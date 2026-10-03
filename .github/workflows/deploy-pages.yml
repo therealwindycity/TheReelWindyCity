@@ -24,6 +24,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Enable GitHub Pages (if not already enabled)
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - name: Build static site
         run: npm run build
         env:
