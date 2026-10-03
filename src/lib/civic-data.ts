@@ -125,6 +125,8 @@ export type Meeting = {
   docs: MeetingDocRef[];
   official: { agenda?: string; minutes?: string; video?: string; granicus?: string };
   transcript?: MeetingDocRef;
+  /** Every transcript variant attached to this meeting; transcript remains the preferred copy. */
+  transcripts?: MeetingDocRef[];
   upcoming?: boolean;
   dayLabel?: string;
   time?: string;

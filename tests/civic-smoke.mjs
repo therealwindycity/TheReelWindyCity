@@ -1,5 +1,5 @@
 import { chromium, expect } from '@playwright/test';
-import { mkdir } from 'node:fs/promises';
+import { mkdir, readFile } from 'node:fs/promises';
 
 await mkdir('test-output', { recursive: true });
 
@@ -31,6 +31,51 @@ try {
   const page = await context.newPage();
   page.on('pageerror', capturePageError);
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
+  const canonicalUrl = 'https://therealwindycity.github.io/TheReelWindyCity/';
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonicalUrl);
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /real public meetings/);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /index, follow/);
+  await expect(page.locator('meta[name="googlebot"]')).toHaveAttribute('content', /max-image-preview:large/);
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute('content', canonicalUrl);
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute('content', 'summary_large_image');
+  const structuredData = await page.locator('script[type="application/ld+json"]').textContent();
+  if (!structuredData?.includes('"@type":"WebSite"') || !structuredData.includes(canonicalUrl)) {
+    throw new Error('Expected truthful WebSite JSON-LD with the canonical URL');
+  }
+  const publicBase = `${BASE_URL.replace(/\/+$/, '')}/`;
+  const sitemapResponse = await context.request.get(new URL('sitemap.xml', publicBase).toString());
+  const sitemapText = await sitemapResponse.text();
+  const meetingIndex = JSON.parse(await readFile('public/data/meetings.json', 'utf8'));
+  const sitemapLocations = [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== meetingIndex.meetings.length + 3) {
+    throw new Error(`Expected homepage, meeting/transcript indexes, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+  }
+  const archiveResponse = await context.request.get(new URL('meetings/', publicBase).toString());
+  const archiveHtml = await archiveResponse.text();
+  if (archiveResponse.status() !== 200 || !archiveHtml.includes('Cheyenne public meeting archive') || !archiveHtml.includes('transcripts/')) {
+    throw new Error('Expected the crawlable meeting archive index and transcript link to be exported');
+  }
+  const transcriptResponse = await context.request.get(new URL('transcripts/', publicBase).toString());
+  const transcriptHtml = await transcriptResponse.text();
+  if (transcriptResponse.status() !== 200 || !transcriptHtml.includes('Cheyenne public meeting transcripts')) {
+    throw new Error('Expected the timestamped transcript index to be exported');
+  }
+  const historicalMeetings = meetingIndex.meetings.filter((meeting) => !meeting.upcoming);
+  const oldestMeeting = historicalMeetings.reduce((oldest, meeting) => meeting.date < oldest.date ? meeting : oldest);
+  const latestMeeting = historicalMeetings.reduce((latest, meeting) => meeting.date > latest.date ? meeting : latest);
+  for (const meeting of [oldestMeeting, latestMeeting]) {
+    const recordResponse = await context.request.get(new URL(`meetings/${meeting.id}/`, publicBase).toString());
+    const recordHtml = await recordResponse.text();
+    const recordCanonical = `https://therealwindycity.github.io/TheReelWindyCity/meetings/${meeting.id}/`;
+    if (recordResponse.status() !== 200 || !recordHtml.includes(meeting.bodyLabel) || !recordHtml.includes(recordCanonical)) {
+      throw new Error(`Expected crawlable static record page for ${meeting.id}`);
+    }
+  }
+  const faviconResponse = await context.request.get(new URL('favicon.svg', publicBase).toString());
+  if (faviconResponse.status() !== 200 || !(await faviconResponse.text()).includes('<svg')) {
+    throw new Error('Expected the Civic Cheyenne favicon to be available');
+  }
+  console.log(`PASS: SEO metadata, sitemap with ${sitemapLocations.length} URLs, full archive index, oldest/latest static meeting pages, and favicon`);
   await expect(page.getByRole('heading', { name: 'Big decisions. Local impact.' })).toBeVisible();
   await expect(page.locator('.maplibregl-canvas')).toHaveCount(1, { timeout: 20000 });
   await expect(page.locator('.map-loading')).not.toBeVisible({ timeout: 20000 });
