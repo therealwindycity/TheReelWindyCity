@@ -1,5 +1,7 @@
 # Civic Cheyenne — Your city. Your seat at the table.
 
+**Live site: [therealwindycity.github.io/TheReelWindyCity](https://therealwindycity.github.io/TheReelWindyCity/)**
+
 An independent, source-backed civic learning experience built around **real Cheyenne, Wyoming
 City Council sessions**. Step inside an actual archived meeting, read the original ordinances,
 follow the recorded actions, and trace proposed impacts across the city — no invented officials,
