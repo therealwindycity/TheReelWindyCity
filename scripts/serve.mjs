@@ -16,13 +16,14 @@ const MIME = {
 };
 
 createServer((req, res) => {
-  let urlPath = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
-  if (urlPath.startsWith("/TheReelWindyCity")) {
-    urlPath = urlPath.slice("/TheReelWindyCity".length) || "/";
-  }
+  const urlPath = decodeURIComponent(new URL(req.url, "http://localhost").pathname);
   let filePath = path.join(root, urlPath);
   if (!filePath.startsWith(root)) { res.writeHead(403); res.end("Forbidden"); return; }
   if (existsSync(filePath) && statSync(filePath).isDirectory()) filePath = path.join(filePath, "index.html");
+  if (!existsSync(filePath) && urlPath.startsWith("/TheReelWindyCity")) {
+    const stripped = path.join(root, urlPath.slice("/TheReelWindyCity".length) || "/");
+    if (existsSync(stripped)) filePath = statSync(stripped).isDirectory() ? path.join(stripped, "index.html") : stripped;
+  }
   if (!existsSync(filePath)) {
     const asIndex = path.join(root, urlPath, "index.html");
     if (existsSync(asIndex)) filePath = asIndex;
