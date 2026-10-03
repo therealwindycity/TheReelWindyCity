@@ -8,6 +8,7 @@
     "build": "next build",
     "preview": "node scripts/serve.mjs out",
     "lint": "eslint .",
+    "pretypecheck": "node scripts/build-data.mjs",
     "typecheck": "tsc --noEmit",
     "data:assemble": "node scripts/build-data.mjs",
     "data:refresh": "node scripts/build-data.mjs --refresh",

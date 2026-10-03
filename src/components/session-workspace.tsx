@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { ArrowRight, ArrowUpRight, BookOpen, Check, CheckCircle2, ChevronRight, FileText, Home, Landmark, Layers, MapPin, MessageSquareText, Play, ShieldCheck, Trees, Video, AlertCircle, Lightbulb, LoaderCircle, ArrowLeft, Map } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronRight, FileText, Home, Landmark, Layers, LoaderCircle, Map, MapPin, MessageSquareText, Play, ShieldCheck, Trees, Video, AlertCircle, Lightbulb, ArrowLeft } from "lucide-react";
 import ImpactMap from "./impact-map";
 import { type SourceDocument } from "./source-library";
-import { ORDINANCES, MEETING, TRANSCRIPT_REPO, asset, githubUrl, officialSourcePath, rawUrl, type CivicProgress, type Ordinance } from "@/lib/civic-data";
+import { DEFAULT_MEETING_ID, GUIDED_MEETING_ID, MEETING, MEETINGS, NEXT_MEETING, ORDINANCES, TRANSCRIPT_REPO, UPCOMING_MEETINGS, asset, githubUrl, meetingGroupLabel, officialSourcePath, rawUrl, readableName, type CivicProgress, type Meeting, type Ordinance } from "@/lib/civic-data";
 import { sourceContentUrl } from "@/lib/source-content";
 
 export function OrdinanceIcon({ ordinance, size = 21 }: { ordinance: Ordinance; size?: number }) {
@@ -32,7 +32,7 @@ export function ImpactSummary({ ordinance, proposed = true }: { ordinance: Ordin
   return <div className="impact-summary"><div className="impact-evidence-label"><span className={`evidence-dot ${proposed ? "" : "muted"}`}/>{proposed ? "PROPOSED RULE CHANGE" : "EXISTING-RULE CONTEXT"}</div><h3>{proposed ? "What would change?" : "Before this proposal"}</h3><p>{proposed ? ordinance.proposed : ordinance.baseline}</p><div className="uncertainty-box"><AlertCircle size={17}/><div><strong>What the record doesn’t establish</strong><p>{ordinance.uncertainty}</p></div></div><div className="recorded-action"><CheckCircle2 size={17}/><div><strong>At the January 26 session</strong><p>{ordinance.outcome}</p></div></div></div>;
 }
 
-export default function SessionWorkspace({ selected, progress, onSelect, onOpen, onSave, onMap, onBack }: { selected: Ordinance; progress: CivicProgress[]; onSelect: (id: string) => void; onOpen: (doc: SourceDocument) => void; onSave: (ordinanceId: string, stage: string, position: string | null, reflection: string) => Promise<boolean>; onMap: (id: string) => void; onBack: () => void }) {
+function GuidedSession({ selected, progress, onSelect, onOpen, onSave, onMap, onBack }: { selected: Ordinance; progress: CivicProgress[]; onSelect: (id: string) => void; onOpen: (doc: SourceDocument) => void; onSave: (ordinanceId: string, stage: string, position: string | null, reflection: string) => Promise<boolean>; onMap: (id: string) => void; onBack: () => void }) {
   const existing = progress.find((p) => p.ordinanceId === selected.id);
   const [stage, setStage] = useState(existing?.stage || "read");
   const [position, setPosition] = useState<string | null>(existing?.position || null);
@@ -71,3 +71,243 @@ export default function SessionWorkspace({ selected, progress, onSelect, onOpen,
   </section>;
 }
 function PlusQuestion() { return <ChevronRight size={13}/>; }
+
+
+function youtubeId(url: string | undefined): string | null {
+  if (!url) return null;
+  const match = url.match(/(?:watch\?v=|youtu\.be\/|embed\/)([\w-]{6,})/);
+  return match ? match[1] : null;
+}
+
+function meetingTranscriptDoc(meeting: Meeting): SourceDocument | null {
+  if (!meeting.transcript) return null;
+  const { repo, path } = meeting.transcript;
+  return {
+    title: `${meeting.bodyLabel} transcript · ${meeting.shortDate}`,
+    kind: "text",
+    url: sourceContentUrl(repo, path),
+    originalUrl: githubUrl(repo, path),
+    downloadUrl: rawUrl(repo, path),
+    repo,
+    path,
+    warning: "Auto-generated captions can contain errors, particularly names. Verify quotations against the official meeting video.",
+  };
+}
+
+function repoDocument(ref: { repo: string; path: string }): SourceDocument {
+  const name = readableName(ref.path).replace(/\.pdf$/i, "");
+  return {
+    title: name.length > 68 ? `${name.slice(0, 66)}…` : name,
+    kind: /\.md$/i.test(ref.path) ? "text" : "document",
+    url: sourceContentUrl(ref.repo, ref.path),
+    originalUrl: githubUrl(ref.repo, ref.path),
+    downloadUrl: rawUrl(ref.repo, ref.path),
+    repo: ref.repo,
+    path: ref.path,
+  };
+}
+
+/** All openable records for a meeting, with official links before repository files. */
+export function meetingDocuments(meeting: Meeting): SourceDocument[] {
+  const docs: SourceDocument[] = [];
+  if (meeting.id === GUIDED_MEETING_ID) {
+    docs.push(officialDocument("agenda", "Official meeting agenda · January 26, 2026", MEETING.agendaUrl));
+    docs.push(officialDocument("minutes", "Official meeting minutes · January 26, 2026", MEETING.minutesUrl));
+    const transcript = meetingTranscriptDoc(meeting);
+    if (transcript) docs.push(transcript);
+  } else {
+    if (meeting.official.agenda) docs.push({ title: `Official agenda · ${meeting.shortDate}`, kind: "document", url: meeting.official.agenda, originalUrl: meeting.official.agenda, downloadUrl: meeting.official.agenda, external: true });
+    if (meeting.official.minutes) docs.push({ title: `Official minutes · ${meeting.shortDate}`, kind: "document", url: meeting.official.minutes, originalUrl: meeting.official.minutes, downloadUrl: meeting.official.minutes, external: true });
+    const transcript = meetingTranscriptDoc(meeting);
+    if (transcript) docs.push(transcript);
+  }
+  for (const ref of meeting.docs) docs.push(repoDocument(ref));
+  return docs;
+}
+
+/* ------------------------------------------------------------------ */
+/* Meeting switcher: every meeting in the record, most current first.  */
+/* ------------------------------------------------------------------ */
+
+export function MeetingSwitcher({ currentId, onSelect }: { currentId: string; onSelect: (id: string) => void }) {
+  const groups = useMemo(() => {
+    const result: { label: string; list: Meeting[] }[] = [];
+    for (const meeting of MEETINGS) {
+      const label = meetingGroupLabel(meeting);
+      const last = result[result.length - 1];
+      if (last && last.label === label) last.list.push(meeting);
+      else result.push({ label, list: [meeting] });
+    }
+    return result;
+  }, []);
+  return (
+    <div className="meeting-switcher">
+      <div className="meeting-switcher-quick">
+        {UPCOMING_MEETINGS.map((meeting) => (
+          <button key={meeting.id} className={meeting.id === currentId ? "active" : ""} onClick={() => onSelect(meeting.id)}>
+            <CalendarDays size={13}/> {meeting.bodyLabel.replace(" Committee", "")} · {(meeting.dayLabel ?? meeting.dateLabel.split(",")[0]).slice(0, 3)}, {meeting.shortDate.replace(/, \d{4}$/, "")}
+          </button>
+        ))}
+        <button className={currentId === GUIDED_MEETING_ID ? "active" : ""} onClick={() => onSelect(GUIDED_MEETING_ID)}>
+          <Landmark size={13}/> Guided session · Jan 26
+        </button>
+      </div>
+      <label className="meeting-switcher-select">
+        <span className="sr-only">Choose a meeting</span>
+        <select value={currentId} onChange={(event) => onSelect(event.target.value)} aria-label="Choose a meeting">
+          {groups.map((group) => (
+            <optgroup key={group.label} label={group.label}>
+              {group.list.map((meeting) => (
+                <option key={meeting.id} value={meeting.id}>
+                  {meeting.upcoming ? "▶ " : ""}{meeting.shortDate} · {meeting.bodyLabel}{meeting.notes?.length ? ` (${meeting.notes[0]})` : ""}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      </label>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Generic meeting browser (everything except the guided session).     */
+/* ------------------------------------------------------------------ */
+
+function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen: (doc: SourceDocument) => void; onBack: () => void }) {
+  const [activeItem, setActiveItem] = useState(0);
+  const docs = meetingDocuments(meeting);
+  const transcript = meetingTranscriptDoc(meeting);
+  const videoId = youtubeId(meeting.official.video);
+  const items = meeting.items ?? [];
+  return (
+    <section className="session-page page-enter">
+      <div className="page-intro">
+        <div>
+          <div className="eyebrow"><Landmark size={13}/> {meeting.upcoming ? "THE NEXT MEETING ON THE CALENDAR" : "INSIDE THE PUBLIC RECORD"}</div>
+          <h1>{meeting.upcoming ? "The agenda is posted. Take a look before it happens." : "Everything the city kept from this meeting."}</h1>
+          <p>{meeting.upcoming ? "Real agenda items from the City of Cheyenne — read them now, then watch the meeting live or after." : "Original agendas, minutes, supporting documents, video, and transcripts — nothing invented."}</p>
+        </div>
+        <button className="button button-outline" onClick={onBack}><ArrowLeft size={15}/> Back to overview</button>
+      </div>
+      <div className="session-location-banner">
+        <div><Landmark size={19}/><strong>{meeting.bodyLabel}</strong><span>{meeting.location ?? "Location is stated in the official record"}</span></div>
+        <span className={`pill ${meeting.upcoming ? "pill-soft-green" : "pill-neutral"}`}>{meeting.upcoming ? `Next meeting · ${meeting.dayLabel}, ${meeting.shortDate}` : `Archived session · ${meeting.shortDate}`}</span>
+      </div>
+      <div className="session-workspace">
+        <aside className="session-agenda">
+          <div className="session-agenda-heading">
+            <span className="eyebrow">{meeting.upcoming ? "ON THE AGENDA" : "THE RECORD"}</span>
+            <h3>{meeting.shortDate}</h3>
+            <p>{meeting.bodyLabel}{meeting.time ? ` · ${meeting.time}` : meeting.upcoming ? "" : " · Archived meeting"}{meeting.notes?.length ? ` · ${meeting.notes.join(" · ")}` : ""}</p>
+          </div>
+          <div className="session-agenda-list">
+            {meeting.upcoming && items.length > 0
+              ? items.map((item, index) => (
+                  <button key={item.number} className={`agenda-ordinance ${index === activeItem ? "active" : ""}`} onClick={() => setActiveItem(index)}>
+                    <span className="agenda-number">{item.number}</span>
+                    <span><strong>{item.kind}</strong><small>{item.text.slice(0, 64)}{item.text.length > 64 ? "…" : ""}</small></span>
+                    <ChevronRight size={14}/>
+                  </button>
+                ))
+              : docs.map((doc, index) => (
+                  <button key={`${doc.title}-${index}`} className={`agenda-ordinance ${index === activeItem ? "active" : ""}`} onClick={() => { setActiveItem(index); onOpen(doc); }}>
+                    <span className="agenda-number">{String(index + 1).padStart(2, "0")}</span>
+                    <span><strong>{doc.title}</strong><small>{doc.external ? "Official city source" : doc.repo === TRANSCRIPT_REPO ? "Timestamped transcript" : "Archived document"}</small></span>
+                    <ChevronRight size={14}/>
+                  </button>
+                ))}
+          </div>
+          {meeting.official.agenda && (
+            <button className="agenda-source-link" onClick={() => onOpen({ title: `Official agenda · ${meeting.shortDate}`, kind: "document", url: meeting.official.agenda!, originalUrl: meeting.official.agenda!, downloadUrl: meeting.official.agenda!, external: true })}>
+              <FileText size={15}/> Open the complete agenda <ArrowUpRight size={14}/>
+            </button>
+          )}
+          {(meeting.upcoming || meeting.body === "city-council") && (
+            <div className="session-hall-photo"><img src={asset("images/council-chambers.png")} alt="The real Cheyenne City Council Chambers at City Hall"/><span><Landmark size={12}/> The Council Chambers</span></div>
+          )}
+          <div className="session-seat-note"><ShieldCheck size={19}/><strong>Explore, don’t impersonate.</strong><p>Everything here links to real public records. Your notes are personal reflections, never official votes.</p></div>
+        </aside>
+        <div className="ordinance-workspace">
+          <div className="workspace-heading">
+            <div className="ordinance-icon lime"><CalendarDays size={23}/></div>
+            <div>
+              <span className="eyebrow">{meeting.upcoming ? "POSTED AGENDA · ITEMS AS FILED" : "ARCHIVED MEETING"}</span>
+              <h2>{meeting.bodyLabel} · {meeting.dateLabel}</h2>
+            </div>
+            <span className={`pill ${meeting.upcoming ? "pill-soft-green" : "pill-neutral"}`}>{meeting.upcoming ? "Upcoming" : "In the record"}</span>
+          </div>
+          <div className="workspace-stage">
+            {meeting.upcoming ? (
+              <div className="read-stage">
+                <div className="evidence-caption"><span className="status-dot"/> Posted by the City of Cheyenne</div>
+                <h3>{meeting.dayLabel}, {meeting.shortDate} · {meeting.time ?? ""} · {meeting.location ?? "Council Chambers"}</h3>
+                <p className="stage-introduction">{items.length} posted agenda items. Read the official agenda language below — the same document the committee will work from.</p>
+                {items.length > 0 ? (
+                  <div className="meeting-item-stack">
+                    {items.map((item, index) => (
+                      <button key={item.number} className={`meeting-item ${index === activeItem ? "active" : ""}`} onClick={() => setActiveItem(index)}>
+                        <span className="meeting-item-number">{item.number}</span>
+                        <div><span className="eyebrow">{item.kind.toUpperCase()}</span><p>{item.text}</p></div>
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <blockquote className="ordinance-text"><span className="eyebrow">AGENDA</span><p>Open the official agenda for the posted item list.</p></blockquote>
+                )}
+                <div className="watch-source-actions">
+                  {meeting.official.agenda && <button className="button button-outline" onClick={() => onOpen({ title: `Official agenda · ${meeting.shortDate}`, kind: "document", url: meeting.official.agenda!, originalUrl: meeting.official.agenda!, downloadUrl: meeting.official.agenda!, external: true })}><FileText size={16}/> Official agenda PDF</button>}
+                  {meeting.zoom && <a className="button button-primary" href={meeting.zoom.joinUrl} target="_blank" rel="noreferrer"><Video size={16}/> Join on Zoom <ArrowUpRight size={14}/></a>}
+                  {meeting.official.granicus && <a className="button button-outline" href={meeting.official.granicus} target="_blank" rel="noreferrer"><ArrowUpRight size={15}/> Granicus agenda page</a>}
+                </div>
+                {meeting.zoom && <div className="stage-source-note"><Video size={16}/><p>Zoom webinar {meeting.zoom.webinarId} · Zoom passcode {meeting.zoom.passcode} · call in {meeting.zoom.callIn} · phone passcode {meeting.zoom.callInPasscode}. See the official agenda for public-comment instructions.</p></div>}
+                <div className="stage-source-note"><ShieldCheck size={16}/><p>Agenda items are proposals. Committee recommendations and final Council action are separate; check the recorded minutes and later readings to confirm what was approved.</p></div>
+              </div>
+            ) : (
+              <div className="watch-stage">
+                <div className="evidence-caption"><span className="status-dot"/> {videoId ? "Official meeting video" : "Official meeting record"}</div>
+                <h3>{meeting.dateLabel}.</h3>
+                <p className="stage-introduction">This meeting is part of a preserved public record. Open any source below — every link leads to the original city or repository document.</p>
+                {videoId ? (
+                  <div className="meeting-video"><iframe src={`https://www.youtube-nocookie.com/embed/${videoId}`} title={`Official meeting video: ${meeting.bodyLabel}, ${meeting.shortDate}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/></div>
+                ) : (
+                  <div className="meeting-video meeting-video-placeholder"><Video size={28}/><p>{meeting.official.video ? "This meeting’s video is hosted on the official archive." : meeting.notes?.includes("Meeting Cancelled") ? "This meeting was cancelled." : "No video is on file for this meeting."}</p></div>
+                )}
+                <div className="watch-source-actions">
+                  {meeting.official.agenda && <button className="button button-outline" onClick={() => onOpen({ title: `Official agenda · ${meeting.shortDate}`, kind: "document", url: meeting.official.agenda!, originalUrl: meeting.official.agenda!, downloadUrl: meeting.official.agenda!, external: true })}><FileText size={16}/> Official agenda</button>}
+                  {meeting.official.minutes && <button className="button button-outline" onClick={() => onOpen({ title: `Official minutes · ${meeting.shortDate}`, kind: "document", url: meeting.official.minutes!, originalUrl: meeting.official.minutes!, downloadUrl: meeting.official.minutes!, external: true })}><FileText size={16}/> Official minutes</button>}
+                  {transcript && <button className="button button-outline" onClick={() => onOpen(transcript)}><MessageSquareText size={16}/> Read transcript</button>}
+                  {meeting.official.video && <a className="button button-outline" href={meeting.official.video} target="_blank" rel="noreferrer"><Video size={16}/> Official video <ArrowUpRight size={14}/></a>}
+                </div>
+                <div className="record-facts">
+                  <div><BookOpen size={16}/><span>Archived documents<strong>{meeting.docs.length} file{meeting.docs.length === 1 ? "" : "s"} in the archive</strong></span></div>
+                  <div><Landmark size={16}/><span>Body<strong>{meeting.bodyLabel}</strong></span></div>
+                  {transcript && <div><MessageSquareText size={16}/><span>Transcript<strong>Timestamped captions on file</strong></span></div>}
+                </div>
+                {meeting.docs.length > 0 && <div className="meeting-docs-strip">{meeting.docs.slice(0, 8).map((ref, index) => { const doc = repoDocument(ref); return <button key={`${ref.path}-${index}`} onClick={() => onOpen(doc)}><FileText size={15}/><span>{doc.title}</span><ArrowUpRight size={13}/></button>; })}</div>}
+                <div className="stage-source-note"><AlertCircle size={16}/><p>Captions and transcripts are automatically generated and may misidentify people. The official video and minutes are the primary records.</p></div>
+              </div>
+            )}
+          </div>
+          <div className="workspace-footer"><span><ShieldCheck size={15}/> Real records. Your own understanding.</span>{meeting.official.granicus || meeting.official.video ? <a className="button button-outline" href={(meeting.official.granicus || meeting.official.video)!} target="_blank" rel="noreferrer">Official source <ArrowUpRight size={15}/></a> : null}</div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Guided session: January 26, 2026 source-guided experience.          */
+/* ------------------------------------------------------------------ */
+
+export default function SessionWorkspace({ meetingId = DEFAULT_MEETING_ID, onSelectMeeting, selected, progress, onSelect, onOpen, onSave, onMap, onBack }: { meetingId?: string; onSelectMeeting?: (id: string) => void; selected: Ordinance; progress: CivicProgress[]; onSelect: (id: string) => void; onOpen: (doc: SourceDocument) => void; onSave: (ordinanceId: string, stage: string, position: string | null, reflection: string) => Promise<boolean>; onMap: (id: string) => void; onBack: () => void }) {
+  const meeting = MEETINGS.find((item) => item.id === meetingId) ?? NEXT_MEETING;
+  return (
+    <>
+      {onSelectMeeting && <MeetingSwitcher currentId={meeting.id} onSelect={onSelectMeeting}/>}
+      {meeting.id === GUIDED_MEETING_ID
+        ? <GuidedSession selected={selected} progress={progress} onSelect={onSelect} onOpen={onOpen} onSave={onSave} onMap={onMap} onBack={onBack}/>
+        : <MeetingBrowser key={meeting.id} meeting={meeting} onOpen={onOpen} onBack={onBack}/>}
+    </>
+  );
+}
