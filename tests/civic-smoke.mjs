@@ -20,23 +20,50 @@ if (process.env.CHROMIUM_PATH) {
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:3000';
 const browser = await chromium.launch(launchOptions);
 const errors = [];
+function capturePageError(error) {
+  // @sparticuz/chromium's required single-process mode can emit harmless MapLibre worker-serialization noise.
+  if (process.env.CHROMIUM_PATH && /can't deserialize unregistered class StructArrayLayout/i.test(error.message)) return;
+  errors.push(error.message);
+}
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, ignoreHTTPSErrors: true });
   await context.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
   const page = await context.newPage();
-  page.on('pageerror', (e) => errors.push(e.message));
+  page.on('pageerror', capturePageError);
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
   await expect(page.getByRole('heading', { name: 'Big decisions. Local impact.' })).toBeVisible();
   await expect(page.locator('.maplibregl-canvas')).toHaveCount(1, { timeout: 20000 });
   await expect(page.locator('.map-loading')).not.toBeVisible({ timeout: 20000 });
   await expect(page.locator('.map-unavailable')).not.toBeVisible();
+  await expect(page.locator('.brief-eyebrow')).toContainText('NEXT UP IN COUNCIL CHAMBERS');
+  await expect(page.locator('.session-brief')).toContainText('Public Services Committee');
+  await expect(page.locator('.session-brief')).toContainText('October 5, 2026');
+  await expect(page.locator('.session-brief')).toContainText('11');
+  await expect(page.locator('.source-count')).toContainText('2008');
   await page.waitForTimeout(1200);
   await page.evaluate(() => { document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,0); });
   await page.screenshot({ path: 'test-output/overview.png', fullPage: true, animations: 'disabled' });
-  console.log('PASS: dashboard and real chamber image');
+  console.log('PASS: dashboard opens on the next posted meeting and shows archive coverage');
 
-  await page.getByRole('button', { name: 'Enter council chambers', exact: true }).click();
+  await page.getByRole('button', { name: 'Open the next meeting', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'The agenda is posted. Take a look before it happens.' })).toBeVisible();
+  await expect(page.locator('.session-location-banner')).toContainText('Public Services Committee');
+  await expect(page.locator('.session-location-banner')).toContainText('Monday, October 5, 2026');
+  await expect(page.locator('.meeting-item')).toHaveCount(11);
+  await expect(page.locator('.meeting-item-stack')).toContainText('Hitching Post District');
+  await expect(page.getByRole('link', { name: /Join on Zoom/ })).toBeVisible();
+  await page.screenshot({ path: 'test-output/next-meeting.png', fullPage: true, animations: 'disabled' });
+  await page.locator('.meeting-switcher-quick').getByRole('button', { name: /Finance · Tue/ }).click();
+  await expect(page.locator('.session-location-banner')).toContainText('October 6, 2026');
+  await expect(page.locator('.meeting-item')).toHaveCount(6);
+  await expect(page.locator('.meeting-item-stack')).toContainText('Airport Golf Course');
+  await page.locator('.meeting-switcher-quick').getByRole('button', { name: /Guided session/ }).click();
   await expect(page.getByRole('heading', { name: 'Inside Council Chambers.' })).toBeVisible();
+  await page.getByRole('button', { name: 'Open the complete agenda' }).click();
+  await expect(page.locator('.document-modal')).toBeVisible();
+  await expect(page.frameLocator('.document-frame').getByText('JANUARY 26, 2026', { exact: true })).toBeVisible({ timeout: 20000 });
+  await page.keyboard.press('Escape');
+  await expect(page.locator('.document-modal')).not.toBeVisible();
   await expect(page.getByRole('heading', { name: 'Start with the actual ordinance.' })).toBeVisible();
   await page.getByRole('button', { name: 'Read & continue' }).click();
   await expect(page.getByRole('heading', { name: 'Hear the discussion in the room.' })).toBeVisible();
@@ -67,9 +94,9 @@ try {
   await page.keyboard.press('Escape');
   await expect(page.locator('.document-modal')).not.toBeVisible();
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
-  await page.locator('.featured-sources button').filter({ hasText: 'Official meeting minutes' }).click();
+  await page.locator('.featured-sources button').filter({ hasText: 'Posted agenda' }).click();
   await expect(page.locator('.document-modal')).toBeVisible();
-  await expect(page.locator('.document-frame')).toBeVisible({ timeout: 20000 });
+  await expect(page.locator('.document-header')).toContainText('October 5, 2026');
   await page.keyboard.press('Escape');
   await page.getByRole('button', { name: /Source library/ }).first().click();
   await page.getByLabel('Choose GitHub archive').selectOption('The-Real-Windy-City-');
@@ -78,7 +105,7 @@ try {
   await page.locator('.source-card-main').first().click();
   await expect(page.locator('.document-text')).toContainText('x6Veeticz3Q', { timeout: 20000 });
   await page.keyboard.press('Escape');
-  console.log('PASS: source search, bookmarks, safely rendered real agenda, official minutes, original transcript');
+  console.log('PASS: source search, bookmarks, safely rendered original agenda, posted next-meeting agenda, transcript');
 
   await page.getByRole('button', { name: 'City impact map', exact: true }).click();
   await page.getByRole('button', { name: 'East Cheyenne annexation', exact: true }).click();
@@ -95,18 +122,31 @@ try {
   console.log('PASS: interactive map, before/if-enacted comparison, verified ordinance statuses');
 
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
-  await page.getByRole('button', { name: 'January 26, 2026', exact: true }).click();
-  await expect(page.locator('.meeting-picker-list button')).toHaveCount(33);
-  await page.locator('.meeting-picker-list button').first().click();
-  await expect(page.locator('.archive-session-reader')).toBeVisible();
-  await page.getByRole('button', { name: 'Follow the discussion', exact: true }).click();
-  await expect(page.locator('.archive-session-reader')).toBeVisible();
-  console.log('PASS: real archived session switching');
+  await page.locator('.session-date-select').click();
+  await expect(page.locator('.featured-meeting').first()).toContainText('Public Services Committee');
+  await expect(page.locator('.featured-meeting').first()).toContainText('Start here');
+  const pickerButtons = await page.locator('.meeting-picker-list button').count();
+  if (pickerButtons < 600) throw new Error(`Expected the complete meeting index in the picker, found ${pickerButtons}`);
+  await expect(page.locator('.meeting-picker-list')).toContainText('May 27, 2008');
+  await expect(page.locator('.meeting-picker-list')).toContainText('September 28, 2026');
+  await page.locator('.meeting-picker-list button').filter({ hasText: 'September 28, 2026' }).first().click();
+  await expect(page.getByRole('heading', { name: 'Everything the city kept from this meeting.' })).toBeVisible();
+  await expect(page.locator('.session-location-banner')).toContainText('September 28, 2026');
+  await expect(page.locator('.meeting-docs-strip').or(page.locator('.watch-source-actions'))).toBeVisible();
+  await page.getByRole('button', { name: 'Explore another meeting', exact: true }).click();
+  await page.locator('.meeting-picker-list button').filter({ hasText: 'September 22, 2026 · Finance Committee' }).first().click();
+  await expect(page.locator('.session-location-banner')).toContainText('Finance Committee');
+  await page.getByRole('button', { name: 'Read transcript', exact: true }).click();
+  await expect(page.locator('.document-modal')).toBeVisible();
+  await expect(page.locator('.document-header')).toContainText('Finance Committee transcript');
+  await expect(page.locator('.document-actions a').filter({ hasText: 'Original source' })).toHaveAttribute('href', /2026-09-22-finance-committee\.md/);
+  await page.keyboard.press('Escape');
+  console.log('PASS: every meeting indexed, next meeting featured, archived meeting & transcript open');
 
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors: true, isMobile: true, deviceScaleFactor: 1 });
   await mobile.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
   const mp = await mobile.newPage();
-  mp.on('pageerror', (e) => errors.push(e.message));
+  mp.on('pageerror', capturePageError);
   await mp.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
   await expect(mp.getByRole('heading', { name: 'Big decisions. Local impact.' })).toBeVisible();
   await mp.screenshot({ path: 'test-output/mobile.png', animations: 'disabled' });

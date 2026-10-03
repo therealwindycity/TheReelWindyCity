@@ -1,0 +1,889 @@
+{
+  "$comment": "Official meeting index captured 2026-10-03 from the City of Cheyenne Minutes-and-Agendas page and Granicus portal. Council clip IDs and dates use the official Granicus archive listing; same-day sessions are represented separately. Upcoming agendas and their Zoom details are transcribed from the city's posted agenda PDFs.",
+  "captured": "2026-10-03",
+  "sources": {
+    "officialPage": "https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas",
+    "granicusPage": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5",
+    "granicusUpcoming": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming"
+  },
+  "schedules": {
+    "city-council": "Second and fourth Mondays at 6:00 p.m., Council Chambers, 2101 O'Neil Ave.",
+    "public-services-committee": "First and third Mondays at 12:00 p.m., Council Chambers, 2101 O'Neil Ave.",
+    "finance-committee": "First and third Tuesdays at 12:00 p.m., Council Chambers, 2101 O'Neil Ave."
+  },
+  "upcoming": [
+    {
+      "id": "public-services-committee-2026-10-05",
+      "body": "public-services-committee",
+      "bodyLabel": "Public Services Committee",
+      "date": "2026-10-05",
+      "dayLabel": "Monday",
+      "time": "12:00 p.m.",
+      "location": "Council Chambers, 2101 O'Neil Ave.",
+      "agendaPath": "psc-2026/psc-10-05-26-agenda.pdf",
+      "granicusUrl": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1447",
+      "zoom": {
+        "joinUrl": "https://us02web.zoom.us/j/89824535358",
+        "webinarId": "898 2453 5358",
+        "passcode": "PS10052026",
+        "callIn": "253-205-0468",
+        "callInPasscode": "0111761018"
+      },
+      "items": [
+        {
+          "number": "9",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+        },
+        {
+          "number": "10",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne establishing the zoning classification of AG Agricultural and LI Light Industrial for land annexed to the City of Cheyenne located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+        },
+        {
+          "number": "11",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25 from AG Agricultural and LI Light Industrial to BP Business Park."
+        },
+        {
+          "number": "13",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue."
+        },
+        {
+          "number": "14",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification AG – Agricultural for land annexed to the City of Cheyenne, located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (PUBLIC SERVICES COMMITTEE)"
+        },
+        {
+          "number": "15",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue from AG – Agricultural to LI – Light Industrial."
+        },
+        {
+          "number": "19",
+          "kind": "Resolution",
+          "text": "Amending the Future Land Use Map of PlanCheyenne by changing the land use designation from Agricultural/Rural, Open Space and Parks, and Mixed-Use Employment to Community Business and removing the Natural and Cultural Resources area designation for property generally located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (Postponed from September 28, 2026)"
+        },
+        {
+          "number": "21",
+          "kind": "Resolution",
+          "text": "Amending the Future Land Use Map of PlanCheyenne changing the land use designation from Mixed-Use Residential to Mixed-Use Employment for property generally located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (Postponed from September 28, 2026)"
+        },
+        {
+          "number": "24",
+          "kind": "Resolution",
+          "text": "Authorizing the Mayor and the City Clerk to sign a Final Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (Sponsor – Dr. Aldrich)"
+        },
+        {
+          "number": "27",
+          "kind": "Resolution",
+          "text": "Appointing the City of Cheyenne's representatives to the Wyoming Association of Risk Management Joint Powers Board and the Wyoming Association of Risk Management Property Insurance Joint Powers Board. (Sponsors – Dr. Aldrich, Dr. Rinne and Mr. White)"
+        },
+        {
+          "number": "28",
+          "kind": "Preliminary plats",
+          "text": "a) Preliminary Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+        }
+      ]
+    },
+    {
+      "id": "finance-committee-2026-10-06",
+      "body": "finance-committee",
+      "bodyLabel": "Finance Committee",
+      "date": "2026-10-06",
+      "dayLabel": "Tuesday",
+      "time": "12:00 p.m.",
+      "location": "Council Chambers, 2101 O'Neil Ave.",
+      "agendaPath": "fc-2026/fc-10-06-26-agenda.pdf",
+      "granicusUrl": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1446",
+      "zoom": {
+        "joinUrl": "https://us02web.zoom.us/j/89350085776",
+        "webinarId": "893 5008 5776",
+        "passcode": "FC10062026",
+        "callIn": "346-248-7799",
+        "callInPasscode": "8105191301"
+      },
+      "items": [
+        {
+          "number": "25",
+          "kind": "Resolution",
+          "text": "Reappropriating $250,000 from General Fund Reserves for repair and replacement of cart paths at the Airport Golf Course. (Sponsors – Dr. Emmons, Mr. Esquibel, Dr. Rinne, Mr. Segrave and Mr. Wolfe)"
+        },
+        {
+          "number": "26",
+          "kind": "Resolution",
+          "text": "Authorizing the Mayor to Execute a Memorandum of Understanding with participating counties, cities and towns, regarding the allocation of Impact Assistance Funds associated with the Cheyenne Prairie Generating Station Expansion Project application before the Industrial Siting Council. (Sponsor – Mr. Esquibel)"
+        },
+        {
+          "number": "29d",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Agreement between the City of Cheyenne, Transit Program and the Wyoming Department of Health Aging Division to provide transportation support services to persons 60 years or older under the Title III-B Program Grant for FY 2027. (Title III-B Division of Aging Grant)"
+        },
+        {
+          "number": "29e",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Professional Services Agreement between the City of Cheyenne and Martin/Martin Wyoming, Inc. for the redesign of the Municipal Building Parking Lot. (2021 Specific Purpose Option Tax Fund)"
+        },
+        {
+          "number": "29f",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Contract between the City of Cheyenne, Office of Youth Alternatives and the Laramie County Community Juvenile Services Joint Powers Board for case management services and substance abuse testing and assessments. (Revenue to the City)"
+        },
+        {
+          "number": "29g",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Professional Services Agreement between the City of Cheyenne and TDSi – The Design Studio, inc. for the Johnson Pool – Evaluation and Design Project. (2026 Specific Purpose Option Tax Fund)"
+        }
+      ]
+    }
+  ],
+  "cityCouncil": [
+    {
+      "d": "2026-09-28",
+      "c": 1137,
+      "minutes": false
+    },
+    {
+      "d": "2026-09-14",
+      "c": 1134
+    },
+    {
+      "d": "2026-08-24",
+      "c": 1126
+    },
+    {
+      "d": "2026-08-10",
+      "c": 1124
+    },
+    {
+      "d": "2026-07-27",
+      "c": 1122
+    },
+    {
+      "d": "2026-07-13",
+      "c": 1120
+    },
+    {
+      "d": "2026-06-23",
+      "c": 1103
+    },
+    {
+      "d": "2026-06-08",
+      "c": 1099
+    },
+    {
+      "d": "2026-05-26",
+      "c": 1097
+    },
+    {
+      "d": "2026-05-11",
+      "c": 1095
+    },
+    {
+      "d": "2026-04-27",
+      "c": 1093
+    },
+    {
+      "d": "2026-04-13",
+      "c": 1091
+    },
+    {
+      "d": "2026-03-23",
+      "c": 1086
+    },
+    {
+      "d": "2026-03-23",
+      "c": 1087,
+      "n": "Special Meeting (budget)"
+    },
+    {
+      "d": "2026-03-17",
+      "c": 1081,
+      "n": "Special Meeting (budget)"
+    },
+    {
+      "d": "2026-03-16",
+      "c": 1075,
+      "n": "Special Meeting (budget)"
+    },
+    {
+      "d": "2026-03-12",
+      "c": 1073,
+      "n": "Special Meeting (budget)"
+    },
+    {
+      "d": "2026-03-09",
+      "c": 1071
+    },
+    {
+      "d": "2026-03-05",
+      "c": 1069,
+      "n": "Special Meeting (budget)"
+    },
+    {
+      "d": "2026-02-23",
+      "c": 1066
+    },
+    {
+      "d": "2026-02-23",
+      "c": 1063,
+      "n": "Special Meeting"
+    },
+    {
+      "d": "2026-02-09",
+      "c": 1060
+    },
+    {
+      "d": "2026-01-26",
+      "c": 1053
+    },
+    {
+      "d": "2026-01-23",
+      "c": 1052,
+      "n": "Special Meeting"
+    },
+    {
+      "d": "2026-01-12",
+      "c": 1050
+    },
+    {
+      "d": "2025-12-22",
+      "c": 1048
+    },
+    {
+      "d": "2025-12-10",
+      "c": 1046,
+      "n": "Special Meeting and Public Hearing"
+    },
+    {
+      "d": "2025-12-08",
+      "c": 1044
+    },
+    {
+      "d": "2025-11-24",
+      "c": 1042
+    },
+    {
+      "d": "2025-11-10",
+      "c": 1040
+    },
+    {
+      "d": "2025-10-27",
+      "c": 1038
+    },
+    {
+      "d": "2025-10-13",
+      "c": 1036
+    },
+    {
+      "d": "2025-09-22",
+      "c": 1034
+    },
+    {
+      "d": "2025-09-08",
+      "c": 1032
+    },
+    {
+      "d": "2025-08-25",
+      "c": 1030
+    },
+    {
+      "d": "2025-08-11",
+      "c": 1028
+    },
+    {
+      "d": "2025-07-28",
+      "c": 1026
+    },
+    {
+      "d": "2025-07-14",
+      "c": 1024
+    },
+    {
+      "d": "2025-06-23",
+      "c": 1022
+    },
+    {
+      "d": "2025-06-09",
+      "c": 1020
+    },
+    {
+      "d": "2025-05-27",
+      "c": 1018
+    },
+    {
+      "d": "2025-05-12",
+      "c": 1016
+    },
+    {
+      "d": "2025-04-28",
+      "c": 1014
+    },
+    {
+      "d": "2025-04-14",
+      "c": 1012
+    },
+    {
+      "d": "2025-03-24",
+      "c": 1010
+    },
+    {
+      "d": "2025-03-11",
+      "c": 1008
+    },
+    {
+      "d": "2025-02-25",
+      "c": 1005,
+      "n": "Special Meeting (budget)"
+    },
+    {
+      "d": "2025-02-24",
+      "c": 1002
+    },
+    {
+      "d": "2025-02-10",
+      "c": 1000
+    },
+    {
+      "d": "2025-01-27",
+      "c": 998
+    },
+    {
+      "d": "2025-01-13",
+      "c": 996
+    },
+    {
+      "d": "2025-01-06",
+      "c": 993,
+      "n": "Sine Die Meeting"
+    },
+    {
+      "d": "2025-01-06",
+      "c": 991,
+      "n": "First Regular Meeting"
+    }
+  ],
+  "financeCommittee": [
+    {
+      "d": "2026-10-06",
+      "a": "fc-2026/fc-10-06-26-agenda.pdf",
+      "n": "Upcoming — agenda posted"
+    },
+    {
+      "d": "2026-09-22",
+      "a": "fc-2026/fc-09-22-26-agenda.pdf",
+      "m": "fc-2026/fc-09-22-26-minutes.pdf",
+      "v": "dLgQPgzcYX0"
+    },
+    {
+      "d": "2026-09-09",
+      "a": "fc-2026/fc-09-09-26-agenda.pdf",
+      "m": "fc-2026/fc-09-09-26-minutes.pdf",
+      "v": "rHQu37W9WKM"
+    },
+    {
+      "d": "2026-08-18",
+      "a": "fc-2026/fc-08-18-26-agenda.pdf",
+      "m": "fc-2026/fc-08-18-26-minutes.pdf",
+      "v": "QJv-vZ6Rf34"
+    },
+    {
+      "d": "2026-08-04",
+      "a": "fc-2026/fc-08-04-26-agenda.pdf",
+      "m": "fc-2026/fc-08-04-26-minutes.pdf",
+      "v": "u522k97TVlo"
+    },
+    {
+      "d": "2026-07-21",
+      "a": "fc-2026/fc-07-21-26-agenda.pdf",
+      "m": "fc-2026/fc-07-21-26-minutes.pdf",
+      "v": "3-FOqtiUUpM"
+    },
+    {
+      "d": "2026-07-07",
+      "a": "fc-2026/fc-07-07-26-agenda.pdf",
+      "m": "fc-2026/fc-07-07-26-minutes.pdf",
+      "v": "2pBhK8j9PyQ"
+    },
+    {
+      "d": "2026-06-16",
+      "a": "fc-2026/fc-06-16-26-agenda.pdf",
+      "m": "fc-2026/fc-06-16-26-minutes.pdf",
+      "v": "4J-9As5ud-U"
+    },
+    {
+      "d": "2026-06-02",
+      "a": "fc-2026/fc-06-02-26-agenda.pdf",
+      "m": "fc-2026/fc-06-02-26-minutes.pdf",
+      "v": "4jX5G3X2nHM"
+    },
+    {
+      "d": "2026-05-19",
+      "a": "fc-2026/fc-05-19-26-agenda.pdf",
+      "m": "fc-2026/fc-05-19-26-minutes.pdf",
+      "v": "Xd-C8vNGw5Y"
+    },
+    {
+      "d": "2026-05-05",
+      "a": "fc-2026/fc-05-05-26-agenda.pdf",
+      "m": "fc-2026/fc-05-05-26-minutes.pdf",
+      "v": "8X4rnC67QiY"
+    },
+    {
+      "d": "2026-04-21",
+      "a": "fc-2026/fc-04-21-26-agenda.pdf",
+      "m": "fc-2026/fc-04-21-26-minutes.pdf",
+      "v": "ykLUnJt9-4Y"
+    },
+    {
+      "d": "2026-04-07",
+      "a": "fc-2026/fc-04-07-26-agenda.pdf",
+      "m": "fc-2026/fc-04-07-26-minutes.pdf",
+      "v": "bPgbRKCxvog"
+    },
+    {
+      "d": "2026-03-17",
+      "a": "fc-2026/fc-03-17-26-agenda.pdf",
+      "m": "fc-2026/fc-03-17-26-minutes.pdf",
+      "v": "6YvgIs2FbW4"
+    },
+    {
+      "d": "2026-03-03",
+      "a": "fc-2026/fc-03-03-26-agenda.pdf",
+      "m": "fc-2026/fc-03-03-26-minutes.pdf",
+      "v": "a9Kzol53bL0"
+    },
+    {
+      "d": "2026-02-18",
+      "a": "fc-2026/fc-02-18-26-agenda.pdf",
+      "m": "fc-2026/fc-02-18-26-minutes.pdf",
+      "v": "541nXnJgKEE"
+    },
+    {
+      "d": "2026-02-03",
+      "a": "fc-2026/fc-02-03-26-agenda.pdf",
+      "m": "fc-2026/fc-02-03-26-minutes.pdf",
+      "v": "32pl4sLzAIk"
+    },
+    {
+      "d": "2026-01-21",
+      "a": "fc-2026/fc-01-21-26-agenda.pdf",
+      "m": "fc-2026/fc-01-21-26-minutes.pdf",
+      "v": "yqe4p5etIb4"
+    },
+    {
+      "d": "2026-01-06",
+      "a": "fc-2026/fc-01-06-26-agenda.pdf",
+      "m": "fc-2026/fc-01-06-26-minutes.pdf",
+      "v": "4NVAiLCU35Y"
+    },
+    {
+      "d": "2025-12-16",
+      "a": "fc-2025/fc-12-16-25-agenda.pdf",
+      "m": "fc-2025/fc-12-16-25-minutes.pdf",
+      "v": "5e9RkW1YWNc"
+    },
+    {
+      "d": "2025-12-02",
+      "a": "fc-2025/fc-12-02-25-agenda.pdf",
+      "m": "fc-2025/fc-12-02-25-minutes.pdf",
+      "v": "x2nJhOr-Qgw"
+    },
+    {
+      "d": "2025-11-18",
+      "a": "fc-2025/fc-11-18-25-agenda.pdf",
+      "m": "fc-2025/fc-11-18-25-minutes.pdf",
+      "v": "Z8z0ah3RMrI"
+    },
+    {
+      "d": "2025-11-04",
+      "a": "fc-2025/fc-11-04-25-agenda.pdf",
+      "m": "fc-2025/fc-11-04-25-minutes.pdf",
+      "v": "Rwc1K6Xn61g"
+    },
+    {
+      "d": "2025-10-21",
+      "a": "fc-2025/fc-10-21-25-agenda.pdf",
+      "m": "fc-2025/fc-10-21-25-minutes.pdf",
+      "v": "5PTP0yK2gcU"
+    },
+    {
+      "d": "2025-10-07",
+      "a": "fc-2025/fc-10-07-25-agenda.pdf",
+      "m": "fc-2025/fc-10-07-25-minutes.pdf",
+      "v": "eKci1jBUpbE"
+    },
+    {
+      "d": "2025-09-16",
+      "a": "fc-2025/fc-09-16-25-agenda.pdf",
+      "m": "fc-2025/fc-09-16-25-minutes.pdf",
+      "v": "exYLQ17dQfU"
+    },
+    {
+      "d": "2025-09-02",
+      "a": "fc-2025/fc-09-02-25-agenda.pdf",
+      "m": "fc-2025/fc-09-02-25-minutes.pdf",
+      "v": "s542xV209rQ"
+    },
+    {
+      "d": "2025-08-19",
+      "a": "fc-2025/fc-08-19-25-agenda.pdf",
+      "m": "fc-2025/fc-08-19-25-minutes.pdf",
+      "v": "wvwBD0T-VfI"
+    },
+    {
+      "d": "2025-08-05",
+      "a": "fc-2025/fc-08-05-25-agenda.pdf",
+      "m": "fc-2025/fc-08-05-25-minutes.pdf",
+      "v": "lQmuF7GyEnM"
+    },
+    {
+      "d": "2025-07-15",
+      "a": "fc-2025/fc-07-15-25-agenda.pdf",
+      "m": "fc-2025/fc-07-15-25-minutes.pdf",
+      "v": "4ij7wNvouXM"
+    },
+    {
+      "d": "2025-07-01",
+      "a": "fc-2025/fc-07-01-25-agenda.pdf",
+      "m": "fc-2025/fc-07-01-25-minutes.pdf",
+      "v": "51EaUg00g-w"
+    },
+    {
+      "d": "2025-06-17",
+      "a": "fc-2025/fc-06-17-25-agenda.pdf",
+      "m": "fc-2025/fc-06-17-25-minutes.pdf",
+      "v": "VzYlg3GtC10"
+    },
+    {
+      "d": "2025-06-03",
+      "a": "fc-2025/fc-06-03-25-agenda.pdf",
+      "m": "fc-2025/fc-06-03-25-minutes.pdf",
+      "v": "cSKhjtvslk8"
+    },
+    {
+      "d": "2025-05-20",
+      "a": "fc-2025/fc-05-20-25-agenda.pdf",
+      "m": "fc-2025/fc-05-20-25-minutes.pdf",
+      "v": "DcYEEsY_64U"
+    },
+    {
+      "d": "2025-05-06",
+      "a": "fc-2025/fc-05-06-25-agenda.pdf",
+      "m": "fc-2025/fc-05-06-25-minutes.pdf",
+      "v": "45I2yk78Vjc"
+    },
+    {
+      "d": "2025-04-15",
+      "a": "fc-2025/fc-04-15-25-agenda.pdf",
+      "m": "fc-2025/fc-04-15-25-minutes.pdf",
+      "v": "O_3N827Pn7A"
+    },
+    {
+      "d": "2025-04-01",
+      "a": "fc-2025/fc-04-01-25-agenda.pdf",
+      "m": "fc-2025/fc-04-01-25-minutes.pdf",
+      "v": "E4r9K8dRAvg"
+    },
+    {
+      "d": "2025-03-18",
+      "a": "fc-2025/fc-03-18-25-agenda.pdf",
+      "m": "fc-2025/fc-03-18-25-minutes.pdf",
+      "v": "4S3x-u5xaWk"
+    },
+    {
+      "d": "2025-03-04",
+      "a": "fc-2025/fc-03-04-25-agenda.pdf",
+      "m": "fc-2025/fc-03-04-25-minutes.pdf",
+      "v": "G5f_2XnFPIw"
+    },
+    {
+      "d": "2025-02-18",
+      "a": "fc-2025/fc-02-18-25-agenda.pdf",
+      "m": "fc-2025/fc-02-18-25-minutes.pdf",
+      "v": "W1dW917nLHY"
+    },
+    {
+      "d": "2025-02-03",
+      "a": "fc-2025/fc-02-03-25-agenda.pdf",
+      "m": "fc-2025/fc-02-03-25-minutes.pdf",
+      "v": "2JTsO70kHrg"
+    },
+    {
+      "d": "2025-01-21",
+      "a": "fc-2025/fc-01-21-25-agenda.pdf",
+      "m": "fc-2025/fc-01-21-25-minutes.pdf",
+      "v": "9UcVqsfMVUA"
+    },
+    {
+      "d": "2025-01-07",
+      "a": "fc-2025/fc-01-07-25-agenda.pdf",
+      "m": "fc-2025/fc-01-21-25-minutes.pdf",
+      "v": "LTLmJGMOm4U",
+      "n": "Minutes filed under 01-21 on the city site"
+    }
+  ],
+  "publicServicesCommittee": [
+    {
+      "d": "2026-10-05",
+      "a": "psc-2026/psc-10-05-26-agenda.pdf",
+      "n": "Upcoming — agenda posted"
+    },
+    {
+      "d": "2026-09-21",
+      "a": "https://www.cheyennecity.org/files/sharedassets/public/v/1/departments/city-council/public-services-committee-agendas/psc-09-21-26-agenda-final.pdf",
+      "m": "psc-2026/psc-09-21-26-minutes.pdf",
+      "v": "BPUJeNwgjoE"
+    },
+    {
+      "d": "2026-09-08",
+      "a": "psc-2026/psc-09-08-26-agenda.pdf",
+      "m": "psc-2026/psc-09-08-26-minutes.pdf",
+      "v": "znfsfJ9O0mo"
+    },
+    {
+      "d": "2026-08-17",
+      "a": "psc-2026/psc-08-17-26-agenda.pdf",
+      "n": "Meeting Cancelled"
+    },
+    {
+      "d": "2026-08-03",
+      "a": "psc-2026/psc-08-03-26-agenda.pdf",
+      "m": "psc-2026/psc-08-03-26-minutes.pdf",
+      "v": "IM0VKGNplhA"
+    },
+    {
+      "d": "2026-07-20",
+      "a": "psc-2026/psc-07-20-26-agenda.pdf",
+      "m": "psc-2026/psc-07-20-26-minutes.pdf",
+      "v": "qayvEfzkIT8"
+    },
+    {
+      "d": "2026-07-06",
+      "a": "psc-2026/psc-07-06-26-agenda.pdf",
+      "m": "psc-2026/psc-07-06-26-minutes.pdf",
+      "v": "7BwdzgyTD2Y"
+    },
+    {
+      "d": "2026-06-15",
+      "a": "psc-2026/psc-06-15-26-agenda.pdf",
+      "m": "psc-2026/psc-06-15-26.pdf",
+      "v": "e8pByyWP7RE",
+      "n": "Minutes filed as psc-06-15-26.pdf"
+    },
+    {
+      "d": "2026-06-01",
+      "a": "psc-2026/psc-06-01-26-agenda.pdf",
+      "m": "psc-2026/psc-06-01-26-minutes.pdf",
+      "v": "AEKufmR2Dc0"
+    },
+    {
+      "d": "2026-05-18",
+      "a": "psc-2026/psc-05-18-26-agenda.pdf",
+      "m": "psc-2026/psc-05-18-26-minutes.pdf",
+      "v": "eyf-DZyuDis"
+    },
+    {
+      "d": "2026-05-04",
+      "a": "psc-2026/psc-05-04-26-agenda.pdf",
+      "m": "psc-2026/psc-05-04-26-minutes.pdf",
+      "v": "gJq4LbGUFfA"
+    },
+    {
+      "d": "2026-04-20",
+      "a": "psc-2026/psc-04-20-26-agenda.pdf",
+      "m": "psc-2026/psc-04-20-26-minutes.pdf",
+      "v": "t17ft4xMMx4"
+    },
+    {
+      "d": "2026-04-06",
+      "a": "psc-2026/psc-04-06-26-agenda.pdf",
+      "m": "psc-2026/psc-04-06-26-minutes.pdf",
+      "v": "-KV5z3Rg8Ss"
+    },
+    {
+      "d": "2026-03-16",
+      "a": "psc-2026/psc-03-16-26-agenda.pdf",
+      "m": "psc-2026/psc-03-16-26-minutes.pdf",
+      "v": "7KLyD7KU1ms"
+    },
+    {
+      "d": "2026-03-02",
+      "a": "psc-2026/psc-03-02-26-agenda.pdf",
+      "m": "psc-2026/psc-03-02-26-minutes.pdf",
+      "v": "o5zAVk1HSh8"
+    },
+    {
+      "d": "2026-02-17",
+      "a": "psc-2026/psc-02-17-26-agenda.pdf",
+      "m": "psc-2026/psc-02-17-26-minutes.pdf",
+      "v": "1maylWhrY2Q"
+    },
+    {
+      "d": "2026-02-02",
+      "a": "psc-2026/psc-02-02-26-agenda-2_1.pdf",
+      "m": "psc-2026/psc-02-03-26-minutes.pdf",
+      "v": "pO5K8gfvy0g",
+      "n": "Minutes filed under 02-03 on the city site"
+    },
+    {
+      "d": "2026-01-20",
+      "a": "psc-2026/psc-01-21-26-agenda.pdf",
+      "m": "psc-2026/psc-01-20-26-minutes.pdf",
+      "v": "PkDZ5ELlJB4",
+      "n": "Agenda filed under 01-21 on the city site"
+    },
+    {
+      "d": "2026-01-05",
+      "a": "psc-2026/psc-01-05-26-agenda.pdf",
+      "m": "psc-2026/psc-01-05-26-minutes.pdf",
+      "v": "ZBXk97c5xDg"
+    },
+    {
+      "d": "2025-12-15",
+      "a": "psc-2025/psc-12-15-25-agenda.pdf",
+      "m": "psc-2025/psc-12-15-25-minutes.pdf",
+      "v": "6ayoeDPoe_w"
+    },
+    {
+      "d": "2025-12-01",
+      "a": "psc-2025/psc-12-01-25-agenda.pdf",
+      "m": "psc-2025/psc-12-01-25-minutes.pdf",
+      "n": "No video available"
+    },
+    {
+      "d": "2025-11-17",
+      "a": "psc-2025/psc-11-17-25-agenda.pdf",
+      "m": "psc-2025/psc-11-17-25-minutes.pdf",
+      "v": "tbfTJyjatfo"
+    },
+    {
+      "d": "2025-11-03",
+      "a": "psc-2025/psc-11-03-25-agenda.pdf",
+      "m": "psc-2025/psc-11-03-25-minutes.pdf",
+      "v": "O5mqVvQvAMU"
+    },
+    {
+      "d": "2025-10-20",
+      "a": "psc-2025/psc-10-20-25-agenda.pdf",
+      "m": "psc-2025/psc-10-20-25-minutes.pdf",
+      "v": "HF3B1FcdQ7k"
+    },
+    {
+      "d": "2025-10-06",
+      "a": "psc-2025/psc-10-06-25-agenda-2.pdf",
+      "m": "psc-2025/psc-10-06-25.pdf",
+      "v": "8EwZb98B5ew",
+      "n": "Minutes filed as psc-10-06-25.pdf"
+    },
+    {
+      "d": "2025-09-15",
+      "a": "https://www.cheyennecity.org/files/sharedassets/public/v/1/departments/city-council/public-services-committee-agendas/psc-09-15-25-agenda.pdf",
+      "m": "https://www.cheyennecity.org/files/sharedassets/public/v/2/departments/city-council/public-services-committee-minutes/psc-09-15-25-minutes.pdf",
+      "v": "VZuH423OxGk"
+    },
+    {
+      "d": "2025-09-02",
+      "a": "psc-2025/psc-09-02-25-agenda.pdf",
+      "m": "psc-2025/psc-09-02-25-minutes.pdf",
+      "v": "ykNS-A5o0RQ"
+    },
+    {
+      "d": "2025-08-18",
+      "a": "psc-2025/psc-08-18-25-agenda.pdf",
+      "m": "psc-2025/psc-08-18-25-minutes.pdf",
+      "v": "g0c9UyE3bMc"
+    },
+    {
+      "d": "2025-08-04",
+      "a": "psc-2025/psc-08-04-25-agenda.pdf",
+      "m": "psc-2025/psc-08-04-25-minutes.pdf",
+      "v": "P82qCf5cnQ4"
+    },
+    {
+      "d": "2025-07-21",
+      "a": "psc-2025/psc-07-21-25-agenda.pdf",
+      "m": "psc-2025/psc-07-21-25-minutes.pdf",
+      "v": "RI841wyuoGM"
+    },
+    {
+      "d": "2025-07-07",
+      "a": "psc-2025/psc-07-07-25-agenda.pdf",
+      "m": "psc-2025/psc-07-07-25-minutes.pdf",
+      "v": "79PFRpvSMbM",
+      "n": "Agenda filed under fc-2025 folder on the city site"
+    },
+    {
+      "d": "2025-06-16",
+      "a": "psc-2025/psc-06-16-25-agenda-2.pdf",
+      "m": "psc-2025/psc-06-16-25-minutes.pdf",
+      "v": "bP2CUf04Uyk"
+    },
+    {
+      "d": "2025-06-02",
+      "a": "psc-2025/psc-06-02-25-agenda.pdf",
+      "m": "psc-2025/psc-06-02-25-minutes.pdf",
+      "v": "YfkoNpbwzvs"
+    },
+    {
+      "d": "2025-05-19",
+      "a": "psc-2025/psc-05-19-25-agenda-2.pdf",
+      "m": "psc-2025/psc-05-19-25-minutes.pdf",
+      "v": "CfMSzx4QEaY"
+    },
+    {
+      "d": "2025-05-05",
+      "a": "psc-2025/psc-05-05-25-agenda.pdf",
+      "m": "psc-2025/psc-05-05-25-minutes-2.pdf",
+      "v": "dbYPffuS-k0"
+    },
+    {
+      "d": "2025-04-21",
+      "a": "psc-2025/psc-04-21-25-agenda.pdf",
+      "m": "psc-2025/psc-04-21-25-minutes.pdf",
+      "v": "pYcU6p42nyA"
+    },
+    {
+      "d": "2025-04-07",
+      "a": "psc-2025/psc-04-07-25-agenda.pdf",
+      "m": "psc-2025/psc-04-07-25-minutes.pdf",
+      "v": "BwEdGK5GJFE"
+    },
+    {
+      "d": "2025-03-17",
+      "a": "psc-2025/psc-03-17-25-agenda.pdf",
+      "m": "psc-2025/psc-03-17-25-minutes.pdf",
+      "v": "UJbnEpy2G5c"
+    },
+    {
+      "d": "2025-03-03",
+      "a": "psc-2025/psc-03-03-25-agenda.pdf",
+      "m": "psc-2025/psc-03-03-25-minutes.pdf",
+      "v": "hNYoYUc2LOA"
+    },
+    {
+      "d": "2025-02-18",
+      "a": "psc-2025/psc-02-18-25-agenda.pdf",
+      "m": "psc-2025/psc-02-18-25-minutes.pdf",
+      "v": "7XVTM03ENzs"
+    },
+    {
+      "d": "2025-02-03",
+      "a": "psc-2025/psc-02-03-25-agenda.pdf",
+      "m": "psc-2025/psc-02-03-25-minutes.pdf",
+      "v": "yJP9A7a0OQA"
+    },
+    {
+      "d": "2025-01-21",
+      "a": "psc-2025/psc-01-21-25-agenda.pdf",
+      "m": "psc-2025/psc-01-21-25-minutes.pdf",
+      "v": "tNKcKJXRpw8"
+    },
+    {
+      "d": "2025-01-06",
+      "a": "psc-2025/psc-01-06-25-agenda.pdf",
+      "m": "psc-2025/psc-01-06-25-minutes.pdf"
+    }
+  ]
+}
