@@ -66,6 +66,25 @@ Every record shown by the site is drawn from these GitHub repositories
 * **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
   be verified against the official meeting video.
 
+## Search indexing
+
+The site publishes canonical URLs, descriptive search/social metadata, a square Civic Cheyenne
+favicon, and truthful `WebSite` structured data from `src/app/layout.tsx`. In addition to the
+interactive application, `/meetings/` is a crawlable archive directory and `/meetings/<meeting-id>/`
+contains a statically rendered page for **every indexed meeting**. The `/transcripts/` directory
+indexes all timestamped transcript files and preserved transcript variants. The sitemap at
+`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, both directories,
+and all meeting pages. Each meeting page links to its official records, all 2,685 associated archive
+documents, and every attached transcript without inventing actions or outcomes. Submit the sitemap
+in Google Search Console after deployment. Index/follow directives are emitted in page metadata. A
+project-scoped `robots.txt` is intentionally omitted: on GitHub Pages, `robots.txt` is scoped to the
+shared host root, which this repository cannot control. The Google HTML-file ownership check is
+served from `public/googlee2d9fc23b9d6b0f7.html`.
+
+Search Console verification establishes site ownership but does not guarantee indexing. After
+verification, submit the sitemap, inspect the archive and key meeting URLs, and use **Request
+indexing** for priority pages if appropriate.
+
 ## Development
 
 ```bash

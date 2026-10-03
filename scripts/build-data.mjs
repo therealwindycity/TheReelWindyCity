@@ -215,8 +215,13 @@ function collectMeetings() {
         const meeting = ensure(transcript[1], transcript[2]);
         const candidate = { repo, path: entry.path };
         // Prefer the explicitly cleaned copy when both transcript variants exist.
+        meeting.transcripts ||= [];
+        if (!meeting.transcripts.some((item) => item.repo === repo && item.path === entry.path)) {
+          meeting.transcripts.push(candidate);
+          transcriptCount += 1;
+        }
+        // Keep the explicitly cleaned copy as the primary transcript when variants coexist.
         if (!meeting.transcript || entry.path.endsWith(".clean.md")) meeting.transcript = candidate;
-        transcriptCount += 1;
         continue;
       }
 
