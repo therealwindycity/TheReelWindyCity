@@ -23,8 +23,9 @@ jobs:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
       - name: Install Playwright browser
         run: npx playwright install --with-deps chromium
-      - name: Serve and run browser smoke tests
+      - name: Serve and run browser smoke tests (GitHub Pages path)
         run: |
-          PORT=3000 node scripts/serve.mjs out &
-          for i in $(seq 1 30); do curl -sf http://127.0.0.1:3000/ >/dev/null && break; sleep 1; done
-          npm run test:e2e
+          mkdir -p /tmp/pages && ln -s "$PWD/out" "/tmp/pages/${{ github.event.repository.name }}"
+          PORT=3000 node scripts/serve.mjs /tmp/pages &
+          for i in $(seq 1 30); do curl -sf "http://127.0.0.1:3000/${{ github.event.repository.name }}/" >/dev/null && break; sleep 1; done
+          BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:e2e
