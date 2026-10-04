@@ -17,6 +17,8 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Sync pipeline tests (red-team regression suite)
+        run: npm run test:sync
       - name: Build static site
         run: npm run build
         env:

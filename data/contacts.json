@@ -1,0 +1,10 @@
+{
+  "_readme": [
+    "Recipient for machine-drafted citizen objection emails (scripts/actions/draft_objection.mjs).",
+    "The project deliberately ships this as null: we do not publish unverified municipal addresses.",
+    "Set defaultRecipient to an address you have verified on cheyennecity.org (e.g. the City Clerk's",
+    "office or the committee's published contact), or pass --to explicitly. Until then the sync",
+    "pipeline succeeds and simply skips draft generation with a warning."
+  ],
+  "defaultRecipient": null
+}

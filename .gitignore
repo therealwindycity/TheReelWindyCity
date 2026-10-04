@@ -15,6 +15,7 @@ src/data/meetings.json
 public/data/meetings.json
 
 # scratch
+.sync/
 image-search/
 *.log
 .DS_Store

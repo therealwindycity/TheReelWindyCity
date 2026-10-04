@@ -66,6 +66,28 @@ Every record shown by the site is drawn from these GitHub repositories
 * **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
   be verified against the official meeting video.
 
+## Live municipal sync pipeline
+
+A red-teamed, fail-closed pipeline watches for newly posted agendas and prepares analysis and
+citizen-action drafts — without ever letting a bad run touch the deployed site:
+
+* **Watch** (`.github/workflows/live_city_watch.yml`, hourly): parses the city's Granicus
+  "Upcoming Events" table into semantic records and hashes the **canonical content** — session ids,
+  nonces and tracking parameters are invisible by design, so a churning DOM cannot spam builds.
+  A broken fetch fails closed instead of reading as "no changes".
+* **Sync** (`.github/workflows/live_city_sync.yml`): on a real change (or an external
+  `repository_dispatch`), extracts the agenda PDF with a **layout-aware engine** (columns stay
+  columns; scanned/password-protected/corrupt uploads fail with typed errors and write nothing),
+  runs an **evidence-cited red-team analysis** (deterministic rules by default; an optional LLM
+  pass is quarantined behind the same verbatim-quote gate), generates **mailto-only** objection
+  drafts (no portal automation, no guessed addresses), and commits to `data/meetings/` only after a
+  structural validator confirms every artifact — all under a single-flight concurrency group.
+
+Pipeline artifacts live under `data/` and are never read by the site build, so the public site
+cannot break from a sync. Promoting agenda data into the curated snapshot stays a human-reviewed
+step. Full finding-by-finding design notes: [`docs/live-sync-architecture.md`](docs/live-sync-architecture.md).
+Regression suite: `npm run test:sync` (runs in CI).
+
 ## Search indexing
 
 The site publishes canonical URLs, descriptive search/social metadata, a square Civic Cheyenne
