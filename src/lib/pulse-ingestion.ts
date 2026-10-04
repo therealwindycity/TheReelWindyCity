@@ -39,17 +39,6 @@ export interface IngestionResult {
   errors: string[];
 }
 
-// ─── NWS Wyoming Zones ───────────────────────────────────
-
-const NWS_WY_ZONES = [
-  'WYZ001','WYZ002','WYZ003','WYZ004','WYZ005',
-  'WYZ006','WYZ007','WYZ008','WYZ009','WYZ010',
-  'WYZ011','WYZ012','WYZ013','WYZ014','WYZ015',
-  'WYZ016','WYZ017','WYZ018','WYZ019','WYZ020',
-  'WYZ021','WYZ022','WYZ023','WYZ024','WYZ025',
-  'WYZ026','WYZ027',
-];
-
 const SEVERITY_MAP: Record<string, AlertSeverity> = {
   'Extreme': 'critical',
   'Severe': 'urgent',
@@ -79,8 +68,9 @@ const EVENT_CATEGORY_MAP: Record<string, AlertCategory> = {
 
 async function fetchNWSAlerts(): Promise<PulseAlert[]> {
   try {
-    const zoneParams = NWS_WY_ZONES.map(z => `zone=${z}`).join('&');
-    const resp = await fetch(`https://api.weather.gov/alerts/active?${zoneParams}`, {
+    // Query the Wyoming state area instead of a stale, hand-picked set of
+    // forecast zones so active county and zone alerts are covered statewide.
+    const resp = await fetch('https://api.weather.gov/alerts/active?area=WY', {
       headers: { 'User-Agent': '(CivicCheyenne, civic-cheyenne@example.com)' },
     });
     if (!resp.ok) return [];
