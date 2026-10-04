@@ -166,6 +166,17 @@ try {
   await expect(page.locator('.tracker-row')).toContainText('Postponed to Feb 9');
   console.log('PASS: interactive map, before/if-enacted comparison, verified ordinance statuses');
 
+  await page.getByRole('button', { name: 'Live alerts', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'PULSE', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Cheyenne & Wyoming Live Scanner Console/ })).toBeVisible();
+  await expect(page.locator('.pulse-scanner-tuner')).toContainText('Laramie County Law Enforcement');
+  await page.getByRole('button', { name: /Cheyenne Talkgroups/ }).click();
+  await expect(page.locator('.pulse-talkgroup-panel')).toContainText('02-LE 1 DSP');
+  await expect(page.locator('.pulse-talkgroup-panel')).toContainText('02-CFR 1');
+  await page.getByRole('button', { name: /Cheyenne \/ Laramie Co\./ }).click();
+  await expect(page.locator('.pulse-alert-list .broadcast-alert').first()).toBeVisible();
+  console.log('PASS: Cheyenne & Wyoming Live Scanner Console, WyoLink P25 talkgroups, and live alerts feed');
+
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
   await page.locator('.session-date-select').click();
   await expect(page.locator('.featured-meeting').first()).toContainText('Public Services Committee');
