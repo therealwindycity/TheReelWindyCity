@@ -1,0 +1,132 @@
+name: Live Municipal Sync
+
+# =============================================================================
+# Phase 2 pipeline: agenda PDF → layout-aware extraction → evidence-cited
+# red-team analysis → objection drafts → validate → commit.
+#
+# Red-team fixes baked into this file (full map in docs/live-sync-architecture.md):
+#   OM1#1  concurrency group "municipal-data-sync" with cancel-in-progress: false —
+#          every run in the group is serialized, so two runners can never clone,
+#          commit and push main concurrently. Queued, never cancelled, never racing.
+#   OM1#1b pipeline artifacts land in data/ (NOT src/data/) — the site build never
+#          reads them, so a bad sync cannot break the deployed site.
+#   OM3#1  payload paths are FLAT: github.event.client_payload.pdf_source_url
+#          (the old client_payload.payload.* nesting is tolerated once, with a
+#          deprecation warning, then removed).
+#   OM3#2  strict step ordering with fail-fast semantics: normalize → extract →
+#          analyze → draft → VALIDATE → only then any git command. A failed or
+#          empty extraction stops the job before anything reaches main.
+#   +      Expression-injection hardening: every client_payload value enters the
+#          scripts through env: — never interpolated inside run: — so a hostile
+#          dispatcher cannot execute shell code.
+#
+# Triggers:
+#   repository_dispatch  — external watchers (Lambda etc.). NOTE: events created
+#                          with the default GITHUB_TOKEN do NOT start workflows
+#                          (GitHub's recursion guard); external dispatchers must
+#                          use a PAT or GitHub App token with "contents:read".
+#   workflow_call        — the in-repo scheduled watcher (live_city_watch.yml).
+# =============================================================================
+
+on:
+  repository_dispatch:
+    types: [MUNICIPAL_AGENDA_ALTERATION]
+  workflow_call:
+    inputs:
+      pdf_source_urls:
+        description: "Agenda URLs (PDF or Granicus AgendaViewer), newline- or comma-separated"
+        required: true
+        type: string
+      meeting_ids:
+        description: "Optional meeting ids matching the urls, comma-separated"
+        required: false
+        type: string
+        default: ""
+      reason:
+        description: "Why this sync is running (audit trail)"
+        required: false
+        type: string
+        default: "workflow-call"
+
+permissions:
+  contents: write # required for the guarded push to main; nothing broader
+
+# OM1#1: one municipal write lane. The watch workflow shares this exact group, so
+# scheduled, dispatched and manual runs can never overlap on a push to main.
+concurrency:
+  group: municipal-data-sync
+  cancel-in-progress: false
+
+jobs:
+  sync_and_rebuild:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # OM3#1 fixed payload mapping — flat client_payload keys. Values flow into
+      # scripts via environment only (injection-safe), never inline in run:.
+      PDF_SOURCE_URL: ${{ github.event.client_payload.pdf_source_url }}
+      PDF_SOURCE_URLS: ${{ github.event.client_payload.pdf_source_urls || inputs.pdf_source_urls }}
+      LEGACY_NESTED_URL: ${{ github.event.client_payload.payload.pdf_source_url }}
+      MEETING_IDS: ${{ github.event.client_payload.meeting_ids || github.event.client_payload.meeting_id || inputs.meeting_ids }}
+      ITEM_ID: ${{ github.event.client_payload.item_id }}
+      SYNC_REASON: ${{ github.event.client_payload.reason || inputs.reason }}
+    steps:
+      - name: Clone source code ecosystem
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js runtime environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install verified dependencies
+        run: npm ci
+
+      - name: Normalize dispatch payload (OM3#1 — fail fast on a malformed contract)
+        run: node scripts/sync/build-plan.mjs
+
+      - name: Execute extraction (layout-aware, OM2#1 — columns, no silent empties)
+        run: node scripts/extractors/parse_agenda_pdf.mjs --plan .sync/plan.json
+
+      - name: Run red-team analysis (evidence-cited; LLM only when a key is present)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+        run: node scripts/analysis/red_team_analyzer.mjs --plan .sync/plan.json --llm
+
+      - name: Draft citizen objections (mailto only — OM2#2, never auto-submit)
+        env:
+          OBJECTION_RECIPIENT: ${{ secrets.OBJECTION_RECIPIENT }}
+        run: node scripts/actions/draft_objection.mjs --plan .sync/plan.json --to "$OBJECTION_RECIPIENT"
+
+      - name: Validate outputs before any git write (OM3#2 — structural soundness + evidence gate)
+        run: node scripts/lib/validate.mjs --plan .sync/plan.json
+
+      - name: Refresh watch baseline (idempotent, self-healing)
+        # Best effort: if Granicus is unreachable here the stale baseline simply
+        # re-fires the next watch run, which re-runs this pipeline and commits
+        # nothing when the data is unchanged. No infinite loop, no lost state.
+        run: node scripts/monitor/upcoming-meetings.mjs --check --update-state || echo "::warning::baseline refresh failed; next watch run will re-fire (harmless)"
+
+      - name: Commit structural diff & push to production (guarded)
+        # Runs only if EVERY previous step succeeded (implicit success()
+        # condition) — the error-cascade fix. The diff guard means unchanged
+        # data never produces an empty commit.
+        run: |
+          git config user.name "CivicCheyenne-SyncBot"
+          git config user.email "sync@civiccheyenne.local"
+          git add data/
+
+          if git diff --cached --quiet; then
+            echo "No structural variations detected. Skipping deployment loop."
+          else
+            git commit -m "Auto-Sync: municipal agenda data for ${SYNC_REASON} ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+            # Belt-and-braces: the concurrency group already serializes runs, but a
+            # human push landing between clone and commit still rebases cleanly here.
+            git pull --rebase origin main
+            git push origin main
+          fi

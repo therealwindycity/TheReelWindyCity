@@ -17,8 +17,14 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Sync pipeline tests (red-team regression suite)
+        run: npm run test:sync
       - name: Build static site
         run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - name: Audit the exported SEO surface (every meeting page, sitemap, canonicals)
+        run: npm run test:seo
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
       - name: Install Playwright browser
