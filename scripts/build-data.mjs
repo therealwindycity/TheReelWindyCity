@@ -20,6 +20,7 @@
  *   src/data/official-sources.json       manifest of locally bundled official documents
  *   src/data/meetings.json               unified index generated from archive snapshots
  *   public/data/meetings.json            copy of the index for the static website
+ *   public/data/transcript-vectors.json  compiled semantic-search corpus (from src/data, if present)
  */
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -352,6 +353,10 @@ function assemble() {
   const meetingsJson = JSON.stringify(meetingIndex, null, 2) + "\n";
   writeFileSync(path.join(SRC_DATA, "meetings.json"), meetingsJson);
   writeFileSync(path.join(PUBLIC_DATA, "meetings.json"), meetingsJson);
+
+  // 5. Precomputed semantic-search index (compiled by scripts/embed-transcripts.mjs).
+  const vectors = path.join(SRC_DATA, "transcript-vectors.json");
+  if (existsSync(vectors)) copyFileSync(vectors, path.join(PUBLIC_DATA, "transcript-vectors.json"));
 
   const files = readdirSync(PUBLIC_DATA);
   console.log(

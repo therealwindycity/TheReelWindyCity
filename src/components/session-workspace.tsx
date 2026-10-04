@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronRight, FileText, Home, Landmark, Layers, LoaderCircle, Map, MapPin, MessageSquareText, Play, ShieldCheck, Trees, Video, AlertCircle, Lightbulb, ArrowLeft } from "lucide-react";
 import ImpactMap from "./impact-map";
+import { SmartCivicSearch } from "./smart-civic-search";
 import { type SourceDocument } from "./source-library";
 import { DEFAULT_MEETING_ID, GUIDED_MEETING_ID, MEETING, MEETINGS, NEXT_MEETING, ORDINANCES, TRANSCRIPT_REPO, UPCOMING_MEETINGS, asset, githubUrl, meetingGroupLabel, officialSourcePath, rawUrl, readableName, type CivicProgress, type Meeting, type Ordinance } from "@/lib/civic-data";
 import { sourceContentUrl } from "@/lib/source-content";
@@ -305,6 +306,7 @@ export default function SessionWorkspace({ meetingId = DEFAULT_MEETING_ID, onSel
   return (
     <>
       {onSelectMeeting && <MeetingSwitcher currentId={meeting.id} onSelect={onSelectMeeting}/>}
+      <SmartCivicSearch compact onOpenSource={onOpen} onOpenMeeting={onSelectMeeting} onOpenOrdinance={onSelect} />
       {meeting.id === GUIDED_MEETING_ID
         ? <GuidedSession selected={selected} progress={progress} onSelect={onSelect} onOpen={onOpen} onSave={onSave} onMap={onMap} onBack={onBack}/>
         : <MeetingBrowser key={meeting.id} meeting={meeting} onOpen={onOpen} onBack={onBack}/>}
