@@ -70,6 +70,28 @@ Every record shown by the site is drawn from these GitHub repositories
   plus timestamped caption chunks, ordinances, and recent meetings into `src/data/transcript-vectors.json`
   so the browser only embeds the query. No API keys, no server embeddings.
 
+## Live municipal sync pipeline
+
+A red-teamed, fail-closed pipeline watches for newly posted agendas and prepares analysis and
+citizen-action drafts — without ever letting a bad run touch the deployed site:
+
+* **Watch** (`.github/workflows/live_city_watch.yml`, hourly): parses the city's Granicus
+  "Upcoming Events" table into semantic records and hashes the **canonical content** — session ids,
+  nonces and tracking parameters are invisible by design, so a churning DOM cannot spam builds.
+  A broken fetch fails closed instead of reading as "no changes".
+* **Sync** (`.github/workflows/live_city_sync.yml`): on a real change (or an external
+  `repository_dispatch`), extracts the agenda PDF with a **layout-aware engine** (columns stay
+  columns; scanned/password-protected/corrupt uploads fail with typed errors and write nothing),
+  runs an **evidence-cited red-team analysis** (deterministic rules by default; an optional LLM
+  pass is quarantined behind the same verbatim-quote gate), generates **mailto-only** objection
+  drafts (no portal automation, no guessed addresses), and commits to `data/meetings/` only after a
+  structural validator confirms every artifact — all under a single-flight concurrency group.
+
+Pipeline artifacts live under `data/` and are never read by the site build, so the public site
+cannot break from a sync. Promoting agenda data into the curated snapshot stays a human-reviewed
+step. Full finding-by-finding design notes: [`docs/live-sync-architecture.md`](docs/live-sync-architecture.md).
+Regression suite: `npm run test:sync` (runs in CI).
+
 ## Search indexing
 
 The site publishes canonical URLs, descriptive search/social metadata, a square Civic Cheyenne
@@ -79,7 +101,16 @@ contains a statically rendered page for **every indexed meeting**. The `/transcr
 indexes all timestamped transcript files and preserved transcript variants. The sitemap at
 `https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, both directories,
 and all meeting pages. Each meeting page links to its official records, all 2,685 associated archive
-documents, and every attached transcript without inventing actions or outcomes. Submit the sitemap
+documents, and every attached transcript without inventing actions or outcomes. Every sitemap entry
+carries a `<lastmod>` set to the archive snapshot date (`captured` in `src/data/meetings.json`), not to
+build time — Google discounts a lastmod that is simply "now" on each deploy — with `daily` change
+frequency for still-changing posted agendas and `yearly` for settled historical records.
+
+The interactive app is the same document for every meeting, so it does not mint a URL per record. The
+"Open this meeting in Civic Cheyenne" links on each record page use `/?meeting=<meeting-id>`; while a
+meeting is selected the app rewrites its canonical link to that meeting's `/meetings/<id>/` page, so the
+parameterized deep link consolidates onto the crawlable record page instead of competing with the
+homepage. Submit the sitemap
 in Google Search Console after deployment. Index/follow directives are emitted in page metadata. A
 project-scoped `robots.txt` is intentionally omitted: on GitHub Pages, `robots.txt` is scoped to the
 shared host root, which this repository cannot control. The Google HTML-file ownership check is
@@ -87,7 +118,20 @@ served from `public/googlee2d9fc23b9d6b0f7.html`.
 
 Search Console verification establishes site ownership but does not guarantee indexing. After
 verification, submit the sitemap, inspect the archive and key meeting URLs, and use **Request
-indexing** for priority pages if appropriate.
+indexing** for priority pages if appropriate. Indexing is not the same as ranking: a page can be
+crawled and still reported as *Crawled — currently not indexed* when Google judges it thin or
+duplicative, so the audit below checks that every exported record page carries real content.
+
+`npm run test:seo` audits the whole exported surface after `npm run build` (and runs in CI on every
+push): that every meeting in the index has a static page with a unique title and canonical URL under
+the project path, valid `WebPage`/`BreadcrumbList` structured data, a linked source document for every
+document in the index, a link from the `/meetings/` archive, and a sitemap entry with an honest
+lastmod. Run it locally with the same base path as the deployment:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/TheReelWindyCity npm run build
+npm run test:seo
+```
 
 ## Development
 
@@ -108,6 +152,7 @@ npm run data:assemble  # rebuild public/data from src/data snapshots
 npm run data:embed     # compile transcript-tree.json into MiniLM vectors (GitHub ONNX mirror, HF fallback)
 npm run test:vectors   # schema + citation checks on the compiled semantic index
 npm run test:e2e       # Playwright smoke tests (start the site first; see below)
+npm run test:seo       # audit the exported out/ surface (run after npm run build)
 ```
 
 Smoke tests expect the site at `http://127.0.0.1:3000` (override with `BASE_URL`):

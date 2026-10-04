@@ -10,8 +10,39 @@ import PulseBroadcast from "./pulse-broadcast";
 import { SmartCivicSearch } from "./smart-civic-search";
 import { ARCHIVE_OWNER, ARCHIVE_REPO, DEFAULT_MEETING_ID, GUIDED_MEETING_ID, MEETING, MEETINGS, MEETING_STATS, NEXT_MEETING, ORDINANCES, UPCOMING_MEETINGS, asset, readableName, type SourceFile, type CivicProgress, type Bookmark as SavedBookmark, type Meeting, type Ordinance } from "@/lib/civic-data";
 import { loadNotebook, saveProgress as persistProgress, toggleBookmark as persistBookmark } from "@/lib/notebook";
+import { SITE_URL, siteUrl } from "@/lib/site-config";
 
 type View = "overview" | "alerts" | "sessions" | "impacts" | "ordinances" | "sources" | "notebook" | "search";
+
+/** Canonical URL this view declares; kept in sync across every canonical tag. */
+let desiredCanonical = SITE_URL;
+
+/**
+ * Write the desired canonical URL onto every `link[rel=canonical]` in the head.
+ *
+ * A statically exported Next app can end up with two of them: the head from the
+ * exported HTML plus a copy the client runtime re-applies from the layout
+ * metadata after hydration. Two tags carrying different URLs tell a crawler
+ * nothing, so every copy is pinned to the same value.
+ */
+function applyCanonical() {
+  for (const link of window.document.querySelectorAll<HTMLLinkElement>('link[rel="canonical"]')) {
+    if (link.getAttribute("href") !== desiredCanonical) link.setAttribute("href", desiredCanonical);
+  }
+}
+
+/**
+ * Point the canonical URL at the meeting's own statically rendered record page
+ * while the app is showing that meeting, so the parameterized deep link
+ * (`/?meeting=<id>`) consolidates onto `/meetings/<id>/` instead of competing
+ * with the homepage for the same records. Falls back to the site root when no
+ * meeting is selected, so every other view keeps its existing canonical.
+ */
+function syncCanonical(meetingId: string | null) {
+  const known = meetingId !== null && MEETINGS.some((meeting) => meeting.id === meetingId);
+  desiredCanonical = known ? siteUrl(`meetings/${meetingId}/`) : SITE_URL;
+  applyCanonical();
+}
 const NAV = [{ id: "overview" as View, label: "Overview", icon: LayoutGrid }, { id: "search" as View, label: "Ask the record", icon: Search }, { id: "alerts" as View, label: "Live alerts", icon: Zap }, { id: "sessions" as View, label: "Meetings & agendas", icon: Landmark }, { id: "impacts" as View, label: "City impact map", icon: Map }, { id: "ordinances" as View, label: "Ordinance tracker", icon: ClipboardList }, { id: "sources" as View, label: "Source library", icon: FolderOpen }];
 
 export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: SourceFile[]; sourceSha: string }) {
@@ -77,18 +108,31 @@ export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: So
       if (linkedMeeting && MEETINGS.some((meeting) => meeting.id === linkedMeeting)) {
         setMeetingId(linkedMeeting);
         setView("sessions");
+        syncCanonical(linkedMeeting);
         return;
       }
+      syncCanonical(null);
       const v = window.location.hash.slice(1);
       if ([...NAV.map((n) => n.id), "notebook", "search"].includes(v as View)) setView(v as View);
       if (v === "alerts") setView("alerts");
     }
     restoreView(); window.addEventListener("popstate", restoreView);
-    return () => window.removeEventListener("popstate", restoreView);
+    // The client runtime can re-apply the layout's canonical tag after hydration;
+    // re-pin every copy to the URL this view declares so the page never publishes
+    // two competing canonicals.
+    const observer = new MutationObserver(applyCanonical);
+    observer.observe(window.document.head, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] });
+    return () => { window.removeEventListener("popstate", restoreView); observer.disconnect(); };
   }, []);
-  function navigate(next: View) { setView(next); setMobileNav(false); window.history.pushState(null,"",`#${next}`); window.scrollTo({ top: 0, behavior: "smooth" }); }
+  function navigate(next: View, meeting: string | null = null) {
+    setView(next); setMobileNav(false);
+    const query = meeting ? `?meeting=${encodeURIComponent(meeting)}` : "";
+    window.history.pushState(null, "", `${window.location.pathname}${query}#${next}`);
+    syncCanonical(meeting);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
   function startSession(id = ORDINANCES[0].id) { setSelectedId(id); setMeetingId(GUIDED_MEETING_ID); navigate("sessions"); }
-  function openMeeting(id: string) { setMeetingId(id); navigate("sessions"); }
+  function openMeeting(id: string) { setMeetingId(id); navigate("sessions", id); }
   function openImpact(id: string) { setSelectedId(id); navigate("impacts"); }
   function openLibrary(query = "") { setSourceQuery(query); navigate("sources"); }
   async function saveProgress(ordinanceId: string, stage: string, position: string | null, reflection: string) {

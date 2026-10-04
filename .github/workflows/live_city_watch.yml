@@ -1,0 +1,80 @@
+name: Live Municipal Watch
+
+# =============================================================================
+# Phase 1: the scheduled watcher that replaced the Lambda + DOM-hash design.
+#
+# Red-team fixes baked into this file:
+#   OM1#2  it never hashes markup. scripts/monitor/upcoming-meetings.mjs parses
+#          the Granicus upcoming table into semantic records, normalizes them and
+#          hashes the canonical JSON — session ids, nonces and tracking params are
+#          invisible to the detector, so a churning DOM cannot spam the pipeline.
+#   OM1#1  it shares the "municipal-data-sync" concurrency group with the sync
+#          workflow: detection and data writes are serialized end to end, and no
+#          queued run is ever cancelled.
+#   OM3#2  a failed fetch/parse fails CLOSED (job goes red, no sync is invoked) —
+#          a broken watcher can never masquerade as "no changes".
+#
+# Why workflow_call instead of the sync workflow firing repository_dispatch:
+# events created with the default GITHUB_TOKEN do not start workflows (GitHub's
+# recursion guard), so an in-repo dispatcher would silently do nothing. The watch
+# job invokes the reusable sync workflow directly instead.
+#
+# Cadence: hourly at :23 (off the top of the hour to be polite to the portal).
+# One run performs exactly one fetch; a detected change triggers exactly one
+# serialized sync.
+# =============================================================================
+
+on:
+  schedule:
+    - cron: "23 * * * *"
+  workflow_dispatch: {}
+
+permissions:
+  # The watch job itself never writes. This scope exists because the reusable
+  # sync workflow invoked below pushes the validated data commit, and a called
+  # workflow cannot exceed the caller's grant.
+  contents: write
+
+concurrency:
+  group: municipal-data-sync # shared with live_city_sync.yml — one write lane
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      changed: ${{ steps.result.outputs.changed }}
+      urls: ${{ steps.result.outputs.urls }}
+      ids: ${{ steps.result.outputs.ids }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Detect semantic changes in the upcoming-meetings table (OM1#2)
+        run: node scripts/monitor/upcoming-meetings.mjs --check --state data/sync-state.json --out .sync/watch.json
+
+      - name: Publish watch outputs
+        id: result
+        run: |
+          {
+            echo "changed=$(jq -r '.changed' .sync/watch.json)"
+            echo "urls=$(jq -r '[.changedMeetings[].agendaUrl | select(length > 0)] | join(",")' .sync/watch.json)"
+            echo "ids=$(jq -r '[.changedMeetings[] | (.body + "-" + .date)] | join(",")' .sync/watch.json)"
+          } >> "$GITHUB_OUTPUT"
+
+  sync:
+    needs: watch
+    if: needs.watch.outputs.changed == 'true' && needs.watch.outputs.urls != ''
+    uses: ./.github/workflows/live_city_sync.yml
+    with:
+      pdf_source_urls: ${{ needs.watch.outputs.urls }}
+      meeting_ids: ${{ needs.watch.outputs.ids }}
+      reason: scheduled-watch
+    secrets: inherit
