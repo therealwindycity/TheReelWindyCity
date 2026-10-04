@@ -105,7 +105,8 @@ npm run typecheck      # TypeScript
 npm run lint           # ESLint
 npm run data:refresh   # re-pull repository indexes from GitHub
 npm run data:assemble  # rebuild public/data from src/data snapshots
-npm run data:embed     # compile transcript-tree.json into MiniLM vectors (Hugging Face model cache)
+npm run data:embed     # compile transcript-tree.json into MiniLM vectors (GitHub ONNX mirror, HF fallback)
+npm run test:vectors   # schema + citation checks on the compiled semantic index
 npm run test:e2e       # Playwright smoke tests (start the site first; see below)
 ```
 

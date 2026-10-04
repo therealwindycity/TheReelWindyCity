@@ -13,6 +13,7 @@
     "data:assemble": "node scripts/build-data.mjs",
     "data:refresh": "node scripts/build-data.mjs --refresh",
     "data:embed": "node scripts/embed-transcripts.mjs",
+    "test:vectors": "node tests/vector-search.mjs",
     "test:e2e": "node tests/civic-smoke.mjs"
   },
   "dependencies": {
