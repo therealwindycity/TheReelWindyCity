@@ -18,3 +18,4 @@ public/data/meetings.json
 image-search/
 *.log
 .DS_Store
+.cache/

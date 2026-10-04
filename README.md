@@ -65,6 +65,10 @@ Every record shown by the site is drawn from these GitHub repositories
   January 26, 2026, and the Chapter 1.28 administrative-inspection-warrants policy brief.
 * **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
   be verified against the official meeting video.
+* **Client-side semantic search** (`src/lib/vectorSearch.ts`) runs MiniLM (`Xenova/all-MiniLM-L6-v2`)
+  entirely in the browser via WebAssembly. `scripts/embed-transcripts.mjs` compiles `transcript-tree.json`
+  plus timestamped caption chunks, ordinances, and recent meetings into `src/data/transcript-vectors.json`
+  so the browser only embeds the query. No API keys, no server embeddings.
 
 ## Search indexing
 
@@ -101,6 +105,7 @@ npm run typecheck      # TypeScript
 npm run lint           # ESLint
 npm run data:refresh   # re-pull repository indexes from GitHub
 npm run data:assemble  # rebuild public/data from src/data snapshots
+npm run data:embed     # compile transcript-tree.json into MiniLM vectors (Hugging Face model cache)
 npm run test:e2e       # Playwright smoke tests (start the site first; see below)
 ```
 
