@@ -12,6 +12,23 @@ import { SITE_URL, siteUrl } from "@/lib/site-config";
 
 type View = "overview" | "sessions" | "impacts" | "ordinances" | "sources" | "notebook";
 
+/** Canonical URL this view declares; kept in sync across every canonical tag. */
+let desiredCanonical = SITE_URL;
+
+/**
+ * Write the desired canonical URL onto every `link[rel=canonical]` in the head.
+ *
+ * A statically exported Next app can end up with two of them: the head from the
+ * exported HTML plus a copy the client runtime re-applies from the layout
+ * metadata after hydration. Two tags carrying different URLs tell a crawler
+ * nothing, so every copy is pinned to the same value.
+ */
+function applyCanonical() {
+  for (const link of window.document.querySelectorAll<HTMLLinkElement>('link[rel="canonical"]')) {
+    if (link.getAttribute("href") !== desiredCanonical) link.setAttribute("href", desiredCanonical);
+  }
+}
+
 /**
  * Point the canonical URL at the meeting's own statically rendered record page
  * while the app is showing that meeting, so the parameterized deep link
@@ -20,10 +37,9 @@ type View = "overview" | "sessions" | "impacts" | "ordinances" | "sources" | "no
  * meeting is selected, so every other view keeps its existing canonical.
  */
 function syncCanonical(meetingId: string | null) {
-  const link = window.document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-  if (!link) return;
   const known = meetingId !== null && MEETINGS.some((meeting) => meeting.id === meetingId);
-  link.setAttribute("href", known ? siteUrl(`meetings/${meetingId}/`) : SITE_URL);
+  desiredCanonical = known ? siteUrl(`meetings/${meetingId}/`) : SITE_URL;
+  applyCanonical();
 }
 
 const NAV = [{ id: "overview" as View, label: "Overview", icon: LayoutGrid }, { id: "sessions" as View, label: "Meetings & agendas", icon: Landmark }, { id: "impacts" as View, label: "City impact map", icon: Map }, { id: "ordinances" as View, label: "Ordinance tracker", icon: ClipboardList }, { id: "sources" as View, label: "Source library", icon: FolderOpen }];
@@ -99,7 +115,12 @@ export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: So
       if ([...NAV.map((n) => n.id), "notebook"].includes(v as View)) setView(v as View);
     }
     restoreView(); window.addEventListener("popstate", restoreView);
-    return () => window.removeEventListener("popstate", restoreView);
+    // The client runtime can re-apply the layout's canonical tag after hydration;
+    // re-pin every copy to the URL this view declares so the page never publishes
+    // two competing canonicals.
+    const observer = new MutationObserver(applyCanonical);
+    observer.observe(window.document.head, { childList: true, subtree: true, attributes: true, attributeFilter: ["href"] });
+    return () => { window.removeEventListener("popstate", restoreView); observer.disconnect(); };
   }, []);
   function navigate(next: View, meeting: string | null = null) {
     setView(next); setMobileNav(false);

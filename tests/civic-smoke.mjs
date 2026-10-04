@@ -18,6 +18,21 @@ if (process.env.CHROMIUM_PATH) {
   launchOptions = { headless: true, executablePath: process.env.CHROMIUM_PATH, args: [...new Set([...extraArgs, '--no-sandbox'])] };
 }
 const BASE_URL = process.env.BASE_URL || 'http://127.0.0.1:3000';
+
+/**
+ * A statically exported Next app can hold more than one `link[rel=canonical]`
+ * after hydration (the exported head plus the copy the client runtime re-applies
+ * from layout metadata). What matters for indexing is that every copy declares
+ * the same URL, so assert on all of them rather than on whichever one strict mode
+ * happens to resolve first.
+ */
+async function expectCanonical(page, expected) {
+  const hrefs = () => page.locator('link[rel="canonical"]').evaluateAll((links) => links.map((link) => link.getAttribute('href')));
+  await expect.poll(async () => {
+    const found = await hrefs();
+    return found.length > 0 && found.every((href) => href === expected) ? 'ok' : found;
+  }, { timeout: 15000 }).toBe('ok');
+}
 const browser = await chromium.launch(launchOptions);
 const errors = [];
 function capturePageError(error) {
@@ -32,7 +47,7 @@ try {
   page.on('pageerror', capturePageError);
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
   const canonicalUrl = 'https://therealwindycity.github.io/TheReelWindyCity/';
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonicalUrl);
+  await expectCanonical(page, canonicalUrl);
   await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /real public meetings/);
   await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /index, follow/);
   await expect(page.locator('meta[name="googlebot"]')).toHaveAttribute('content', /max-image-preview:large/);
@@ -195,12 +210,12 @@ try {
   const deepLinkCanonical = `https://therealwindycity.github.io/TheReelWindyCity/meetings/${newestHistorical.id}/`;
   await page.goto(`${publicBase}?meeting=${newestHistorical.id}`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.session-location-banner')).toContainText(newestHistorical.bodyLabel);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', deepLinkCanonical);
+  await expectCanonical(page, deepLinkCanonical);
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect(page.locator('.session-location-banner')).toContainText(newestHistorical.bodyLabel);
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', deepLinkCanonical);
+  await expectCanonical(page, deepLinkCanonical);
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonicalUrl);
+  await expectCanonical(page, canonicalUrl);
   console.log('PASS: meeting deep links open the record and consolidate the canonical URL');
 
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors: true, isMobile: true, deviceScaleFactor: 1 });
