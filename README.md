@@ -75,7 +75,16 @@ contains a statically rendered page for **every indexed meeting**. The `/transcr
 indexes all timestamped transcript files and preserved transcript variants. The sitemap at
 `https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, both directories,
 and all meeting pages. Each meeting page links to its official records, all 2,685 associated archive
-documents, and every attached transcript without inventing actions or outcomes. Submit the sitemap
+documents, and every attached transcript without inventing actions or outcomes. Every sitemap entry
+carries a `<lastmod>` set to the archive snapshot date (`captured` in `src/data/meetings.json`), not to
+build time — Google discounts a lastmod that is simply "now" on each deploy — with `daily` change
+frequency for still-changing posted agendas and `yearly` for settled historical records.
+
+The interactive app is the same document for every meeting, so it does not mint a URL per record. The
+"Open this meeting in Civic Cheyenne" links on each record page use `/?meeting=<meeting-id>`; while a
+meeting is selected the app rewrites its canonical link to that meeting's `/meetings/<id>/` page, so the
+parameterized deep link consolidates onto the crawlable record page instead of competing with the
+homepage. Submit the sitemap
 in Google Search Console after deployment. Index/follow directives are emitted in page metadata. A
 project-scoped `robots.txt` is intentionally omitted: on GitHub Pages, `robots.txt` is scoped to the
 shared host root, which this repository cannot control. The Google HTML-file ownership check is
@@ -83,7 +92,20 @@ served from `public/googlee2d9fc23b9d6b0f7.html`.
 
 Search Console verification establishes site ownership but does not guarantee indexing. After
 verification, submit the sitemap, inspect the archive and key meeting URLs, and use **Request
-indexing** for priority pages if appropriate.
+indexing** for priority pages if appropriate. Indexing is not the same as ranking: a page can be
+crawled and still reported as *Crawled — currently not indexed* when Google judges it thin or
+duplicative, so the audit below checks that every exported record page carries real content.
+
+`npm run test:seo` audits the whole exported surface after `npm run build` (and runs in CI on every
+push): that every meeting in the index has a static page with a unique title and canonical URL under
+the project path, valid `WebPage`/`BreadcrumbList` structured data, a linked source document for every
+document in the index, a link from the `/meetings/` archive, and a sitemap entry with an honest
+lastmod. Run it locally with the same base path as the deployment:
+
+```bash
+NEXT_PUBLIC_BASE_PATH=/TheReelWindyCity npm run build
+npm run test:seo
+```
 
 ## Development
 
@@ -102,6 +124,7 @@ npm run lint           # ESLint
 npm run data:refresh   # re-pull repository indexes from GitHub
 npm run data:assemble  # rebuild public/data from src/data snapshots
 npm run test:e2e       # Playwright smoke tests (start the site first; see below)
+npm run test:seo       # audit the exported out/ surface (run after npm run build)
 ```
 
 Smoke tests expect the site at `http://127.0.0.1:3000` (override with `BASE_URL`):

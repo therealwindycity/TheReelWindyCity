@@ -12,7 +12,8 @@
     "typecheck": "tsc --noEmit",
     "data:assemble": "node scripts/build-data.mjs",
     "data:refresh": "node scripts/build-data.mjs --refresh",
-    "test:e2e": "node tests/civic-smoke.mjs"
+    "test:e2e": "node tests/civic-smoke.mjs",
+    "test:seo": "node tests/seo-audit.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.63.0",
