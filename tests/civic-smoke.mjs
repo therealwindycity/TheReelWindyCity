@@ -188,6 +188,21 @@ try {
   await page.keyboard.press('Escape');
   console.log('PASS: every meeting indexed, next meeting featured, archived meeting & transcript open');
 
+  // The "Open this meeting in Civic Cheyenne" links on the static record pages point at
+  // /?meeting=<id>. That deep link must open the named meeting, survive a reload, and move
+  // the canonical URL onto the meeting's own record page so the two do not compete.
+  const newestHistorical = historicalMeetings.reduce((latest, meeting) => meeting.date > latest.date ? meeting : latest);
+  const deepLinkCanonical = `https://therealwindycity.github.io/TheReelWindyCity/meetings/${newestHistorical.id}/`;
+  await page.goto(`${publicBase}?meeting=${newestHistorical.id}`, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.session-location-banner')).toContainText(newestHistorical.bodyLabel);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', deepLinkCanonical);
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.session-location-banner')).toContainText(newestHistorical.bodyLabel);
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', deepLinkCanonical);
+  await page.getByRole('button', { name: 'Overview', exact: true }).click();
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', canonicalUrl);
+  console.log('PASS: meeting deep links open the record and consolidate the canonical URL');
+
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors: true, isMobile: true, deviceScaleFactor: 1 });
   await mobile.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
   const mp = await mobile.newPage();
