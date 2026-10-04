@@ -12,7 +12,12 @@
     "typecheck": "tsc --noEmit",
     "data:assemble": "node scripts/build-data.mjs",
     "data:refresh": "node scripts/build-data.mjs --refresh",
-    "test:e2e": "node tests/civic-smoke.mjs"
+    "test:e2e": "node tests/civic-smoke.mjs",
+    "sync:watch": "node scripts/monitor/upcoming-meetings.mjs --check",
+    "sync:seed": "node scripts/monitor/upcoming-meetings.mjs --seed",
+    "sync:parse": "node scripts/extractors/parse_agenda_pdf.mjs",
+    "sync:analyze": "node scripts/analysis/red_team_analyzer.mjs",
+    "test:sync": "node --test tests/sync/sync-pipeline.test.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.63.0",
@@ -21,6 +26,8 @@
     "lucide-react": "^1.49.0",
     "maplibre-gl": "^6.11.2",
     "next": "16.2.6",
+    "node-html-parser": "^6.1.13",
+    "pdfjs-dist": "^4.10.38",
     "react": "19.2.6",
     "react-dom": "19.2.6"
   },
@@ -33,6 +40,7 @@
     "eslint-config-next": "16.2.6",
     "postcss": "8.5.8",
     "tailwindcss": "4.1.17",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "yaml": "^2.9.1"
   }
 }

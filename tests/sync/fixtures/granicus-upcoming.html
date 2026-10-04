@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--
+  Realistic Granicus / CivicPlus "ViewPublisher" upcoming-events widget capture,
+  INCLUDING the noise that breaks DOM-hash watchers: per-request session ids,
+  cache-busting script srcs, tracking query params, decorative markup churn.
+  Shape calibrated against https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming
+  (columns: Name | Date | Agenda | Events) on 2026-10-03.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Civicplus View - Granicus Content</title>
+  <script type="text/javascript">
+    var _granicus_session = "jsid_8817263541";
+    var _gaq = _gaq || [];
+  </script>
+  <link rel="stylesheet" href="/css/granicus.css?cb=77213984">
+</head>
+<body class="publisher upcoming-widget" data-phsid="f4c9a2ee17">
+  <div id="container" class="container jsid_8817263541">
+    <span class="granicus-nonce" data-nonce="a93f0c1e-8827-4b1c-9d0e-77aa51b2c3dd"></span>
+    <h2>Upcoming Events</h2>
+    <table class="listingTable upcoming" id="EventList" border="0" cellpadding="4" cellspacing="0" summary="Upcoming events">
+      <thead>
+        <tr>
+          <th scope="col" class="Name">Name</th>
+          <th scope="col" class="Date">Date</th>
+          <th scope="col" class="Agenda">Agenda</th>
+          <th scope="col" class="Events">Events</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="odd">
+          <td class="Name">Public Services Committee</td>
+          <td class="Date">Oct 5, 2026<br />&nbsp;-&nbsp;<br />12:00 PM</td>
+          <td class="Agenda">
+            <a href="https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&amp;event_id=1447&amp;utm_source=widget&amp;utm_medium=upcoming&amp;_ga=2.214871544.1726354981.1759514863">Agenda</a>
+          </td>
+          <td class="Events">&nbsp;</td>
+        </tr>
+        <tr class="even">
+          <td class="Name">Finance Committee</td>
+          <td class="Date">Oct 6, 2026<br />&nbsp;-&nbsp;<br />12:00 PM</td>
+          <td class="Agenda">
+            <a href="https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&amp;event_id=1446&amp;utm_source=widget&amp;utm_medium=upcoming&amp;_ga=2.214871544.9812364711.1759514863">Agenda</a>
+          </td>
+          <td class="Events">&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <script type="text/javascript" src="/js/ViewPublisher.js?cb=77213984&amp;jsid=8817263541"></script>
+  <noscript><img src="https://analytics.granicus.com/collect?jsid=8817263541&amp;rand=0.48291" alt=""></noscript>
+</body>
+</html>
