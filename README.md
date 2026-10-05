@@ -78,6 +78,23 @@ Every record shown by the site is drawn from these GitHub repositories
   January 26, 2026, and the Chapter 1.28 administrative-inspection-warrants policy brief.
 * **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
   be verified against the official meeting video.
+* **Wyoming Pulse** is the statewide news desk in the app. It groups source-linked headlines into
+  nine moving sector streams (statewide, government, public safety, weather, roads, energy/land,
+  schools/health, community/economy, and Wyoming sports). The ten publisher feeds are Oil City News,
+  Cap City News, WyoFile, Buckrail, County 10, SweetwaterNOW, Wyoming Public Media, K2 Radio,
+  Cowboy State Daily, and WyoPreps; NWS alerts and WYDOT travel events are checked separately. `scripts/build-pulse-data.mjs`
+  collects RSS during static builds into an ignored `public/data/wyoming-pulse.json` asset, so the
+  browser does not depend on publisher CORS support. The Pages workflow republishes that snapshot
+  hourly; `npm run data:pulse` refreshes it manually. Each sector marquee opens its source-linked
+  archive. The browser retains up to 12 months / 600 headlines locally, combining the publisher's
+  current feed window with snapshots seen on that device; this is a reader-side archive, not a
+  server-wide historical database. A dated, verified October 2026 seed keeps the desk populated
+  when upstream feeds are unavailable, and is clearly labeled as a snapshot — the desk shows
+  `DATED SNAPSHOT · <date>` unless at least one live source answered, and only then
+  `LIVE SOURCES · UPDATED <time>`. Add newly verified stories to the fallback with
+  `node scripts/refresh-pulse-seed.mjs <stories.json> [--captured-at YYYY-MM-DD]`, which rejects
+  anything that is not an https, source-linked, dated story.
+* **Presentation styles** are available from the sitewide Appearance control: Prairie, Newsroom, Field Notes, Terminal, Glacier, Sunset, High Contrast, Blueprint, Garden, and Monochrome. Each changes navigation and information layout as well as typography and palette: examples include an editorial top masthead, a narrow reading column, icon rails, a floating bottom dock, and a modular board. All styles keep the same records, source links, and tools. The selected style is stored in that browser and synchronized across its open tabs; the experience avoids engagement streaks and urgency tricks.
 * **Client-side semantic search** (`src/lib/vectorSearch.ts`) runs MiniLM (`Xenova/all-MiniLM-L6-v2`)
   entirely in the browser via WebAssembly. `scripts/embed-transcripts.mjs` compiles `transcript-tree.json`
   plus timestamped caption chunks, ordinances, and recent meetings into `src/data/transcript-vectors.json`
@@ -122,11 +139,31 @@ The interactive app is the same document for every meeting, so it does not mint 
 "Open this meeting in Civic Cheyenne" links on each record page use `/?meeting=<meeting-id>`; while a
 meeting is selected the app rewrites its canonical link to that meeting's `/meetings/<id>/` page, so the
 parameterized deep link consolidates onto the crawlable record page instead of competing with the
-homepage. Submit the sitemap
-in Google Search Console after deployment. Index/follow directives are emitted in page metadata. A
-project-scoped `robots.txt` is intentionally omitted: on GitHub Pages, `robots.txt` is scoped to the
-shared host root, which this repository cannot control. The Google HTML-file ownership check is
+homepage.
+
+**Submit exactly this URL in Google Search Console:**
+`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml`. The domain root
+(`https://therealwindycity.github.io/sitemap.xml`) is not a sitemap — it is a GitHub Pages 404 — so a
+root URL submitted there reports a fetch error instead of indexing the site. When a previously
+submitted sitemap is listed in Search Console, remove the stale entry and resubmit the URL above so
+Google re-reads the current file rather than reporting the old fetch.
+
+`src/app/robots.ts` publishes `robots.txt` at the project path, naming that sitemap in full and
+allowing all crawlers. Two limits are worth knowing before relying on it: crawlers read `robots.txt`
+only from the host root, and GitHub Pages serves nothing at
+`https://therealwindycity.github.io/robots.txt` for a project site — a 404 there means "no crawl
+rules", so nothing in this repository can block or unblock Googlebot at the host root. The file exists
+so the sitemap is discoverable to tools that read it, to make the intent explicit, and to be ready to
+copy into a `therealwindycity.github.io` user-site repository if a host-root `robots.txt` is ever
+wanted. Index/follow directives are emitted in page metadata. The Google HTML-file ownership check is
 served from `public/googlee2d9fc23b9d6b0f7.html`.
+
+`npm run seo:live` verifies the **published** files rather than the build output — that the deployed
+sitemap is reachable, advertises this exact host and base path, lists at least as many pages as the
+archive requires, and that `robots.txt` names it. The deploy workflow runs the same check after
+`actions/deploy-pages`, so a deploy that would leave Search Console reading the wrong sitemap fails
+loudly instead of going unnoticed. Use `--mirror` to audit a local export served under a different
+host.
 
 Search Console verification establishes site ownership but does not guarantee indexing. After
 verification, submit the sitemap, inspect the archive and key meeting URLs, and use **Request

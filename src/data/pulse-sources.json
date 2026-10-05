@@ -1,0 +1,78 @@
+{
+  "feeds": [
+    {
+      "id": "oil-city-news",
+      "name": "Oil City News",
+      "url": "https://oilcity.news/feed/",
+      "website": "https://oilcity.news/latest-news/"
+    },
+    {
+      "id": "cap-city-news",
+      "name": "Cap City News",
+      "url": "https://capcity.news/feed/",
+      "website": "https://capcity.news/latest-news/"
+    },
+    {
+      "id": "wyofile",
+      "name": "WyoFile",
+      "url": "https://wyofile.com/feed/",
+      "website": "https://wyofile.com/"
+    },
+    {
+      "id": "buckrail",
+      "name": "Buckrail",
+      "url": "https://buckrail.com/feed/",
+      "website": "https://buckrail.com/"
+    },
+    {
+      "id": "county-10",
+      "name": "County 10",
+      "url": "https://county10.com/feed/",
+      "website": "https://county10.com/"
+    },
+    {
+      "id": "sweetwater-now",
+      "name": "SweetwaterNOW",
+      "url": "https://www.sweetwaternow.com/feed/",
+      "website": "https://www.sweetwaternow.com/"
+    },
+    {
+      "id": "wyoming-public-media",
+      "name": "Wyoming Public Media",
+      "url": "https://www.wyomingpublicmedia.org/rss.xml",
+      "website": "https://www.wyomingpublicmedia.org/"
+    },
+    {
+      "id": "k2-radio",
+      "name": "K2 Radio",
+      "url": "https://k2radio.com/feed/",
+      "website": "https://k2radio.com/"
+    },
+    {
+      "id": "cowboy-state-daily",
+      "name": "Cowboy State Daily",
+      "url": "https://cowboystatedaily.com/feed/",
+      "website": "https://cowboystatedaily.com/"
+    },
+    {
+      "id": "wyopreps",
+      "name": "WyoPreps",
+      "url": "https://wyopreps.com/feed/",
+      "website": "https://wyopreps.com/"
+    }
+  ],
+  "agencies": [
+    {
+      "id": "nws",
+      "name": "National Weather Service",
+      "url": "https://api.weather.gov/alerts/active?area=WY",
+      "website": "https://www.weather.gov/riw/"
+    },
+    {
+      "id": "wydot",
+      "name": "WYDOT Travel Information",
+      "url": "https://www.wyoroad.info/highway/webmap/json/events.json",
+      "website": "https://wyoroad.info/"
+    }
+  ]
+}
