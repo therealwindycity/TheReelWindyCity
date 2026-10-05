@@ -43,6 +43,44 @@ function capturePageError(error) {
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, ignoreHTTPSErrors: true });
   await context.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
+  // Keep the live-desk smoke check deterministic and independent of third-party uptime.
+  await context.route('https://api.weather.gov/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/geo+json',
+    body: JSON.stringify({ features: [], properties: {} }),
+  }));
+  await context.route('https://www.wyoroad.info/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'text/html',
+    body: '<html><body><p>CI fixture: no current WYDOT travel advisories.</p></body></html>',
+  }));
+  await context.route('https://services3.arcgis.com/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ features: [] }),
+  }));
+  await context.route('https://earthquake.usgs.gov/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/geo+json',
+    body: JSON.stringify({ features: [] }),
+  }));
+  await context.route('https://api.rss2json.com/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ status: 'ok', items: [] }),
+  }));
+  const rssHosts = [
+    'capcity.news', 'kgab.com', 'kfbcradio.com', 'shortgo.co',
+    'www.wyomingpublicmedia.org', 'wyofile.com', 'oilcity.news', 'county17.com',
+    'sheridanmedia.com', 'buckrail.com', 'county10.com', 'www.sweetwaternow.com',
+  ];
+  for (const host of rssHosts) {
+    await context.route(`https://${host}/**`, (route) => route.fulfill({
+      status: 200,
+      contentType: 'application/rss+xml',
+      body: '<?xml version="1.0"?><rss version="2.0"><channel><title>CI fixture</title><description>Empty deterministic test feed.</description></channel></rss>',
+    }));
+  }
   const page = await context.newPage();
   page.on('pageerror', capturePageError);
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
@@ -82,8 +120,8 @@ try {
   const sitemapText = await sitemapResponse.text();
   const meetingIndex = JSON.parse(await readFile('public/data/meetings.json', 'utf8'));
   const sitemapLocations = [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== meetingIndex.meetings.length + 3) {
-    throw new Error(`Expected homepage, meeting/transcript indexes, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== meetingIndex.meetings.length + 7) {
+    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
   }
   const archiveResponse = await context.request.get(new URL('meetings/', publicBase).toString());
   const archiveHtml = await archiveResponse.text();
@@ -94,6 +132,19 @@ try {
   const transcriptHtml = await transcriptResponse.text();
   if (transcriptResponse.status() !== 200 || !transcriptHtml.includes('Cheyenne public meeting transcripts')) {
     throw new Error('Expected the timestamped transcript index to be exported');
+  }
+  const hubPages = [
+    { path: 'hub/', marker: 'Local government is easier to follow', extra: '<iframe' },
+    { path: 'hub/meetings/', marker: 'Meetings &amp; agendas', extra: 'FEATURED POSTED AGENDA' },
+    { path: 'hub/signals/', marker: 'Live signal desk', extra: 'WyoLink P25' },
+    { path: 'hub/learn/', marker: 'Learn to follow a public decision', extra: 'QUICK KNOWLEDGE CHECK' },
+  ];
+  for (const hub of hubPages) {
+    const response = await context.request.get(new URL(hub.path, publicBase).toString());
+    const html = await response.text();
+    if (response.status() !== 200 || !html.includes(hub.marker) || !html.includes(hub.extra)) {
+      throw new Error(`Expected dedicated ${hub.path} civic hub page with source-backed content`);
+    }
   }
   const historicalMeetings = meetingIndex.meetings.filter((meeting) => !meeting.upcoming);
   const oldestMeeting = historicalMeetings.reduce((oldest, meeting) => meeting.date < oldest.date ? meeting : oldest);
@@ -201,6 +252,17 @@ try {
   await expect(page.locator('.tracker-row')).toContainText('Postponed to Feb 9');
   console.log('PASS: interactive map, before/if-enacted comparison, verified ordinance statuses');
 
+  await page.getByRole('button', { name: 'Live alerts', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'PULSE', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: /Cheyenne & Wyoming Live Scanner Console/ })).toBeVisible();
+  await expect(page.locator('.pulse-scanner-tuner')).toContainText('Laramie County Law Enforcement');
+  await page.getByRole('button', { name: /Cheyenne Talkgroups/ }).click();
+  await expect(page.locator('.pulse-talkgroup-panel')).toContainText('02-LE 1 DSP');
+  await expect(page.locator('.pulse-talkgroup-panel')).toContainText('02-CFR 1');
+  await page.getByRole('button', { name: /Cheyenne \/ Laramie Co\./ }).click();
+  await expect(page.locator('.pulse-alert-list .broadcast-alert').first()).toBeVisible();
+  console.log('PASS: Cheyenne & Wyoming Live Scanner Console, WyoLink P25 talkgroups, and live alerts feed');
+
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
   await page.locator('.session-date-select').click();
   await expect(page.locator('.featured-meeting').first()).toContainText('Public Services Committee');
@@ -276,6 +338,15 @@ try {
   console.log('PASS: mobile navigation, news archives, and responsive layouts');
   if (errors.length) throw new Error(`Browser exceptions: ${errors.join('; ')}`);
   console.log('ALL CIVIC BROWSER CHECKS PASSED');
+} catch (error) {
+  const message = String(error instanceof Error ? error.message : error)
+    .replaceAll('%', '%25')
+    .replaceAll('\r', '%0D')
+    .replaceAll('\n', '%0A')
+    .replaceAll(':', '%3A')
+    .slice(0, 1400);
+  console.log(`::error title=Civic browser smoke failure::${message}`);
+  throw error;
 } finally {
   await browser.close();
 }
