@@ -9,7 +9,7 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { parsePublisherFeed } from "./lib/pulse-news.mjs";
+import { parsePublisherFeed, publisherSnapshotMode } from "./lib/pulse-news.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SEED_PATH = path.join(ROOT, "src", "data", "wyoming-pulse-seed.json");
@@ -200,7 +200,10 @@ const sourceStatuses = [
 const errors = sourceStatuses
   .filter((source) => source.status === "unavailable")
   .map((source) => `${source.name}: ${source.error ?? "source request failed"}`);
-const hasPublisherSnapshot = publisherResults.some((result) => result.status === "ok" || result.status === "empty");
+const mode = publisherSnapshotMode(
+  nws.alerts.length + wydot.alerts.length,
+  publisherResults.reduce((total, result) => total + result.alerts.length, 0),
+);
 const rssCount = alerts.filter((alert) => alert.source.startsWith("rss-")).length;
 const counts = {
   total: alerts.length,
@@ -209,8 +212,8 @@ const counts = {
   rss: rssCount,
 };
 const output = {
-  mode: hasPublisherSnapshot ? "published-snapshot" : "curated-seed",
-  capturedAt: hasPublisherSnapshot ? capturedAt : seed.capturedAt,
+  mode,
+  capturedAt: mode === "published-snapshot" ? capturedAt : seed.capturedAt,
   counts,
   sources: sourceStatuses,
   errors,

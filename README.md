@@ -89,7 +89,11 @@ Every record shown by the site is drawn from these GitHub repositories
   archive. The browser retains up to 12 months / 600 headlines locally, combining the publisher's
   current feed window with snapshots seen on that device; this is a reader-side archive, not a
   server-wide historical database. A dated, verified October 2026 seed keeps the desk populated
-  when upstream feeds are unavailable, and is clearly labeled as a snapshot.
+  when upstream feeds are unavailable, and is clearly labeled as a snapshot — the desk shows
+  `DATED SNAPSHOT · <date>` unless at least one live source answered, and only then
+  `LIVE SOURCES · UPDATED <time>`. Add newly verified stories to the fallback with
+  `node scripts/refresh-pulse-seed.mjs <stories.json> [--captured-at YYYY-MM-DD]`, which rejects
+  anything that is not an https, source-linked, dated story.
 * **Presentation styles** are available from the sitewide Appearance control: Prairie, Newsroom, Field Notes, Terminal, Glacier, Sunset, High Contrast, Blueprint, Garden, and Monochrome. Each changes navigation and information layout as well as typography and palette: examples include an editorial top masthead, a narrow reading column, icon rails, a floating bottom dock, and a modular board. All styles keep the same records, source links, and tools. The selected style is stored in that browser and synchronized across its open tabs; the experience avoids engagement streaks and urgency tricks.
 * **Client-side semantic search** (`src/lib/vectorSearch.ts`) runs MiniLM (`Xenova/all-MiniLM-L6-v2`)
   entirely in the browser via WebAssembly. `scripts/embed-transcripts.mjs` compiles `transcript-tree.json`

@@ -831,6 +831,16 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
   const updatedLabel = lastUpdated
     ? formatTime(lastUpdated, { hour: "numeric", minute: "2-digit", hour12: true })
     : "Waiting for first update";
+  // The build snapshot records whether live sources actually answered. Surface
+  // that instead of letting a dated fallback look like a fresh live feed.
+  const isLiveSnapshot = result?.mode === "published-snapshot";
+  const snapshotCapturedLabel = formatPublishedDate(result?.snapshotCapturedAt ?? INITIAL_RESULT.snapshotCapturedAt);
+  const provenanceLabel = isLiveSnapshot
+    ? `LIVE SOURCES · UPDATED ${updatedLabel} ${mountainZoneLabel}`
+    : `DATED SNAPSHOT · ${snapshotCapturedLabel}`;
+  const provenanceDetail = isLiveSnapshot
+    ? "Publisher feeds and agency sources answered during the latest build; any retained fallback stories keep their own publish dates."
+    : "Publisher feeds did not answer during the latest build, so this desk is showing its dated, source-linked curated snapshot. Every headline links to the original publisher.";
   const cityForecastUrl = `https://forecast.weather.gov/MapClick.php?lat=${city.latitude}&lon=${city.longitude}`;
 
   useEffect(() => {
@@ -917,8 +927,12 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
         <span className="pulse-status-copy">
           MONITORING <strong>CHEYENNE &amp; WYOMING</strong>
         </span>
-        <span className="pulse-status-updated">
-          UPDATED {updatedLabel} {mountainZoneLabel}
+        <span
+          className={`pulse-status-updated pulse-status-updated--${isLiveSnapshot ? "live" : "snapshot"}`}
+          data-provenance={isLiveSnapshot ? "live" : "snapshot"}
+          title={provenanceDetail}
+        >
+          {provenanceLabel}
         </span>
         <button
           className="pulse-refresh"

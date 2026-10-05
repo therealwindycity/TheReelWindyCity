@@ -13,6 +13,7 @@
     "data:assemble": "node scripts/build-data.mjs",
     "data:refresh": "node scripts/build-data.mjs --refresh",
     "data:pulse": "node scripts/build-pulse-data.mjs",
+    "data:pulse:seed": "node scripts/refresh-pulse-seed.mjs",
     "data:embed": "node scripts/embed-transcripts.mjs",
     "test:vectors": "node tests/vector-search.mjs",
     "test:pulse": "node --test tests/pulse-news.test.mjs",

@@ -255,6 +255,8 @@ try {
   await page.getByRole('button', { name: 'Wyoming Pulse', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'PULSE', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: /Cheyenne & Wyoming Live Scanner Console/ })).toBeVisible();
+  await expect(page.locator('.pulse-status-updated')).toHaveAttribute('data-provenance', /live|snapshot/);
+  await expect(page.locator('.pulse-status-updated')).toContainText(/LIVE SOURCES|DATED SNAPSHOT/);
   await expect(page.locator('.pulse-scanner-tuner')).toContainText('Laramie County Law Enforcement');
   await page.getByRole('button', { name: /Cheyenne Talkgroups/ }).click();
   await expect(page.locator('.pulse-talkgroup-panel')).toContainText('02-LE 1 DSP');

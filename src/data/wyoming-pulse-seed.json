@@ -1,17 +1,166 @@
 {
   "mode": "curated-seed",
-  "capturedAt": "2026-10-04",
+  "capturedAt": "2026-10-05",
   "counts": {
-    "total": 23,
+    "total": 31,
     "nws": 0,
     "wydot": 0,
-    "rss": 23
+    "rss": 31
   },
   "sources": [],
   "errors": [
     "Showing a dated, source-linked curated snapshot until publisher feeds refresh."
   ],
   "alerts": [
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/community/city/2026/10/05/cheyenne-public-services-committee-advances-annexation-proposals-to-final-city-vote/",
+      "severity": "standard",
+      "category": "government",
+      "title": "Cheyenne Public Services Committee advances annexation proposals to final city vote",
+      "summary": "Both ordinance packages — the 652.67-acre Hitching Post District that will host the PRCA Hall of Fame and Museum of the American Cowboy, and the 162-acre Orchard Hills parcel proposed as a Trammell Crow data center site — now go to the Cheyenne City Council for a final vote next week. Orchard Valley neighbors on the boundary told the committee they prefer the industrial project to high-density housing.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "government",
+        "city council"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/community/city/2026/10/05/city-property-improvements-on-cheyenne-finance-committee-agenda-tuesday/",
+      "severity": "standard",
+      "category": "government",
+      "title": "City property improvements on Cheyenne Finance Committee agenda Tuesday",
+      "summary": "The Finance Committee will review about $735,000 of city property work, including $250,000 for Airport Golf Course cart paths, $132,000 to redesign the Municipal Building's north parking lot with EV charging and solar-ready canopies, and $353,400 for Johnson Pool design and construction administration.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "government",
+        "city budget"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/weather-2/2026/10/05/record-heat-gusty-winds-prompt-red-flag-warning-for-southeast-wyoming/",
+      "severity": "urgent",
+      "category": "weather",
+      "title": "Record heat, gusty winds prompt red flag warning for southeast Wyoming",
+      "summary": "A red flag warning runs from noon to 6 p.m. for portions of southeast Wyoming as Cheyenne's high climbs toward 84 degrees, which would top the city's previous Oct. 5 record of 82 set in 1947. West winds of 10–20 mph with gusts to 35 mph and relative humidity of 10–15% led the National Weather Service to warn that any fire would spread rapidly and that outdoor burning is not recommended.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "weather",
+        "fire danger"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/community/energy-community/2026/10/05/gas-prices-down-in-laramie-county-amid-falling-state-national-averages/",
+      "severity": "standard",
+      "category": "community",
+      "title": "Gas prices down in Laramie County amid falling state, national averages",
+      "summary": "Laramie County's average fell 15 cents over the week to $4.11 a gallon, giving it Wyoming's cheapest county average, according to AAA data. The statewide average slipped 4 cents to $4.45 while the national average dropped 9 cents to $4.36, with diesel down 14.2 cents to $6.30.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "energy",
+        "economy"
+      ]
+    },
+    {
+      "source": "rss-oil-city-news",
+      "source_id": "https://oilcity.news/crime/2026/10/05/man-accused-of-attacking-motel-residents-with-knife-and-hammer-last-week-in-casper/",
+      "severity": "standard",
+      "category": "crime",
+      "title": "Man accused of attacking motel residents with knife and hammer last week in Casper",
+      "summary": "Casper police charged Paul Joseph Clark, 65, with four felonies after motel residents and the complex owner reported attacks with a knife and a hammer, and officers used a bean-bag round to take him into custody. He remained jailed Friday on a $150,000 bond and is presumed innocent.",
+      "location": {
+        "city": "Casper",
+        "county": "Natrona"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Oil City News",
+        "crime",
+        "public safety"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/judge-jails-man-in-moose-abuse-case-and-warns-wyoming-values-wildlife/",
+      "severity": "standard",
+      "category": "court",
+      "title": "Judge jails man in moose abuse case and warns: Wyoming values wildlife",
+      "summary": "A Uinta County judge jailed former state livestock brand inspector Justin Martin for 30 days and extended his supervised probation to three years despite a plea deal that called for no jail time, saying Wyoming values its wildlife. All three defendants in the case were ordered to complete 576 hours of community service.",
+      "location": {
+        "county": "Uinta"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "WyoFile",
+        "court",
+        "wildlife"
+      ]
+    },
+    {
+      "source": "rss-wyopreps",
+      "source_id": "https://wyopreps.com/football-standings-six-2026-wyoming/",
+      "severity": "standard",
+      "category": "sports",
+      "title": "Wyoming High School Football Standings on October 5, 2026",
+      "summary": "Updated statewide football standings and conference records for every classification ahead of Week 6 of the Wyoming high school season.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "WyoPreps",
+        "high school sports",
+        "football"
+      ]
+    },
+    {
+      "source": "rss-wyopreps",
+      "source_id": "https://wyopreps.com/volleyball-standings-six-2026-wyoming/",
+      "severity": "standard",
+      "category": "sports",
+      "title": "Wyoming High School Volleyball Standings on October 5, 2026",
+      "summary": "Updated statewide volleyball standings and conference records for every classification as the Wyoming high school season enters its final weeks.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "WyoPreps",
+        "high school sports",
+        "volleyball"
+      ]
+    },
     {
       "source": "rss-cap-city-news",
       "source_id": "https://capcity.news/latest-news/2026/10/03/2-czech-republic-residents-killed-in-crash-near-pinedale/",

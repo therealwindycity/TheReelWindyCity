@@ -165,11 +165,11 @@
 .pulse-status-rail{display:flex;align-items:center;gap:17px;min-height:43px;padding:7px 15px;background:#202d34;color:#c4cecd;border-top:1px solid rgba(255,255,255,.06);font-size:8px;letter-spacing:.8px}
 .pulse-on-air{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;background:#263b34;border:1px solid #3b5747;border-radius:3px;color:#c5e4bd;font-size:7px;font-weight:700;letter-spacing:1px;white-space:nowrap}
 .pulse-on-air>span,.pulse-live-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#62cc83;box-shadow:0 0 0 3px rgba(98,204,131,.12)}
-.pulse-status-rail--demo .pulse-on-air{background:#48351e;border-color:#735224;color:#f3d497}
-.pulse-status-rail--demo .pulse-on-air>span{background:#e9ae48;box-shadow:0 0 0 3px rgba(233,174,72,.15)}
 .pulse-status-copy{color:#aab6b6;white-space:nowrap}
 .pulse-status-copy strong{color:#f0f3ee}
 .pulse-status-updated{margin-left:auto;color:#91a09f;white-space:nowrap}
+.pulse-status-updated--snapshot{color:#e9c179}
+.pulse-status-updated--live{color:#9adfb1}
 .pulse-refresh{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;border:1px solid #435158;border-radius:4px;color:#e0e7e4;font-size:8px;white-space:nowrap}
 .pulse-refresh:hover:not(:disabled){background:#2c3b42;border-color:#66777c}
 .pulse-refresh:disabled{opacity:.55}

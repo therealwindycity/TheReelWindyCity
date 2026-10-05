@@ -15,6 +15,15 @@ const CATEGORY_RULES = [
   ["sports", /\b(sport|football|basketball|volleyball|baseball|softball|soccer|wrestling|tennis|golf|cross[- ]country|swimming|rodeo|scoreboard|playoffs?|championship|all-state|touchdown|standings)\b/i],
 ];
 
+/**
+ * Decide how a build snapshot should describe itself. A feed that is reachable
+ * but empty is not live coverage, so the curated fallback keeps its honest
+ * "curated-seed" label unless at least one source actually returned items.
+ */
+export function publisherSnapshotMode(agencyItems = 0, publisherItems = 0) {
+  return agencyItems + publisherItems > 0 ? "published-snapshot" : "curated-seed";
+}
+
 function tagName(node) {
   return String(node?.rawTagName ?? node?.tagName ?? "").toLowerCase();
 }
