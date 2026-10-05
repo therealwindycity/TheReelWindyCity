@@ -14,6 +14,9 @@ test-output/
 src/data/meetings.json
 public/data/meetings.json
 
+# generated citizen-connect copy (src/data/citizen-connect.json is the source of truth)
+public/data/citizen-connect.json
+
 # scratch
 .sync/
 image-search/

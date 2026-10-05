@@ -17,7 +17,7 @@ The dedicated hub is published as its own small set of crawlable pages under [`/
 
 * **Live desk (`/hub/`)** puts the current captured agenda beside a source-window switchboard for Granicus, an archived Council video, Broadcastify, the National Weather Service, and WYDOT. It loads one external iframe at a time, names the publisher, and keeps a direct-source link available when a publisher blocks embedding.
 * **Meetings (`/hub/meetings/`)** summarizes posted agenda items and teaches the agenda → meeting → minutes/adopted-text sequence. Agenda entries remain proposals until the official record establishes an outcome.
-* **Live signals (`/hub/signals/`)** reuses the Wyoming Pulse syndication desk for agency alerts, scanner metadata, weather, roads, wildfire/seismic sources, and Wyoming newsroom feeds. Third-party relays are contextual, not official dispatch.
+* **Live signals (`/hub/signals/`)** reuses the Wyoming Pulse syndication desk for agency alerts, scanner metadata, weather, roads, wildfire/seismic sources, and Wyoming newsroom feeds. Inside the same desk, the **Incident Record Lens** reads the historical Cheyenne Police Department / Laramie County Sheriff Citizen Connect archive through weekday/hour patterns, per-day trends, call-type mix, and ward/response-area workload. Third-party relays are contextual, not official dispatch; the historical lens is not an emergency service.
 * **Learn the record (`/hub/learn/`)** is a short civic field guide with an interactive knowledge check on source authority, meeting stages, and transcript verification.
 
 The hub is an independent learning tool, not a City of Cheyenne service. External sites control their own availability, embedded-player policies, and update cadence; emergencies should be directed to 911 or the responsible authority.
@@ -51,8 +51,9 @@ posted; agenda items are proposals, not recorded decisions.
 
 ## Data — built from the public-record repositories
 
-Every record shown by the site is drawn from these GitHub repositories
-(all owned by [`therealwindycity`](https://github.com/therealwindycity)):
+Meeting records and transcripts shown by the site are drawn from these GitHub repositories
+(all owned by [`therealwindycity`](https://github.com/therealwindycity)). The signals desk also
+bundles public aggregate data from the official Citizen Connect publisher; it is documented below.
 
 | Repository | Contents |
 | --- | --- |
@@ -80,6 +81,33 @@ Every record shown by the site is drawn from these GitHub repositories
   entirely in the browser via WebAssembly. `scripts/embed-transcripts.mjs` compiles `transcript-tree.json`
   plus timestamped caption chunks, ordinances, and recent meetings into `src/data/transcript-vectors.json`
   so the browser only embeds the query. No API keys, no server embeddings.
+
+## Citizen Connect historical record lens
+
+The `/hub/signals/` page places a historical record lens directly in the Wyoming Pulse desk, immediately
+beneath the Cheyenne/Laramie scanner console. It uses the agencies’ own public
+[Citizen Connect dashboard](https://laramiecounty-letmsp.connect.socrata.com/) and its public JSON API —
+not scanner transcripts, third-party crime scores, or a scrape of private Socrata tables.
+The filter selection follows the supplied dashboard link: both agencies, Incidents and Cases, the selected
+category ranges, 2020-01-01 through the latest requested day, Wards, and no restricted-place layer.
+
+The bundled seed (`src/data/citizen-connect.json`) includes exact full-window totals and the complete
+7 × 24 weekday/hour grid. The scheduled `citizen_connect_sync.yml` then fills the date-by-date, monthly,
+and yearly series from the publisher’s aggregate endpoint, and rebuilds call-type, agency, and boundary
+counts from record-level public pins starting in 2023 (the substantive data era). Record-level responses
+are checkpointed in the ignored `.cache/citizen-connect/`; raw detail rows are not committed. Only the
+aggregate trends, grouped breakdowns, boundary totals, and a tiny illustrative sample are bundled into
+the static site. Run the heavier first pass manually with `npm run data:citizen-connect:full`; rebuild the
+public copy with `npm run data:assemble`. `npm run data:citizen-connect:plan -- --mode records --start 2020-01-01 --end 2026-10-04 --records-start 2023-01-01`
+prints an offline request plan without contacting the publisher.
+
+The lens compares per-occurrence weekdays, hours against their share of the clock, full-year per-day rates,
+call-type concentration, and workload counts by boundary. It deliberately does **not** call dispatch volume
+“crime,” treat Cases as a one-to-one conversion from Incidents, infer risk from unadjusted ward counts, or
+claim the publisher’s blurred pin locations are addresses. The agencies say sexual assaults and juvenile
+matters are withheld and names/addresses are removed; the source refreshes roughly every three days.
+Read the Method & limits tab and open the original dashboard before citing a figure. This is historical
+public information, not dispatch or emergency guidance.
 
 ## Live municipal sync pipeline
 

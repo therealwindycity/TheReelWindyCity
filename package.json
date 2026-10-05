@@ -12,6 +12,9 @@
     "typecheck": "tsc --noEmit",
     "data:assemble": "node scripts/build-data.mjs",
     "data:refresh": "node scripts/build-data.mjs --refresh",
+    "data:citizen-connect": "node scripts/sync/citizen-connect.mjs",
+    "data:citizen-connect:full": "node scripts/sync/citizen-connect.mjs --mode all --records-start 2023-01-01",
+    "data:citizen-connect:plan": "node scripts/sync/citizen-connect.mjs --dry-run",
     "data:embed": "node scripts/embed-transcripts.mjs",
     "test:vectors": "node tests/vector-search.mjs",
     "test:e2e": "node tests/civic-smoke.mjs",
@@ -20,7 +23,8 @@
     "sync:seed": "node scripts/monitor/upcoming-meetings.mjs --seed",
     "sync:parse": "node scripts/extractors/parse_agenda_pdf.mjs",
     "sync:analyze": "node scripts/analysis/red_team_analyzer.mjs",
-    "test:sync": "node --test tests/sync/sync-pipeline.test.mjs"
+    "test:sync": "node --test tests/sync/sync-pipeline.test.mjs",
+    "test:citizen-connect": "node --test tests/sync/citizen-connect.test.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.63.0",

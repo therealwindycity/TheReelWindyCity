@@ -1,0 +1,191 @@
+name: Citizen Connect Incident Sync
+
+# =============================================================================
+# Refreshes the Laramie County / Cheyenne "Citizen Connect" incident record that
+# powers the Incident Record Lens on /hub/signals/.
+#
+# The public dashboard says its underlying CAD data refreshes roughly every
+# three days; this runs daily to pick up backfills promptly. Record-level detail
+# starts in 2023 (the substantive data era), while the aggregate time series
+# retains the complete 2020→present dashboard window.
+#
+# Safety notes:
+#   * scripts/sync/citizen-connect.mjs fails closed — an unreachable publisher,
+#     empty totals, or a trend/grid mismatch leaves the committed artifact alone.
+#   * The initial record-level pull is checkpointed under .cache/citizen-connect
+#     and restored from Actions cache; raw rows are never committed.
+#   * This shares the municipal-data-sync write lane with the agenda pipeline.
+#   * GITHUB_TOKEN pushes do not start another push-triggered workflow. If the
+#     public artifact changes on the default branch, this workflow builds and
+#     deploys Pages itself so the new record reaches the site.
+# =============================================================================
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/data/citizen-connect.json"
+      - "scripts/sync/citizen-connect.mjs"
+      - ".github/workflows/citizen_connect_sync.yml"
+  schedule:
+    # 11:17 UTC == overnight in Cheyenne; off-peak for the publisher.
+    - cron: "17 11 * * *"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "aggregates refreshes totals; records also rebuilds categories and boundary counts"
+        required: false
+        default: "records"
+        type: choice
+        options: [aggregates, records, all]
+      start:
+        description: "Override aggregate window start (YYYY-MM-DD). Blank = publisher's start year."
+        required: false
+        default: ""
+        type: string
+      end:
+        description: "Override window end (YYYY-MM-DD). Blank = yesterday UTC."
+        required: false
+        default: ""
+        type: string
+      records_start:
+        description: "Record-level breakdown start (YYYY-MM-DD). Default 2023-01-01."
+        required: false
+        default: "2023-01-01"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: municipal-data-sync
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: write
+    outputs:
+      changed: ${{ steps.commit.outputs.changed }}
+      commit: ${{ steps.commit.outputs.commit }}
+    env:
+      CC_MODE: ${{ github.event.inputs.mode || 'records' }}
+      CC_START: ${{ github.event.inputs.start || '' }}
+      CC_END: ${{ github.event.inputs.end || '' }}
+      CC_RECORDS_START: ${{ github.event.inputs.records_start || '2023-01-01' }}
+    steps:
+      - name: Clone source code ecosystem
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js runtime environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install verified dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Restore record-level checkpoint cache
+        if: env.CC_MODE == 'records' || env.CC_MODE == 'all'
+        uses: actions/cache@v4
+        with:
+          path: .cache/citizen-connect
+          key: citizen-connect-records-${{ github.run_id }}
+          restore-keys: citizen-connect-records-
+
+      - name: Smoke-test the ingest plan (offline, no publisher round-trip)
+        run: node scripts/sync/citizen-connect.mjs --dry-run --mode records --start 2020-01-01 --end 2026-01-01 --records-start 2023-01-01
+
+      - name: Run the ingest (fails closed on an unreachable publisher)
+        # Dispatch inputs flow through env and a bash array, never interpolated
+        # into shell source. The script also validates all dates before a request.
+        shell: bash
+        run: |
+          ARGS=(--mode "$CC_MODE" --records-start "$CC_RECORDS_START")
+          if [ -n "$CC_START" ]; then ARGS+=(--start "$CC_START"); fi
+          if [ -n "$CC_END" ]; then ARGS+=(--end "$CC_END"); fi
+          node scripts/sync/citizen-connect.mjs "${ARGS[@]}"
+
+      - name: Rebuild the bundled public-data copy
+        run: node scripts/build-data.mjs
+
+      - name: Commit the refreshed record & push (guarded)
+        id: commit
+        shell: bash
+        run: |
+          git config user.name "CivicCheyenne-SyncBot"
+          git config user.email "sync@civiccheyenne.local"
+          # public/data/citizen-connect.json is generated and gitignored; src/data is canonical.
+          git add src/data/citizen-connect.json
+
+          if git diff --cached --quiet; then
+            echo "Citizen Connect record unchanged since the last sync. Nothing to commit."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Auto-Sync: Laramie County Citizen Connect incident record ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+          echo "commit=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: sync
+    if: needs.sync.outputs.changed == 'true' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - name: Check out the just-synced commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.sync.outputs.commit }}
+
+      - name: Setup Node.js runtime environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install verified dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Enable GitHub Pages (if not already enabled)
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+        with:
+          enablement: true
+
+      - name: Build the updated static site
+        run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+
+      - name: Upload the Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: [sync, build]
+    if: needs.sync.outputs.changed == 'true' && github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages-${{ github.ref }}
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
