@@ -1,4 +1,5 @@
 import { WYOMING_CITIES, type WyomingCity } from "./wyoming-cities";
+import pulseSeed from "@/data/wyoming-pulse-seed.json";
 
 /**
  * Wyoming Pulse — Cheyenne & Statewide Live Scanner, Public Safety, Weather,
@@ -17,6 +18,8 @@ export type AlertCategory =
   | "court"
   | "election"
   | "environment"
+  | "health"
+  | "sports"
   | "community"
   | "breaking";
 
@@ -65,7 +68,18 @@ export interface IngestionResult {
   timestamp: string;
   errors: string[];
   liveSourcesCount: number;
+  snapshotCapturedAt: string;
+  mode: "published-snapshot" | "curated-seed";
 }
+
+interface PublisherSnapshot {
+  mode?: IngestionResult["mode"];
+  capturedAt?: string;
+  alerts?: PulseAlert[];
+}
+
+const SEED_ALERTS = pulseSeed.alerts as PulseAlert[];
+const SEED_CAPTURED_AT = pulseSeed.capturedAt;
 
 const SEVERITY_MAP: Record<string, AlertSeverity> = {
   Extreme: "critical",
@@ -91,6 +105,20 @@ const EVENT_CATEGORY_MAP: Record<string, AlertCategory> = {
   "Wind Advisory": "weather",
   "Dust Advisory": "road_conditions",
 };
+
+/** Load the build-time feed snapshot at the repository's Pages path. */
+async function fetchPublisherSnapshot(): Promise<PublisherSnapshot> {
+  const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? "").replace(/\/$/, "");
+  const response = await fetch(`${basePath}/data/wyoming-pulse.json`, {
+    cache: "no-store",
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(12_000),
+  });
+  if (!response.ok) throw new Error(`Publisher snapshot returned HTTP ${response.status}`);
+  const snapshot = await response.json() as PublisherSnapshot;
+  if (!Array.isArray(snapshot.alerts)) throw new Error("Publisher snapshot did not contain an article list");
+  return snapshot;
+}
 
 // ─── CORS-Resilient Fetch Helper ─────────────────────────
 
@@ -1164,6 +1192,7 @@ export async function runPulseIngestion(): Promise<IngestionResult> {
     fetchWFIGSWildfires(),
     fetchUSGSEarthquakes(),
     fetchRSSFeeds(),
+    fetchPublisherSnapshot(),
   ]);
 
   const liveAlerts: PulseAlert[] = [];
@@ -1199,6 +1228,17 @@ export async function runPulseIngestion(): Promise<IngestionResult> {
   } else if (results[4].status === "rejected") {
     errors.push(`RSS: ${results[4].reason}`);
   }
+
+  const snapshotResult = results[5];
+  const publisherSnapshot = snapshotResult.status === "fulfilled" ? snapshotResult.value : null;
+  const snapshotAlerts = publisherSnapshot?.alerts?.length ? publisherSnapshot.alerts : SEED_ALERTS;
+  liveAlerts.push(...snapshotAlerts);
+  const snapshotMode = publisherSnapshot?.mode === "published-snapshot" && publisherSnapshot.alerts?.length
+    ? "published-snapshot"
+    : "curated-seed";
+  const snapshotCapturedAt = publisherSnapshot?.capturedAt || SEED_CAPTURED_AT;
+  if (snapshotMode === "published-snapshot") liveSourcesCount += 1;
+  if (snapshotResult.status === "rejected") errors.push(`Publisher snapshot: ${snapshotResult.reason}`);
 
   // Merge live fetched alerts with the verified October 2026 Cheyenne & Wyoming
   // public-safety baseline so Cheyenne scanner dispatches, WYDOT Cheyenne road
@@ -1239,5 +1279,7 @@ export async function runPulseIngestion(): Promise<IngestionResult> {
     timestamp: new Date().toISOString(),
     errors,
     liveSourcesCount,
+    snapshotCapturedAt,
+    mode: snapshotMode,
   };
 }

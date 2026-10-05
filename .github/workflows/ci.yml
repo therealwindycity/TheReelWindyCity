@@ -19,6 +19,8 @@ jobs:
       - run: npm run typecheck
       - name: Sync pipeline tests (red-team regression suite)
         run: npm run test:sync
+      - name: Wyoming Pulse RSS parsing and source-data tests
+        run: npm run test:pulse
       - name: Build static site
         run: npm run build
         env:
