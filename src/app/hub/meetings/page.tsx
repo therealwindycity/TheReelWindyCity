@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ArrowRight, ArrowUpRight, CalendarDays, CheckCircle2, FileText, Info, Landmark } from "lucide-react";
+import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
 import HubSourceDeck from "@/components/hub-source-deck";
 import { getHubSources } from "@/lib/hub-sources";
 import { MEETINGS_CAPTURED, NEXT_MEETING, UPCOMING_MEETINGS, asset } from "@/lib/civic-data";
@@ -35,6 +36,7 @@ export default function CivicHubMeetingsPage() {
           <span className="gov-posted-pill"><i aria-hidden="true" /> Agenda in archive snapshot</span>
         </div>
         <p className="gov-meeting-feature-note">The following item count and agenda text come from the captured city posting. This snapshot may lag a later revision; confirm updates with the original city source.</p>
+        <HubSnapshotFreshness note="check the city’s calendar for revisions posted since then." />
         <div className="gov-meeting-agenda-list">
           {(NEXT_MEETING.items ?? []).map((item) => (
             <article key={`${item.number}-${item.text}`}>

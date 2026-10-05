@@ -16,6 +16,8 @@ agenda**, and the source library indexes the complete public-record archive belo
 The dedicated hub is published as its own small set of crawlable pages under [`/hub/`](https://therealwindycity.github.io/TheReelWindyCity/hub/):
 
 * **Live desk (`/hub/`)** puts the current captured agenda beside a source-window switchboard for Granicus, an archived Council video, Broadcastify, the National Weather Service, and WYDOT. It loads one external iframe at a time, names the publisher, and keeps a direct-source link available when a publisher blocks embedding.
+  * Publisher windows are **click-to-load**: the frame is present in the markup but carries no `src` until you press *Load window*, so nothing is requested from a third party on page view. Once open, a *Reload* control and the direct-source link stay available, and the address bar tracks the selected window (`/hub/#source-scanner`) so a single source can be linked and re-found.
+  * Pages that show posted agenda items carry a **record-snapshot freshness note** with the snapshot date and its age, so a stale capture is visible rather than implied.
 * **Meetings (`/hub/meetings/`)** summarizes posted agenda items and teaches the agenda → meeting → minutes/adopted-text sequence. Agenda entries remain proposals until the official record establishes an outcome.
 * **Live signals (`/hub/signals/`)** reuses the Wyoming Pulse syndication desk for agency alerts, scanner metadata, weather, roads, wildfire/seismic sources, and Wyoming newsroom feeds. Third-party relays are contextual, not official dispatch.
 * **Learn the record (`/hub/learn/`)** is a short civic field guide with an interactive knowledge check on source authority, meeting stages, and transcript verification.

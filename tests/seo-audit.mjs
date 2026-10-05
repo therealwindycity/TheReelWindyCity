@@ -169,6 +169,34 @@ for (const sourceLabel of ["Posted agenda", "Council video", "Scanner audio", "N
 }
 check(Boolean(hubHome && hubHome.includes("Open original source")), "hub/: missing direct-source fallback for publishers that block iframes");
 
+// Publisher windows are click-to-load. The frame stays in the exported markup so
+// it still works without JavaScript and still describes a real framed document,
+// but it must not carry a src — otherwise every visit silently opens a request
+// to five third parties before anyone has asked to see them.
+const hubIframes = [...(hubHome ?? "").matchAll(/<iframe\b[^>]*>/g)].map((match) => match[0]);
+check(hubIframes.length > 0, "hub/: expected at least one publisher iframe in the exported markup");
+for (const tag of hubIframes) {
+  check(
+    !/\ssrc="/.test(tag),
+    `hub/: publisher iframe ships with a src, so it loads before the visitor asks — ${tag.slice(0, 90)}`,
+  );
+}
+for (const affordance of ["gov-frame-gate", "Load window"]) {
+  check(Boolean(hubHome && hubHome.includes(affordance)), `hub/: missing click-to-load affordance "${affordance}"`);
+}
+
+// Every page that shows posted agenda items must say how old the snapshot is.
+for (const route of ["hub/", "hub/meetings/"]) {
+  const html = read(path.join(route, "index.html"));
+  check(Boolean(html && html.includes("Record snapshot")), `${route}: missing the record-snapshot freshness note`);
+  check(Boolean(html && html.includes("gov-freshness")), `${route}: missing the freshness indicator element`);
+  const snapshotYear = index.captured.slice(0, 4);
+  check(
+    Boolean(html && new RegExp(`Record snapshot[^<]*${snapshotYear}`).test(html)),
+    `${route}: freshness note does not name the snapshot year ${snapshotYear}`,
+  );
+}
+
 /* ------------------------------------------------------------------ */
 /* 4. Sitemap covers every page with an honest lastmod                  */
 /* ------------------------------------------------------------------ */
