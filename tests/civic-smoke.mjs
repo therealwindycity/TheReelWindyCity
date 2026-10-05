@@ -252,7 +252,7 @@ try {
   await expect(page.locator('.tracker-row')).toContainText('Postponed to Feb 9');
   console.log('PASS: interactive map, before/if-enacted comparison, verified ordinance statuses');
 
-  await page.getByRole('button', { name: 'Live alerts', exact: true }).click();
+  await page.getByRole('button', { name: 'Wyoming Pulse', exact: true }).click();
   await expect(page.getByRole('heading', { name: 'PULSE', exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: /Cheyenne & Wyoming Live Scanner Console/ })).toBeVisible();
   await expect(page.locator('.pulse-scanner-tuner')).toContainText('Laramie County Law Enforcement');
