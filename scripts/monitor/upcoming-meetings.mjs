@@ -59,7 +59,10 @@ function loadState(statePath) {
   }
 }
 
-async function fetchUpcoming(url) {
+const FETCH_ATTEMPTS = 3;
+const RETRY_DELAYS_MS = [2_000, 6_000];
+
+async function fetchOnce(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 30_000);
   try {
@@ -80,6 +83,29 @@ async function fetchUpcoming(url) {
   }
 }
 
+/**
+ * Retry a transient portal or network failure before giving up. An hourly
+ * watcher that goes red on a single blip trains its reader to ignore the
+ * emails, which is its own failure mode; the last error is still rethrown so
+ * the caller can decide whether to fail closed.
+ */
+async function fetchUpcoming(url) {
+  let lastError;
+  for (let attempt = 1; attempt <= FETCH_ATTEMPTS; attempt += 1) {
+    try {
+      return await fetchOnce(url);
+    } catch (error) {
+      lastError = error;
+      if (attempt < FETCH_ATTEMPTS) {
+        const delay = RETRY_DELAYS_MS[attempt - 1] ?? RETRY_DELAYS_MS.at(-1);
+        console.warn(`⚠ attempt ${attempt}/${FETCH_ATTEMPTS} failed (${error.message}); retrying in ${Math.round(delay / 1_000)}s`);
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+  throw lastError;
+}
+
 /** Which records are new or changed vs the baseline (drives which URLs get synced). */
 export function changedRecords(records, previousRecords) {
   if (!previousRecords?.length) return records;
@@ -91,10 +117,43 @@ export function changedRecords(records, previousRecords) {
   });
 }
 
+/**
+ * How the scheduled watcher reports a portal outage.
+ *
+ * OM3#2 requires that a failure never reads as "no changes", and that is
+ * preserved exactly: this path records reason "source-unavailable" with
+ * `changed: null`, so nothing downstream can mistake it for an unchanged table,
+ * and no sync can be triggered (`changed` must be exactly `true`). What it does
+ * *not* do is email a red run every hour for the portal being unreachable —
+ * unattended red runs train the reader to ignore alerts, and the run history
+ * plus the job summary still record every outage.
+ *
+ * Structural surprises stay fatal: if the page loads but the expected table is
+ * missing or malformed (ENO_TABLE / ENO_ROWS), the watcher exits non-zero. That
+ * is the city changing its markup, and it needs a human.
+ */
+function reportSourceUnavailable(outFile, error) {
+  const result = {
+    checkedAt: new Date().toISOString(),
+    changed: null,
+    contentHash: null,
+    previousHash: null,
+    reason: "source-unavailable",
+    error: error.message,
+    meetings: [],
+    changedMeetings: [],
+  };
+  if (outFile) atomicWrite(outFile, `${JSON.stringify(result, null, 2)}\n`);
+  console.warn(`⚠ source unavailable after ${FETCH_ATTEMPTS} attempts: ${error.message}`);
+  console.warn("  Recorded as source-unavailable — NOT as “no changes”. No sync will be triggered.");
+  return result;
+}
+
 async function main() {
   const statePath = flag("--state") || DEFAULT_STATE;
   const updateState = process.argv.includes("--update-state");
   const seed = process.argv.includes("--seed");
+  const tolerateSourceUnavailable = process.argv.includes("--tolerate-source-unavailable");
   const outFile = flag("--out");
 
   let records;
@@ -103,7 +162,17 @@ async function main() {
     records = recordsFromOfficialSnapshot(JSON.parse(readFileSync(SNAPSHOT, "utf8")));
     console.log(`Seeded baseline from curated snapshot: ${records.length} upcoming meeting(s).`);
   } else {
-    const html = flag("--from-file") ? readFileSync(flag("--from-file"), "utf8") : await fetchUpcoming(flag("--url") || DEFAULT_URL);
+    let html;
+    if (flag("--from-file")) {
+      html = readFileSync(flag("--from-file"), "utf8");
+    } else {
+      try {
+        html = await fetchUpcoming(flag("--url") || DEFAULT_URL);
+      } catch (error) {
+        if (!tolerateSourceUnavailable) throw error;
+        return reportSourceUnavailable(outFile, error);
+      }
+    }
     records = extractUpcomingRecords(html); // throws ENO_TABLE / ENO_ROWS on structural surprises
   }
 

@@ -36,8 +36,18 @@ permissions:
   contents: write
 
 concurrency:
-  group: municipal-data-sync # shared with live_city_sync.yml — one write lane
-  cancel-in-progress: false
+  # The watcher is read-only and idempotent: detection writes nothing, so two
+  # overlapping detections cannot corrupt state, and a superseded detection is
+  # harmless because the next run re-reads the same table.
+  #
+  # This used to share the writer's "municipal-data-sync" group (OM1#1). That
+  # serialized a 30-second read behind long sync runs, and hourly runs then sat
+  # in the queue until GitHub cancelled them — jobs with zero executed steps,
+  # reported as failed runs, one email per hour. Detection now owns its group and
+  # supersedes itself. The write lane is still serialized exactly as before:
+  # live_city_sync.yml keeps "municipal-data-sync" with cancel-in-progress: false.
+  group: municipal-watch
+  cancel-in-progress: true
 
 jobs:
   watch:
@@ -58,16 +68,43 @@ jobs:
       - run: npm ci
 
       - name: Detect semantic changes in the upcoming-meetings table (OM1#2)
-        run: node scripts/monitor/upcoming-meetings.mjs --check --state data/sync-state.json --out .sync/watch.json
+        timeout-minutes: 5
+        run: node scripts/monitor/upcoming-meetings.mjs --check --state data/sync-state.json --out .sync/watch.json --tolerate-source-unavailable
 
       - name: Publish watch outputs
         id: result
         run: |
           {
-            echo "changed=$(jq -r '.changed' .sync/watch.json)"
-            echo "urls=$(jq -r '[.changedMeetings[].agendaUrl | select(length > 0)] | join(",")' .sync/watch.json)"
-            echo "ids=$(jq -r '[.changedMeetings[] | (.body + "-" + .date)] | join(",")' .sync/watch.json)"
+            echo "changed=$(jq -r 'if .changed == true then "true" else "false" end' .sync/watch.json)"
+            echo "urls=$(jq -r '[.changedMeetings[]?.agendaUrl | select(length > 0)] | join(",")' .sync/watch.json)"
+            echo "ids=$(jq -r '[.changedMeetings[]? | (.body + "-" + .date)] | join(",")' .sync/watch.json)"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Explain this run in the summary
+        if: always()
+        run: |
+          {
+            echo "## Live Municipal Watch"
+            echo ""
+            if [ ! -f .sync/watch.json ]; then
+              echo "**No result file was written** — the detection step did not reach the end,"
+              echo "which means either the portal's table structure changed or the run was cut short."
+              echo "A structural change is a human-actionable failure (ENO_TABLE / ENO_ROWS)."
+            else
+              echo "| field | value |"
+              echo "| --- | --- |"
+              echo "| outcome | $(jq -r '.reason // "unknown"' .sync/watch.json) |"
+              echo "| changed | $(jq -r 'if .changed == true then "yes" elif .changed == false then "no" else "n/a (not checked)" end' .sync/watch.json) |"
+              echo "| checked | $(jq -r '.checkedAt // "n/a"' .sync/watch.json) |"
+              if jq -e '.reason == "source-unavailable"' .sync/watch.json >/dev/null 2>&1; then
+                echo "| error | $(jq -r '.error // "n/a"' .sync/watch.json) |"
+                echo ""
+                echo "The city's agenda portal was unreachable after retries. This is recorded as"
+                echo "**source-unavailable**, not as \"no changes\": no sync was triggered, and the"
+                echo "next scheduled run re-checks. Repeated days of this are worth investigating."
+              fi
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
   sync:
     needs: watch
