@@ -139,11 +139,31 @@ The interactive app is the same document for every meeting, so it does not mint 
 "Open this meeting in Civic Cheyenne" links on each record page use `/?meeting=<meeting-id>`; while a
 meeting is selected the app rewrites its canonical link to that meeting's `/meetings/<id>/` page, so the
 parameterized deep link consolidates onto the crawlable record page instead of competing with the
-homepage. Submit the sitemap
-in Google Search Console after deployment. Index/follow directives are emitted in page metadata. A
-project-scoped `robots.txt` is intentionally omitted: on GitHub Pages, `robots.txt` is scoped to the
-shared host root, which this repository cannot control. The Google HTML-file ownership check is
+homepage.
+
+**Submit exactly this URL in Google Search Console:**
+`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml`. The domain root
+(`https://therealwindycity.github.io/sitemap.xml`) is not a sitemap — it is a GitHub Pages 404 — so a
+root URL submitted there reports a fetch error instead of indexing the site. When a previously
+submitted sitemap is listed in Search Console, remove the stale entry and resubmit the URL above so
+Google re-reads the current file rather than reporting the old fetch.
+
+`src/app/robots.ts` publishes `robots.txt` at the project path, naming that sitemap in full and
+allowing all crawlers. Two limits are worth knowing before relying on it: crawlers read `robots.txt`
+only from the host root, and GitHub Pages serves nothing at
+`https://therealwindycity.github.io/robots.txt` for a project site — a 404 there means "no crawl
+rules", so nothing in this repository can block or unblock Googlebot at the host root. The file exists
+so the sitemap is discoverable to tools that read it, to make the intent explicit, and to be ready to
+copy into a `therealwindycity.github.io` user-site repository if a host-root `robots.txt` is ever
+wanted. Index/follow directives are emitted in page metadata. The Google HTML-file ownership check is
 served from `public/googlee2d9fc23b9d6b0f7.html`.
+
+`npm run seo:live` verifies the **published** files rather than the build output — that the deployed
+sitemap is reachable, advertises this exact host and base path, lists at least as many pages as the
+archive requires, and that `robots.txt` names it. The deploy workflow runs the same check after
+`actions/deploy-pages`, so a deploy that would leave Search Console reading the wrong sitemap fails
+loudly instead of going unnoticed. Use `--mirror` to audit a local export served under a different
+host.
 
 Search Console verification establishes site ownership but does not guarantee indexing. After
 verification, submit the sitemap, inspect the archive and key meeting URLs, and use **Request

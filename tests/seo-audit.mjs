@@ -12,7 +12,7 @@
  * so an export that quietly drops static pages, duplicates canonicals, or
  * serves a placeholder host cannot ship.
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const ORIGIN = process.env.SEO_ORIGIN || "https://therealwindycity.github.io";
@@ -215,6 +215,27 @@ if (!sitemap) {
   const missing = expected.filter((url) => !locations.includes(url));
   check(missing.length === 0, `Sitemap is missing ${missing.length} URLs (e.g. ${missing[0]})`);
 
+  // Nothing optional here: compare the sitemap against the pages actually
+  // exported, so a new route cannot ship without an entry. Framework error
+  // pages are the only intentional exception.
+  const NOT_INDEXABLE = new Set(["404", "_not-found"]);
+  const exportedPages = [];
+  (function walk(directory) {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) walk(entryPath);
+      else if (entry.name === "index.html") {
+        const relative = path.relative(OUT, path.dirname(entryPath)).split(path.sep).join("/");
+        if (relative && NOT_INDEXABLE.has(relative.split("/")[0])) continue;
+        exportedPages.push(relative ? `${SITE_URL}${relative}/` : SITE_URL);
+      }
+    }
+  })(OUT);
+  const unlisted = exportedPages.filter((url) => !locations.includes(url));
+  check(unlisted.length === 0, `${unlisted.length} exported pages are absent from the sitemap (e.g. ${unlisted[0]})`);
+  const dangling = locations.filter((url) => !exportedPages.includes(url));
+  check(dangling.length === 0, `Sitemap lists ${dangling.length} URLs with no exported page (e.g. ${dangling[0]})`);
+
   const withoutLastmod = blocks.filter((block) => !/<lastmod>/.test(block)).length;
   check(withoutLastmod === 0, `${withoutLastmod} sitemap entries have no <lastmod>`);
 
@@ -249,6 +270,19 @@ for (const [label, file, expectedCanonical] of [
   }
   check(html.includes(`rel="canonical" href="${expectedCanonical}"`), `${label} canonical is not ${expectedCanonical}`);
   check(exportedSitemap.includes(`<loc>${expectedCanonical}</loc>`), `${label} missing from sitemap`);
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. robots.txt names this site's sitemap                             */
+/* ------------------------------------------------------------------ */
+const robots = read("robots.txt");
+if (!robots) {
+  failures.push("Missing out/robots.txt — nothing names the sitemap for crawlers");
+} else {
+  const sitemapUrl = `${SITE_URL}sitemap.xml`;
+  check(/user-agent:\s*\*/i.test(robots), "robots.txt does not define a user-agent group");
+  check(!/^\s*disallow:\s*\/\s*$/im.test(robots), "robots.txt disallows the whole site");
+  check(robots.includes(`Sitemap: ${sitemapUrl}`), `robots.txt does not point at ${sitemapUrl}`);
 }
 
 /* ------------------------------------------------------------------ */

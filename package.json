@@ -19,6 +19,7 @@
     "test:pulse": "node --test tests/pulse-news.test.mjs",
     "test:e2e": "node tests/civic-smoke.mjs",
     "test:seo": "node tests/seo-audit.mjs",
+    "seo:live": "node scripts/check-live-seo.mjs",
     "sync:watch": "node scripts/monitor/upcoming-meetings.mjs --check",
     "sync:seed": "node scripts/monitor/upcoming-meetings.mjs --seed",
     "sync:parse": "node scripts/extractors/parse_agenda_pdf.mjs",
