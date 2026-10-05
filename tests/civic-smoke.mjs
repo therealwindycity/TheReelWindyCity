@@ -62,8 +62,8 @@ try {
   const sitemapText = await sitemapResponse.text();
   const meetingIndex = JSON.parse(await readFile('public/data/meetings.json', 'utf8'));
   const sitemapLocations = [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== meetingIndex.meetings.length + 3) {
-    throw new Error(`Expected homepage, meeting/transcript indexes, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== meetingIndex.meetings.length + 7) {
+    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
   }
   const archiveResponse = await context.request.get(new URL('meetings/', publicBase).toString());
   const archiveHtml = await archiveResponse.text();
@@ -74,6 +74,19 @@ try {
   const transcriptHtml = await transcriptResponse.text();
   if (transcriptResponse.status() !== 200 || !transcriptHtml.includes('Cheyenne public meeting transcripts')) {
     throw new Error('Expected the timestamped transcript index to be exported');
+  }
+  const hubPages = [
+    { path: 'hub/', marker: 'Local government is easier to follow', extra: '<iframe' },
+    { path: 'hub/meetings/', marker: 'Meetings &amp; agendas', extra: 'FEATURED POSTED AGENDA' },
+    { path: 'hub/signals/', marker: 'Live signal desk', extra: 'WyoLink P25' },
+    { path: 'hub/learn/', marker: 'Learn to follow a public decision', extra: 'QUICK KNOWLEDGE CHECK' },
+  ];
+  for (const hub of hubPages) {
+    const response = await context.request.get(new URL(hub.path, publicBase).toString());
+    const html = await response.text();
+    if (response.status() !== 200 || !html.includes(hub.marker) || !html.includes(hub.extra)) {
+      throw new Error(`Expected dedicated ${hub.path} civic hub page with source-backed content`);
+    }
   }
   const historicalMeetings = meetingIndex.meetings.filter((meeting) => !meeting.upcoming);
   const oldestMeeting = historicalMeetings.reduce((oldest, meeting) => meeting.date < oldest.date ? meeting : oldest);

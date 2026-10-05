@@ -335,7 +335,7 @@ function AlertRow({
   );
 }
 
-export function PulseBroadcast() {
+export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
   const [result, setResult] = useState<IngestionResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -775,7 +775,7 @@ export function PulseBroadcast() {
         </div>
         <div className="pulse-brand-copy">
           <span>WYOMING</span>
-          <h1 id="pulse-title">PULSE</h1>
+          {embedded ? <h2 id="pulse-title">PULSE</h2> : <h1 id="pulse-title">PULSE</h1>}
         </div>
         <div className="pulse-masthead-divider" />
         <div className="pulse-masthead-description">
@@ -797,7 +797,7 @@ export function PulseBroadcast() {
       <div className="pulse-status-rail">
         <span className="pulse-on-air">
           <span />
-          {loading ? "CONNECTING" : isStreaming ? "SCANNER LIVE" : "ON AIR"}
+          {loading ? "CONNECTING" : isStreaming ? "SCANNER LIVE" : "MONITORING"}
         </span>
         <span className="pulse-status-copy">
           MONITORING <strong>CHEYENNE &amp; WYOMING</strong>

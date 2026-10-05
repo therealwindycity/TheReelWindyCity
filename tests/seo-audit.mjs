@@ -134,7 +134,43 @@ if (!archiveHtml) {
 }
 
 /* ------------------------------------------------------------------ */
-/* 3. Sitemap covers every page with an honest lastmod                  */
+/* 3. Dedicated civic hub pages are crawlable, canonical, and useful    */
+/* ------------------------------------------------------------------ */
+const hubPages = [
+  { route: "hub/", heading: "Local government is easier to follow", marker: "OPEN SOURCE WINDOWS" },
+  { route: "hub/meetings/", heading: "Meetings & agendas", marker: "FEATURED POSTED AGENDA" },
+  { route: "hub/signals/", heading: "Live signal desk", marker: "WyoLink P25" },
+  { route: "hub/learn/", heading: "Learn to follow a public decision", marker: "QUICK KNOWLEDGE CHECK" },
+];
+for (const hub of hubPages) {
+  const html = read(path.join(hub.route, "index.html"));
+  if (!html) {
+    failures.push(`Missing dedicated civic hub page: out/${hub.route}index.html`);
+    continue;
+  }
+  const canonicalUrl = `${SITE_URL}${hub.route}`;
+  const titleTags = matchAll(html, /<title>([^<]*)<\/title>/g);
+  const canonicalTags = matchAll(html, /<link rel="canonical" href="([^"]*)"/g);
+  check(titleTags.length === 1, `${hub.route}: expected one page title, found ${titleTags.length}`);
+  check(canonicalTags.length === 1 && canonicalTags[0] === canonicalUrl, `${hub.route}: canonical ${canonicalTags[0]} does not match ${canonicalUrl}`);
+  check(/<meta name="robots" content="[^"]*index/.test(html), `${hub.route}: missing indexable robots directive`);
+  check(visibleText(html).length > 700, `${hub.route}: page text is only ${visibleText(html).length} characters — likely a hollow shell`);
+  check(html.toLowerCase().includes(hub.marker.toLowerCase()), `${hub.route}: missing expected page content "${hub.marker}"`);
+  const h1Tags = matchAll(html, /<h1[^>]*>([\s\S]*?)<\/h1>/g);
+  check(h1Tags.length === 1, `${hub.route}: expected one <h1>, found ${h1Tags.length}`);
+  const h1Text = visibleText(h1Tags[0] ?? "").replace(/&amp;/g, "&");
+  check(h1Text.toLowerCase().includes(hub.heading.toLowerCase()), `${hub.route}: heading "${h1Text}" does not match "${hub.heading}"`);
+  check(!/https:\/\/github\.io(\/|\{|\s|")/.test(html), `${hub.route}: links a bare github.io host instead of the project URL`);
+}
+const hubHome = read(path.join("hub/", "index.html"));
+check(Boolean(hubHome && /<iframe[^>]+title=/.test(hubHome)), "hub/: expected a titled external source iframe with a direct-source fallback");
+for (const sourceLabel of ["Posted agenda", "Council video", "Scanner audio", "NWS forecast", "WYDOT roads"]) {
+  check(Boolean(hubHome && hubHome.includes(sourceLabel)), `hub/: missing iframe source tab "${sourceLabel}"`);
+}
+check(Boolean(hubHome && hubHome.includes("Open original source")), "hub/: missing direct-source fallback for publishers that block iframes");
+
+/* ------------------------------------------------------------------ */
+/* 4. Sitemap covers every page with an honest lastmod                  */
 /* ------------------------------------------------------------------ */
 const sitemap = read("sitemap.xml");
 if (!sitemap) {
@@ -142,7 +178,8 @@ if (!sitemap) {
 } else {
   const blocks = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => match[1]);
   const locations = blocks.map((block) => matchAll(block, /<loc>([^<]*)<\/loc>/g)[0]);
-  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
+  const hubUrls = ["hub/", "hub/meetings/", "hub/signals/", "hub/learn/"].map((route) => `${SITE_URL}${route}`);
+  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, ...hubUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
 
   check(locations.length === expected.length, `Sitemap lists ${locations.length} URLs, expected ${expected.length}`);
   check(new Set(locations).size === locations.length, "Sitemap contains duplicate <loc> entries");
@@ -172,6 +209,7 @@ if (!home) {
   check(home.includes("meetings/"), "Homepage does not link the crawlable meeting archive");
 }
 
+const exportedSitemap = read("sitemap.xml") ?? "";
 for (const [label, file, expectedCanonical] of [
   ["meeting archive", path.join("meetings", "index.html"), `${SITE_URL}meetings/`],
   ["transcript archive", path.join("transcripts", "index.html"), `${SITE_URL}transcripts/`],
@@ -182,7 +220,7 @@ for (const [label, file, expectedCanonical] of [
     continue;
   }
   check(html.includes(`rel="canonical" href="${expectedCanonical}"`), `${label} canonical is not ${expectedCanonical}`);
-  check(html.includes(`<loc>${expectedCanonical}</loc>`) || true, `${label} missing from sitemap`);
+  check(exportedSitemap.includes(`<loc>${expectedCanonical}</loc>`), `${label} missing from sitemap`);
 }
 
 /* ------------------------------------------------------------------ */
@@ -196,6 +234,6 @@ if (failures.length) {
 }
 
 console.log(
-  `SEO audit passed: ${MEETINGS.length} meeting pages exported with unique titles and canonicals, ` +
-    `${MEETINGS.length} sitemap entries with lastmod ${index.captured}, all pages linked from /meetings/.`,
+  `SEO audit passed: ${MEETINGS.length} meeting pages and four standalone hub pages exported with canonicals, ` +
+    `plus home, archive and transcript indexes in the sitemap (lastmod ${index.captured}).`,
 );

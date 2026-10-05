@@ -47,6 +47,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.8,
     },
+    {
+      url: siteUrl("hub/"),
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
+    {
+      url: siteUrl("hub/meetings/"),
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    {
+      url: siteUrl("hub/signals/"),
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.8,
+    },
+    {
+      url: siteUrl("hub/learn/"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
     ...MEETINGS.map((meeting): MetadataRoute.Sitemap[number] => ({
       url: siteUrl(`meetings/${meeting.id}/`),
       lastModified,
