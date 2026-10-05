@@ -61,6 +61,30 @@ function loadState(statePath) {
 
 const FETCH_ATTEMPTS = 3;
 const RETRY_DELAYS_MS = [2_000, 6_000];
+const DEFAULT_BLOCKED = path.join("data", "sync-blocked.json");
+
+/**
+ * How long a change that already failed to sync stays quiet before retrying.
+ *
+ * Without this, the loop is: the watcher detects a change, the sync fails on the
+ * extraction step, the baseline never advances, and the identical change re-fires
+ * every hour — one failure email per hour, forever, for a document a human has to
+ * look at anyway. The change is still reported as changed (never disguised as
+ * "no changes"); it is simply not re-attempted until the window passes, so the
+ * pipeline escalates daily instead of hourly and clears itself as soon as the
+ * blocked document is fixed.
+ */
+const BLOCKED_RETRY_AFTER_MS = Number(process.env.SYNC_BLOCKED_RETRY_MS || 24 * 60 * 60 * 1_000);
+
+function readBlocked(blockedPath) {
+  if (!existsSync(blockedPath)) return null;
+  try {
+    const blocked = JSON.parse(readFileSync(blockedPath, "utf8"));
+    return blocked && typeof blocked.contentHash === "string" ? blocked : null;
+  } catch {
+    return null; // A corrupt marker must never suppress a real change.
+  }
+}
 
 async function fetchOnce(url) {
   const controller = new AbortController();
@@ -181,12 +205,28 @@ async function main() {
   const changed = !previous || previous.contentHash !== hash;
   const changedList = changed ? changedRecords(records, previous?.meetings) : [];
 
+  // A change that already failed to sync stays reported as changed, but is not
+  // re-attempted until the retry window passes (see BLOCKED_RETRY_AFTER_MS).
+  const blocked = seed || !changed ? null : readBlocked(flag("--blocked") || DEFAULT_BLOCKED);
+  const blockedAgeMs = blocked ? Date.now() - Date.parse(blocked.attemptedAt ?? "") : Number.NaN;
+  const suppressed = Boolean(
+    blocked && blocked.contentHash === hash && Number.isFinite(blockedAgeMs) && blockedAgeMs < BLOCKED_RETRY_AFTER_MS,
+  );
+
   const result = {
     checkedAt: new Date().toISOString(),
     changed,
+    suppressed,
     contentHash: hash,
     previousHash: previous?.contentHash ?? null,
-    reason: seed ? "seed" : changed ? (previous ? "content-changed" : "no-baseline") : "unchanged",
+    reason: seed
+      ? "seed"
+      : changed
+        ? suppressed ? "change-blocked-retry-window" : (previous ? "content-changed" : "no-baseline")
+        : "unchanged",
+    blocked: suppressed
+      ? { attemptedAt: blocked.attemptedAt ?? null, attempts: blocked.attempts ?? null, retryAfterMs: BLOCKED_RETRY_AFTER_MS }
+      : null,
     meetings: records,
     changedMeetings: changedList,
   };
@@ -198,6 +238,12 @@ async function main() {
   if (outFile) atomicWrite(outFile, `${JSON.stringify(result, null, 2)}\n`);
 
   console.log(JSON.stringify({ ...result, meetings: records.length, changedMeetings: changedList.length }));
+  if (suppressed) {
+    console.warn(
+      `⚠ change already failed to sync (attempted ${blocked?.attemptedAt ?? "unknown"}) — not re-attempting for ` +
+        `${Math.round(BLOCKED_RETRY_AFTER_MS / 3_600_000)}h. The change is still recorded as changed.`,
+    );
+  }
   if (!seed && changed) {
     console.log(
       changedList.length
