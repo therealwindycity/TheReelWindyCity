@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, CircleHelp, ClipboardList, Clock3, FileText, FolderOpen, Landmark, LayoutGrid, Map, MapPin, Menu, MessageSquareText, Search, ShieldCheck, X, Play, Download, Bookmark, AlertCircle, Zap } from "lucide-react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronDown, ChevronRight, CircleHelp, ClipboardList, Clock3, FileText, FolderOpen, Landmark, LayoutGrid, Map, MapPin, Menu, MessageSquareText, Newspaper, Palette, Search, ShieldCheck, X, Play, Download, Bookmark, AlertCircle } from "lucide-react";
 import Github from "./github-icon";
 import ImpactMap from "./impact-map";
 import SessionWorkspace, { ImpactSummary, OrdinanceIcon, officialDocument } from "./session-workspace";
@@ -43,10 +43,47 @@ function syncCanonical(meetingId: string | null) {
   desiredCanonical = known ? siteUrl(`meetings/${meetingId}/`) : SITE_URL;
   applyCanonical();
 }
-const NAV = [{ id: "overview" as View, label: "Overview", icon: LayoutGrid }, { id: "search" as View, label: "Ask the record", icon: Search }, { id: "alerts" as View, label: "Live alerts", icon: Zap }, { id: "sessions" as View, label: "Meetings & agendas", icon: Landmark }, { id: "impacts" as View, label: "City impact map", icon: Map }, { id: "ordinances" as View, label: "Ordinance tracker", icon: ClipboardList }, { id: "sources" as View, label: "Source library", icon: FolderOpen }];
+type SiteStyleId = "prairie" | "newsroom" | "field-notes" | "terminal" | "glacier" | "sunset" | "high-contrast" | "blueprint" | "garden" | "monochrome";
+
+const STYLE_STORAGE_KEY = "civic-cheyenne-interface-style-v1";
+const SITE_STYLES: Array<{
+  id: SiteStyleId;
+  name: string;
+  note: string;
+  canvas: string;
+  panel: string;
+  sidebar: string;
+  accent: string;
+  ink: string;
+  border: string;
+}> = [
+  { id: "prairie", name: "Prairie", note: "Balanced sidebar dashboard", canvas: "#f6f7f3", panel: "#ffffff", sidebar: "#182c26", accent: "#c2e79a", ink: "#22332c", border: "#e5e8e1" },
+  { id: "newsroom", name: "Newsroom", note: "Editorial masthead & columns", canvas: "#f1f3f4", panel: "#ffffff", sidebar: "#131b21", accent: "#df463e", ink: "#1b262c", border: "#cfd6d9" },
+  { id: "field-notes", name: "Field Notes", note: "Narrow reading column", canvas: "#f1e8d8", panel: "#fffaf0", sidebar: "#48382c", accent: "#bd8550", ink: "#392f27", border: "#d9cbb4" },
+  { id: "terminal", name: "Terminal", note: "Compact icon rail & data grid", canvas: "#e5efe7", panel: "#f5fbf6", sidebar: "#14291d", accent: "#5d9a68", ink: "#1d3926", border: "#bfd1c2" },
+  { id: "glacier", name: "Glacier", note: "Right-side navigation rail", canvas: "#edf4f8", panel: "#ffffff", sidebar: "#15364b", accent: "#4ca0c9", ink: "#203744", border: "#cfdee7" },
+  { id: "sunset", name: "Sunset", note: "Immersive view & bottom dock", canvas: "#f8edf0", panel: "#fffafd", sidebar: "#41263e", accent: "#df7181", ink: "#38273a", border: "#ead2dc" },
+  { id: "high-contrast", name: "High Contrast", note: "Large-print single-column reader", canvas: "#ffffff", panel: "#ffffff", sidebar: "#050505", accent: "#f0d400", ink: "#050505", border: "#111111" },
+  { id: "blueprint", name: "Blueprint", note: "12-column modular board", canvas: "#eaf2f8", panel: "#f9fcff", sidebar: "#112b4b", accent: "#39b6d7", ink: "#18324c", border: "#bfd4e4" },
+  { id: "garden", name: "Garden", note: "Inset rail & organic mosaic", canvas: "#eef4e9", panel: "#fbfff7", sidebar: "#304931", accent: "#8eb567", ink: "#344632", border: "#d1dfc5" },
+  { id: "monochrome", name: "Monochrome", note: "Minimal archive & icon rail", canvas: "#f0f0ef", panel: "#ffffff", sidebar: "#202020", accent: "#444444", ink: "#262626", border: "#d5d5d4" },
+
+];
+
+function isSiteStyle(value: string | null): value is SiteStyleId {
+  return SITE_STYLES.some((style) => style.id === value);
+}
+
+const NAV = [{ id: "overview" as View, label: "Overview", icon: LayoutGrid }, { id: "search" as View, label: "Ask the record", icon: Search }, { id: "alerts" as View, label: "Wyoming Pulse", icon: Newspaper }, { id: "sessions" as View, label: "Meetings & agendas", icon: Landmark }, { id: "impacts" as View, label: "City impact map", icon: Map }, { id: "ordinances" as View, label: "Ordinance tracker", icon: ClipboardList }, { id: "sources" as View, label: "Source library", icon: FolderOpen }];
 
 export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: SourceFile[]; sourceSha: string }) {
   const [view, setView] = useState<View>("overview");
+  const [siteStyle, setSiteStyle] = useState<SiteStyleId>("prairie");
+  const [stylePickerOpen, setStylePickerOpen] = useState(false);
+  const [siteStyleReady, setSiteStyleReady] = useState(false);
+  const stylePopoverRef = useRef<HTMLDivElement>(null);
+  const styleTriggerRef = useRef<HTMLButtonElement>(null);
+  const styleChangedBeforeRestoreRef = useRef(false);
   const [selectedId, setSelectedId] = useState(ORDINANCES[0].id);
   const [mobileNav, setMobileNav] = useState(false);
   const [about, setAbout] = useState(false);
@@ -74,6 +111,33 @@ export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: So
     setProgress(state.progress);
     setBookmarks(state.bookmarks);
   }, []);
+  useEffect(() => {
+    const restoreStyle = (value: string | null) => setSiteStyle(isSiteStyle(value) ? value : "prairie");
+    const frame = window.requestAnimationFrame(() => {
+      let savedStyle: string | null = null;
+      try { savedStyle = window.localStorage.getItem(STYLE_STORAGE_KEY); } catch { /* Use the default when storage is unavailable. */ }
+      if (!styleChangedBeforeRestoreRef.current) restoreStyle(savedStyle);
+      setSiteStyleReady(true);
+    });
+    const syncAcrossTabs = (event: StorageEvent) => {
+      if (event.key === STYLE_STORAGE_KEY || event.key === null) restoreStyle(event.key === null ? null : event.newValue);
+    };
+    window.addEventListener("storage", syncAcrossTabs);
+    return () => { window.cancelAnimationFrame(frame); window.removeEventListener("storage", syncAcrossTabs); };
+  }, []);
+  useEffect(() => {
+    if (!siteStyleReady) return;
+    try { window.localStorage.setItem(STYLE_STORAGE_KEY, siteStyle); } catch { /* Appearance still works if storage is disabled. */ }
+  }, [siteStyle, siteStyleReady]);
+  useEffect(() => {
+    if (!stylePickerOpen) return;
+    const closeOutside = (event: PointerEvent) => {
+      const target = event.target as Node;
+      if (!stylePopoverRef.current?.contains(target) && !styleTriggerRef.current?.contains(target)) setStylePickerOpen(false);
+    };
+    window.addEventListener("pointerdown", closeOutside);
+    return () => window.removeEventListener("pointerdown", closeOutside);
+  }, [stylePickerOpen]);
   useEffect(() => { if (!toast) return; const timer = window.setTimeout(() => setToast(null), 4500); return () => window.clearTimeout(timer); }, [toast]);
   useEffect(() => {
     if (!about && !meetingPicker) return;
@@ -96,7 +160,11 @@ export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: So
   }, [about,meetingPicker]);
   useEffect(() => {
     function keyboard(e: KeyboardEvent) {
-      if (e.key === "Escape") { setAbout(false); setMeetingPicker(false); setMobileNav(false); }
+      if (e.key === "Escape") {
+        const appearanceWasOpen = Boolean(stylePopoverRef.current);
+        setAbout(false); setMeetingPicker(false); setMobileNav(false); setStylePickerOpen(false);
+        if (appearanceWasOpen) styleTriggerRef.current?.focus();
+      }
       if ((e.metaKey || e.ctrlKey) && e.key === "k") { e.preventDefault(); navigate("search"); }
     }
     window.addEventListener("keydown", keyboard);
@@ -164,21 +232,68 @@ export default function CivicApp({ initialFiles, sourceSha }: { initialFiles: So
     const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), notice:"Personal reflections only. Not official votes or public comments.", meeting: MEETING.date, progress, bookmarks }, null, 2)], { type:"application/json" });
     const url = URL.createObjectURL(blob); const link = window.document.createElement("a"); link.href = url; link.download = "my-cheyenne-civic-notebook.json"; link.click(); URL.revokeObjectURL(url); notify("Your notebook has been exported.");
   }
+  function dismissStylePicker() { setStylePickerOpen(false); styleTriggerRef.current?.focus(); }
+  function chooseStyle(style: SiteStyleId) { styleChangedBeforeRestoreRef.current = true; setSiteStyle(style); }
+  const activeStyleInfo = SITE_STYLES.find((style) => style.id === siteStyle) ?? SITE_STYLES[0];
 
-  return <div className="civic-shell">
+  return <div className="civic-shell" data-style={siteStyle}>
     {mobileNav && <div className="mobile-nav-backdrop" onClick={() => setMobileNav(false)}/>}
     <aside className={`sidebar ${mobileNav ? "mobile-open" : ""}`}>
       <button className="brand" onClick={() => navigate("overview")} aria-label="Civic Cheyenne overview"><span className="brand-symbol"><Landmark size={26} strokeWidth={1.6}/><span className="brand-spark">✦</span></span><span className="brand-wordmark">civic<span>CHEYENNE</span></span></button>
       <button className="city-select" onClick={() => setAbout(true)}><MapPin size={16}/><span>Cheyenne, Wyoming</span><ChevronDown size={13}/></button>
       <div className="sidebar-section-label">YOUR CITY, IN FOCUS</div>
-      <nav className="main-nav" aria-label="Main navigation">{NAV.map((item) => <button key={item.id} onClick={() => navigate(item.id)} className={view === item.id ? "active" : ""}><item.icon size={19} strokeWidth={1.7}/><span>{item.label}</span>{item.id === "sources" && <small>{documentCount}</small>}{item.id === "overview" && view === "overview" && <span className="nav-active-dot"/>}</button>)}</nav>
+      <nav className="main-nav" aria-label="Main navigation">{NAV.map((item) => <button key={item.id} aria-label={item.label} title={item.label} aria-current={view === item.id ? "page" : undefined} onClick={() => navigate(item.id)} className={view === item.id ? "active" : ""}><item.icon size={19} strokeWidth={1.7}/><span>{item.label}</span>{item.id === "sources" && <small>{documentCount}</small>}{item.id === "overview" && view === "overview" && <span className="nav-active-dot"/>}</button>)}</nav>
       <div className="sidebar-divider"/>
       <div className="sidebar-section-label">YOUR PARTICIPATION</div>
-      <button className={`notebook-nav ${view === "notebook" ? "active" : ""}`} onClick={() => navigate("notebook")}><BookOpen size={19} strokeWidth={1.7}/><span>My civic notebook</span>{bookmarks.length > 0 && <small>{bookmarks.length}</small>}</button>
+      <button className={`notebook-nav ${view === "notebook" ? "active" : ""}`} aria-label="My civic notebook" title="My civic notebook" aria-current={view === "notebook" ? "page" : undefined} onClick={() => navigate("notebook")}><BookOpen size={19} strokeWidth={1.7}/><span>My civic notebook</span>{bookmarks.length > 0 && <small>{bookmarks.length}</small>}</button>
       <div className="sidebar-journey"><div><span>Your civic journey</span><span>{explored} / {ORDINANCES.length}</span></div><div className="journey-track"><span style={{ width: `${Math.min(100, explored / ORDINANCES.length * 100)}%` }}/></div><p>{explored ? "Keep following the decisions that matter." : "Every informed perspective starts here."}</p></div>
       <div className="sidebar-bottom"><div className="public-record-note"><ShieldCheck size={22}/><h3>Real city. Real decisions.</h3><p>Built on public records.<br/>Not a fictional world.</p><button onClick={() => setAbout(true)}>What makes this different <ArrowUpRight size={13}/></button></div><a className="sidebar-github" href={`https://github.com/${ARCHIVE_OWNER}/${ARCHIVE_REPO}`} target="_blank" rel="noreferrer"><Github size={17}/><span>Open records. Open possibilities.</span><ArrowUpRight size={12}/></a><div className="sidebar-city-mark"><span>CHEYENNE</span><small>THE MAGIC CITY OF THE PLAINS</small></div></div>
     </aside>
-    <div className="app-main"><header className="topbar"><div className="topbar-breadcrumb"><button className="mobile-menu icon-button" aria-label="Open navigation" onClick={() => setMobileNav(true)}><Menu size={21}/></button><span>Cheyenne</span><ChevronRight size={13}/><strong>{view === "notebook" ? "My civic notebook" : NAV.find((n) => n.id === view)?.label}</strong></div><div className="topbar-right"><button className="global-search" onClick={() => navigate("search")}><Search size={16}/><span>Ask the public record</span><kbd>⌘ K</kbd></button><button className="icon-button mobile-search" aria-label="Ask the public record" onClick={() => navigate("search")}><Search size={19}/></button><span className="topbar-source-status"><span className="status-dot"/> Source-backed</span><button className="icon-button help-button" aria-label="About this civic experience" onClick={() => setAbout(true)}><CircleHelp size={19}/></button><span className="topbar-divider"/><button className="visitor-avatar" onClick={() => navigate("notebook")} aria-label="Open your civic notebook">YOU</button></div></header>
+    <div className="app-main">
+      <header className="topbar">
+        <div className="topbar-breadcrumb"><button className="mobile-menu icon-button" aria-label="Open navigation" onClick={() => setMobileNav(true)}><Menu size={21}/></button><span>Cheyenne</span><ChevronRight size={13}/><strong>{view === "notebook" ? "My civic notebook" : NAV.find((n) => n.id === view)?.label}</strong></div>
+        <div className="topbar-right">
+          <button className="global-search" onClick={() => navigate("search")}><Search size={16}/><span>Ask the public record</span><kbd>⌘ K</kbd></button>
+          <button className="icon-button mobile-search" aria-label="Ask the public record" onClick={() => navigate("search")}><Search size={19}/></button>
+          <span className="topbar-source-status"><span className="status-dot"/> Source-backed</span>
+          <div className="style-control-wrap">
+            <button
+              ref={styleTriggerRef}
+              className="style-launcher"
+              type="button"
+              aria-label="Choose site appearance"
+              aria-haspopup="dialog"
+              aria-expanded={stylePickerOpen}
+              aria-controls={stylePickerOpen ? "site-style-picker" : undefined}
+              onClick={() => setStylePickerOpen((open) => !open)}
+            ><Palette size={16}/><span>Appearance</span></button>
+            {stylePickerOpen && <div className="style-picker-popover" id="site-style-picker" ref={stylePopoverRef} role="dialog" aria-modal="false" aria-labelledby="site-style-title" aria-describedby="site-style-description">
+              <div className="style-picker-heading">
+                <div><span className="style-picker-kicker">MAKE IT YOURS</span><h2 id="site-style-title">Choose your reading style</h2></div>
+                <button className="icon-button style-picker-close" type="button" aria-label="Close appearance settings" onClick={dismissStylePicker}><X size={17}/></button>
+              </div>
+              <p className="style-picker-description" id="site-style-description">Ten different ways to arrange and read the site—not just different colors. Your choice is saved on this device.</p>
+              <p className="style-picker-current" aria-live="polite">Previewing <strong>{activeStyleInfo.name}</strong></p>
+              <div className="style-choice-grid">
+                {SITE_STYLES.map((style) => <button key={style.id} type="button" className={`style-choice ${siteStyle === style.id ? "is-selected" : ""}`} aria-pressed={siteStyle === style.id} onClick={() => chooseStyle(style.id)}>
+                  <span className={`style-choice-preview style-preview--${style.id}`} aria-hidden="true">
+                    <span className="style-preview-rail" style={{ backgroundColor: style.sidebar }}/>
+                    <span className="style-preview-canvas" style={{ backgroundColor: style.canvas }}>
+                      <span className="style-preview-toolbar" style={{ backgroundColor: style.panel, borderColor: style.border }}><i style={{ backgroundColor: style.accent }}/><b style={{ backgroundColor: style.ink }}/></span>
+                      <span className="style-preview-panels"><i style={{ backgroundColor: style.panel, borderColor: style.border }}/><i style={{ backgroundColor: style.panel, borderColor: style.border }}/></span>
+                    </span>
+                  </span>
+                  <span className="style-choice-copy"><strong>{style.name}</strong><small>{style.note}</small></span>
+                  {siteStyle === style.id && <Check size={15} aria-hidden="true"/>}
+                </button>)}
+              </div>
+              <div className="style-picker-footer"><span>Presentation is always user-controlled.</span><button type="button" onClick={dismissStylePicker}>Done</button></div>
+            </div>}
+          </div>
+          <button className="icon-button help-button" aria-label="About this civic experience" onClick={() => setAbout(true)}><CircleHelp size={19}/></button>
+          <span className="topbar-divider"/><button className="visitor-avatar" onClick={() => navigate("notebook")} aria-label="Open your civic notebook">YOU</button>
+        </div>
+      </header>
       <main className="main-content">
         {view === "search" && <section className="page-enter semantic-page"><div className="page-intro"><div><div className="eyebrow"><span className="eyebrow-dot"/> ZERO-COST CLIENT-SIDE RAG</div><h1>Ask the public record.</h1><p>Natural-language search across compiled council transcripts, ordinances, and meeting records. The model runs in your browser — nothing is sent to a server.</p></div></div><SmartCivicSearch onOpenSource={openDocument} onOpenMeeting={openMeeting} onOpenOrdinance={startSession}/></section>}
         {view === "alerts" && <PulseBroadcast />}

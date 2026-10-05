@@ -57,6 +57,26 @@ try {
   if (!structuredData?.includes('"@type":"WebSite"') || !structuredData.includes(canonicalUrl)) {
     throw new Error('Expected truthful WebSite JSON-LD with the canonical URL');
   }
+  const appearanceButton = page.getByRole('button', { name: 'Choose site appearance' });
+  await appearanceButton.click();
+  await expect(appearanceButton).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.getByRole('heading', { name: 'Choose your reading style' })).toBeVisible();
+  await expect(page.locator('.style-choice')).toHaveCount(10);
+  await expect(page.locator('.style-choice-preview[class*="style-preview--"]')).toHaveCount(10);
+  const fieldNotesChoice = page.getByRole('button', { name: /Field Notes/ });
+  await fieldNotesChoice.click();
+  await expect(fieldNotesChoice).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.locator('.civic-shell')).toHaveAttribute('data-style', 'field-notes');
+  await expect(page.locator('.overview-hero-grid')).toHaveCSS('display', 'flex');
+  await page.keyboard.press('Escape');
+  await expect(appearanceButton).toHaveAttribute('aria-expanded', 'false');
+  await expect(appearanceButton).toBeFocused();
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect(page.locator('.civic-shell')).toHaveAttribute('data-style', 'field-notes');
+  await page.getByRole('button', { name: 'Choose site appearance' }).click();
+  await page.getByRole('button', { name: /^Prairie/ }).click();
+  await page.getByRole('button', { name: 'Done', exact: true }).click();
+  console.log('PASS: ten presentation styles are selectable and the preference persists');
   const publicBase = `${BASE_URL.replace(/\/+$/, '')}/`;
   const sitemapResponse = await context.request.get(new URL('sitemap.xml', publicBase).toString());
   const sitemapText = await sitemapResponse.text();
@@ -218,6 +238,20 @@ try {
   await expectCanonical(page, canonicalUrl);
   console.log('PASS: meeting deep links open the record and consolidate the canonical URL');
 
+  await page.getByRole('button', { name: 'Wyoming Pulse', exact: true }).click();
+  await expect(page.getByRole('heading', { name: 'A state-wide desk, split into streams.' })).toBeVisible();
+  await expect(page.locator('.pulse-stream-row')).toHaveCount(9);
+  await page.getByRole('button', { name: /Statewide headlines\. .*Open this stream's news archive/ }).click();
+  await expect(page.getByRole('heading', { name: 'Statewide headlines archive' })).toBeVisible();
+  await expect(page.locator('.pulse-stream-story').first()).toBeVisible();
+  await expect(page.locator('.pulse-archive-source-link')).toHaveAttribute('target', '_blank');
+  await page.getByRole('button', { name: /Public safety\. .*Open this stream's news archive/ }).click();
+  await expect(page.getByRole('heading', { name: 'Public safety archive' })).toBeVisible();
+  await page.getByRole('button', { name: /Wyoming sports\. .*Open this stream's news archive/ }).click();
+  await expect(page.getByRole('heading', { name: 'Wyoming sports archive' })).toBeVisible();
+  await expect(page.locator('.pulse-stream-story').first()).toBeVisible();
+  console.log('PASS: nine sector marquees expand to source-linked Wyoming news history, including sports');
+
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors: true, isMobile: true, deviceScaleFactor: 1 });
   await mobile.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
   const mp = await mobile.newPage();
@@ -232,7 +266,14 @@ try {
   await expect(mp.getByRole('heading', { name: 'From ordinance to everyday life.' })).toBeVisible();
   overflow = await mp.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
   if (overflow) throw new Error('Horizontal overflow on the mobile map');
-  console.log('PASS: mobile navigation and responsive layouts');
+  await mp.getByRole('button', { name: 'Open navigation', exact: true }).click();
+  await mp.getByRole('button', { name: 'Wyoming Pulse', exact: true }).click();
+  await expect(mp.locator('.pulse-stream-row')).toHaveCount(9);
+  await mp.getByRole('button', { name: /Roads & travel\. .*Open this stream's news archive/ }).click();
+  await expect(mp.getByRole('heading', { name: 'Roads & travel archive' })).toBeVisible();
+  overflow = await mp.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);
+  if (overflow) throw new Error('Horizontal overflow on the mobile news stream archive');
+  console.log('PASS: mobile navigation, news archives, and responsive layouts');
   if (errors.length) throw new Error(`Browser exceptions: ${errors.join('; ')}`);
   console.log('ALL CIVIC BROWSER CHECKS PASSED');
 } finally {

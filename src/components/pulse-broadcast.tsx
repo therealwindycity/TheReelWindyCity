@@ -8,6 +8,7 @@ import {
   Bell,
   Building2,
   CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   Cloud,
@@ -17,6 +18,7 @@ import {
   ExternalLink,
   Flame,
   Gauge,
+  HeartPulse,
   MapPin,
   Newspaper,
   Pause,
@@ -27,6 +29,7 @@ import {
   Shield,
   Sun,
   Thermometer,
+  Trophy,
   Wind,
   type LucideIcon,
 } from "lucide-react";
@@ -37,6 +40,8 @@ import {
   type IngestionResult,
   type PulseAlert,
 } from "@/lib/pulse-ingestion";
+import pulseSeed from "@/data/wyoming-pulse-seed.json";
+import pulseSources from "@/data/pulse-sources.json";
 import { WYOMING_CITIES, type WyomingCity } from "@/lib/wyoming-cities";
 
 const SEVERITY: Record<AlertSeverity, { label: string; rank: number }> = {
@@ -56,11 +61,11 @@ const CATEGORY_LABEL: Record<AlertCategory, string> = {
   court: "Courts",
   election: "Elections",
   environment: "Environment",
+  health: "Health",
+  sports: "Sports",
   community: "Community",
   breaking: "Breaking news",
 };
-
-const EMPTY_ALERTS: PulseAlert[] = [];
 
 const CATEGORY_ICON: Record<AlertCategory, LucideIcon> = {
   weather: Cloud,
@@ -72,9 +77,118 @@ const CATEGORY_ICON: Record<AlertCategory, LucideIcon> = {
   court: Building2,
   election: CheckCircle2,
   environment: Activity,
+  health: HeartPulse,
+  sports: Trophy,
   community: Newspaper,
   breaking: Bell,
 };
+
+const HISTORY_STORAGE_KEY = "wyoming-pulse-history-v1";
+const HISTORY_RETENTION_MS = 365 * 24 * 60 * 60 * 1_000;
+const MAX_HISTORY_ITEMS = 600;
+const SEED_ALERTS = pulseSeed.alerts as PulseAlert[];
+
+const INITIAL_RESULT: IngestionResult = {
+  alerts: SEED_ALERTS,
+  counts: pulseSeed.counts,
+  timestamp: pulseSeed.capturedAt,
+  snapshotCapturedAt: pulseSeed.capturedAt,
+  mode: "curated-seed",
+  sourceStatuses: [],
+  errors: pulseSeed.errors,
+};
+
+interface PulseNewsStream {
+  id: string;
+  title: string;
+  description: string;
+  icon: LucideIcon;
+  matches: (alert: PulseAlert) => boolean;
+  sourceUrl: string;
+}
+
+const NEWS_STREAMS: PulseNewsStream[] = [
+  {
+    id: "statewide",
+    title: "Statewide headlines",
+    description: "The full Wyoming newswire",
+    icon: Newspaper,
+    matches: () => true,
+    sourceUrl: "https://www.wyomingpublicmedia.org/",
+  },
+  {
+    id: "government",
+    title: "Government & elections",
+    description: "Policy, ballots, and public decisions",
+    icon: Building2,
+    matches: (alert) => ["government", "court", "election"].includes(alert.category)
+      || /legislature|lawmakers?|governor|commission|ballot|voter|election|tax|public hearing|city council/i.test(`${alert.title} ${alert.summary}`),
+    sourceUrl: "https://www.wyomingpublicmedia.org/politics-government/",
+  },
+  {
+    id: "public-safety",
+    title: "Public safety",
+    description: "Incidents, emergency services, and policing",
+    icon: Shield,
+    matches: (alert) => ["crime", "accident", "fire", "breaking"].includes(alert.category)
+      || /police|sheriff|crash|collision|fatal|firefighter|ambulance|emt|law enforcement|flock camera|license plate/i.test(`${alert.title} ${alert.summary}`),
+    sourceUrl: "https://capcity.news/latest-news/",
+  },
+  {
+    id: "weather",
+    title: "Weather & wildfire",
+    description: "Forecasts, watches, and fire conditions",
+    icon: Cloud,
+    matches: (alert) => ["weather", "fire"].includes(alert.category)
+      || /forecast|wind warning|blizzard|wildfire|fire weather|burn ban/i.test(`${alert.title} ${alert.summary}`),
+    sourceUrl: "https://www.weather.gov/riw/",
+  },
+  {
+    id: "roads",
+    title: "Roads & travel",
+    description: "Closures, crashes, construction, and WYDOT",
+    icon: Route,
+    matches: (alert) => ["road_conditions", "accident"].includes(alert.category)
+      || /road|highway|interstate|traffic|closure|closed|construction|detour|travel|wyodot|milepost/i.test(`${alert.title} ${alert.summary}`),
+    sourceUrl: "https://wyoroad.info/",
+  },
+  {
+    id: "energy-land",
+    title: "Energy, land & wildlife",
+    description: "Natural resources and Wyoming’s outdoors",
+    icon: Activity,
+    matches: (alert) => alert.category === "environment"
+      || /energy|electric(?:ity)?|power bills?|data cent(?:er|re)s?|oil|gas|coal|uranium|wind turbine|public lands?|national forest|wildlife|conservation|water rights|mining/i.test(`${alert.title} ${alert.summary}`),
+    sourceUrl: "https://www.wyomingpublicmedia.org/natural-resources-energy/",
+  },
+  {
+    id: "schools-health",
+    title: "Schools & health",
+    description: "Education, care, and community services",
+    icon: CheckCircle2,
+    matches: (alert) => alert.category === "health"
+      || /school|student|education|bus|university|college|health|hospital|medicaid|ambulance|emt|boys’ school|boys' school/i.test(`${alert.title} ${alert.summary} ${alert.tags.join(" ")}`),
+    sourceUrl: "https://www.wyomingpublicmedia.org/",
+  },
+  {
+    id: "community",
+    title: "Community & economy",
+    description: "Local life, business, and county news",
+    icon: MapPin,
+    matches: (alert) => alert.category === "community"
+      || /business|economy|tourism|lodging|local|community|arts|event|ranch|housing|residents|ratepayers/i.test(`${alert.title} ${alert.summary}`),
+    sourceUrl: "https://oilcity.news/latest-news/",
+  },
+  {
+    id: "sports",
+    title: "Wyoming sports",
+    description: "High school scores, standouts, and local teams",
+    icon: Trophy,
+    matches: (alert) => alert.category === "sports"
+      || /football|basketball|volleyball|baseball|softball|soccer|wrestling|tennis|golf|cross[- ]country|swimming|rodeo|scoreboard|playoffs?|championship|all-state/i.test(`${alert.title} ${alert.summary} ${alert.tags.join(" ")}`),
+    sourceUrl: "https://wyopreps.com/",
+  },
+];
 
 interface HourlyForecast {
   name: string;
@@ -136,6 +250,64 @@ function sourceLabel(alert: PulseAlert): string {
   return alert.tags[0]?.toUpperCase() ?? "NEWSWIRE";
 }
 
+function articleSourceUrl(alert: PulseAlert): string | null {
+  if (alert.source === "nws" && /^https?:\/\//i.test(alert.source_id)) return alert.source_id;
+  if (alert.source === "wydot") return "https://wyoroad.info/";
+  if (alert.source.startsWith("rss-") && /^https?:\/\//i.test(alert.source_id)) return alert.source_id;
+  return null;
+}
+
+function mergeHistoryAlerts(...groups: PulseAlert[][]): PulseAlert[] {
+  const unique = new Map<string, PulseAlert>();
+  const cutoff = Date.now() - HISTORY_RETENTION_MS;
+  for (const alert of groups.flat()) {
+    if (!alert || !alert.source_id || !alert.title) continue;
+    const timestamp = new Date(alert.event_time).getTime();
+    if (Number.isFinite(timestamp) && timestamp < cutoff) continue;
+    const current = unique.get(alert.source_id);
+    if (!current || new Date(alert.ingested_at).getTime() >= new Date(current.ingested_at).getTime()) {
+      unique.set(alert.source_id, alert);
+    }
+  }
+  return [...unique.values()]
+    .sort((a, b) => new Date(b.event_time).getTime() - new Date(a.event_time).getTime())
+    .slice(0, MAX_HISTORY_ITEMS);
+}
+
+function readSavedHistory(): PulseAlert[] {
+  try {
+    const stored = window.localStorage.getItem(HISTORY_STORAGE_KEY);
+    const value: unknown = stored ? JSON.parse(stored) : [];
+    return Array.isArray(value) ? value as PulseAlert[] : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSavedHistory(alerts: PulseAlert[]) {
+  try {
+    window.localStorage.setItem(HISTORY_STORAGE_KEY, JSON.stringify(alerts));
+  } catch {
+    // Keep the live desk usable when private browsing or storage limits block saving.
+  }
+}
+
+function formatPublishedDate(value: string): string {
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(value);
+  const date = new Date(dateOnly ? `${value}T12:00:00Z` : value);
+  if (!Number.isFinite(date.getTime())) return "Date not listed";
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: dateOnly ? "UTC" : "America/Denver",
+  }).format(date);
+}
+
+function newestFirst(alerts: PulseAlert[]): PulseAlert[] {
+  return [...alerts].sort((a, b) => new Date(b.event_time).getTime() - new Date(a.event_time).getTime());
+}
+
 function alertLocation(alert: PulseAlert): string {
   return [alert.location.city, alert.location.county, alert.location.highway]
     .filter(Boolean)
@@ -188,13 +360,7 @@ function ForecastIcon({ forecast }: { forecast: string }) {
 
 function AlertRow({ alert, now }: { alert: PulseAlert; now: Date }) {
   const Icon = CATEGORY_ICON[alert.category] ?? Bell;
-  const sourceUrl = alert.source === "nws" && /^https?:\/\//i.test(alert.source_id)
-    ? alert.source_id
-    : alert.source === "wydot"
-      ? "https://wyoroad.info/"
-      : alert.source.startsWith("rss-") && /^https?:\/\//i.test(alert.source_id)
-        ? alert.source_id
-        : null;
+  const sourceUrl = articleSourceUrl(alert);
   const sourceLinkLabel = alert.source === "nws" ? "NWS alert" : alert.source === "wydot" ? "WYDOT" : "Original story";
 
   return (
@@ -224,7 +390,9 @@ function AlertRow({ alert, now }: { alert: PulseAlert; now: Date }) {
 }
 
 export default function PulseBroadcast() {
-  const [result, setResult] = useState<IngestionResult | null>(null);
+  const [result, setResult] = useState<IngestionResult>(INITIAL_RESULT);
+  const [historyAlerts, setHistoryAlerts] = useState<PulseAlert[]>(SEED_ALERTS);
+  const [expandedStreamId, setExpandedStreamId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
@@ -233,13 +401,16 @@ export default function PulseBroadcast() {
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const [rotationPaused, setRotationPaused] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
-  const [feedFilter, setFeedFilter] = useState<"all" | "priority" | AlertCategory>("all");
+  const [feedFilter, setFeedFilter] = useState<"all" | "priority" | "public_safety" | "government_desk" | AlertCategory>("all");
   const [forecast, setForecast] = useState<HourlyForecast | null>(null);
   const [forecastLoading, setForecastLoading] = useState(true);
   const [forecastUnavailable, setForecastUnavailable] = useState(false);
   const hasLoadedRef = useRef(false);
+  const refreshInProgressRef = useRef(false);
 
   const refresh = useCallback(async () => {
+    if (refreshInProgressRef.current) return;
+    refreshInProgressRef.current = true;
     if (hasLoadedRef.current) setRefreshing(true);
     else setLoading(true);
 
@@ -249,8 +420,9 @@ export default function PulseBroadcast() {
       setLastUpdated(new Date());
       hasLoadedRef.current = true;
     } catch {
-      // Keep the most recent feed on screen if a refresh fails.
+      // Keep the most recent source-linked headlines on screen if a refresh fails.
     } finally {
+      refreshInProgressRef.current = false;
       setLoading(false);
       setRefreshing(false);
     }
@@ -264,6 +436,13 @@ export default function PulseBroadcast() {
       window.clearInterval(interval);
     };
   }, [refresh]);
+
+  useEffect(() => {
+    const restored = mergeHistoryAlerts(SEED_ALERTS, readSavedHistory(), result.alerts);
+    writeSavedHistory(restored);
+    const frame = window.requestAnimationFrame(() => setHistoryAlerts(restored));
+    return () => window.cancelAnimationFrame(frame);
+  }, [result.alerts]);
 
   useEffect(() => {
     const updateClock = () => setClock(new Date());
@@ -283,8 +462,8 @@ export default function PulseBroadcast() {
     };
   }, []);
 
-  const allAlerts = result?.alerts ?? EMPTY_ALERTS;
-  const isDemo = result?.errors.some((error) => /demo data loaded/i.test(error)) ?? false;
+  const allAlerts = result.alerts;
+  const isSeedSnapshot = result.mode === "curated-seed";
   const city = WYOMING_CITIES.find((item) => item.id === selectedCityId) ?? WYOMING_CITIES[0];
 
   useEffect(() => {
@@ -362,7 +541,16 @@ export default function PulseBroadcast() {
     [allAlerts, city],
   );
   const localWeatherAlerts = localAlerts.filter(
-    (alert) => alert.category === "weather" || alert.category === "fire",
+    (alert) => (alert.category === "weather" || alert.category === "fire") && alert.source === "nws",
+  );
+  const nwsUnavailable = result.sourceStatuses.some((source) => source.id === "nws" && source.status === "unavailable")
+    || result.errors.some((error) => /^NWS:/i.test(error));
+  const storiesByStream = useMemo(
+    () => new Map(NEWS_STREAMS.map((stream) => [
+      stream.id,
+      newestFirst(historyAlerts.filter((alert) => stream.matches(alert))),
+    ])),
+    [historyAlerts],
   );
   const priorityAlerts = allAlerts.filter(
     (alert) => alert.severity === "critical" || alert.severity === "urgent",
@@ -371,6 +559,8 @@ export default function PulseBroadcast() {
   const filteredAlerts = allAlerts.filter((alert) => {
     if (feedFilter === "all") return true;
     if (feedFilter === "priority") return alert.severity === "critical" || alert.severity === "urgent";
+    if (feedFilter === "public_safety") return ["crime", "accident", "fire", "breaking"].includes(alert.category);
+    if (feedFilter === "government_desk") return ["government", "court", "election"].includes(alert.category);
     return alert.category === feedFilter;
   });
   const featuredStoryCount = Math.min(allAlerts.length, 8);
@@ -385,6 +575,7 @@ export default function PulseBroadcast() {
   const updatedLabel = lastUpdated
     ? formatTime(lastUpdated, { hour: "numeric", minute: "2-digit", hour12: true })
     : "Waiting for first update";
+  const snapshotDateLabel = result.snapshotCapturedAt ? formatPublishedDate(result.snapshotCapturedAt) : "not available";
   const cityForecastUrl = `https://forecast.weather.gov/MapClick.php?lat=${city.latitude}&lon=${city.longitude}`;
 
   useEffect(() => {
@@ -407,11 +598,16 @@ export default function PulseBroadcast() {
     setForecastUnavailable(false);
   }
 
-  const feedFilters: { id: "all" | "priority" | AlertCategory; label: string }[] = [
-    { id: "all", label: "All signals" },
+  const feedFilters: { id: "all" | "priority" | "public_safety" | "government_desk" | AlertCategory; label: string }[] = [
+    { id: "all", label: "All items" },
     { id: "priority", label: "Priority" },
+    { id: "government_desk", label: "Government" },
+    { id: "public_safety", label: "Public safety" },
     { id: "weather", label: "Weather" },
     { id: "road_conditions", label: "Roads" },
+    { id: "environment", label: "Land & energy" },
+    { id: "health", label: "Health" },
+    { id: "sports", label: "Sports" },
     { id: "community", label: "Community" },
   ];
 
@@ -426,7 +622,7 @@ export default function PulseBroadcast() {
         <div className="pulse-masthead-divider" />
         <div className="pulse-masthead-description">
           <strong>THE STATEWIDE DESK</strong>
-          <span>Weather · Roads · Government · Community</span>
+          <span>News · Safety · Weather · Roads · Government</span>
         </div>
         <div className="pulse-masthead-clock" aria-label={`Current Wyoming time ${mountainTime} ${mountainZoneLabel}`}>
           <span>CHEYENNE LOCAL TIME</span>
@@ -435,15 +631,15 @@ export default function PulseBroadcast() {
         </div>
       </header>
 
-      <div className={`pulse-status-rail ${isDemo ? "pulse-status-rail--demo" : ""}`}>
-        <span className="pulse-on-air"><span />{isDemo ? "DEMO FEED" : loading ? "CONNECTING" : "ON AIR"}</span>
+      <div className={`pulse-status-rail ${isSeedSnapshot ? "pulse-status-rail--snapshot" : ""}`}>
+        <span className="pulse-on-air"><span />{loading ? "SYNCING" : isSeedSnapshot ? "SOURCE SNAPSHOT" : "ON AIR"}</span>
         <span className="pulse-status-copy">MONITORING <strong>WYOMING</strong></span>
-        <span className="pulse-status-updated">UPDATED {updatedLabel} {mountainZoneLabel}</span>
+        <span className="pulse-status-updated">CHECKED {updatedLabel} {mountainZoneLabel}</span>
         <button className="pulse-refresh" type="button" onClick={() => void refresh()} disabled={loading || refreshing}>
           <RefreshCw size={13} className={refreshing ? "spin" : ""} aria-hidden="true" />
-          {refreshing ? "Updating" : "Refresh feed"}
+          {refreshing ? "Updating" : "Refresh feeds"}
         </button>
-        <span className="pulse-status-sources">NWS <i /> WYDOT <i /> NEWSROOMS</span>
+        <span className="pulse-status-sources">NWS <i /> WYDOT <i /> {pulseSources.feeds.length} NEWSROOMS</span>
       </div>
 
       <section className="pulse-breaking-ticker" aria-label="Breaking and priority alerts">
@@ -472,7 +668,147 @@ export default function PulseBroadcast() {
         <span className="pulse-ticker-count">{priorityAlerts.length.toString().padStart(2, "0")} PRIORITY</span>
       </section>
 
-      <div className="pulse-broadcast-grid">
+      <section className="pulse-stream-directory" aria-labelledby="pulse-stream-title">
+        <div className="pulse-stream-directory-heading">
+          <div>
+            <span className="pulse-stream-kicker">THE WYOMING NEWS MAP</span>
+            <h2 id="pulse-stream-title">A state-wide desk, split into streams.</h2>
+            <p>Scan each moving headline rail. Select a sector to open its source-linked news archive.</p>
+          </div>
+          <div className="pulse-stream-summary">
+            <span><strong>{NEWS_STREAMS.length.toString().padStart(2, "0")}</strong> news streams</span>
+            <span><strong>{historyAlerts.length.toLocaleString("en-US")}</strong> saved headlines</span>
+          </div>
+        </div>
+
+        <nav className="pulse-stream-index" aria-label="Jump to a Wyoming news stream">
+          {NEWS_STREAMS.map((stream) => (
+            <a href={`#pulse-stream-row-${stream.id}`} key={stream.id}>{stream.title}</a>
+          ))}
+        </nav>
+
+        <div className="pulse-stream-list">
+          {NEWS_STREAMS.map((stream, index) => {
+            const stories = storiesByStream.get(stream.id) ?? [];
+            const marqueeStories = stories.slice(0, 12);
+            const expanded = expandedStreamId === stream.id;
+            const Icon = stream.icon;
+
+            return (
+              <article
+                className={`pulse-stream-row ${expanded ? "pulse-stream-row--open" : ""}`}
+                key={stream.id}
+                id={`pulse-stream-row-${stream.id}`}
+                data-open={expanded}
+              >
+                <button
+                  type="button"
+                  className="pulse-stream-lane"
+                  aria-expanded={expanded}
+                  aria-controls={expanded ? `pulse-stream-history-${stream.id}` : undefined}
+                  aria-label={`${stream.title}. ${stories.length} archived ${stories.length === 1 ? "story" : "stories"}. ${expanded ? "Close" : "Open"} this stream's news archive.`}
+                  onClick={() => setExpandedStreamId(expanded ? null : stream.id)}
+                >
+                  <span className="pulse-stream-icon"><Icon size={16} aria-hidden="true" /></span>
+                  <span className="pulse-stream-label">
+                    <strong>{stream.title}</strong>
+                    <small>{stream.description}</small>
+                  </span>
+                  <span className="pulse-stream-window" aria-hidden="true">
+                    {marqueeStories.length ? (
+                      <span className="pulse-stream-track" data-direction={index % 2 ? "reverse" : "forward"}>
+                        {[0, 1].map((copy) => (
+                          <span className="pulse-stream-copy" key={copy}>
+                            {marqueeStories.map((alert, storyIndex) => (
+                              <span className="pulse-stream-item" key={`${copy}-${alert.source_id}-${storyIndex}`}>
+                                <b>{sourceLabel(alert)}</b>
+                                <span>{alert.title}</span>
+                                <i>{formatPublishedDate(alert.event_time)}</i>
+                                <i className="pulse-stream-separator">◆</i>
+                              </span>
+                            ))}
+                          </span>
+                        ))}
+                      </span>
+                    ) : (
+                      <span className="pulse-stream-empty-copy">Waiting for the next source-linked update…</span>
+                    )}
+                  </span>
+                  <span className="pulse-stream-count"><strong>{stories.length.toString().padStart(2, "0")}</strong><small>STORIES</small></span>
+                  <span className="pulse-stream-action">{expanded ? "CLOSE" : "ARCHIVE"}<ChevronDown size={14} aria-hidden="true" /></span>
+                </button>
+
+                {expanded && (
+                  <section
+                    className="pulse-stream-history"
+                    id={`pulse-stream-history-${stream.id}`}
+                    aria-label={`${stream.title} historical news`}
+                  >
+                    <div className="pulse-stream-history-heading">
+                      <div>
+                        <span className="pulse-stream-kicker">SECTOR ARCHIVE · {stream.title.toUpperCase()}</span>
+                        <h3>{stream.title} archive</h3>
+                        <p>{stories.length} source-linked {stories.length === 1 ? "story" : "stories"}, newest first.</p>
+                      </div>
+                      <span className="pulse-stream-history-actions">
+                        <span className="pulse-archive-retention"><Activity size={13} aria-hidden="true" /> Publisher snapshot + this browser’s saved history</span>
+                        <a className="pulse-archive-source-link" href={stream.sourceUrl} target="_blank" rel="noreferrer">
+                          Open sector source <ExternalLink size={11} aria-hidden="true" />
+                        </a>
+                      </span>
+                    </div>
+
+                    {stories.length ? (
+                      <div className="pulse-stream-story-list">
+                        {stories.map((alert, storyIndex) => {
+                          const sourceUrl = articleSourceUrl(alert);
+                          return (
+                            <article className="pulse-stream-story" key={`${alert.source_id}-${storyIndex}`}>
+                              <div className="pulse-stream-story-meta">
+                                <span>{CATEGORY_LABEL[alert.category].toUpperCase()}</span>
+                                <time dateTime={alert.event_time}>{formatPublishedDate(alert.event_time)}</time>
+                                <b>{sourceLabel(alert)}</b>
+                              </div>
+                              <h4>
+                                {sourceUrl ? (
+                                  <a href={sourceUrl} target="_blank" rel="noreferrer">
+                                    {alert.title}<ArrowUpRight size={14} aria-hidden="true" />
+                                  </a>
+                                ) : alert.title}
+                              </h4>
+                              {alert.summary && <p>{alert.summary}</p>}
+                              <div className="pulse-stream-story-footer">
+                                <span><MapPin size={12} aria-hidden="true" />{alertLocation(alert)}</span>
+                                {sourceUrl && <a href={sourceUrl} target="_blank" rel="noreferrer">Open original story <ExternalLink size={11} aria-hidden="true" /></a>}
+                              </div>
+                            </article>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="pulse-stream-history-empty">
+                        <Newspaper size={20} aria-hidden="true" />
+                        <p>No stories have been saved in this stream yet. Publisher updates will appear here as they’re published.</p>
+                        <a href={stream.sourceUrl} target="_blank" rel="noreferrer">Browse this sector’s source <ExternalLink size={12} aria-hidden="true" /></a>
+                      </div>
+                    )}
+                    <p className="pulse-stream-history-note">
+                      Archive includes the publisher’s current RSS window and up to 12 months of feed snapshots saved in this browser (up to 600 links). Publisher availability and archive depth vary; each headline links to its original source.
+                    </p>
+                  </section>
+                )}
+              </article>
+            );
+          })}
+        </div>
+      </section>
+
+      <details className="pulse-supporting-desk">
+        <summary className="pulse-supporting-summary">
+          <span><small>LIVE DESK TOOLS</small><strong>Agency alerts, local forecast &amp; feed analytics</strong></span>
+          <span className="pulse-supporting-toggle">OPEN DETAILS <ChevronDown size={15} aria-hidden="true" /></span>
+        </summary>
+        <div className="pulse-broadcast-grid">
         <div className="pulse-broadcast-main">
           <section className="pulse-lead-story" aria-label="Rotating statewide stories">
             <div className="pulse-lead-topline">
@@ -533,23 +869,23 @@ export default function PulseBroadcast() {
           </section>
 
           <section className="pulse-stat-strip" aria-label="Statewide alert totals">
-            <div><span>ACTIVE SIGNALS</span><strong>{loading && !result ? "—" : allAlerts.length.toString().padStart(2, "0")}</strong></div>
-            <div><span>PRIORITY</span><strong className="pulse-stat-red">{loading && !result ? "—" : priorityAlerts.length.toString().padStart(2, "0")}</strong></div>
-            <div><span>WEATHER</span><strong>{loading && !result ? "—" : allAlerts.filter((alert) => alert.category === "weather").length.toString().padStart(2, "0")}</strong></div>
-            <div><span>ROAD EVENTS</span><strong>{loading && !result ? "—" : allAlerts.filter((alert) => alert.category === "road_conditions").length.toString().padStart(2, "0")}</strong></div>
-            <div className="pulse-stat-caption"><Activity size={14} aria-hidden="true" /><span>Feed totals across Wyoming</span></div>
+            <div><span>FEED ITEMS</span><strong>{allAlerts.length.toString().padStart(2, "0")}</strong></div>
+            <div><span>PRIORITY</span><strong className="pulse-stat-red">{priorityAlerts.length.toString().padStart(2, "0")}</strong></div>
+            <div><span>WEATHER ITEMS</span><strong>{allAlerts.filter((alert) => alert.category === "weather").length.toString().padStart(2, "0")}</strong></div>
+            <div><span>ROAD ITEMS</span><strong>{allAlerts.filter((alert) => alert.category === "road_conditions").length.toString().padStart(2, "0")}</strong></div>
+            <div className="pulse-stat-caption"><Activity size={14} aria-hidden="true" /><span>Source-linked snapshot across Wyoming</span></div>
           </section>
 
           <section className="pulse-feed-section" aria-labelledby="pulse-feed-title">
             <div className="pulse-section-heading">
               <div>
                 <span className="pulse-section-kicker">THE LIVE DESK</span>
-                <h2 id="pulse-feed-title">Latest signals</h2>
-                <p>Source-linked updates from across the state.</p>
+                <h2 id="pulse-feed-title">Latest headlines &amp; alerts</h2>
+                <p>Source-linked news, weather alerts, and road reports from across Wyoming.</p>
               </div>
               <span className="pulse-feed-total">{filteredAlerts.length} {filteredAlerts.length === 1 ? "item" : "items"}</span>
             </div>
-            <div className="pulse-feed-filters" role="group" aria-label="Filter live alerts">
+            <div className="pulse-feed-filters" role="group" aria-label="Filter the latest headlines and alerts">
               {feedFilters.map((filter) => (
                 <button
                   type="button"
@@ -569,12 +905,9 @@ export default function PulseBroadcast() {
               {!loading && filteredAlerts.length === 0 && (
                 <div className="pulse-feed-empty">
                   <CheckCircle2 size={24} aria-hidden="true" />
-                  <strong>{allAlerts.length ? "No signals in this filter." : "No active alerts returned."}</strong>
-                  <span>{allAlerts.length ? "Choose another feed filter to see more updates." : "Try refreshing, or check the original agency feeds."}</span>
+                  <strong>{allAlerts.length ? "No headlines in this filter." : "No current feed items returned."}</strong>
+                  <span>{allAlerts.length ? "Choose another sector to see more updates." : "Try refreshing, or open the original agency feeds."}</span>
                 </div>
-              )}
-              {loading && !result && (
-                <div className="pulse-feed-loading" role="status"><span /><span /><span />Checking statewide feeds…</div>
               )}
             </div>
           </section>
@@ -634,9 +967,17 @@ export default function PulseBroadcast() {
                 <small>Open the official forecast for current conditions.</small>
               </div>
             )}
-            <div className={`pulse-weather-alert-count ${localWeatherAlerts.length ? "has-alerts" : ""}`}>
-              {localWeatherAlerts.length ? <AlertTriangle size={14} aria-hidden="true" /> : <CheckCircle2 size={14} aria-hidden="true" />}
-              <span>{localWeatherAlerts.length ? `${localWeatherAlerts.length} active weather ${localWeatherAlerts.length === 1 ? "alert" : "alerts"} in the local feed` : "No weather alerts in the local feed"}</span>
+            <div className={`pulse-weather-alert-count ${localWeatherAlerts.length || nwsUnavailable ? "has-alerts" : ""}`}>
+              {localWeatherAlerts.length || nwsUnavailable ? <AlertTriangle size={14} aria-hidden="true" /> : <CheckCircle2 size={14} aria-hidden="true" />}
+              <span>{loading
+                ? "Checking current NWS weather alerts…"
+                : nwsUnavailable
+                  ? localWeatherAlerts.length
+                    ? `${localWeatherAlerts.length} alert${localWeatherAlerts.length === 1 ? "" : "s"} in the last NWS snapshot; live check unavailable`
+                    : "NWS alert check unavailable — use the official forecast link"
+                  : localWeatherAlerts.length
+                    ? `${localWeatherAlerts.length} active NWS weather ${localWeatherAlerts.length === 1 ? "alert" : "alerts"} near ${city.name}`
+                    : `No active NWS weather alerts listed near ${city.name}`}</span>
             </div>
             <div className="pulse-zone-note">NWS ZONE{city.nwsZones.length > 1 ? "S" : ""}: {city.nwsZones.map((zone) => `${zone.id} · ${zone.name}`).join("  /  ")}</div>
           </section>
@@ -683,11 +1024,11 @@ export default function PulseBroadcast() {
 
           <section className="pulse-rail-card pulse-source-card">
             <div className="pulse-card-kicker"><Activity size={13} aria-hidden="true" /> FEED SOURCES</div>
-            <div className="pulse-source-row"><span className="pulse-source-icon pulse-source-icon--weather"><Cloud size={14} /></span><span><strong>National Weather Service</strong><small>Alerts & hourly forecast</small></span><b>{result?.counts.nws ?? "—"}</b></div>
-            <div className="pulse-source-row"><span className="pulse-source-icon pulse-source-icon--roads"><Route size={14} /></span><span><strong>WYDOT</strong><small>Road conditions & closures</small></span><b>{result?.counts.wydot ?? "—"}</b></div>
-            <div className="pulse-source-row"><span className="pulse-source-icon pulse-source-icon--news"><Newspaper size={14} /></span><span><strong>Wyoming newsrooms</strong><small>Publisher RSS feeds</small></span><b>{result?.counts.rss ?? "—"}</b></div>
-            <div className="pulse-source-foot"><span className={isDemo ? "pulse-source-indicator demo" : "pulse-source-indicator"} />
-              {isDemo ? "Sample feed shown · live requests returned no alerts" : `Last checked ${updatedLabel} ${mountainZoneLabel}`}
+            <div className="pulse-source-row"><span className="pulse-source-icon pulse-source-icon--weather"><Cloud size={14} /></span><span><strong>National Weather Service</strong><small>Alerts & hourly forecast</small></span><b>{result.counts.nws ?? 0}</b></div>
+            <div className="pulse-source-row"><span className="pulse-source-icon pulse-source-icon--roads"><Route size={14} /></span><span><strong>WYDOT</strong><small>Road conditions & closures</small></span><b>{result.counts.wydot ?? 0}</b></div>
+            <div className="pulse-source-row"><span className="pulse-source-icon pulse-source-icon--news"><Newspaper size={14} /></span><span><strong>Wyoming newsrooms</strong><small>{pulseSources.feeds.length} publisher RSS feeds · latest snapshot</small></span><b>{result.counts.rss ?? 0}</b></div>
+            <div className="pulse-source-foot"><span className={isSeedSnapshot ? "pulse-source-indicator demo" : "pulse-source-indicator"} />
+              {isSeedSnapshot ? `Dated source snapshot · ${snapshotDateLabel}` : `Publisher snapshot ${snapshotDateLabel} · checked ${updatedLabel} ${mountainZoneLabel}`}
             </div>
           </section>
 
@@ -695,11 +1036,12 @@ export default function PulseBroadcast() {
             <Route size={15} aria-hidden="true" /> WYDOT road conditions <ExternalLink size={12} aria-hidden="true" />
           </a>
         </aside>
-      </div>
+        </div>
+      </details>
 
       <footer className="pulse-broadcast-footer">
         <span><Radio size={13} aria-hidden="true" /> WYOMING PULSE · PUBLIC INFORMATION MONITOR</span>
-        <span>Auto-refreshes every 60 seconds <i /> Times shown in Mountain Time</span>
+        <span>Agency alerts refresh every minute · newsroom feeds refresh with the published site snapshot (hourly) <i /> Mountain Time</span>
       </footer>
     </section>
   );

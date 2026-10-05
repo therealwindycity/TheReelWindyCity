@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, "arena/**"]
   workflow_dispatch:
+  # Static Pages has no runtime RSS proxy; rebuild and publish the newsroom
+  # snapshot hourly so the public news lanes stay genuinely current.
+  schedule:
+    - cron: "17 * * * *"
 
 permissions:
   contents: read

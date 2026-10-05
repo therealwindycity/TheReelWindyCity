@@ -13,6 +13,8 @@ test-output/
 # generated meeting index (recreated from committed snapshots)
 src/data/meetings.json
 public/data/meetings.json
+# Generated from live publisher and agency feeds during each static-site build.
+public/data/wyoming-pulse.json
 
 # scratch
 .sync/

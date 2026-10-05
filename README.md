@@ -65,6 +65,19 @@ Every record shown by the site is drawn from these GitHub repositories
   January 26, 2026, and the Chapter 1.28 administrative-inspection-warrants policy brief.
 * **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
   be verified against the official meeting video.
+* **Wyoming Pulse** is the statewide news desk in the app. It groups source-linked headlines into
+  nine moving sector streams (statewide, government, public safety, weather, roads, energy/land,
+  schools/health, community/economy, and Wyoming sports). The ten publisher feeds are Oil City News,
+  Cap City News, WyoFile, Buckrail, County 10, SweetwaterNOW, Wyoming Public Media, K2 Radio,
+  Cowboy State Daily, and WyoPreps; NWS alerts and WYDOT travel events are checked separately. `scripts/build-pulse-data.mjs`
+  collects RSS during static builds into an ignored `public/data/wyoming-pulse.json` asset, so the
+  browser does not depend on publisher CORS support. The Pages workflow republishes that snapshot
+  hourly; `npm run data:pulse` refreshes it manually. Each sector marquee opens its source-linked
+  archive. The browser retains up to 12 months / 600 headlines locally, combining the publisher's
+  current feed window with snapshots seen on that device; this is a reader-side archive, not a
+  server-wide historical database. A dated, verified October 2026 seed keeps the desk populated
+  when upstream feeds are unavailable, and is clearly labeled as a snapshot.
+* **Presentation styles** are available from the sitewide Appearance control: Prairie, Newsroom, Field Notes, Terminal, Glacier, Sunset, High Contrast, Blueprint, Garden, and Monochrome. Each changes navigation and information layout as well as typography and palette: examples include an editorial top masthead, a narrow reading column, icon rails, a floating bottom dock, and a modular board. All styles keep the same records, source links, and tools. The selected style is stored in that browser and synchronized across its open tabs; the experience avoids engagement streaks and urgency tricks.
 * **Client-side semantic search** (`src/lib/vectorSearch.ts`) runs MiniLM (`Xenova/all-MiniLM-L6-v2`)
   entirely in the browser via WebAssembly. `scripts/embed-transcripts.mjs` compiles `transcript-tree.json`
   plus timestamped caption chunks, ordinances, and recent meetings into `src/data/transcript-vectors.json`
