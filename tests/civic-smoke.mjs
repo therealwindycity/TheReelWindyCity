@@ -43,6 +43,44 @@ function capturePageError(error) {
 try {
   const context = await browser.newContext({ viewport: { width: 1440, height: 1000 }, ignoreHTTPSErrors: true });
   await context.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
+  // Keep the live-desk smoke check deterministic and independent of third-party uptime.
+  await context.route('https://api.weather.gov/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/geo+json',
+    body: JSON.stringify({ features: [], properties: {} }),
+  }));
+  await context.route('https://www.wyoroad.info/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'text/html',
+    body: '<html><body><p>CI fixture: no current WYDOT travel advisories.</p></body></html>',
+  }));
+  await context.route('https://services3.arcgis.com/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ features: [] }),
+  }));
+  await context.route('https://earthquake.usgs.gov/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/geo+json',
+    body: JSON.stringify({ features: [] }),
+  }));
+  await context.route('https://api.rss2json.com/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({ status: 'ok', items: [] }),
+  }));
+  const rssHosts = [
+    'capcity.news', 'kgab.com', 'kfbcradio.com', 'shortgo.co',
+    'www.wyomingpublicmedia.org', 'wyofile.com', 'oilcity.news', 'county17.com',
+    'sheridanmedia.com', 'buckrail.com', 'county10.com', 'www.sweetwaternow.com',
+  ];
+  for (const host of rssHosts) {
+    await context.route(`https://${host}/**`, (route) => route.fulfill({
+      status: 200,
+      contentType: 'application/rss+xml',
+      body: '<?xml version="1.0"?><rss version="2.0"><channel><title>CI fixture</title><description>Empty deterministic test feed.</description></channel></rss>',
+    }));
+  }
   const page = await context.newPage();
   page.on('pageerror', capturePageError);
   await page.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
