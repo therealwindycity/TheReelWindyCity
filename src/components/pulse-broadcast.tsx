@@ -38,6 +38,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import {
+  NEWSROOM_COUNT,
   runPulseIngestion,
   type AlertCategory,
   type AlertSeverity,
@@ -944,7 +945,7 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
           {refreshing ? "Updating" : "Refresh feed"}
         </button>
         <span className="pulse-status-sources">
-          WYOLINK P25 <i /> NWS KCYS <i /> WYDOT 511 <i /> NIFC/USGS <i /> 14 NEWSROOMS
+          WYOLINK P25 <i /> NWS KCYS <i /> WYDOT 511 <i /> NIFC/USGS <i /> {NEWSROOM_COUNT} NEWSROOMS
         </span>
       </div>
 
@@ -1501,7 +1502,7 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
                 <span className="pulse-section-kicker">THE LIVE DESK</span>
                 <h2 id="pulse-feed-title">Latest dispatches &amp; signals</h2>
                 <p>
-                  Live scanner blotter, NWS Cheyenne alerts, WYDOT 511 road conditions, and 14 Wyoming newsrooms.
+                  Live scanner blotter, NWS Cheyenne alerts, WYDOT 511 road conditions, and {NEWSROOM_COUNT} Wyoming newsrooms.
                 </p>
               </div>
               <span className="pulse-feed-total">
@@ -1557,7 +1558,7 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
           <section className="pulse-method-note">
             <Shield size={16} aria-hidden="true" />
             <p>
-              Wyoming Pulse aggregates live WyoLink P25 scanner feeds (Broadcastify Node 6571 &amp; statewide relays), NWS Cheyenne (KCYS) alerts, WYDOT 511 road conditions, NIFC WFIGS wildfire incidents, USGS seismic events, and 14 Wyoming newsrooms. Always confirm emergency instructions with Laramie County Combined Communications or your local 911 authority.
+              Wyoming Pulse aggregates live WyoLink P25 scanner feeds (Broadcastify Node 6571 &amp; statewide relays), NWS Cheyenne (KCYS) alerts, WYDOT 511 road conditions, NIFC WFIGS wildfire incidents, USGS seismic events, and {NEWSROOM_COUNT} Wyoming newsrooms. Always confirm emergency instructions with Laramie County Combined Communications or your local 911 authority.
             </p>
           </section>
         </div>

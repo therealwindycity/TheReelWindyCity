@@ -638,6 +638,9 @@ const WY_RSS_FEEDS: readonly RSSFeedConfig[] = [
   },
 ];
 
+/** Newsroom count derived from the configured feeds so the desk's labels cannot drift. */
+export const NEWSROOM_COUNT = WY_RSS_FEEDS.length;
+
 function cleanHtmlText(s: string): string {
   return s
     .replace(/<[^>]*>/g, " ")
