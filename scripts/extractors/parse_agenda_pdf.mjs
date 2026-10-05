@@ -206,8 +206,13 @@ async function main() {
       if (error instanceof ExtractionError) {
         console.error(`✗ ${task.url || task.file}: [${error.code}] ${error.message}`);
         console.error("  Extraction failed — no artifacts written; the sync job stops here (no commit).");
+        // Surface the code and message as a run annotation. The step log lives
+        // behind the Actions log download, which is not always reachable; an
+        // annotation carries the reason where a blocked reader can see it.
+        console.error(`::error title=Agenda extraction failed [${error.code}]::${error.message}`);
       } else {
         console.error(`✗ ${task.url || task.file}: ${error.stack || error}`);
+        console.error(`::error title=Agenda extraction crashed::${String(error?.message ?? error).slice(0, 900)}`);
       }
       process.exit(1); // hard stop: never continue the chain after a failed extraction (OM3#2)
     }
