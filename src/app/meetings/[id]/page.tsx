@@ -164,6 +164,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
         </a>
         <nav aria-label="Site navigation">
           <a href={siteUrl("meetings/")}>All meetings</a>
+          <a href={siteUrl("hub/")}>Live Government Hub</a>
           <a href={siteUrl("transcripts/")}>Transcript archive</a>
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">
             Official city records

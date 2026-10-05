@@ -67,6 +67,7 @@ export default function MeetingArchivePage() {
         </a>
         <nav aria-label="Site navigation">
           <a href={SITE_URL}>Civic Cheyenne home</a>
+          <a href={siteUrl("hub/")}>Live Government Hub</a>
           <a href={siteUrl("transcripts/")}>Transcript archive</a>
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">
             Official city records

@@ -49,6 +49,7 @@ export default function TranscriptArchivePage() {
         </a>
         <nav aria-label="Site navigation">
           <a href={siteUrl("meetings/")}>All meetings</a>
+          <a href={siteUrl("hub/")}>Live Government Hub</a>
           <a href={SITE_URL}>Civic Cheyenne home</a>
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">Official city records</a>
         </nav>
