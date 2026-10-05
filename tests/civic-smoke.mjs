@@ -259,6 +259,15 @@ try {
   console.log('PASS: mobile navigation and responsive layouts');
   if (errors.length) throw new Error(`Browser exceptions: ${errors.join('; ')}`);
   console.log('ALL CIVIC BROWSER CHECKS PASSED');
+} catch (error) {
+  const message = String(error instanceof Error ? error.message : error)
+    .replaceAll('%', '%25')
+    .replaceAll('\r', '%0D')
+    .replaceAll('\n', '%0A')
+    .replaceAll(':', '%3A')
+    .slice(0, 1400);
+  console.log(`::error title=Civic browser smoke failure::${message}`);
+  throw error;
 } finally {
   await browser.close();
 }
