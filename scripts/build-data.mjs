@@ -22,6 +22,7 @@
  *   public/data/meetings.json            copy of the index for the static website
  *   public/transcripts/<meeting-id>.md   locally hosted caption files committed under src/data/transcripts
  *   public/data/transcript-vectors.json  compiled semantic-search corpus (from src/data, if present)
+ *   public/data/citizen-connect.json   bundled historical incident-record aggregates (from src/data)
  */
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -453,13 +454,28 @@ function assemble() {
   const vectors = path.join(SRC_DATA, "transcript-vectors.json");
   if (existsSync(vectors)) copyFileSync(vectors, path.join(PUBLIC_DATA, "transcript-vectors.json"));
 
+  // 6. Citizen Connect incident-record artifact (produced by
+  //    scripts/sync/citizen-connect.mjs). The site bundles src/data/… at build
+  //    time; the public/ copy exists so the same aggregates are reusable by
+  //    anything else without a rebuild. Never fatal if the sync has not run —
+  //    a committed seed snapshot ships in the repo.
+  const citizenConnect = path.join(SRC_DATA, "citizen-connect.json");
+  let ccRecords = 0;
+  if (existsSync(citizenConnect)) {
+    copyFileSync(citizenConnect, path.join(PUBLIC_DATA, "citizen-connect.json"));
+    try { ccRecords = JSON.parse(readFileSync(citizenConnect, "utf8"))?.totals?.all ?? 0; } catch { /* leave at 0 */ }
+  } else {
+    console.warn('note: no citizen-connect artifact; run "npm run data:citizen-connect"');
+  }
+
   const files = readdirSync(PUBLIC_DATA);
   console.log(
     `Assembled public/data (${files.length} files) · official-sources manifest (${Object.keys(available).length} documents) · ` +
       `meetings index (${meetingIndex.stats.totalMeetings} meetings: ${meetingIndex.stats.upcomingMeetings} upcoming, ` +
       `${meetingIndex.stats.pastMeetings} past, ${meetingIndex.stats.totalDocuments} archived documents, ` +
       `${meetingIndex.stats.totalTranscripts} linked transcripts (${meetingIndex.stats.totalTranscriptFiles} files incl. undated), ` +
-      `earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}).`,
+      `earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}) · ` +
+      `citizen-connect (${ccRecords.toLocaleString("en-US")} records).`,
   );
 }
 

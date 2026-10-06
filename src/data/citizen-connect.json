@@ -1,0 +1,1440 @@
+{
+  "schema": 2,
+  "generatedBy": "manual-capture",
+  "capturedAt": "2026-10-05",
+  "captureNote": "Seed snapshot captured by hand from the public Citizen Connect API on 2026-10-05. The rhythm grid and totals below are complete and exact for the requested window. Trend, category-count and shape-count series are produced by scripts/sync/citizen-connect.mjs on its first run.",
+  "source": {
+    "name": "Cheyenne / Laramie County Citizen Connect",
+    "publisher": "Cheyenne Police Department & Laramie County Sheriff's Office",
+    "platform": "Tyler Technologies (Socrata) Citizen Connect",
+    "appUrl": "https://laramiecounty-letmsp.connect.socrata.com/",
+    "apiBase": "https://laramiecounty-letmsp.connect.socrata.com",
+    "dashboardUrl": "https://laramiecounty-letmsp.connect.socrata.com/#!/dashboard?categories=1:3130%3D2-107,109-127,130-300,302-359,367-385,404-411,413-451,453-495,497%263145%3D2-93,95-111,114-277,279-326,334-353,370-447%7C2:2056%3D1-27,34-100,107,111-125%262059%3D1-25,32-71,73-99,106,110-121&start_date=2020-01-01&end_date=2026-10-04&shapeGroupId=c2vd-vf25&currentTab=list&overlayLayers=Wards",
+    "refreshCadence": "Publisher states the underlying data refreshes roughly every three days.",
+    "timezone": "America/Denver",
+    "agencyInfoUrl": "https://www.cheyennepd.org/News/Local-Law-Enforcement-Agencies-Launch-New-Online-Crime-Mapping-Tool",
+    "attributionNote": "Citizen Connect is the agencies’ public dashboard; the linked page describes its coverage, refresh cadence, and privacy exclusions."
+  },
+  "coverage": {
+    "requestedStart": "2020-01-01",
+    "requestedEnd": "2026-10-04",
+    "days": 2469,
+    "weekdayOccurrences": {
+      "Su": 353,
+      "Mo": 352,
+      "Tu": 352,
+      "We": 353,
+      "Th": 353,
+      "Fr": 353,
+      "Sa": 353
+    },
+    "note": "The dashboard's date picker opens at 2020, but substantive volume begins in 2023; 2020–2022 contains only sparse records. Treat pre-2023 as pre-launch, not as low crime.",
+    "substantiveStart": "2023-01-01"
+  },
+  "layers": [
+    {
+      "id": "incidents",
+      "label": "Incidents",
+      "datasetId": "35sf-bu8v",
+      "entryId": "pds_5",
+      "dateField": "call_date_time",
+      "typeField": "incident_type",
+      "description": "Computer-aided-dispatch activity: citizen calls for service and officer/deputy-initiated events. A dispatch record is not, by itself, a police report or proof that a crime occurred."
+    },
+    {
+      "id": "cases",
+      "label": "Cases",
+      "datasetId": "cvz7-2j69",
+      "entryId": "pds_4",
+      "dateField": "reported_date_time",
+      "typeField": "occurred_incident_type",
+      "description": "A separate Cases dataset with its own reported_date_time field. The public record does not link any one Incidents row to any one Cases row."
+    }
+  ],
+  "agencies": [
+    {
+      "name": "Cheyenne Police Department",
+      "ori": "WY0110100"
+    },
+    {
+      "name": "Laramie County Sheriff's Department",
+      "ori": "WY0110000"
+    }
+  ],
+  "totals": {
+    "all": 445453,
+    "incidents": 406832,
+    "cases": 38621
+  },
+  "rhythm": {
+    "dowOrder": [
+      "Su",
+      "Mo",
+      "Tu",
+      "We",
+      "Th",
+      "Fr",
+      "Sa"
+    ],
+    "cells": {
+      "Su": [
+        [
+          2465,
+          2252,
+          213
+        ],
+        [
+          1806,
+          1605,
+          201
+        ],
+        [
+          1288,
+          1114,
+          174
+        ],
+        [
+          808,
+          712,
+          96
+        ],
+        [
+          586,
+          528,
+          58
+        ],
+        [
+          538,
+          493,
+          45
+        ],
+        [
+          532,
+          482,
+          50
+        ],
+        [
+          860,
+          760,
+          100
+        ],
+        [
+          1516,
+          1386,
+          130
+        ],
+        [
+          1890,
+          1712,
+          178
+        ],
+        [
+          2195,
+          2008,
+          187
+        ],
+        [
+          2304,
+          2109,
+          195
+        ],
+        [
+          2325,
+          2099,
+          226
+        ],
+        [
+          2455,
+          2220,
+          235
+        ],
+        [
+          2319,
+          2091,
+          228
+        ],
+        [
+          2302,
+          2066,
+          236
+        ],
+        [
+          2387,
+          2147,
+          240
+        ],
+        [
+          2810,
+          2545,
+          265
+        ],
+        [
+          2783,
+          2524,
+          259
+        ],
+        [
+          2806,
+          2571,
+          235
+        ],
+        [
+          2654,
+          2429,
+          225
+        ],
+        [
+          2567,
+          2355,
+          212
+        ],
+        [
+          2279,
+          2111,
+          168
+        ],
+        [
+          2541,
+          2371,
+          170
+        ]
+      ],
+      "Mo": [
+        [
+          2502,
+          2368,
+          134
+        ],
+        [
+          1742,
+          1638,
+          104
+        ],
+        [
+          1149,
+          1079,
+          70
+        ],
+        [
+          655,
+          605,
+          50
+        ],
+        [
+          609,
+          565,
+          44
+        ],
+        [
+          795,
+          714,
+          81
+        ],
+        [
+          932,
+          833,
+          99
+        ],
+        [
+          2417,
+          2217,
+          200
+        ],
+        [
+          3865,
+          3573,
+          292
+        ],
+        [
+          3774,
+          3395,
+          379
+        ],
+        [
+          4125,
+          3757,
+          368
+        ],
+        [
+          4150,
+          3790,
+          360
+        ],
+        [
+          4119,
+          3729,
+          390
+        ],
+        [
+          4170,
+          3768,
+          402
+        ],
+        [
+          4210,
+          3824,
+          386
+        ],
+        [
+          3700,
+          3318,
+          382
+        ],
+        [
+          3459,
+          3064,
+          395
+        ],
+        [
+          3417,
+          3057,
+          360
+        ],
+        [
+          3136,
+          2855,
+          281
+        ],
+        [
+          3102,
+          2811,
+          291
+        ],
+        [
+          2810,
+          2593,
+          217
+        ],
+        [
+          2577,
+          2399,
+          178
+        ],
+        [
+          2348,
+          2163,
+          185
+        ],
+        [
+          2487,
+          2339,
+          148
+        ]
+      ],
+      "Tu": [
+        [
+          2361,
+          2229,
+          132
+        ],
+        [
+          1697,
+          1602,
+          95
+        ],
+        [
+          1053,
+          993,
+          60
+        ],
+        [
+          718,
+          661,
+          57
+        ],
+        [
+          604,
+          552,
+          52
+        ],
+        [
+          904,
+          841,
+          63
+        ],
+        [
+          1108,
+          1003,
+          105
+        ],
+        [
+          3040,
+          2847,
+          193
+        ],
+        [
+          4346,
+          4068,
+          278
+        ],
+        [
+          3935,
+          3601,
+          334
+        ],
+        [
+          4408,
+          4007,
+          401
+        ],
+        [
+          4263,
+          3931,
+          332
+        ],
+        [
+          4161,
+          3790,
+          371
+        ],
+        [
+          4221,
+          3849,
+          372
+        ],
+        [
+          4263,
+          3866,
+          397
+        ],
+        [
+          4048,
+          3685,
+          363
+        ],
+        [
+          3709,
+          3297,
+          412
+        ],
+        [
+          3578,
+          3230,
+          348
+        ],
+        [
+          3090,
+          2799,
+          291
+        ],
+        [
+          3055,
+          2793,
+          262
+        ],
+        [
+          2947,
+          2703,
+          244
+        ],
+        [
+          2532,
+          2313,
+          219
+        ],
+        [
+          2274,
+          2101,
+          173
+        ],
+        [
+          2377,
+          2208,
+          169
+        ]
+      ],
+      "We": [
+        [
+          2265,
+          2138,
+          127
+        ],
+        [
+          1703,
+          1598,
+          105
+        ],
+        [
+          1041,
+          955,
+          86
+        ],
+        [
+          745,
+          683,
+          62
+        ],
+        [
+          603,
+          552,
+          51
+        ],
+        [
+          826,
+          758,
+          68
+        ],
+        [
+          1131,
+          1032,
+          99
+        ],
+        [
+          2739,
+          2565,
+          174
+        ],
+        [
+          4056,
+          3737,
+          319
+        ],
+        [
+          3867,
+          3521,
+          346
+        ],
+        [
+          4377,
+          3973,
+          404
+        ],
+        [
+          4328,
+          3998,
+          330
+        ],
+        [
+          4021,
+          3671,
+          350
+        ],
+        [
+          4251,
+          3859,
+          392
+        ],
+        [
+          4000,
+          3583,
+          417
+        ],
+        [
+          3966,
+          3589,
+          377
+        ],
+        [
+          3524,
+          3123,
+          401
+        ],
+        [
+          3575,
+          3262,
+          313
+        ],
+        [
+          3377,
+          3081,
+          296
+        ],
+        [
+          3392,
+          3096,
+          296
+        ],
+        [
+          3340,
+          3089,
+          251
+        ],
+        [
+          3001,
+          2764,
+          237
+        ],
+        [
+          2904,
+          2706,
+          198
+        ],
+        [
+          2886,
+          2701,
+          185
+        ]
+      ],
+      "Th": [
+        [
+          2695,
+          2553,
+          142
+        ],
+        [
+          1914,
+          1761,
+          153
+        ],
+        [
+          1160,
+          1063,
+          97
+        ],
+        [
+          818,
+          762,
+          56
+        ],
+        [
+          744,
+          693,
+          51
+        ],
+        [
+          856,
+          798,
+          58
+        ],
+        [
+          1075,
+          982,
+          93
+        ],
+        [
+          3159,
+          2993,
+          166
+        ],
+        [
+          5286,
+          4965,
+          321
+        ],
+        [
+          4440,
+          4090,
+          350
+        ],
+        [
+          4706,
+          4328,
+          378
+        ],
+        [
+          4680,
+          4298,
+          382
+        ],
+        [
+          4502,
+          4106,
+          396
+        ],
+        [
+          4494,
+          4140,
+          354
+        ],
+        [
+          4400,
+          3954,
+          446
+        ],
+        [
+          4313,
+          3905,
+          408
+        ],
+        [
+          3653,
+          3282,
+          371
+        ],
+        [
+          3602,
+          3259,
+          343
+        ],
+        [
+          3419,
+          3119,
+          300
+        ],
+        [
+          3294,
+          3034,
+          260
+        ],
+        [
+          3058,
+          2789,
+          269
+        ],
+        [
+          2637,
+          2387,
+          250
+        ],
+        [
+          2355,
+          2171,
+          184
+        ],
+        [
+          2528,
+          2324,
+          204
+        ]
+      ],
+      "Fr": [
+        [
+          2331,
+          2168,
+          163
+        ],
+        [
+          1603,
+          1472,
+          131
+        ],
+        [
+          1117,
+          995,
+          122
+        ],
+        [
+          689,
+          635,
+          54
+        ],
+        [
+          721,
+          662,
+          59
+        ],
+        [
+          794,
+          728,
+          66
+        ],
+        [
+          941,
+          856,
+          85
+        ],
+        [
+          2565,
+          2419,
+          146
+        ],
+        [
+          4234,
+          3949,
+          285
+        ],
+        [
+          4019,
+          3665,
+          354
+        ],
+        [
+          4306,
+          3930,
+          376
+        ],
+        [
+          4244,
+          3846,
+          398
+        ],
+        [
+          4117,
+          3741,
+          376
+        ],
+        [
+          4275,
+          3874,
+          401
+        ],
+        [
+          4216,
+          3808,
+          408
+        ],
+        [
+          4008,
+          3638,
+          370
+        ],
+        [
+          3372,
+          2996,
+          376
+        ],
+        [
+          3406,
+          3076,
+          330
+        ],
+        [
+          3283,
+          2988,
+          295
+        ],
+        [
+          3075,
+          2806,
+          269
+        ],
+        [
+          3218,
+          2983,
+          235
+        ],
+        [
+          3007,
+          2732,
+          275
+        ],
+        [
+          2789,
+          2567,
+          222
+        ],
+        [
+          2898,
+          2651,
+          247
+        ]
+      ],
+      "Sa": [
+        [
+          2719,
+          2442,
+          277
+        ],
+        [
+          1898,
+          1672,
+          226
+        ],
+        [
+          1371,
+          1212,
+          159
+        ],
+        [
+          813,
+          735,
+          78
+        ],
+        [
+          645,
+          583,
+          62
+        ],
+        [
+          657,
+          610,
+          47
+        ],
+        [
+          666,
+          601,
+          65
+        ],
+        [
+          1005,
+          907,
+          98
+        ],
+        [
+          1770,
+          1595,
+          175
+        ],
+        [
+          2187,
+          1988,
+          199
+        ],
+        [
+          2344,
+          2124,
+          220
+        ],
+        [
+          2479,
+          2242,
+          237
+        ],
+        [
+          2585,
+          2323,
+          262
+        ],
+        [
+          2460,
+          2229,
+          231
+        ],
+        [
+          2553,
+          2281,
+          272
+        ],
+        [
+          2307,
+          2059,
+          248
+        ],
+        [
+          2423,
+          2150,
+          273
+        ],
+        [
+          2691,
+          2440,
+          251
+        ],
+        [
+          2896,
+          2642,
+          254
+        ],
+        [
+          2957,
+          2738,
+          219
+        ],
+        [
+          2909,
+          2669,
+          240
+        ],
+        [
+          2803,
+          2550,
+          253
+        ],
+        [
+          2705,
+          2464,
+          241
+        ],
+        [
+          2718,
+          2488,
+          230
+        ]
+      ]
+    },
+    "dowTotals": {
+      "Su": {
+        "total": 47016,
+        "incidents": 42690,
+        "cases": 4326,
+        "occurrences": 353,
+        "perOccurrence": 133.2
+      },
+      "Mo": {
+        "total": 66250,
+        "incidents": 60454,
+        "cases": 5796,
+        "occurrences": 352,
+        "perOccurrence": 188.2
+      },
+      "Tu": {
+        "total": 68692,
+        "incidents": 62969,
+        "cases": 5723,
+        "occurrences": 352,
+        "perOccurrence": 195.1
+      },
+      "We": {
+        "total": 69918,
+        "incidents": 64034,
+        "cases": 5884,
+        "occurrences": 353,
+        "perOccurrence": 198.1
+      },
+      "Th": {
+        "total": 73788,
+        "incidents": 67756,
+        "cases": 6032,
+        "occurrences": 353,
+        "perOccurrence": 209
+      },
+      "Fr": {
+        "total": 69228,
+        "incidents": 63185,
+        "cases": 6043,
+        "occurrences": 353,
+        "perOccurrence": 196.1
+      },
+      "Sa": {
+        "total": 50561,
+        "incidents": 45744,
+        "cases": 4817,
+        "occurrences": 353,
+        "perOccurrence": 143.2
+      }
+    },
+    "hour": [
+      {
+        "hour": 0,
+        "total": 17338,
+        "incidents": 16150,
+        "cases": 1188
+      },
+      {
+        "hour": 1,
+        "total": 12363,
+        "incidents": 11348,
+        "cases": 1015
+      },
+      {
+        "hour": 2,
+        "total": 8179,
+        "incidents": 7411,
+        "cases": 768
+      },
+      {
+        "hour": 3,
+        "total": 5246,
+        "incidents": 4793,
+        "cases": 453
+      },
+      {
+        "hour": 4,
+        "total": 4512,
+        "incidents": 4135,
+        "cases": 377
+      },
+      {
+        "hour": 5,
+        "total": 5370,
+        "incidents": 4942,
+        "cases": 428
+      },
+      {
+        "hour": 6,
+        "total": 6385,
+        "incidents": 5789,
+        "cases": 596
+      },
+      {
+        "hour": 7,
+        "total": 15785,
+        "incidents": 14708,
+        "cases": 1077
+      },
+      {
+        "hour": 8,
+        "total": 25073,
+        "incidents": 23273,
+        "cases": 1800
+      },
+      {
+        "hour": 9,
+        "total": 24112,
+        "incidents": 21972,
+        "cases": 2140
+      },
+      {
+        "hour": 10,
+        "total": 26461,
+        "incidents": 24127,
+        "cases": 2334
+      },
+      {
+        "hour": 11,
+        "total": 26448,
+        "incidents": 24214,
+        "cases": 2234
+      },
+      {
+        "hour": 12,
+        "total": 25830,
+        "incidents": 23459,
+        "cases": 2371
+      },
+      {
+        "hour": 13,
+        "total": 26326,
+        "incidents": 23939,
+        "cases": 2387
+      },
+      {
+        "hour": 14,
+        "total": 25961,
+        "incidents": 23407,
+        "cases": 2554
+      },
+      {
+        "hour": 15,
+        "total": 24644,
+        "incidents": 22260,
+        "cases": 2384
+      },
+      {
+        "hour": 16,
+        "total": 22527,
+        "incidents": 20059,
+        "cases": 2468
+      },
+      {
+        "hour": 17,
+        "total": 23079,
+        "incidents": 20869,
+        "cases": 2210
+      },
+      {
+        "hour": 18,
+        "total": 21984,
+        "incidents": 20008,
+        "cases": 1976
+      },
+      {
+        "hour": 19,
+        "total": 21681,
+        "incidents": 19849,
+        "cases": 1832
+      },
+      {
+        "hour": 20,
+        "total": 20936,
+        "incidents": 19255,
+        "cases": 1681
+      },
+      {
+        "hour": 21,
+        "total": 19124,
+        "incidents": 17500,
+        "cases": 1624
+      },
+      {
+        "hour": 22,
+        "total": 17654,
+        "incidents": 16283,
+        "cases": 1371
+      },
+      {
+        "hour": 23,
+        "total": 18435,
+        "incidents": 17082,
+        "cases": 1353
+      }
+    ]
+  },
+  "trend": {
+    "granularity": null,
+    "series": []
+  },
+  "categories": {
+    "counts": [],
+    "tree": []
+  },
+  "geography": {
+    "groups": [
+      {
+        "id": "c2vd-vf25",
+        "name": "Wards",
+        "color": "#008080",
+        "complete": true,
+        "shapes": [
+          {
+            "id": "1",
+            "name": "Ward 1 · Scott Roybal"
+          },
+          {
+            "id": "2",
+            "name": "Ward 2 · Bryan M. Cook"
+          },
+          {
+            "id": "3",
+            "name": "Ward 3 · Dr. Michelle Aldrich"
+          }
+        ]
+      },
+      {
+        "id": "hsfq-p7cr",
+        "name": "LE Response Area",
+        "color": "#4169E1",
+        "complete": true,
+        "shapes": [
+          {
+            "id": "1",
+            "name": "WAFB"
+          },
+          {
+            "id": "2",
+            "name": "PBPD"
+          },
+          {
+            "id": "3",
+            "name": "BURNS"
+          },
+          {
+            "id": "4",
+            "name": "PD-NC"
+          },
+          {
+            "id": "5",
+            "name": "PD-SE"
+          },
+          {
+            "id": "6",
+            "name": "PD-NW"
+          },
+          {
+            "id": "7",
+            "name": "PD-NE"
+          },
+          {
+            "id": "8",
+            "name": "PD-SW"
+          },
+          {
+            "id": "9",
+            "name": "PD-W"
+          },
+          {
+            "id": "10",
+            "name": "SO-W"
+          },
+          {
+            "id": "11",
+            "name": "SO-N"
+          },
+          {
+            "id": "12",
+            "name": "SO-S"
+          },
+          {
+            "id": "13",
+            "name": "SO-E"
+          },
+          {
+            "id": "14",
+            "name": "PD-SC"
+          }
+        ]
+      },
+      {
+        "id": "jgtq-znyx",
+        "name": "Precinct",
+        "color": "#A52A2A",
+        "complete": false,
+        "expectedShapes": 40,
+        "shapes": [
+          {
+            "id": "1",
+            "name": "1-5"
+          },
+          {
+            "id": "1",
+            "name": "1-6"
+          },
+          {
+            "id": "1",
+            "name": "1-7"
+          },
+          {
+            "id": "2",
+            "name": "2-1"
+          },
+          {
+            "id": "2",
+            "name": "2-3"
+          },
+          {
+            "id": "2",
+            "name": "2-4"
+          },
+          {
+            "id": "2",
+            "name": "2-7"
+          },
+          {
+            "id": "3",
+            "name": "3-3"
+          },
+          {
+            "id": "4",
+            "name": "4-5"
+          },
+          {
+            "id": "4",
+            "name": "4-8"
+          },
+          {
+            "id": "4",
+            "name": "4-9"
+          },
+          {
+            "id": "5",
+            "name": "5-1"
+          },
+          {
+            "id": "6",
+            "name": "6-4"
+          }
+        ]
+      }
+    ]
+  },
+  "dataQuality": {
+    "unmappable": {
+      "window": "2023-01-01/2023-12-31",
+      "count": 8066,
+      "label": "Unverified Locations"
+    },
+    "locationPrecisionDegrees": 0.005
+  },
+  "sample": [
+    {
+      "id": "2026-00032861",
+      "at": "2026-09-29T00:02:53.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "School Visit",
+      "lat": 41.225,
+      "lng": -104.83
+    },
+    {
+      "id": "2026-00032862",
+      "at": "2026-09-29T00:14:41.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "Domestic Physical",
+      "lat": 41.12,
+      "lng": -104.8
+    },
+    {
+      "id": "2026-00032863",
+      "at": "2026-09-29T00:15:18.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "911 Hang Up",
+      "lat": 41.105,
+      "lng": -104.78
+    },
+    {
+      "id": "2026-00052917",
+      "at": "2026-09-29T00:24:27.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Security Check",
+      "lat": 41.135,
+      "lng": -104.815
+    },
+    {
+      "id": "2026-00032864",
+      "at": "2026-09-29T00:30:57.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "School Visit",
+      "lat": 41.1,
+      "lng": -104.78
+    },
+    {
+      "id": "2026-00032865",
+      "at": "2026-09-29T00:42:17.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "Domestic Verbal",
+      "lat": 41.115,
+      "lng": -104.79
+    },
+    {
+      "id": "2026-00052918",
+      "at": "2026-09-29T00:48:21.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Security Check",
+      "lat": 41.135,
+      "lng": -104.815
+    },
+    {
+      "id": "2026-00052919",
+      "at": "2026-09-29T01:19:35.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Security Check",
+      "lat": 41.15,
+      "lng": -104.82
+    },
+    {
+      "id": "2026-00052920",
+      "at": "2026-09-29T01:28:29.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Security Check",
+      "lat": 41.15,
+      "lng": -104.79
+    },
+    {
+      "id": "2026-00032867",
+      "at": "2026-09-29T01:46:54.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "Security Check",
+      "lat": 41.095,
+      "lng": -104.805
+    },
+    {
+      "id": "2026-00052921",
+      "at": "2026-09-29T02:10:34.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Behavioral Problems",
+      "lat": 41.14,
+      "lng": -104.795
+    },
+    {
+      "id": "2026-00032869",
+      "at": "2026-09-29T02:27:34.000",
+      "agency": "Laramie County Sheriff's Department - WY0110000",
+      "layer": "Incidents",
+      "type": "Accident - With Injuries",
+      "lat": 41.155,
+      "lng": -104.355
+    },
+    {
+      "id": "2026-00052923",
+      "at": "2026-09-29T03:07:54.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Disturbance",
+      "lat": 41.135,
+      "lng": -104.81
+    },
+    {
+      "id": "2026-00052924",
+      "at": "2026-09-29T03:22:29.000",
+      "agency": "Cheyenne Police Department - WY0110100",
+      "layer": "Incidents",
+      "type": "Security Check",
+      "lat": 41.16,
+      "lng": -104.805
+    }
+  ],
+  "completeness": {
+    "totals": true,
+    "rhythm": true,
+    "trend": false,
+    "categoryCounts": false,
+    "geographyCounts": false,
+    "sample": true
+  },
+  "filters": {
+    "categorySelection": "1:3130=2-107,109-127,130-300,302-359,367-385,404-411,413-451,453-495,497&3145=2-93,95-111,114-277,279-326,334-353,370-447|2:2056=1-27,34-100,107,111-125&2059=1-25,32-71,73-99,106,110-121",
+    "includeRestrictedPlaces": false,
+    "shapeGroup": "Wards"
+  },
+  "sampleDescription": "Illustrative slice from the 2026-09-29 public pin response, not a complete day or the latest record set. Coordinates are the publisher’s generalized grid locations."
+}

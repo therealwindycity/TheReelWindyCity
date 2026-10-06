@@ -43,6 +43,8 @@ jobs:
 
   deploy:
     needs: build
+    # The github-pages environment is protected to the default branch; feature
+    # branches are build-checked but must not attempt a production deployment.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:

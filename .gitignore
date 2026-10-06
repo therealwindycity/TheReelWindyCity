@@ -18,6 +18,9 @@ public/data/wyoming-pulse.json
 # Static copies generated from the committed transcript source files
 public/transcripts/*.md
 
+# generated citizen-connect copy (src/data/citizen-connect.json is the source of truth)
+public/data/citizen-connect.json
+
 # scratch
 .sync/
 image-search/

@@ -5,7 +5,7 @@ import { asset } from "@/lib/civic-data";
 import { SITE_NAME, siteUrl } from "@/lib/site-config";
 
 const canonical = siteUrl("hub/signals/");
-const description = "A source-attributed, syndicated live signal desk for Cheyenne and Wyoming, combining public alerts, scanner references, road conditions, wildfire and seismic updates, weather, and local news feeds.";
+const description = "A source-attributed signal desk for Cheyenne and Wyoming, combining scanner feeds and public alerts with a historical, carefully contextualized reading of Cheyenne PD and Laramie County Citizen Connect incident records.";
 
 export const metadata: Metadata = {
   title: "Live Signal Desk",

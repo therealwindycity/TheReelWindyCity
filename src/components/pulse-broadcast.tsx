@@ -54,6 +54,7 @@ import {
   type WyomingCity,
   type WyomingScannerFeed,
 } from "@/lib/wyoming-cities";
+import IncidentRecordLens from "./incident-record-lens";
 
 const SEVERITY: Record<AlertSeverity, { label: string; rank: number }> = {
   critical: { label: "Critical", rank: 0 },
@@ -1497,6 +1498,12 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
               </div>
             )}
           </section>
+
+          {/* LARAMIE COUNTY CITIZEN CONNECT INCIDENT RECORD — the historical
+              counterpart to the live scanner above: same agencies, same
+              dispatch stream, but the whole archive read as evidence rather
+              than as pins on a map. */}
+          <IncidentRecordLens />
 
           <section className="pulse-feed-section" aria-labelledby="pulse-feed-title">
             <div className="pulse-section-heading">
