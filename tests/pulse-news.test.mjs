@@ -101,10 +101,13 @@ test("seed refresh accepts only verified, source-linked additions", () => {
   assert.equal(next.alerts[0].title, "Fresh verified story", "newest story sorts first");
 });
 
-test("a reachable but empty feed never relabels the curated fallback as live", () => {
-  assert.equal(publisherSnapshotMode(0, 0), "curated-seed");
-  assert.equal(publisherSnapshotMode(0, 1), "published-snapshot");
-  assert.equal(publisherSnapshotMode(2, 0), "published-snapshot");
+test("a snapshot is published only when an agency or publisher feed returned stories", () => {
+  assert.equal(publisherSnapshotMode([], []), "curated-seed");
+  assert.equal(publisherSnapshotMode([{ status: "empty", alerts: [] }], [{ status: "unavailable", alerts: [] }]), "curated-seed");
+  assert.equal(publisherSnapshotMode([{ status: "ok", alerts: [] }], []), "curated-seed");
+  assert.equal(publisherSnapshotMode([], [{ status: "ok", alerts: [{}] }]), "published-snapshot");
+  assert.equal(publisherSnapshotMode([{ status: "ok", alerts: [{}] }], []), "published-snapshot");
+  assert.equal(publisherSnapshotMode([{ status: "unavailable", alerts: [{}] }], []), "curated-seed");
 });
 
 test("news classification routes environment, elections, and community stories", () => {

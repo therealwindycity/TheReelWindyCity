@@ -20,8 +20,13 @@ const CATEGORY_RULES = [
  * but empty is not live coverage, so the curated fallback keeps its honest
  * "curated-seed" label unless at least one source actually returned items.
  */
-export function publisherSnapshotMode(agencyItems = 0, publisherItems = 0) {
-  return agencyItems + publisherItems > 0 ? "published-snapshot" : "curated-seed";
+export function publisherSnapshotMode(agencyResults = [], publisherResults = []) {
+  const returnedStories = (results) => results.some((result) => (
+    result?.status === "ok" && Array.isArray(result.alerts) && result.alerts.length > 0
+  ));
+  return returnedStories(agencyResults) || returnedStories(publisherResults)
+    ? "published-snapshot"
+    : "curated-seed";
 }
 
 function tagName(node) {

@@ -834,14 +834,16 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
     : "Waiting for first update";
   // The build snapshot records whether live sources actually answered. Surface
   // that instead of letting a dated fallback look like a fresh live feed.
-  const isLiveSnapshot = result?.mode === "published-snapshot";
+  const hasLiveFeeds = Boolean(result && (
+    result.mode === "published-snapshot" || result.liveSourcesCount > 0
+  ));
   const snapshotCapturedLabel = formatPublishedDate(result?.snapshotCapturedAt ?? INITIAL_RESULT.snapshotCapturedAt);
-  const provenanceLabel = isLiveSnapshot
-    ? `LIVE SOURCES · UPDATED ${updatedLabel} ${mountainZoneLabel}`
+  const provenanceLabel = hasLiveFeeds
+    ? `LIVE FEEDS · UPDATED ${updatedLabel} ${mountainZoneLabel}`
     : `DATED SNAPSHOT · ${snapshotCapturedLabel}`;
-  const provenanceDetail = isLiveSnapshot
-    ? "Publisher feeds and agency sources answered during the latest build; any retained fallback stories keep their own publish dates."
-    : "Publisher feeds did not answer during the latest build, so this desk is showing its dated, source-linked curated snapshot. Every headline links to the original publisher.";
+  const provenanceDetail = hasLiveFeeds
+    ? "Publisher or agency feeds returned stories during the latest update; any retained fallback stories keep their own publish dates."
+    : "Publisher and agency feeds did not return stories during the latest update, so this desk is showing its dated, source-linked curated snapshot.";
   const cityForecastUrl = `https://forecast.weather.gov/MapClick.php?lat=${city.latitude}&lon=${city.longitude}`;
 
   useEffect(() => {
@@ -929,8 +931,8 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
           MONITORING <strong>CHEYENNE &amp; WYOMING</strong>
         </span>
         <span
-          className={`pulse-status-updated pulse-status-updated--${isLiveSnapshot ? "live" : "snapshot"}`}
-          data-provenance={isLiveSnapshot ? "live" : "snapshot"}
+          className={`pulse-status-updated pulse-status-updated--${hasLiveFeeds ? "live" : "snapshot"}`}
+          data-provenance={hasLiveFeeds ? "live" : "snapshot"}
           title={provenanceDetail}
         >
           {provenanceLabel}

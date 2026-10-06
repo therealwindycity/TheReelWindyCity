@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import transcriptVectorIndex from "@/data/transcript-vectors.json";
+import ClickToLoadYouTube from "@/components/click-to-load-youtube";
 import { ARCHIVE_OWNER, MEETINGS, MEETINGS_CAPTURED, readableName, type Meeting } from "@/lib/civic-data";
 import { SITE_NAME, SITE_URL, siteUrl } from "@/lib/site-config";
 
@@ -8,6 +10,17 @@ export const dynamicParams = false;
 
 type MeetingPageProps = { params: Promise<{ id: string }> };
 type ExternalLink = { label: string; url: string };
+type TranscriptOverlaySegment = {
+  id: string;
+  kind: string;
+  text: string;
+  timestamp?: string;
+  videoUrl?: string;
+  sourceUrl?: string;
+  meetingId?: string;
+};
+const TRANSCRIPT_SEGMENTS = (transcriptVectorIndex as unknown as { items: TranscriptOverlaySegment[] }).items
+  .filter((item) => item.kind === "transcript" && item.meetingId);
 
 function findMeeting(id: string): Meeting | undefined {
   return MEETINGS.find((meeting) => meeting.id === id);
@@ -66,12 +79,50 @@ function githubBlobUrl(repo: string, path: string): string {
   return `https://github.com/${ARCHIVE_OWNER}/${encodeURIComponent(repo)}/blob/main/${encodedPath}`;
 }
 
+function youtubeVideoId(value: string | undefined): string | null {
+  if (!value) return null;
+  if (/^[A-Za-z0-9_-]{11}$/.test(value)) return value;
+
+  try {
+    const url = new URL(value);
+    const host = url.hostname.toLowerCase().replace(/^www\./, "");
+    if (host === "youtu.be") return url.pathname.split("/").filter(Boolean)[0] ?? null;
+    if (host === "youtube.com" || host === "m.youtube.com" || host === "youtube-nocookie.com") {
+      const queryId = url.searchParams.get("v");
+      if (queryId) return queryId;
+      const pathId = url.pathname.match(/^\/(?:embed|shorts|live)\/([A-Za-z0-9_-]{6,})/);
+      return pathId?.[1] ?? null;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
+function timestampSeconds(value: string | undefined): number | null {
+  if (!value) return null;
+  const parts = value.split(":").map(Number);
+  if (parts.length < 2 || parts.length > 3 || parts.some((part) => !Number.isInteger(part) || part < 0)) return null;
+  if (parts.at(-1)! >= 60 || (parts.length === 3 && parts[1] >= 60)) return null;
+  return parts.reduce((total, part) => total * 60 + part, 0);
+}
+
+function youtubeTimestampUrl(videoId: string, timestamp: string | undefined): string {
+  const seconds = timestampSeconds(timestamp);
+  return `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}${seconds === null ? "" : `&t=${seconds}s`}`;
+}
+
 function hostLabel(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
   } catch {
     return "Original source";
   }
+}
+
+function publicSourceUrl(value: string | undefined): string | undefined {
+  if (!value) return undefined;
+  return /^https?:\/\//i.test(value) ? value : siteUrl(value);
 }
 
 export function generateStaticParams(): Array<{ id: string }> {
@@ -117,6 +168,25 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
   const transcripts = meeting.transcripts?.length
     ? [...meeting.transcripts].sort((a, b) => Number(b.path === meeting.transcript?.path) - Number(a.path === meeting.transcript?.path))
     : meeting.transcript ? [meeting.transcript] : [];
+  const indexedTranscriptSegments = TRANSCRIPT_SEGMENTS
+    .filter((segment) => segment.meetingId === meeting.id);
+  const localTranscriptSegments = (meeting.transcriptExcerpts ?? [])
+    .map((segment) => ({ ...segment, kind: "transcript" }));
+  const transcriptSegmentsByKey = new Map<string, TranscriptOverlaySegment>();
+  for (const segment of [...localTranscriptSegments, ...indexedTranscriptSegments]) {
+    const key = JSON.stringify([segment.timestamp ?? "", segment.text]);
+    const existing = transcriptSegmentsByKey.get(key);
+    if (!existing) transcriptSegmentsByKey.set(key, segment);
+    else if (!existing.videoUrl && segment.videoUrl) {
+      // Prefer the site's static caption copy while retaining a timestamped player link from the index.
+      transcriptSegmentsByKey.set(key, { ...existing, videoUrl: segment.videoUrl });
+    }
+  }
+  const transcriptSegments = [...transcriptSegmentsByKey.values()]
+    .sort((a, b) => (a.timestamp ?? "").localeCompare(b.timestamp ?? ""));
+  const videoId = youtubeVideoId(meeting.official.video)
+    ?? transcriptSegments.map((segment) => youtubeVideoId(segment.videoUrl ?? "")).find(Boolean)
+    ?? null;
   const siblings = MEETINGS.filter((item) => item.body === meeting.body)
     .sort((a, b) => b.date.localeCompare(a.date));
   const siblingPosition = siblings.findIndex((item) => item.id === meeting.id);
@@ -244,6 +314,52 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
           )}
         </section>
 
+        {videoId && (
+          <section className="seo-card" aria-labelledby="meeting-video-heading">
+            <h2 id="meeting-video-heading">Meeting video</h2>
+            <p className="seo-section-intro">The recording stays local to the archive page until you choose to load the YouTube player.</p>
+            <div className="seo-video-frame">
+              <ClickToLoadYouTube
+                videoId={videoId}
+                title={`Meeting video: ${meeting.bodyLabel}, ${meeting.dateLabel}`}
+              />
+            </div>
+            <a className="seo-record-link" href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`} target="_blank" rel="noreferrer">
+              Open the original YouTube recording
+            </a>
+          </section>
+        )}
+
+        {transcriptSegments.length > 0 && (
+          <section className="seo-card" aria-labelledby="local-transcript-heading">
+            <h2 id="local-transcript-heading">Timestamp-linked transcript ({transcriptSegments.length} excerpts)</h2>
+            <p className="seo-section-intro">
+              Local transcript excerpts are associated by meeting ID, independent of official-video links. Captions may be automatically generated and can misidentify names; verify quotations against the recording or minutes.
+            </p>
+            <ol className="seo-transcript-segments">
+              {transcriptSegments.map((segment, index) => {
+                const timestamp = segment.timestamp;
+                const timestampHref = segment.videoUrl
+                  || (videoId ? youtubeTimestampUrl(videoId, timestamp) : undefined);
+                const transcriptSourceHref = publicSourceUrl(segment.sourceUrl);
+                return (
+                  <li key={segment.id || `${meeting.id}-transcript-${index}`}>
+                    {timestamp ? (
+                      timestampHref ? (
+                        <a className="seo-transcript-time" href={timestampHref} target="_blank" rel="noreferrer">{timestamp}</a>
+                      ) : <span className="seo-transcript-time">{timestamp}</span>
+                    ) : <span className="seo-transcript-time">Transcript excerpt {index + 1}</span>}
+                    <p>{segment.text}</p>
+                    {transcriptSourceHref && (
+                      <a className="seo-transcript-source" href={transcriptSourceHref} target="_blank" rel="noreferrer">Transcript source</a>
+                    )}
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
+        )}
+
         {transcripts.length > 0 && (
           <section className="seo-card" aria-labelledby="transcript-heading">
             <h2 id="transcript-heading">Timestamped transcript{transcripts.length === 1 ? "" : "s"} ({transcripts.length})</h2>
@@ -251,8 +367,9 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             <ul className="seo-document-list">
               {transcripts.map((transcript) => (
                 <li key={`${transcript.repo}/${transcript.path}`}>
-                  <a href={githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">{readableName(transcript.path)}</a>
-                  <span>{transcript.path === meeting.transcript?.path ? "Preferred transcript · " : "Transcript source · "}{transcript.repo}</span>
+                  <a href={transcript.local && transcript.publicPath ? siteUrl(transcript.publicPath) : githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">{readableName(transcript.path)}</a>
+                  <span>{transcript.path === meeting.transcript?.path ? "Preferred transcript · " : "Transcript source · "}{transcript.local ? "locally hosted copy" : transcript.repo}</span>
+                  {transcript.local && <a href={githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">Open the copy in GitHub</a>}
                 </li>
               ))}
             </ul>

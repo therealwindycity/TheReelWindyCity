@@ -22,6 +22,7 @@ const SITE_URL = `${ORIGIN}${BASE_PATH}/`;
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, "out");
 const index = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "meetings.json"), "utf8"));
+const transcriptIndex = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "transcript-vectors.json"), "utf8"));
 const MEETINGS = index.meetings;
 
 const failures = [];
@@ -75,6 +76,7 @@ for (const meeting of MEETINGS) {
   check(/<meta name="robots" content="[^"]*index/.test(html), `${meeting.id}: missing indexable robots directive`);
   check(!/noindex/i.test(html), `${meeting.id}: page contains a noindex directive`);
   check(!/https:\/\/github\.io(\/|\{|\s|")/.test(html), `${meeting.id}: links a bare github.io host instead of the project URL`);
+  check(!/<iframe\b[^>]*src="https?:\/\/(?:www\.)?(?:youtube-nocookie\.com|youtube\.com|cheyenne\.granicus\.com)/i.test(html), `${meeting.id}: page eagerly loads a third-party meeting video iframe`);
 
   const title = (titleTags[0] ?? "").trim();
   check(title.length > 0 && title.includes(meeting.shortDate), `${meeting.id}: title "${title}" does not carry the meeting date`);
@@ -113,6 +115,23 @@ for (const meeting of MEETINGS) {
     githubLinks.length >= meeting.docs.length + (meeting.transcripts?.length ?? (meeting.transcript ? 1 : 0)),
     `${meeting.id}: links ${githubLinks.length} source documents but the index lists ${meeting.docs.length} documents`,
   );
+}
+
+// Transcript overlays are local corpus data joined by meetingId, so they must
+// stay available even when the city snapshot has no external video URL.
+const transcriptOverlay = transcriptIndex.items.find((item) => {
+  if (item.kind !== "transcript" || !item.meetingId || !item.videoUrl) return false;
+  const meeting = MEETINGS.find((candidate) => candidate.id === item.meetingId);
+  return meeting && !meeting.official.video;
+});
+if (transcriptOverlay) {
+  const overlayMeeting = MEETINGS.find((meeting) => meeting.id === transcriptOverlay.meetingId);
+  const overlayHtml = read(path.join("meetings", overlayMeeting.id, "index.html"));
+  check(Boolean(overlayHtml && overlayHtml.includes("Timestamp-linked transcript")), `${overlayMeeting.id}: local transcript overlay was not rendered`);
+  check(Boolean(overlayHtml && /aria-label="Load video from YouTube:[^"]+"/.test(overlayHtml)), `${overlayMeeting.id}: transcript video was not made visitor-initiated`);
+  check(Boolean(overlayHtml && overlayHtml.includes(transcriptOverlay.timestamp)), `${overlayMeeting.id}: transcript timestamp is not linkable inline`);
+} else {
+  check(false, "Expected a bundled transcript excerpt whose meeting has no official video URL");
 }
 
 const duplicateTitles = [...titles.values()].filter((title, position) => titles.size && [...titles.values()].indexOf(title) !== position);
@@ -163,6 +182,8 @@ for (const hub of hubPages) {
   check(!/https:\/\/github\.io(\/|\{|\s|")/.test(html), `${hub.route}: links a bare github.io host instead of the project URL`);
 }
 const hubHome = read(path.join("hub/", "index.html"));
+const signalsHtml = read(path.join("hub/signals/", "index.html"));
+check(Boolean(signalsHtml && /(?:LIVE FEEDS · UPDATED|DATED SNAPSHOT ·)/.test(signalsHtml)), "hub/signals/: missing the explicit live-feed or dated-snapshot provenance badge");
 check(Boolean(hubHome && /<iframe[^>]+title=/.test(hubHome)), "hub/: expected a titled external source iframe with a direct-source fallback");
 for (const sourceLabel of ["Posted agenda", "Council video", "Scanner audio", "NWS forecast", "WYDOT roads"]) {
   check(Boolean(hubHome && hubHome.includes(sourceLabel)), `hub/: missing iframe source tab "${sourceLabel}"`);

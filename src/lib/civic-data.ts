@@ -113,7 +113,8 @@ export function readableName(path: string) {
 /* ------------------------------------------------------------------ */
 
 export type AgendaItem = { number: string; kind: string; text: string };
-export type MeetingDocRef = { repo: string; path: string };
+export type MeetingDocRef = { repo: string; path: string; local?: boolean; publicPath?: string; size?: number };
+export type MeetingTranscriptExcerpt = { id: string; timestamp: string; text: string; sourceUrl: string; videoUrl?: string };
 export type Meeting = {
   id: string;
   body: string;
@@ -127,6 +128,8 @@ export type Meeting = {
   transcript?: MeetingDocRef;
   /** Every transcript variant attached to this meeting; transcript remains the preferred copy. */
   transcripts?: MeetingDocRef[];
+  /** Small, timestamped excerpts from locally hosted transcript files. */
+  transcriptExcerpts?: MeetingTranscriptExcerpt[];
   upcoming?: boolean;
   dayLabel?: string;
   time?: string;
@@ -145,6 +148,7 @@ type MeetingIndex = {
     latest: string | null;
     totalDocuments: number;
     totalTranscripts: number;
+    totalTranscriptFiles?: number;
     byBody: Record<string, { label: string; count: number; first: string; last: string }>;
   };
   captured: string;

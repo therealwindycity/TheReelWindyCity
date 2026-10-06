@@ -17,9 +17,9 @@ export default function ImpactMap({ selected, onSelect, expanded = false, propos
   const container = useRef<HTMLDivElement>(null);
   const mapRef = useRef<CivicMap | null>(null);
   const callback = useRef(onSelect);
-  callback.current = onSelect;
   const [ready, setReady] = useState(false);
   const [failed, setFailed] = useState(false);
+  useEffect(() => { callback.current = onSelect; }, [onSelect]);
   useEffect(() => {
     let cancelled = false;
     import("maplibre-gl").then((ML) => {
