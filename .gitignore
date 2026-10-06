@@ -13,6 +13,10 @@ test-output/
 # generated meeting index (recreated from committed snapshots)
 src/data/meetings.json
 public/data/meetings.json
+# Generated from live publisher and agency feeds during each static-site build.
+public/data/wyoming-pulse.json
+# Static copies generated from the committed transcript source files
+public/transcripts/*.md
 
 # generated citizen-connect copy (src/data/citizen-connect.json is the source of truth)
 public/data/citizen-connect.json

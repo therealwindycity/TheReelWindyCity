@@ -1,5 +1,70 @@
-import { MEETING, NEXT_MEETING } from "./civic-data";
+import { MEETING, MEETINGS_CAPTURED, NEXT_MEETING } from "./civic-data";
 import { CHEYENNE_SCANNER_FEEDS, WYOMING_CITIES } from "./wyoming-cities";
+
+/** A record snapshot older than this is called out as possibly out of date. */
+export const SNAPSHOT_STALE_AFTER_DAYS = 14;
+
+export type SnapshotFreshness = {
+  /** ISO date of the record snapshot, e.g. "2026-10-03". */
+  captured: string;
+  /** Human label for the snapshot date, e.g. "October 3, 2026". */
+  capturedLabel: string;
+  /** Whole days between the snapshot and the reference date. */
+  ageInDays: number;
+  /** Short age phrase, e.g. "today", "yesterday", "6 days ago". */
+  ageLabel: string;
+  /** True when the snapshot is old enough that visitors should double-check it. */
+  stale: boolean;
+};
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function startOfUtcDay(value: Date): number {
+  return Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate());
+}
+
+/**
+ * How old the underlying record snapshot is.
+ *
+ * The hub is a static export, so "now" is the moment of the build rather than
+ * the moment of the visit. That is still the honest number to show: it is when
+ * these records were last reconciled with the city's postings.
+ */
+export function getSnapshotFreshness(
+  captured: string = MEETINGS_CAPTURED,
+  now: Date = new Date(),
+): SnapshotFreshness {
+  const capturedDate = new Date(`${captured}T00:00:00Z`);
+  const capturedMs = Number.isNaN(capturedDate.getTime()) ? startOfUtcDay(now) : startOfUtcDay(capturedDate);
+  // Clock skew or a dated build should never render a negative "-3 days ago".
+  const ageInDays = Math.max(0, Math.round((startOfUtcDay(now) - capturedMs) / DAY_MS));
+
+  let ageLabel = "today";
+  if (ageInDays === 1) ageLabel = "yesterday";
+  else if (ageInDays > 1) ageLabel = `${ageInDays} days ago`;
+
+  return {
+    captured,
+    capturedLabel: capturedDate.toLocaleDateString("en-US", {
+      timeZone: "UTC",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
+    ageInDays,
+    ageLabel,
+    stale: ageInDays >= SNAPSHOT_STALE_AFTER_DAYS,
+  };
+}
+
+/** The origin a URL belongs to, so a visitor can see exactly where a window goes. */
+export function publisherHost(url: string): string {
+  try {
+    return new URL(url).host.replace(/^www\./, "");
+  } catch {
+    return "external publisher";
+  }
+}
 
 export type HubSource = {
   id: string;

@@ -20,6 +20,7 @@
  *   src/data/official-sources.json       manifest of locally bundled official documents
  *   src/data/meetings.json               unified index generated from archive snapshots
  *   public/data/meetings.json            copy of the index for the static website
+ *   public/transcripts/<meeting-id>.md   locally hosted caption files committed under src/data/transcripts
  *   public/data/transcript-vectors.json  compiled semantic-search corpus (from src/data, if present)
  *   public/data/citizen-connect.json   bundled historical incident-record aggregates (from src/data)
  */
@@ -27,11 +28,21 @@ import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  inferMeetingBodyFromFilename,
+  parseArchiveDate,
+  parseFilenameDate,
+  parseMunicipalMeetingFilename,
+} from "./lib/filename-dates.mjs";
+import { sampleTranscriptCues, timestampedMarkdownCues, youtubeVideoId } from "./lib/transcript-harvest.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC_DATA = path.join(ROOT, "src", "data");
+const LOCAL_TRANSCRIPTS = path.join(SRC_DATA, "transcripts");
 const PUBLIC_DATA = path.join(ROOT, "public", "data");
 const PUBLIC_SOURCES = path.join(ROOT, "public", "sources");
+const PUBLIC_TRANSCRIPTS = path.join(ROOT, "public", "transcripts");
+const LOCAL_TRANSCRIPT_REPO = "TheReelWindyCity";
 
 const OWNER = "therealwindycity";
 /** Repository id -> snapshot file under src/data/ */
@@ -109,6 +120,14 @@ function youtubeUrl(value) {
   return /^https?:\/\//i.test(value) ? value : `https://www.youtube.com/watch?v=${value}`;
 }
 
+function youtubeTimestampUrl(videoId, timestamp) {
+  if (!videoId || !/^\d{2}:\d{2}:\d{2}$/.test(timestamp)) return undefined;
+  const [hours, minutes, seconds] = timestamp.split(":").map(Number);
+  if (minutes > 59 || seconds > 59) return undefined;
+  const start = hours * 3600 + minutes * 60 + seconds;
+  return `https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}&t=${start}s`;
+}
+
 function noteFromFolderName(name) {
   const lower = name.toLowerCase();
   if (lower.includes("sine die")) return "Sine Die Meeting";
@@ -148,25 +167,13 @@ function bodyFromRoot(root, folder) {
   return bodyFromFolderName(folder);
 }
 
-const MONTHS = { Jan: 1, Feb: 2, Mar: 3, Apr: 4, May: 5, Jun: 6, Jul: 7, Aug: 8, Sep: 9, Oct: 10, Nov: 11, Dec: 12 };
-
-/** Parse archive folder dates, ISO folders, and municipal-docs date filenames. */
-function parseMeetingDate(raw) {
-  let match = raw.match(/^\d{10}([A-Z][a-z]{2})\s+(\d{1,2}),\s*(\d{4})/);
-  if (match) {
-    const [, month, day, year] = match;
-    const monthNumber = MONTHS[month];
-    return monthNumber ? `${year}-${String(monthNumber).padStart(2, "0")}-${String(day).padStart(2, "0")}` : null;
-  }
-  match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  return match ? `${match[1]}-${match[2]}-${match[3]}` : null;
-}
 
 function collectMeetings() {
   /** @type {Map<string, any>} */
   const meetings = new Map();
   let documentCount = 0;
   let transcriptCount = 0;
+  let transcriptFileCount = 0;
 
   const ensure = (body, date, note) => {
     const suffix = eventSuffix(note);
@@ -207,56 +214,87 @@ function collectMeetings() {
     }
   };
 
+  /** Filename-dated municipal documents without an explicit body are resolved after all snapshots are loaded. */
+  const pendingFilenameDocs = [];
+
   for (const { id: repo, snapshot } of REPOS) {
     const tree = JSON.parse(readFileSync(path.join(SRC_DATA, snapshot), "utf8")).tree;
     for (const entry of tree) {
       if (entry.type !== "blob") continue;
+      if (repo === "The-Real-Windy-City-" && entry.path.startsWith("cheyenne-2026-transcripts/")
+        && entry.path.toLowerCase().endsWith(".md") && entry.path !== "cheyenne-2026-transcripts/README.md") {
+        transcriptFileCount += 1;
+      }
 
       const transcript = entry.path.match(/^cheyenne-\d{4}-transcripts\/([^/]+)\/(\d{4}-\d{2}-\d{2})(?:-[^/]*)?\.md$/);
       if (transcript && BODY_LABELS[transcript[1]]) {
-        const meeting = ensure(transcript[1], transcript[2]);
-        const candidate = { repo, path: entry.path };
-        // Prefer the explicitly cleaned copy when both transcript variants exist.
-        meeting.transcripts ||= [];
-        if (!meeting.transcripts.some((item) => item.repo === repo && item.path === entry.path)) {
-          meeting.transcripts.push(candidate);
-          transcriptCount += 1;
+        const date = parseArchiveDate(transcript[2]);
+        if (date) {
+          const meeting = ensure(transcript[1], date);
+          const candidate = { repo, path: entry.path };
+          // Local tree paths bind transcripts to meeting IDs even without a publisher URL.
+          meeting.transcripts ||= [];
+          if (!meeting.transcripts.some((item) => item.repo === repo && item.path === entry.path)) {
+            meeting.transcripts.push(candidate);
+            transcriptCount += 1;
+          }
+          // Keep the explicitly cleaned copy as the primary transcript when variants coexist.
+          if (!meeting.transcript || entry.path.endsWith(".clean.md")) meeting.transcript = candidate;
         }
-        // Keep the explicitly cleaned copy as the primary transcript when variants coexist.
-        if (!meeting.transcript || entry.path.endsWith(".clean.md")) meeting.transcript = candidate;
         continue;
       }
 
-      // Committee/work-session PDFs are flat inside municipal-docs/ in these snapshots.
       const file = entry.path.split("/").pop();
       const municipal = entry.path.match(/(?:^|\/)municipal-docs\/(?:[^/]+\/)?([^/]+)$/i);
-      const loose = municipal && file.match(/^(psc|fc|ws|cow)-(\d{1,2})-(\d{1,2})-(\d{2})/i);
-      if (loose) {
-        const [, prefix, month, day, year] = loose;
-        const date = `20${year}-${String(month).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        const body = { psc: "public-services-committee", fc: "finance-committee", ws: "work-sessions", cow: "work-sessions" }[prefix.toLowerCase()];
-        addDoc(ensure(body, date), repo, entry.path);
-        continue;
+      if (municipal) {
+        const datedMunicipal = parseMunicipalMeetingFilename(file);
+        if (datedMunicipal?.date && datedMunicipal.body) {
+          const meeting = ensure(datedMunicipal.body, datedMunicipal.date, datedMunicipal.note);
+          addNote(meeting, datedMunicipal.note);
+          addDoc(meeting, repo, entry.path);
+          continue;
+        }
+        if (datedMunicipal?.date) {
+          pendingFilenameDocs.push({ repo, path: entry.path, date: datedMunicipal.date });
+          continue;
+        }
       }
 
       // Dates may be top-level council folders or body-specific ISO subfolders.
       const parts = entry.path.split("/");
       let folderIndex = -1;
+      let folderDate = null;
       for (let i = 0; i < parts.length - 1; i += 1) {
-        if (/^\d{10}[A-Z][a-z]{2}/.test(parts[i]) || /^\d{4}-\d{2}-\d{2}/.test(parts[i])) {
+        const date = parseArchiveDate(parts[i]);
+        if (date) {
           folderIndex = i;
+          folderDate = date;
           break;
         }
       }
-      if (folderIndex === -1) continue;
-      const folder = parts[folderIndex];
-      const date = parseMeetingDate(folder);
-      if (!date) continue;
-      const body = bodyFromRoot(parts[0], folder);
-      const note = noteFromFolderName(folder);
-      const meeting = ensure(body, date, note);
-      addNote(meeting, note);
-      addDoc(meeting, repo, entry.path);
+      if (folderIndex !== -1 && folderDate) {
+        const folder = parts[folderIndex];
+        const body = bodyFromRoot(parts[0], folder);
+        const note = noteFromFolderName(folder);
+        const meeting = ensure(body, folderDate, note);
+        addNote(meeting, note);
+        addDoc(meeting, repo, entry.path);
+        continue;
+      }
+
+      // Agenda-packet snapshots often keep the date only in a filename such as
+      // CHEY-2022-11-01_packet-17.pdf. Do not discard these files just because
+      // there is no dated parent directory.
+      if (entry.path.startsWith("agenda-packets/")) {
+        const date = parseFilenameDate(file);
+        if (date) {
+          const body = inferMeetingBodyFromFilename(file) || "city-council";
+          const note = noteFromFolderName(file);
+          const meeting = ensure(body, date, note);
+          addNote(meeting, note);
+          addDoc(meeting, repo, entry.path);
+        }
+      }
     }
   }
 
@@ -291,6 +329,52 @@ function collectMeetings() {
     if (upcoming.granicusUrl) meeting.official.granicus = upcoming.granicusUrl;
   }
 
+  // Locally harvested or manually supplied captions are first-class archive
+  // files. They bind by an explicit meeting ID in the filename, never by date
+  // alone, and the public copy is served from this static site at build time.
+  if (existsSync(LOCAL_TRANSCRIPTS)) {
+    const byId = new Map([...meetings.values()].map((meeting) => [meeting.id, meeting]));
+    for (const file of readdirSync(LOCAL_TRANSCRIPTS).filter((name) => name.toLowerCase().endsWith(".md") && name !== "README.md").sort()) {
+      const meetingId = file.slice(0, -3);
+      const meeting = byId.get(meetingId);
+      if (!meeting) throw new Error(`Local transcript ${file} does not match a meeting ID in the archive snapshot`);
+      const markdown = readFileSync(path.join(LOCAL_TRANSCRIPTS, file), "utf8");
+      const cues = timestampedMarkdownCues(markdown);
+      const videoUrl = markdown.match(/^\*\*Video:\*\*\s*(https?:\/\/\S+)/m)?.[1] || meeting.official.video;
+      const videoId = youtubeVideoId(videoUrl);
+      const publicPath = `transcripts/${file}`;
+      const candidate = { repo: LOCAL_TRANSCRIPT_REPO, path: `src/data/transcripts/${file}`, local: true, publicPath, size: Buffer.byteLength(markdown) };
+      meeting.transcripts ||= [];
+      if (!meeting.transcripts.some((item) => item.repo === candidate.repo && item.path === candidate.path)) {
+        meeting.transcripts.push(candidate);
+        transcriptCount += 1;
+        transcriptFileCount += 1;
+      }
+      if (!meeting.transcript) meeting.transcript = candidate;
+      if (cues.length) {
+        meeting.transcriptExcerpts = sampleTranscriptCues(cues).map((cue, index) => ({
+          id: `local:${meeting.id}:${cue.timestamp}:${index}`,
+          timestamp: cue.timestamp,
+          text: cue.text,
+          sourceUrl: publicPath,
+          videoUrl: youtubeTimestampUrl(videoId, cue.timestamp),
+        }));
+      }
+    }
+  }
+
+  // Some supporting PDFs contain a date but do not identify a board in the
+  // filename. Attach those only when the dated snapshot identifies one
+  // unambiguous meeting for that day; do not guess when multiple bodies meet.
+  for (const document of pendingFilenameDocs) {
+    const sameDayMeetings = [...meetings.values()].filter((meeting) => meeting.date === document.date);
+    if (sameDayMeetings.length === 1) {
+      addDoc(sameDayMeetings[0], document.repo, document.path);
+    } else {
+      console.warn(`note: left filename-dated document unlinked because its meeting body is ambiguous (${document.path})`);
+    }
+  }
+
   const list = [...meetings.values()].map((meeting) => {
     if (!meeting.notes.length) delete meeting.notes;
     meeting.docs.sort((a, b) => a.path.localeCompare(b.path));
@@ -319,6 +403,7 @@ function collectMeetings() {
     latest: pastDates.length ? pastDates.reduce((a, b) => (a > b ? a : b)) : null,
     totalDocuments: documentCount,
     totalTranscripts: transcriptCount,
+    totalTranscriptFiles: transcriptFileCount,
     byBody,
   };
 
@@ -349,13 +434,23 @@ function assemble() {
   }
   writeFileSync(path.join(SRC_DATA, "official-sources.json"), JSON.stringify(available, null, 2) + "\n");
 
-  // 4. Unified meeting index (current first; distinct same-day sessions stay separate).
+  // 4. Locally hosted caption transcripts (the original text also stays in Git).
+  // Clear old generated copies first so removed source captions do not leak into a later export.
+  rmSync(PUBLIC_TRANSCRIPTS, { recursive: true, force: true });
+  if (existsSync(LOCAL_TRANSCRIPTS)) {
+    mkdirSync(PUBLIC_TRANSCRIPTS, { recursive: true });
+    for (const file of readdirSync(LOCAL_TRANSCRIPTS).filter((name) => name.toLowerCase().endsWith(".md") && name !== "README.md")) {
+      copyFileSync(path.join(LOCAL_TRANSCRIPTS, file), path.join(PUBLIC_TRANSCRIPTS, file));
+    }
+  }
+
+  // 5. Unified meeting index (current first; distinct same-day sessions stay separate).
   const meetingIndex = collectMeetings();
   const meetingsJson = JSON.stringify(meetingIndex, null, 2) + "\n";
   writeFileSync(path.join(SRC_DATA, "meetings.json"), meetingsJson);
   writeFileSync(path.join(PUBLIC_DATA, "meetings.json"), meetingsJson);
 
-  // 5. Precomputed semantic-search index (compiled by scripts/embed-transcripts.mjs).
+  // 6. Precomputed semantic-search index (compiled by scripts/embed-transcripts.mjs).
   const vectors = path.join(SRC_DATA, "transcript-vectors.json");
   if (existsSync(vectors)) copyFileSync(vectors, path.join(PUBLIC_DATA, "transcript-vectors.json"));
 
@@ -377,7 +472,9 @@ function assemble() {
   console.log(
     `Assembled public/data (${files.length} files) · official-sources manifest (${Object.keys(available).length} documents) · ` +
       `meetings index (${meetingIndex.stats.totalMeetings} meetings: ${meetingIndex.stats.upcomingMeetings} upcoming, ` +
-      `${meetingIndex.stats.pastMeetings} past, earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}) · ` +
+      `${meetingIndex.stats.pastMeetings} past, ${meetingIndex.stats.totalDocuments} archived documents, ` +
+      `${meetingIndex.stats.totalTranscripts} linked transcripts (${meetingIndex.stats.totalTranscriptFiles} files incl. undated), ` +
+      `earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}) · ` +
       `citizen-connect (${ccRecords.toLocaleString("en-US")} records).`,
   );
 }

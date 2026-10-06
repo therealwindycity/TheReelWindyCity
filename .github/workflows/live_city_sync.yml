@@ -119,6 +119,10 @@ jobs:
         run: |
           git config user.name "CivicCheyenne-SyncBot"
           git config user.email "sync@civiccheyenne.local"
+          # The sync completed, so any "blocked change" marker the watcher wrote
+          # for this document is stale — clearing it lets the next real change
+          # trigger immediately instead of waiting out the retry window.
+          rm -f data/sync-blocked.json
           git add data/
 
           if git diff --cached --quiet; then

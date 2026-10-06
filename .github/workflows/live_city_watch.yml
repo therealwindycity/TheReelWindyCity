@@ -36,8 +36,18 @@ permissions:
   contents: write
 
 concurrency:
-  group: municipal-data-sync # shared with live_city_sync.yml — one write lane
-  cancel-in-progress: false
+  # The watcher is read-only and idempotent: detection writes nothing, so two
+  # overlapping detections cannot corrupt state, and a superseded detection is
+  # harmless because the next run re-reads the same table.
+  #
+  # This used to share the writer's "municipal-data-sync" group (OM1#1). That
+  # serialized a 30-second read behind long sync runs, and hourly runs then sat
+  # in the queue until GitHub cancelled them — jobs with zero executed steps,
+  # reported as failed runs, one email per hour. Detection now owns its group and
+  # supersedes itself. The write lane is still serialized exactly as before:
+  # live_city_sync.yml keeps "municipal-data-sync" with cancel-in-progress: false.
+  group: municipal-watch
+  cancel-in-progress: true
 
 jobs:
   watch:
@@ -45,6 +55,8 @@ jobs:
     timeout-minutes: 10
     outputs:
       changed: ${{ steps.result.outputs.changed }}
+      suppressed: ${{ steps.result.outputs.suppressed }}
+      hash: ${{ steps.result.outputs.hash }}
       urls: ${{ steps.result.outputs.urls }}
       ids: ${{ steps.result.outputs.ids }}
     steps:
@@ -58,23 +70,103 @@ jobs:
       - run: npm ci
 
       - name: Detect semantic changes in the upcoming-meetings table (OM1#2)
-        run: node scripts/monitor/upcoming-meetings.mjs --check --state data/sync-state.json --out .sync/watch.json
+        timeout-minutes: 5
+        run: node scripts/monitor/upcoming-meetings.mjs --check --state data/sync-state.json --out .sync/watch.json --tolerate-source-unavailable
 
       - name: Publish watch outputs
         id: result
         run: |
           {
-            echo "changed=$(jq -r '.changed' .sync/watch.json)"
-            echo "urls=$(jq -r '[.changedMeetings[].agendaUrl | select(length > 0)] | join(",")' .sync/watch.json)"
-            echo "ids=$(jq -r '[.changedMeetings[] | (.body + "-" + .date)] | join(",")' .sync/watch.json)"
+            echo "changed=$(jq -r 'if .changed == true then "true" else "false" end' .sync/watch.json)"
+            echo "suppressed=$(jq -r 'if .suppressed == true then "true" else "false" end' .sync/watch.json)"
+            echo "hash=$(jq -r '.contentHash // ""' .sync/watch.json)"
+            echo "urls=$(jq -r '[.changedMeetings[]?.agendaUrl | select(length > 0)] | join(",")' .sync/watch.json)"
+            echo "ids=$(jq -r '[.changedMeetings[]? | (.body + "-" + .date)] | join(",")' .sync/watch.json)"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Explain this run in the summary
+        if: always()
+        run: |
+          {
+            echo "## Live Municipal Watch"
+            echo ""
+            if [ ! -f .sync/watch.json ]; then
+              echo "**No result file was written** — the detection step did not reach the end,"
+              echo "which means either the portal's table structure changed or the run was cut short."
+              echo "A structural change is a human-actionable failure (ENO_TABLE / ENO_ROWS)."
+            else
+              echo "| field | value |"
+              echo "| --- | --- |"
+              echo "| outcome | $(jq -r '.reason // "unknown"' .sync/watch.json) |"
+              if jq -e '.suppressed == true' .sync/watch.json >/dev/null 2>&1; then
+                echo "| suppressed | yes — same change already failed to sync |"
+              fi
+              echo "| changed | $(jq -r 'if .changed == true then "yes" elif .changed == false then "no" else "n/a (not checked)" end' .sync/watch.json) |"
+              echo "| checked | $(jq -r '.checkedAt // "n/a"' .sync/watch.json) |"
+              if jq -e '.reason == "source-unavailable"' .sync/watch.json >/dev/null 2>&1; then
+                echo "| error | $(jq -r '.error // "n/a"' .sync/watch.json) |"
+                echo ""
+                echo "The city's agenda portal was unreachable after retries. This is recorded as"
+                echo "**source-unavailable**, not as \"no changes\": no sync was triggered, and the"
+                echo "next scheduled run re-checks. Repeated days of this are worth investigating."
+              fi
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
 
   sync:
     needs: watch
-    if: needs.watch.outputs.changed == 'true' && needs.watch.outputs.urls != ''
+    # A change that already failed to sync within the retry window is reported
+    # but not re-attempted, so a blocked document escalates daily instead of
+    # emailing a failure every hour.
+    if: needs.watch.outputs.changed == 'true' && needs.watch.outputs.suppressed != 'true' && needs.watch.outputs.urls != ''
     uses: ./.github/workflows/live_city_sync.yml
     with:
       pdf_source_urls: ${{ needs.watch.outputs.urls }}
       meeting_ids: ${{ needs.watch.outputs.ids }}
       reason: scheduled-watch
     secrets: inherit
+
+  record_block:
+    # The sync failed, so the same change would re-fire on the next hourly run.
+    # Record it once, with the hash the watcher reported, so the watcher can stay
+    # quiet until the retry window passes. This is the only write the watch
+    # workflow performs, and it is published under the writer's concurrency lane.
+    needs: [watch, sync]
+    if: failure() && needs.watch.outputs.changed == 'true' && needs.watch.outputs.suppressed != 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: municipal-data-sync
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Record the blocked change (do not advance the baseline)
+        env:
+          CONTENT_HASH: ${{ needs.watch.outputs.hash }}
+          MEETING_IDS: ${{ needs.watch.outputs.ids }}
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          attempts=1
+          if [ -f data/sync-blocked.json ] && [ "$(jq -r '.contentHash // ""' data/sync-blocked.json)" = "$CONTENT_HASH" ]; then
+            attempts=$(( $(jq -r '.attempts // 0' data/sync-blocked.json) + 1 ))
+          fi
+          jq -n --arg hash "$CONTENT_HASH" --arg at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" --arg ids "$MEETING_IDS" \
+            --argjson attempts "$attempts" \
+            '{contentHash:$hash, attemptedAt:$at, attempts:$attempts, meetingIds:$ids, reason:"scheduled-watch-sync-failed", retryAfterMs:86400000}' \
+            > data/sync-blocked.json
+          cat data/sync-blocked.json >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "civic-cheyenne-watcher"
+          git config user.email "civic-cheyenne-watcher@users.noreply.github.com"
+          git add data/sync-blocked.json
+          if git diff --cached --quiet; then
+            echo "Blocked marker already current."
+            exit 0
+          fi
+          git commit -m "Record a change that failed to sync; the watcher stays quiet until the retry window passes"
+          git pull --rebase origin main
+          git push origin main

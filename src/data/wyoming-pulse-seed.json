@@ -1,0 +1,609 @@
+{
+  "mode": "curated-seed",
+  "capturedAt": "2026-10-05",
+  "counts": {
+    "total": 31,
+    "nws": 0,
+    "wydot": 0,
+    "rss": 31
+  },
+  "sources": [],
+  "errors": [
+    "Showing a dated, source-linked curated snapshot until publisher feeds refresh."
+  ],
+  "alerts": [
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/community/city/2026/10/05/cheyenne-public-services-committee-advances-annexation-proposals-to-final-city-vote/",
+      "severity": "standard",
+      "category": "government",
+      "title": "Cheyenne Public Services Committee advances annexation proposals to final city vote",
+      "summary": "Both ordinance packages — the 652.67-acre Hitching Post District that will host the PRCA Hall of Fame and Museum of the American Cowboy, and the 162-acre Orchard Hills parcel proposed as a Trammell Crow data center site — now go to the Cheyenne City Council for a final vote next week. Orchard Valley neighbors on the boundary told the committee they prefer the industrial project to high-density housing.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "government",
+        "city council"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/community/city/2026/10/05/city-property-improvements-on-cheyenne-finance-committee-agenda-tuesday/",
+      "severity": "standard",
+      "category": "government",
+      "title": "City property improvements on Cheyenne Finance Committee agenda Tuesday",
+      "summary": "The Finance Committee will review about $735,000 of city property work, including $250,000 for Airport Golf Course cart paths, $132,000 to redesign the Municipal Building's north parking lot with EV charging and solar-ready canopies, and $353,400 for Johnson Pool design and construction administration.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "government",
+        "city budget"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/weather-2/2026/10/05/record-heat-gusty-winds-prompt-red-flag-warning-for-southeast-wyoming/",
+      "severity": "urgent",
+      "category": "weather",
+      "title": "Record heat, gusty winds prompt red flag warning for southeast Wyoming",
+      "summary": "A red flag warning runs from noon to 6 p.m. for portions of southeast Wyoming as Cheyenne's high climbs toward 84 degrees, which would top the city's previous Oct. 5 record of 82 set in 1947. West winds of 10–20 mph with gusts to 35 mph and relative humidity of 10–15% led the National Weather Service to warn that any fire would spread rapidly and that outdoor burning is not recommended.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "weather",
+        "fire danger"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/community/energy-community/2026/10/05/gas-prices-down-in-laramie-county-amid-falling-state-national-averages/",
+      "severity": "standard",
+      "category": "community",
+      "title": "Gas prices down in Laramie County amid falling state, national averages",
+      "summary": "Laramie County's average fell 15 cents over the week to $4.11 a gallon, giving it Wyoming's cheapest county average, according to AAA data. The statewide average slipped 4 cents to $4.45 while the national average dropped 9 cents to $4.36, with diesel down 14.2 cents to $6.30.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Cap City News",
+        "energy",
+        "economy"
+      ]
+    },
+    {
+      "source": "rss-oil-city-news",
+      "source_id": "https://oilcity.news/crime/2026/10/05/man-accused-of-attacking-motel-residents-with-knife-and-hammer-last-week-in-casper/",
+      "severity": "standard",
+      "category": "crime",
+      "title": "Man accused of attacking motel residents with knife and hammer last week in Casper",
+      "summary": "Casper police charged Paul Joseph Clark, 65, with four felonies after motel residents and the complex owner reported attacks with a knife and a hammer, and officers used a bean-bag round to take him into custody. He remained jailed Friday on a $150,000 bond and is presumed innocent.",
+      "location": {
+        "city": "Casper",
+        "county": "Natrona"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "Oil City News",
+        "crime",
+        "public safety"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/judge-jails-man-in-moose-abuse-case-and-warns-wyoming-values-wildlife/",
+      "severity": "standard",
+      "category": "court",
+      "title": "Judge jails man in moose abuse case and warns: Wyoming values wildlife",
+      "summary": "A Uinta County judge jailed former state livestock brand inspector Justin Martin for 30 days and extended his supervised probation to three years despite a plea deal that called for no jail time, saying Wyoming values its wildlife. All three defendants in the case were ordered to complete 576 hours of community service.",
+      "location": {
+        "county": "Uinta"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "WyoFile",
+        "court",
+        "wildlife"
+      ]
+    },
+    {
+      "source": "rss-wyopreps",
+      "source_id": "https://wyopreps.com/football-standings-six-2026-wyoming/",
+      "severity": "standard",
+      "category": "sports",
+      "title": "Wyoming High School Football Standings on October 5, 2026",
+      "summary": "Updated statewide football standings and conference records for every classification ahead of Week 6 of the Wyoming high school season.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "WyoPreps",
+        "high school sports",
+        "football"
+      ]
+    },
+    {
+      "source": "rss-wyopreps",
+      "source_id": "https://wyopreps.com/volleyball-standings-six-2026-wyoming/",
+      "severity": "standard",
+      "category": "sports",
+      "title": "Wyoming High School Volleyball Standings on October 5, 2026",
+      "summary": "Updated statewide volleyball standings and conference records for every classification as the Wyoming high school season enters its final weeks.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-05",
+      "ingested_at": "2026-10-05",
+      "tags": [
+        "WyoPreps",
+        "high school sports",
+        "volleyball"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/latest-news/2026/10/03/2-czech-republic-residents-killed-in-crash-near-pinedale/",
+      "severity": "standard",
+      "category": "accident",
+      "title": "2 Czech Republic residents killed in crash near Pinedale",
+      "summary": "The Wyoming Highway Patrol reported that two people died and two were injured in a collision on US 191 near milepost 123.5. The report said road and weather conditions were dry and clear; driver fatigue is being investigated.",
+      "location": {
+        "city": "Pinedale",
+        "county": "Sublette",
+        "highway": "US-191"
+      },
+      "event_time": "2026-10-03",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cap City News",
+        "traffic",
+        "public safety"
+      ]
+    },
+    {
+      "source": "rss-wyopreps",
+      "source_id": "https://wyopreps.com/football-scoreboard-five-2026-wyoming/",
+      "severity": "standard",
+      "category": "sports",
+      "title": "Wyoming High School Football Week 5 Scoreboard for October 2-3, 2026",
+      "summary": "No. 1 Star Valley edged No. 2 Cody 28–27 in overtime after tying the game with 22 seconds left; Thunder Basin also upset rival Campbell County 15–14. WyoPreps has scores from games across the state.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-03",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoPreps",
+        "high school sports",
+        "football"
+      ]
+    },
+    {
+      "source": "rss-cap-city-news",
+      "source_id": "https://capcity.news/weather-2/2026/10/03/unseasonable-heat-fire-weather-risks-ahead-for-cheyenne-this-week/",
+      "severity": "standard",
+      "category": "weather",
+      "title": "Unseasonable Heat, Fire Weather Risks Ahead For Cheyenne This Week",
+      "summary": "A Cap City News forecast says southeast Wyoming could see highs near 90°F, very low humidity and little precipitation early in the week, raising fire-weather concerns around the Laramie Range.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-03",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cap City News",
+        "weather",
+        "fire danger",
+        "Laramie County"
+      ]
+    },
+    {
+      "source": "rss-oil-city-news",
+      "source_id": "https://oilcity.news/breaking-news/2026/10/02/voters-to-decide-on-2-lodging-tax-in-upcoming-general-election/",
+      "severity": "informational",
+      "category": "election",
+      "title": "Voters to decide on 2% lodging tax in upcoming general election",
+      "summary": "Natrona County voters will decide whether to continue the visitor-paid lodging tax. Visit Casper says the revenue supports tourism promotion, events, and local visitor services.",
+      "location": {
+        "city": "Casper",
+        "county": "Natrona"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Oil City News",
+        "elections",
+        "local government"
+      ]
+    },
+    {
+      "source": "rss-oil-city-news",
+      "source_id": "https://oilcity.news/community/county-community/county-government/2026/10/02/natrona-county-to-consider-lifting-burn-ban-hearing-two-zoning-requests-tuesday/",
+      "severity": "informational",
+      "category": "government",
+      "title": "Natrona County to consider lifting burn ban, hearing two zoning requests Tuesday",
+      "summary": "County commissioners scheduled a hearing on a proposed burn-ban lift and two land-use requests for Oct. 6. Fire officials still advise residents to follow permit rules and avoid burning in high winds.",
+      "location": {
+        "city": "Casper",
+        "county": "Natrona"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Oil City News",
+        "county government"
+      ]
+    },
+    {
+      "source": "rss-wyoming-public-media",
+      "source_id": "https://www.wyomingpublicmedia.org/politics-government/2026-10-02/wyoming-supreme-court-concludes-crossover-voting-ban-is-constitutional",
+      "severity": "standard",
+      "category": "court",
+      "title": "Wyoming Supreme Court concludes crossover-voting ban is constitutional",
+      "summary": "The unanimous ruling upholds the state's 96-day party-affiliation freeze before primary elections, clearing the way for the rule to remain in place for November's general election.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Wyoming Public Media",
+        "courts",
+        "elections"
+      ]
+    },
+    {
+      "source": "rss-wyoming-public-media",
+      "source_id": "https://www.wyomingpublicmedia.org/open-spaces/2026-10-02/the-arguments-for-and-against-the-peoples-initiative-on-the-wyoming-ballot",
+      "severity": "informational",
+      "category": "election",
+      "title": "The arguments for and against ‘The People’s Initiative’ on the Wyoming ballot",
+      "summary": "Wyoming voters will decide on a proposed 50% property-tax cut for primary residences. Supporters and opponents debate the effects on household bills and local services.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Wyoming Public Media",
+        "elections",
+        "taxes"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/wyoming-lawmakers-could-pursue-some-of-the-nations-strictest-limits-on-flock-like-cameras/",
+      "severity": "standard",
+      "category": "government",
+      "title": "Wyoming lawmakers could pursue some of the nation’s strictest limits on Flock-like cameras",
+      "summary": "A legislative committee discussed draft restrictions on automatic license-plate readers, including short data retention and limits on sharing. The preliminary bill is expected to change before the next session.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoFile",
+        "government",
+        "privacy"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/judge-denies-qualified-immunity-to-wyoming-boys-school-staff-in-abuse-lawsuit/",
+      "severity": "standard",
+      "category": "court",
+      "title": "Judge denies qualified immunity to Wyoming Boys’ School staff in abuse lawsuit",
+      "summary": "A federal judge allowed some civil-rights claims involving isolation and use of force at the state-run facility near Worland to proceed to trial. The ruling concerns one of six lawsuits.",
+      "location": {
+        "city": "Worland",
+        "county": "Washakie"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoFile",
+        "courts",
+        "public safety"
+      ]
+    },
+    {
+      "source": "rss-wyoming-public-media",
+      "source_id": "https://www.wyomingpublicmedia.org/natural-resources-energy/2026-10-02/analysis-99-of-commenters-oppose-motorized-use-changes-in-forests",
+      "severity": "informational",
+      "category": "environment",
+      "title": "Analysis: 99% of commenters oppose motorized use changes in forests",
+      "summary": "More than 134,000 comments were submitted on possible changes to national-forest travel rules; an analysis found that more than 99% opposed the changes in some way.",
+      "location": {
+        "county": "Statewide"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Wyoming Public Media",
+        "public lands",
+        "environment"
+      ]
+    },
+    {
+      "source": "rss-sweetwater-now",
+      "source_id": "https://sweetwaternow.com/wydot-closes-belt-loop-for-two-more-days",
+      "severity": "standard",
+      "category": "road_conditions",
+      "title": "WYDOT closes Belt Loop in Rock Springs through Oct. 6",
+      "summary": "SweetwaterNOW reported that the Belt Loop from Dewar Drive to Blair Avenue would be closed through Oct. 6 for concrete-joint sealing on WYO 376. Local access to West Center Street was expected to remain open.",
+      "location": {
+        "city": "Rock Springs",
+        "county": "Sweetwater",
+        "highway": "WYO 376"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "SweetwaterNOW",
+        "WYDOT",
+        "road work"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/fremont-county-avoids-emt-strike-after-extending-contract/",
+      "severity": "informational",
+      "category": "community",
+      "title": "Fremont County avoids EMT strike after extending contract",
+      "summary": "A two-year contract extension averted a planned strike by EMTs and paramedics serving Fremont County while local governments work on a longer-term ambulance-service plan.",
+      "location": {
+        "county": "Fremont"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoFile",
+        "health",
+        "county government"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/10/02/torrington-to-decide-whether-to-have-residents-pay-for-massive-electricity-spike/",
+      "severity": "standard",
+      "category": "community",
+      "title": "Torrington To Decide Whether To Have Residents Pay $800,000 Electricity Spike",
+      "summary": "Torrington officials say transmission charges pushed the city’s wholesale energy bill up 189% year over year, adding about $800,000 annually. The council is weighing a ratepayer increase against using reserve funds.",
+      "location": {
+        "city": "Torrington",
+        "county": "Goshen"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "energy",
+        "utility bills",
+        "local economy"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/10/02/rawlins-man-and-six-others-get-prison-after-bust-of-major-wyoming-drug-ring/",
+      "severity": "standard",
+      "category": "crime",
+      "title": "Rawlins Man, Six Others, Get Prison After Bust Of Major Wyoming Drug Ring",
+      "summary": "Seven members of a multi-county drug ring, including a Rawlins man identified as its leader, received prison sentences ranging from eight to 18 years. Thirty others were prosecuted at the state level.",
+      "location": {
+        "city": "Rawlins",
+        "county": "Carbon"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "crime",
+        "courts",
+        "public safety"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/a-new-suicide-fatality-review-sheds-light-on-prevention-efforts-in-laramie-county/",
+      "severity": "standard",
+      "category": "health",
+      "title": "A New Suicide Fatality Review Sheds Light On Prevention Efforts In Laramie County",
+      "summary": "A new county review identifies social isolation and relationship or family stress among common risk factors, and calls for better coordination among crisis responders and health providers. It also highlights firearm-safe-storage outreach.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoFile",
+        "mental health",
+        "public health",
+        "prevention"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/10/02/casper-familys-12-foot-skeleton-tomb-petty-is-dying-for-drivers-to-stop/",
+      "severity": "informational",
+      "category": "community",
+      "title": "Casper Family Enlists 12-Foot Skeleton To Help Drivers Stop",
+      "summary": "A Casper family put a 12-foot Halloween skeleton, nicknamed Tomb Petty, beside a neighborhood stop sign after hearing drivers race through the intersection near Dean Morgan Middle School.",
+      "location": {
+        "city": "Casper",
+        "county": "Natrona"
+      },
+      "event_time": "2026-10-02",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "Casper",
+        "community",
+        "Halloween"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/10/01/mlb-drops-plan-for-baseball-in-grand-teton-national-park-after-public-backlash/",
+      "severity": "standard",
+      "category": "environment",
+      "title": "MLB Drops Plan For Baseball In Grand Teton National Park After Public Backlash",
+      "summary": "The baseball commissioner told Jackson-area officials that MLB will stop evaluating Grand Teton National Park as a possible game site after residents, conservationists and local leaders objected.",
+      "location": {
+        "city": "Jackson",
+        "county": "Teton"
+      },
+      "event_time": "2026-10-01",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "Grand Teton",
+        "public lands",
+        "community"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/10/01/feds-casper-man-zigzagged-up-i-25-ate-meth-and-fentanyl-as-agents-closed-in/",
+      "severity": "standard",
+      "category": "crime",
+      "title": "Feds: Man Accused Of Trafficking 174 Pounds Of Meth Tried To Eat Drugs During Chase",
+      "summary": "Federal agents allege a Casper man suspected of trafficking meth and fentanyl led them on an I-25 chase and tried to eat drugs as they closed in. The charges remain allegations unless proven in court.",
+      "location": {
+        "city": "Casper",
+        "county": "Natrona",
+        "highway": "I-25"
+      },
+      "event_time": "2026-10-01",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "crime",
+        "I-25",
+        "public safety"
+      ]
+    },
+    {
+      "source": "rss-buckrail",
+      "source_id": "https://buckrail.com/wydots-safe-pass-enforcement-begins-today-with-new-wy22-signage/",
+      "severity": "standard",
+      "category": "road_conditions",
+      "title": "WYDOT’s Safe Pass Enforcement Begins With New WY22 Signage",
+      "summary": "The WY22 Safe Pass program is now enforceable on Teton Pass. RVs, vehicles towing trailers and vehicles rated at 10,000 pounds or more must complete the online self-certification before driving the pass.",
+      "location": {
+        "city": "Wilson",
+        "county": "Teton",
+        "highway": "WY-22"
+      },
+      "event_time": "2026-10-01",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Buckrail",
+        "WYDOT",
+        "Teton Pass",
+        "travel"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/10/01/liberty-bells-sudden-appearance-outside-gillette-courthouse-befuddled-workers/",
+      "severity": "informational",
+      "category": "community",
+      "title": "Mysterious Liberty Bell Appears Outside Campbell County Courthouse",
+      "summary": "A bell that seemed bronze appeared on an empty courthouse pedestal in Gillette, puzzling staff for days. It turned out to be a papier-mâché America 250 gift made by local volunteers.",
+      "location": {
+        "city": "Gillette",
+        "county": "Campbell"
+      },
+      "event_time": "2026-10-01",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "Gillette",
+        "community",
+        "arts"
+      ]
+    },
+    {
+      "source": "rss-cowboy-state-daily",
+      "source_id": "https://cowboystatedaily.com/2026/09/29/cheyenne-approves-another-annexation-for-data-center-during-contentious-meeting/",
+      "severity": "standard",
+      "category": "government",
+      "title": "Data Center Critics Angry As Cheyenne Council OKs Another Data Center Annexation",
+      "summary": "After a contentious six-hour meeting, the City Council approved a 1,260-acre annexation and rezoning for another data-center project. Residents raised concerns about the pace of growth, water, traffic and community impact.",
+      "location": {
+        "city": "Cheyenne",
+        "county": "Laramie"
+      },
+      "event_time": "2026-09-29",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "Cowboy State Daily",
+        "Cheyenne",
+        "data centers",
+        "local government"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/bucking-the-wind-wyoming-artists-transform-wind-blade-into-snowfence/",
+      "severity": "informational",
+      "category": "environment",
+      "title": "Bucking the wind: Wyoming artists transform wind blade into snowfence",
+      "summary": "A Wyoming art project near Esterbrook repurposes a retired turbine blade as a snow fence. WYDOT will monitor how well the installation limits drifting near a road.",
+      "location": {
+        "city": "Esterbrook",
+        "county": "Converse"
+      },
+      "event_time": "2026-09-25",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoFile",
+        "energy",
+        "community"
+      ]
+    },
+    {
+      "source": "rss-wyofile",
+      "source_id": "https://wyofile.com/80-trail-miles-700-downed-trees-wyoming-forest-corps-brings-muscle-to-maintenance-backlog/",
+      "severity": "informational",
+      "category": "environment",
+      "title": "80 Trail Miles, 700 Downed Trees: Wyoming Forest Corps Tackles Maintenance Backlog",
+      "summary": "A four-person crew with Friends of the Bridger-Teton cleared about 700 downed trees from 80 miles of trail this season, helping reopen routes across the national forest.",
+      "location": {
+        "county": "Teton"
+      },
+      "event_time": "2026-09-03",
+      "ingested_at": "2026-10-04",
+      "tags": [
+        "WyoFile",
+        "outdoors",
+        "public lands",
+        "trails"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "contentHash": "40a3416223b053567f2453231a67edcbe26d88c624a4f1c2352616ebbffaaf15",
+  "attemptedAt": "2026-10-05T23:35:27Z",
+  "attempts": 1,
+  "meetingIds": "finance-committee-2026-10-06",
+  "reason": "scheduled-watch-sync-failed",
+  "retryAfterMs": 86400000
+}

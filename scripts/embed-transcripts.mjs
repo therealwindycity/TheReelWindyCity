@@ -23,6 +23,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import Module from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { youtubeVideoId } from "./lib/transcript-harvest.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC_DATA = path.join(ROOT, "src", "data");
@@ -170,6 +171,8 @@ function windowsFor(filePath, chunks) {
 }
 
 function youtubeFrom(markdown) {
+  const videoUrl = markdown.match(/^\*\*Video:\*\*\s*(https?:\/\/\S+)/m)?.[1];
+  if (videoUrl) return youtubeVideoId(videoUrl);
   const idMatch = markdown.match(/YouTube ID:\*\*\s*`([A-Za-z0-9_-]{6,})`/) || markdown.match(/watch\?v=([A-Za-z0-9_-]{6,})/);
   return idMatch ? idMatch[1] : null;
 }
@@ -322,6 +325,53 @@ function transcriptItems(tree, limit) {
   return items;
 }
 
+function localTranscriptItems(meetings, limit = 0) {
+  const localFiles = meetings.flatMap((meeting) => (meeting.transcripts || [])
+    .filter((transcript) => transcript.local)
+    .map((transcript) => ({ meeting, transcript })));
+  const selected = limit ? localFiles.slice(0, limit) : localFiles;
+  const items = [];
+  let skipped = 0;
+
+  for (const { meeting, transcript } of selected) {
+    const localPath = path.join(ROOT, transcript.path);
+    if (!existsSync(localPath)) {
+      skipped += 1;
+      continue;
+    }
+    const markdown = readFileSync(localPath, "utf8");
+    const cues = parseCues(markdown);
+    const chunks = cues.length ? groupCues(cues) : [];
+    if (!chunks.length) {
+      skipped += 1;
+      continue;
+    }
+    const dateText = dateLabel(meeting.date);
+    const body = meeting.bodyLabel || meeting.body;
+    const videoId = youtubeFrom(markdown);
+
+    chunks.forEach((chunk, index) => {
+      const seconds = chunk.timestamp ? timestampToSeconds(chunk.timestamp) : undefined;
+      items.push({
+        id: `transcript:${meeting.id}:${chunk.timestamp || index}`,
+        kind: "transcript",
+        title: `${body} · ${dateText}${chunk.timestamp ? ` · ${chunk.timestamp}` : ""}`,
+        text: chunk.text,
+        meetingDate: meeting.dateLabel,
+        timestamp: chunk.timestamp,
+        sourceUrl: githubBlob(transcript.repo, transcript.path),
+        videoUrl: videoId ? `https://www.youtube.com/watch?v=${videoId}${seconds ? `&t=${seconds}s` : ""}` : undefined,
+        repo: transcript.repo,
+        path: transcript.path,
+        meetingId: meeting.id,
+      });
+    });
+  }
+
+  console.log(`Local transcripts compiled: ${items.length} chunks from ${selected.length - skipped} files (${skipped} skipped).`);
+  return items;
+}
+
 function ensureLocalMiniLM() {
   const onnxSrc = path.join(WEIGHTS_DIR, "all-MiniLM-L6-v2-onnx", "model.onnx");
   if (!existsSync(onnxSrc)) {
@@ -394,6 +444,7 @@ async function main() {
   const meetings = ensureMeetings();
   const items = [
     ...transcriptItems(tree, LIMIT),
+    ...localTranscriptItems(meetings.meetings || [], LIMIT),
     ...ordinanceItems(),
     ...meetingItems(meetings.meetings || []),
   ];

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, FileStack, Landmark, Radio, ShieldCheck } from "lucide-react";
+import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
 import HubSourceDeck from "@/components/hub-source-deck";
 import { getHubSources } from "@/lib/hub-sources";
 import { MEETINGS_CAPTURED, MEETING_STATS, NEXT_MEETING, asset } from "@/lib/civic-data";
@@ -70,6 +71,7 @@ export default function CivicHubHomePage() {
           <h2 id="gov-featured-agenda-title">{NEXT_MEETING.bodyLabel}</h2>
           <p>{NEXT_MEETING.dayLabel}{NEXT_MEETING.time ? ` · ${NEXT_MEETING.time}` : ""}{NEXT_MEETING.location ? ` · ${NEXT_MEETING.location}` : ""}</p>
           <small>{NEXT_MEETING.items?.length ?? 0} items in the captured agenda · Snapshot captured {MEETINGS_CAPTURED}</small>
+          <HubSnapshotFreshness note="a later revision may exist on the city’s own calendar." />
         </div>
         <div className="gov-featured-actions">
           {agendaUrl && <a className="gov-button gov-button-outline" href={agendaUrl} target="_blank" rel="noopener noreferrer">Open original agenda <ArrowUpRight size={14} aria-hidden="true" /></a>}

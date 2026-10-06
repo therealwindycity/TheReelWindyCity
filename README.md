@@ -16,6 +16,8 @@ agenda**, and the source library indexes the complete public-record archive belo
 The dedicated hub is published as its own small set of crawlable pages under [`/hub/`](https://therealwindycity.github.io/TheReelWindyCity/hub/):
 
 * **Live desk (`/hub/`)** puts the current captured agenda beside a source-window switchboard for Granicus, an archived Council video, Broadcastify, the National Weather Service, and WYDOT. It loads one external iframe at a time, names the publisher, and keeps a direct-source link available when a publisher blocks embedding.
+  * Publisher windows are **click-to-load**: the frame is present in the markup but carries no `src` until you press *Load window*, so nothing is requested from a third party on page view. Once open, a *Reload* control and the direct-source link stay available, and the address bar tracks the selected window (`/hub/#source-scanner`) so a single source can be linked and re-found.
+  * Pages that show posted agenda items carry a **record-snapshot freshness note** with the snapshot date and its age, so a stale capture is visible rather than implied.
 * **Meetings (`/hub/meetings/`)** summarizes posted agenda items and teaches the agenda → meeting → minutes/adopted-text sequence. Agenda entries remain proposals until the official record establishes an outcome.
 * **Live signals (`/hub/signals/`)** reuses the Wyoming Pulse syndication desk for agency alerts, scanner metadata, weather, roads, wildfire/seismic sources, and Wyoming newsroom feeds. Inside the same desk, the **Incident Record Lens** reads the historical Cheyenne Police Department / Laramie County Sheriff Citizen Connect archive through weekday/hour patterns, per-day trends, call-type mix, and ward/response-area workload. Third-party relays are contextual, not official dispatch; the historical lens is not an emergency service.
 * **Learn the record (`/hub/learn/`)** is a short civic field guide with an interactive knowledge check on source authority, meeting stages, and transcript verification.
@@ -30,24 +32,32 @@ of official links captured on October 3, 2026. It keeps same-day City Council se
 
 | Body | Meetings | Coverage |
 | --- | ---: | --- |
-| City Council | 470 | **May 27, 2008 → September 28, 2026** (specials & budget sessions included) |
-| Finance Committee | 123 | January 2022 → **October 6, 2026 (upcoming)** |
-| Public Services Committee | 118 | January 2022 → **October 5, 2026 (upcoming)** |
-| Work Sessions / Committee of the Whole | 117 | October 2018 → August 2026 |
-| Board of County Commissioners | 58 | January 2024 → March 2026 |
-| Planning Commission | 47 | January 2024 → July 2026 |
-| Historic Preservation Board | 7 | 2026 |
-| Board of Adjustment | 6 | 2026 |
-| Urban Renewal Authority | 2 | 2026 |
+| City Council | 526 | **May 27, 2008 → September 28, 2026** (specials & budget sessions included) |
+| Finance Committee | 123 | January 4, 2022 → **October 6, 2026 (upcoming)** |
+| Public Services Committee | 119 | January 5, 2022 → **October 5, 2026 (upcoming)** |
+| Work Sessions / Committee of the Whole | 115 | October 3, 2018 → August 28, 2026 |
+| Board of County Commissioners | 58 | January 2, 2024 → March 17, 2026 |
+| Planning Commission | 47 | January 11, 2024 → July 6, 2026 |
+| Historic Preservation Board | 7 | January 13 → July 14, 2026 |
+| Board of Adjustment | 6 | January 15 → July 16, 2026 |
+| Urban Renewal Authority | 2 | February 5 → May 7, 2026 |
 
-**948 meeting entries · 2,685 archived documents · 84 timestamped transcript files.** Committee PDF
-files from older snapshots are included where available; counts are generated from the committed
-indexes rather than hard-coded. The next posted meetings are Public Services Committee, Monday
-October 5 (11 agenda items), and Finance Committee, Tuesday October 6 (6 agenda items).
+**1,003 meeting entries · 5,118 archived documents · 85 transcript files** (84 dated transcript
+attachments across 82 meetings and one undated transcript whose meeting date is not established).
+These are reproducible counts from the committed repository snapshots and official-links snapshot;
+the former 948-entry README total was stale. Meeting IDs are keyed by government body, date, and
+explicit session note; the archive is not padded with unverified placeholders to match another tally.
+The next posted meetings are Public Services Committee, Monday October 5 (11 agenda items), and
+Finance Committee, Tuesday October 6 (6 agenda items).
 
 Each meeting links to available official agendas, minutes, and video, plus repository documents and
-a timestamped transcript where one exists. Upcoming agendas and their access details are shown as
-posted; agenda items are proposals, not recorded decisions.
+a timestamped transcript where one exists. The archive transcript snapshot currently covers 82
+meetings; of 134 meeting records with video links, 83 have no transcript in the source material
+(74 from 2025 and 9 from 2026: 46 YouTube and 37 Granicus). `npm run transcripts:fetch` can opt in to a caption-only YouTube import;
+Granicus is not polled or scraped, and supplied VTT files can be imported by meeting ID. Imported
+transcripts are stored in this repository and copied into the static site at build time. Meeting
+pages do not load third-party video until a visitor explicitly chooses the player. Upcoming agendas
+and their access details are shown as posted; agenda items are proposals, not recorded decisions.
 
 ## Data — built from the public-record repositories
 
@@ -58,7 +68,8 @@ bundles public aggregate data from the official Citizen Connect publisher; it is
 | Repository | Contents |
 | --- | --- |
 | [cheyenne-archives-2025-2026](https://github.com/therealwindycity/cheyenne-archives-2025-2026) | Council & other body meeting records, 2025–2026 |
-| [The-Real-Windy-City-](https://github.com/therealwindycity/The-Real-Windy-City-) | Verbatim timestamped 2026 meeting transcripts (with official video links) |
+| [The-Real-Windy-City-](https://github.com/therealwindycity/The-Real-Windy-City-) | Timestamped 2026 meeting transcripts and transcript variants |
+| [TheReelWindyCity](https://github.com/therealwindycity/TheReelWindyCity) | Site source, generated caption imports, and the local transcript cache (when populated) |
 | [cheyenne-archives-2023-2024](https://github.com/therealwindycity/cheyenne-archives-2023-2024) | Meeting records, 2023–2024 |
 | [cheyenne-archives-2022](https://github.com/therealwindycity/cheyenne-archives-2022) | Meeting records, 2022 |
 | [cheyenne-archives-2018-2021](https://github.com/therealwindycity/cheyenne-archives-2018-2021) | Meeting records, 2018–2021 |
@@ -75,8 +86,30 @@ bundles public aggregate data from the official Citizen Connect publisher; it is
 * **Official documents for the guided session** ship with the site in `public/sources/`:
   the January 26 agenda capture (the archived agenda page), the official Record of Proceedings for
   January 26, 2026, and the Chapter 1.28 administrative-inspection-warrants policy brief.
-* **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
-  be verified against the official meeting video.
+* **Transcripts** preserve creator-provided or auto-generated captions, labeled by source and stored
+  in Git. The opt-in `npm run transcripts:fetch` step uses `yt-dlp` to fetch subtitles only (never
+  meeting audio/video); it is not part of `npm run build` or a page view. A WebVTT import can attach
+  Granicus captions by exact meeting ID without polling that service. Locally committed caption
+  files are served from the static site, shown as timestamp-linked excerpts, and included in the
+  semantic-search compiler when `npm run data:embed` is run. Verify names and quotations against
+  official minutes and video before quoting.
+* **Wyoming Pulse** is the statewide news desk in the app. It groups source-linked headlines into
+  nine moving sector streams (statewide, government, public safety, weather, roads, energy/land,
+  schools/health, community/economy, and Wyoming sports). The ten publisher feeds are Oil City News,
+  Cap City News, WyoFile, Buckrail, County 10, SweetwaterNOW, Wyoming Public Media, K2 Radio,
+  Cowboy State Daily, and WyoPreps; NWS alerts and WYDOT travel events are checked separately. `scripts/build-pulse-data.mjs`
+  collects RSS during static builds into an ignored `public/data/wyoming-pulse.json` asset, so the
+  browser does not depend on publisher CORS support. The Pages workflow republishes that snapshot
+  hourly; `npm run data:pulse` refreshes it manually. Each sector marquee opens its source-linked
+  archive. The browser retains up to 12 months / 600 headlines locally, combining the publisher's
+  current feed window with snapshots seen on that device; this is a reader-side archive, not a
+  server-wide historical database. A dated, verified October 2026 seed keeps the desk populated
+  when upstream feeds are unavailable, and is clearly labeled as a snapshot — the desk shows
+  `DATED SNAPSHOT · <date>` unless at least one live source answered, and only then
+  `LIVE SOURCES · UPDATED <time>`. Add newly verified stories to the fallback with
+  `node scripts/refresh-pulse-seed.mjs <stories.json> [--captured-at YYYY-MM-DD]`, which rejects
+  anything that is not an https, source-linked, dated story.
+* **Presentation styles** are available from the sitewide Appearance control: Prairie, Newsroom, Field Notes, Terminal, Glacier, Sunset, High Contrast, Blueprint, Garden, and Monochrome. Each changes navigation and information layout as well as typography and palette: examples include an editorial top masthead, a narrow reading column, icon rails, a floating bottom dock, and a modular board. All styles keep the same records, source links, and tools. The selected style is stored in that browser and synchronized across its open tabs; the experience avoids engagement streaks and urgency tricks.
 * **Client-side semantic search** (`src/lib/vectorSearch.ts`) runs MiniLM (`Xenova/all-MiniLM-L6-v2`)
   entirely in the browser via WebAssembly. `scripts/embed-transcripts.mjs` compiles `transcript-tree.json`
   plus timestamped caption chunks, ordinances, and recent meetings into `src/data/transcript-vectors.json`
@@ -138,8 +171,7 @@ favicon, and truthful `WebSite` structured data from `src/app/layout.tsx`. In ad
 interactive application, `/meetings/` is a crawlable archive directory and `/meetings/<meeting-id>/`
 contains a statically rendered page for **every indexed meeting**. The `/transcripts/` directory
 indexes all timestamped transcript files and preserved transcript variants. The sitemap at
-`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, meeting and transcript directories, four standalone Live Government Hub pages, and all meeting pages. Each meeting page links to its official records, all 2,685 associated archive
-documents, and every attached transcript without inventing actions or outcomes. Every sitemap entry
+`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, meeting and transcript directories, four standalone Live Government Hub pages, and all meeting pages. Each meeting page links to its official records, its associated repository documents, and every attached transcript without inventing actions or outcomes. Every sitemap entry
 carries a `<lastmod>` set to the archive snapshot date (`captured` in `src/data/meetings.json`), not to
 build time — Google discounts a lastmod that is simply "now" on each deploy — with `daily` change
 frequency for still-changing posted agendas and `yearly` for settled historical records.
@@ -148,11 +180,31 @@ The interactive app is the same document for every meeting, so it does not mint 
 "Open this meeting in Civic Cheyenne" links on each record page use `/?meeting=<meeting-id>`; while a
 meeting is selected the app rewrites its canonical link to that meeting's `/meetings/<id>/` page, so the
 parameterized deep link consolidates onto the crawlable record page instead of competing with the
-homepage. Submit the sitemap
-in Google Search Console after deployment. Index/follow directives are emitted in page metadata. A
-project-scoped `robots.txt` is intentionally omitted: on GitHub Pages, `robots.txt` is scoped to the
-shared host root, which this repository cannot control. The Google HTML-file ownership check is
+homepage.
+
+**Submit exactly this URL in Google Search Console:**
+`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml`. The domain root
+(`https://therealwindycity.github.io/sitemap.xml`) is not a sitemap — it is a GitHub Pages 404 — so a
+root URL submitted there reports a fetch error instead of indexing the site. When a previously
+submitted sitemap is listed in Search Console, remove the stale entry and resubmit the URL above so
+Google re-reads the current file rather than reporting the old fetch.
+
+`src/app/robots.ts` publishes `robots.txt` at the project path, naming that sitemap in full and
+allowing all crawlers. Two limits are worth knowing before relying on it: crawlers read `robots.txt`
+only from the host root, and GitHub Pages serves nothing at
+`https://therealwindycity.github.io/robots.txt` for a project site — a 404 there means "no crawl
+rules", so nothing in this repository can block or unblock Googlebot at the host root. The file exists
+so the sitemap is discoverable to tools that read it, to make the intent explicit, and to be ready to
+copy into a `therealwindycity.github.io` user-site repository if a host-root `robots.txt` is ever
+wanted. Index/follow directives are emitted in page metadata. The Google HTML-file ownership check is
 served from `public/googlee2d9fc23b9d6b0f7.html`.
+
+`npm run seo:live` verifies the **published** files rather than the build output — that the deployed
+sitemap is reachable, advertises this exact host and base path, lists at least as many pages as the
+archive requires, and that `robots.txt` names it. The deploy workflow runs the same check after
+`actions/deploy-pages`, so a deploy that would leave Search Console reading the wrong sitemap fails
+loudly instead of going unnoticed. Use `--mirror` to audit a local export served under a different
+host.
 
 Search Console verification establishes site ownership but does not guarantee indexing. After
 verification, submit the sitemap, inspect the archive and key meeting URLs, and use **Request
@@ -187,7 +239,10 @@ npm run typecheck      # TypeScript
 npm run lint           # ESLint
 npm run data:refresh   # re-pull repository indexes from GitHub
 npm run data:assemble  # rebuild public/data from src/data snapshots
-npm run data:embed     # compile transcript-tree.json into MiniLM vectors (GitHub ONNX mirror, HF fallback)
+npm run data:embed     # compile repository + local transcript captions into MiniLM vectors
+npm run transcripts:report # list video-linked meetings still missing transcript files
+npm run transcripts:fetch  # opt-in: fetch YouTube subtitles only (requires yt-dlp)
+# Local Granicus import: node scripts/harvest-transcripts.mjs --import-vtt ./captions.vtt --meeting '<meeting-id>'
 npm run test:vectors   # schema + citation checks on the compiled semantic index
 npm run test:e2e       # Playwright smoke tests (start the site first; see below)
 npm run test:seo       # audit the exported out/ surface (run after npm run build)

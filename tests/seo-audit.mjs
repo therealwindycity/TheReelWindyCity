@@ -12,7 +12,7 @@
  * so an export that quietly drops static pages, duplicates canonicals, or
  * serves a placeholder host cannot ship.
  */
-import { readFileSync, existsSync } from "node:fs";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
 import path from "node:path";
 
 const ORIGIN = process.env.SEO_ORIGIN || "https://therealwindycity.github.io";
@@ -22,6 +22,7 @@ const SITE_URL = `${ORIGIN}${BASE_PATH}/`;
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, "out");
 const index = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "meetings.json"), "utf8"));
+const transcriptIndex = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "transcript-vectors.json"), "utf8"));
 const MEETINGS = index.meetings;
 
 const failures = [];
@@ -75,6 +76,7 @@ for (const meeting of MEETINGS) {
   check(/<meta name="robots" content="[^"]*index/.test(html), `${meeting.id}: missing indexable robots directive`);
   check(!/noindex/i.test(html), `${meeting.id}: page contains a noindex directive`);
   check(!/https:\/\/github\.io(\/|\{|\s|")/.test(html), `${meeting.id}: links a bare github.io host instead of the project URL`);
+  check(!/<iframe\b[^>]*src="https?:\/\/(?:www\.)?(?:youtube-nocookie\.com|youtube\.com|cheyenne\.granicus\.com)/i.test(html), `${meeting.id}: page eagerly loads a third-party meeting video iframe`);
 
   const title = (titleTags[0] ?? "").trim();
   check(title.length > 0 && title.includes(meeting.shortDate), `${meeting.id}: title "${title}" does not carry the meeting date`);
@@ -113,6 +115,23 @@ for (const meeting of MEETINGS) {
     githubLinks.length >= meeting.docs.length + (meeting.transcripts?.length ?? (meeting.transcript ? 1 : 0)),
     `${meeting.id}: links ${githubLinks.length} source documents but the index lists ${meeting.docs.length} documents`,
   );
+}
+
+// Transcript overlays are local corpus data joined by meetingId, so they must
+// stay available even when the city snapshot has no external video URL.
+const transcriptOverlay = transcriptIndex.items.find((item) => {
+  if (item.kind !== "transcript" || !item.meetingId || !item.videoUrl) return false;
+  const meeting = MEETINGS.find((candidate) => candidate.id === item.meetingId);
+  return meeting && !meeting.official.video;
+});
+if (transcriptOverlay) {
+  const overlayMeeting = MEETINGS.find((meeting) => meeting.id === transcriptOverlay.meetingId);
+  const overlayHtml = read(path.join("meetings", overlayMeeting.id, "index.html"));
+  check(Boolean(overlayHtml && overlayHtml.includes("Timestamp-linked transcript")), `${overlayMeeting.id}: local transcript overlay was not rendered`);
+  check(Boolean(overlayHtml && /aria-label="Load video from YouTube:[^"]+"/.test(overlayHtml)), `${overlayMeeting.id}: transcript video was not made visitor-initiated`);
+  check(Boolean(overlayHtml && overlayHtml.includes(transcriptOverlay.timestamp)), `${overlayMeeting.id}: transcript timestamp is not linkable inline`);
+} else {
+  check(false, "Expected a bundled transcript excerpt whose meeting has no official video URL");
 }
 
 const duplicateTitles = [...titles.values()].filter((title, position) => titles.size && [...titles.values()].indexOf(title) !== position);
@@ -163,11 +182,41 @@ for (const hub of hubPages) {
   check(!/https:\/\/github\.io(\/|\{|\s|")/.test(html), `${hub.route}: links a bare github.io host instead of the project URL`);
 }
 const hubHome = read(path.join("hub/", "index.html"));
+const signalsHtml = read(path.join("hub/signals/", "index.html"));
+check(Boolean(signalsHtml && /(?:LIVE FEEDS · UPDATED|DATED SNAPSHOT ·)/.test(signalsHtml)), "hub/signals/: missing the explicit live-feed or dated-snapshot provenance badge");
 check(Boolean(hubHome && /<iframe[^>]+title=/.test(hubHome)), "hub/: expected a titled external source iframe with a direct-source fallback");
 for (const sourceLabel of ["Posted agenda", "Council video", "Scanner audio", "NWS forecast", "WYDOT roads"]) {
   check(Boolean(hubHome && hubHome.includes(sourceLabel)), `hub/: missing iframe source tab "${sourceLabel}"`);
 }
 check(Boolean(hubHome && hubHome.includes("Open original source")), "hub/: missing direct-source fallback for publishers that block iframes");
+
+// Publisher windows are click-to-load. The frame stays in the exported markup so
+// it still works without JavaScript and still describes a real framed document,
+// but it must not carry a src — otherwise every visit silently opens a request
+// to five third parties before anyone has asked to see them.
+const hubIframes = [...(hubHome ?? "").matchAll(/<iframe\b[^>]*>/g)].map((match) => match[0]);
+check(hubIframes.length > 0, "hub/: expected at least one publisher iframe in the exported markup");
+for (const tag of hubIframes) {
+  check(
+    !/\ssrc="/.test(tag),
+    `hub/: publisher iframe ships with a src, so it loads before the visitor asks — ${tag.slice(0, 90)}`,
+  );
+}
+for (const affordance of ["gov-frame-gate", "Load window"]) {
+  check(Boolean(hubHome && hubHome.includes(affordance)), `hub/: missing click-to-load affordance "${affordance}"`);
+}
+
+// Every page that shows posted agenda items must say how old the snapshot is.
+for (const route of ["hub/", "hub/meetings/"]) {
+  const html = read(path.join(route, "index.html"));
+  check(Boolean(html && html.includes("Record snapshot")), `${route}: missing the record-snapshot freshness note`);
+  check(Boolean(html && html.includes("gov-freshness")), `${route}: missing the freshness indicator element`);
+  const snapshotYear = index.captured.slice(0, 4);
+  check(
+    Boolean(html && new RegExp(`Record snapshot[^<]*${snapshotYear}`).test(html)),
+    `${route}: freshness note does not name the snapshot year ${snapshotYear}`,
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* 4. Sitemap covers every page with an honest lastmod                  */
@@ -186,6 +235,27 @@ if (!sitemap) {
 
   const missing = expected.filter((url) => !locations.includes(url));
   check(missing.length === 0, `Sitemap is missing ${missing.length} URLs (e.g. ${missing[0]})`);
+
+  // Nothing optional here: compare the sitemap against the pages actually
+  // exported, so a new route cannot ship without an entry. Framework error
+  // pages are the only intentional exception.
+  const NOT_INDEXABLE = new Set(["404", "_not-found"]);
+  const exportedPages = [];
+  (function walk(directory) {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const entryPath = path.join(directory, entry.name);
+      if (entry.isDirectory()) walk(entryPath);
+      else if (entry.name === "index.html") {
+        const relative = path.relative(OUT, path.dirname(entryPath)).split(path.sep).join("/");
+        if (relative && NOT_INDEXABLE.has(relative.split("/")[0])) continue;
+        exportedPages.push(relative ? `${SITE_URL}${relative}/` : SITE_URL);
+      }
+    }
+  })(OUT);
+  const unlisted = exportedPages.filter((url) => !locations.includes(url));
+  check(unlisted.length === 0, `${unlisted.length} exported pages are absent from the sitemap (e.g. ${unlisted[0]})`);
+  const dangling = locations.filter((url) => !exportedPages.includes(url));
+  check(dangling.length === 0, `Sitemap lists ${dangling.length} URLs with no exported page (e.g. ${dangling[0]})`);
 
   const withoutLastmod = blocks.filter((block) => !/<lastmod>/.test(block)).length;
   check(withoutLastmod === 0, `${withoutLastmod} sitemap entries have no <lastmod>`);
@@ -221,6 +291,19 @@ for (const [label, file, expectedCanonical] of [
   }
   check(html.includes(`rel="canonical" href="${expectedCanonical}"`), `${label} canonical is not ${expectedCanonical}`);
   check(exportedSitemap.includes(`<loc>${expectedCanonical}</loc>`), `${label} missing from sitemap`);
+}
+
+/* ------------------------------------------------------------------ */
+/* 5. robots.txt names this site's sitemap                             */
+/* ------------------------------------------------------------------ */
+const robots = read("robots.txt");
+if (!robots) {
+  failures.push("Missing out/robots.txt — nothing names the sitemap for crawlers");
+} else {
+  const sitemapUrl = `${SITE_URL}sitemap.xml`;
+  check(/user-agent:\s*\*/i.test(robots), "robots.txt does not define a user-agent group");
+  check(!/^\s*disallow:\s*\/\s*$/im.test(robots), "robots.txt disallows the whole site");
+  check(robots.includes(`Sitemap: ${sitemapUrl}`), `robots.txt does not point at ${sitemapUrl}`);
 }
 
 /* ------------------------------------------------------------------ */

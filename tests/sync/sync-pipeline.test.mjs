@@ -174,6 +174,89 @@ describe("OM1#2 watcher CLI — seed, detect, fail closed", () => {
     writeFileSync(path.join(OUT, "broken.html"), "<html><body><h1>503 Service Unavailable</h1></body></html>");
     runCli("scripts/monitor/upcoming-meetings.mjs", ["--check", "--from-file", path.join(OUT, "broken.html"), "--state", state], { expectFail: true });
   });
+
+  test("a portal outage is recorded as source-unavailable, never as an unchanged table", () => {
+    // Point the watcher at a port that refuses connections, with retries kept
+    // short by the outage being immediate rather than a timeout.
+    const out = path.join(OUT, "watch-outage.json");
+    runCli("scripts/monitor/upcoming-meetings.mjs", [
+      "--check", "--url", "http://127.0.0.1:9/upcoming", "--state", state, "--out", out, "--tolerate-source-unavailable",
+    ]);
+    const payload = JSON.parse(readFileSync(out, "utf8"));
+    assert.equal(payload.reason, "source-unavailable");
+    assert.notEqual(payload.changed, false, "an outage must not be published as unchanged");
+    assert.equal(payload.changed, null);
+    assert.equal(payload.changedMeetings.length, 0, "an outage cannot propose meetings to sync");
+  });
+
+  test("a change that already failed to sync is reported but not re-attempted inside the window", () => {
+    const blocked = path.join(OUT, "sync-blocked.json");
+    const out = path.join(OUT, "watch-blocked.json");
+    const moved = fixtureHtml.replace("Oct 5, 2026<br />&nbsp;-&nbsp;<br />12:00 PM", "Oct 5, 2026<br />&nbsp;-&nbsp;<br />2:45 PM");
+    writeFileSync(path.join(OUT, "moved2.html"), moved);
+
+    // First pass: a genuine change, no marker yet.
+    runCli("scripts/monitor/upcoming-meetings.mjs", [
+      "--check", "--from-file", path.join(OUT, "moved2.html"), "--state", state,
+      "--out", out, "--blocked", blocked,
+    ]);
+    const first = JSON.parse(readFileSync(out, "utf8"));
+    assert.equal(first.changed, true);
+    assert.equal(first.suppressed, false);
+
+    // The sync failed on this hash, so the watcher records the attempt.
+    writeFileSync(blocked, JSON.stringify({
+      contentHash: first.contentHash, attemptedAt: new Date().toISOString(), attempts: 1, retryAfterMs: 86_400_000,
+    }));
+
+    runCli("scripts/monitor/upcoming-meetings.mjs", [
+      "--check", "--from-file", path.join(OUT, "moved2.html"), "--state", state,
+      "--out", out, "--blocked", blocked,
+    ]);
+    const second = JSON.parse(readFileSync(out, "utf8"));
+    assert.equal(second.changed, true, "a blocked change is still a change — never disguised as unchanged");
+    assert.equal(second.suppressed, true);
+    assert.equal(second.reason, "change-blocked-retry-window");
+    assert.equal(second.changedMeetings.length > 0, true, "the blocked change keeps its meeting list for the next attempt");
+  });
+
+  test("the retry window expires and the change is attempted again", () => {
+    const blocked = path.join(OUT, "sync-blocked.json");
+    const out = path.join(OUT, "watch-blocked.json");
+    const current = JSON.parse(readFileSync(out, "utf8"));
+    writeFileSync(blocked, JSON.stringify({
+      contentHash: current.contentHash,
+      attemptedAt: new Date(Date.now() - 25 * 60 * 60 * 1_000).toISOString(), // older than the window
+      attempts: 3,
+      retryAfterMs: 86_400_000,
+    }));
+    runCli("scripts/monitor/upcoming-meetings.mjs", [
+      "--check", "--from-file", path.join(OUT, "moved2.html"), "--state", state,
+      "--out", out, "--blocked", blocked,
+    ]);
+    const payload = JSON.parse(readFileSync(out, "utf8"));
+    assert.equal(payload.suppressed, false, "an expired window must retry");
+    assert.equal(payload.reason, "content-changed", "an expired window reports an ordinary detected change");
+  });
+
+  test("a marker for a different hash never suppresses a new change", () => {
+    const blocked = path.join(OUT, "sync-blocked.json");
+    const out = path.join(OUT, "watch-blocked.json");
+    writeFileSync(blocked, JSON.stringify({
+      contentHash: "f".repeat(64), attemptedAt: new Date().toISOString(), attempts: 1, retryAfterMs: 86_400_000,
+    }));
+    runCli("scripts/monitor/upcoming-meetings.mjs", [
+      "--check", "--from-file", path.join(OUT, "moved2.html"), "--state", state,
+      "--out", out, "--blocked", blocked,
+    ]);
+    assert.equal(JSON.parse(readFileSync(out, "utf8")).suppressed, false);
+  });
+
+  test("without the tolerance flag a portal outage still fails closed", () => {
+    runCli("scripts/monitor/upcoming-meetings.mjs", [
+      "--check", "--url", "http://127.0.0.1:9/upcoming", "--state", state, "--out", path.join(OUT, "watch-strict.json"),
+    ], { expectFail: true });
+  });
 });
 
 /* ================================================================== */
@@ -567,14 +650,51 @@ describe("OM1#1 + OM3#1 workflow YAML hardening", () => {
     assert.match(commitStep.run, /git diff --cached --quiet/, "commit step must be guarded by a diff check");
   });
 
-  test("watch workflow: shares the write lane, fails closed, invokes the reusable sync", () => {
+  test("watch workflow: read-only detection lane, fails closed on structure, invokes the reusable sync", () => {
     const workflow = loadWorkflow("live_city_watch.yml");
-    assert.equal(workflow.concurrency.group, "municipal-data-sync");
-    assert.equal(workflow.concurrency["cancel-in-progress"], false);
+    // Detection owns its own group so hourly runs cannot queue behind the writer
+    // and be cancelled (that produced a failure email per hour). It writes
+    // nothing, so superseding a detection is harmless.
+    assert.equal(workflow.concurrency.group, "municipal-watch");
+    assert.equal(workflow.concurrency["cancel-in-progress"], true);
     assert.ok(workflow.on.schedule?.[0]?.cron, "scheduled watch missing");
+
+    // A sync may only ever run on a positive detection, and the published output
+    // is exactly "true" — never a null/unknown state from an outage.
     const syncJob = workflow.jobs.sync;
     assert.equal(syncJob.uses, "./.github/workflows/live_city_sync.yml");
     assert.equal(syncJob.if.includes("needs.watch.outputs.changed == 'true'"), true);
+    const publishStep = workflow.jobs.watch.steps.find((step) => step.id === "result");
+    assert.match(publishStep.run, /if \.changed == true then "true" else "false" end/, "outage must not publish changed=true");
+
+    // The detection step is bounded so a hang fails fast instead of consuming the
+    // job's whole timeout, and every run explains itself in the summary.
+    const detectStep = workflow.jobs.watch.steps.find((step) => step.name?.includes("Detect semantic changes"));
+    assert.ok(detectStep["timeout-minutes"], "detection step needs its own timeout");
+    assert.match(detectStep.run, /--tolerate-source-unavailable/);
+    assert.ok(workflow.jobs.watch.steps.some((step) => step.name === "Explain this run in the summary"), "run summary missing");
+
+    // A blocked change is throttled, not retried hourly forever, and the
+    // throttle is recorded by a job that joins the writer's lane.
+    assert.ok(workflow.jobs.watch.outputs.suppressed, "suppression state must be published");
+    assert.match(workflow.jobs.sync.if, /needs\.watch\.outputs\.suppressed != 'true'/, "a blocked change must not re-run the sync every hour");
+    const recordBlock = workflow.jobs.record_block;
+    assert.ok(recordBlock, "a failed sync must record the blocked change");
+    assert.match(recordBlock.if, /failure\(\)/);
+    assert.equal(recordBlock.concurrency.group, "municipal-data-sync", "the marker write joins the writer's lane");
+    assert.equal(recordBlock.concurrency["cancel-in-progress"], false);
+  });
+
+  test("the sync clears the blocked marker once it completes", () => {
+    const sync = loadWorkflow("live_city_sync.yml");
+    const commitStep = sync.jobs.sync_and_rebuild.steps.at(-1);
+    assert.match(commitStep.run, /rm -f data\/sync-blocked\.json/, "a completed sync must clear the throttle marker");
+  });
+
+  test("write lane stays serialized in the sync workflow it belongs to (OM1#1)", () => {
+    const sync = loadWorkflow("live_city_sync.yml");
+    assert.equal(sync.concurrency.group, "municipal-data-sync");
+    assert.equal(sync.concurrency["cancel-in-progress"], false);
   });
 });
 

@@ -4,6 +4,10 @@ on:
   push:
     branches: [main, "arena/**"]
   workflow_dispatch:
+  # Static Pages has no runtime RSS proxy; rebuild and publish the newsroom
+  # snapshot hourly so the public news lanes stay genuinely current.
+  schedule:
+    - cron: "17 * * * *"
 
 permissions:
   contents: read
@@ -47,5 +51,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
       - id: deployment
         uses: actions/deploy-pages@v4
+      # Search Console reads the published files, not the build artifacts. Fail
+      # the deploy if the live sitemap is unreachable, advertises another host,
+      # or lists fewer pages than the archive in this commit.
+      - name: Verify the published sitemap and robots.txt
+        run: node scripts/check-live-seo.mjs --retries 6 --delay 10000
+        env:
+          LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
