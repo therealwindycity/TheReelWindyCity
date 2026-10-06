@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import Image from "next/image";
 import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronRight, FileText, Home, Landmark, Layers, LoaderCircle, Map, MapPin, MessageSquareText, Play, ShieldCheck, Trees, Video, AlertCircle, Lightbulb, ArrowLeft } from "lucide-react";
 import ImpactMap from "./impact-map";
+import ClickToLoadYouTube from "./click-to-load-youtube";
 import { SmartCivicSearch } from "./smart-civic-search";
 import { type SourceDocument } from "./source-library";
 import { DEFAULT_MEETING_ID, GUIDED_MEETING_ID, MEETING, MEETINGS, NEXT_MEETING, ORDINANCES, TRANSCRIPT_REPO, UPCOMING_MEETINGS, asset, githubUrl, meetingGroupLabel, officialSourcePath, rawUrl, readableName, type CivicProgress, type Meeting, type Ordinance } from "@/lib/civic-data";
@@ -33,7 +35,21 @@ export function ImpactSummary({ ordinance, proposed = true }: { ordinance: Ordin
   return <div className="impact-summary"><div className="impact-evidence-label"><span className={`evidence-dot ${proposed ? "" : "muted"}`}/>{proposed ? "PROPOSED RULE CHANGE" : "EXISTING-RULE CONTEXT"}</div><h3>{proposed ? "What would change?" : "Before this proposal"}</h3><p>{proposed ? ordinance.proposed : ordinance.baseline}</p><div className="uncertainty-box"><AlertCircle size={17}/><div><strong>What the record doesn’t establish</strong><p>{ordinance.uncertainty}</p></div></div><div className="recorded-action"><CheckCircle2 size={17}/><div><strong>At the January 26 session</strong><p>{ordinance.outcome}</p></div></div></div>;
 }
 
-function GuidedSession({ selected, progress, onSelect, onOpen, onSave, onMap, onBack }: { selected: Ordinance; progress: CivicProgress[]; onSelect: (id: string) => void; onOpen: (doc: SourceDocument) => void; onSave: (ordinanceId: string, stage: string, position: string | null, reflection: string) => Promise<boolean>; onMap: (id: string) => void; onBack: () => void }) {
+type GuidedSessionProps = {
+  selected: Ordinance;
+  progress: CivicProgress[];
+  onSelect: (id: string) => void;
+  onOpen: (doc: SourceDocument) => void;
+  onSave: (ordinanceId: string, stage: string, position: string | null, reflection: string) => Promise<boolean>;
+  onMap: (id: string) => void;
+  onBack: () => void;
+};
+
+function GuidedSession(props: GuidedSessionProps) {
+  return <GuidedSessionState key={props.selected.id} {...props}/>;
+}
+
+function GuidedSessionState({ selected, progress, onSelect, onOpen, onSave, onMap, onBack }: GuidedSessionProps) {
   const existing = progress.find((p) => p.ordinanceId === selected.id);
   const [stage, setStage] = useState(existing?.stage || "read");
   const [position, setPosition] = useState<string | null>(existing?.position || null);
@@ -42,12 +58,6 @@ function GuidedSession({ selected, progress, onSelect, onOpen, onSave, onMap, on
   const [proposed, setProposed] = useState(true);
   const [answer, setAnswer] = useState<number | null>(null);
   const [saved, setSaved] = useState(false);
-  useEffect(() => {
-    const p = progress.find((item) => item.ordinanceId === selected.id);
-    setStage(p?.stage || "read"); setPosition(p?.position || null); setReflection(p?.reflection || ""); setAnswer(null); setSaved(false);
-    // Restore the selected ordinance's saved state only when the selection changes.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selected.id]);
   async function save(nextStage: string) {
     setSaving(true);
     const ok = await onSave(selected.id, nextStage, position, reflection);
@@ -58,11 +68,11 @@ function GuidedSession({ selected, progress, onSelect, onOpen, onSave, onMap, on
   const checkpoint = CHECKPOINTS[selected.icon];
   return <section className="session-page page-enter"><div className="page-intro"><div><div className="eyebrow"><Landmark size={13}/> YOUR SEAT AT CITY HALL</div><h1>Inside Council Chambers.</h1><p>A real session. The original agenda. A closer look at what’s at stake.</p></div><button className="button button-outline" onClick={onBack}><ArrowLeft size={15}/> Back to overview</button></div>
     <div className="session-location-banner"><div><Landmark size={19}/><strong>Cheyenne Municipal Building</strong><span>2101 O’Neil Avenue · Council Chambers</span></div><span className="pill pill-neutral">Archived session · {MEETING.shortDate}</span></div>
-    <div className="session-workspace"><aside className="session-agenda"><div className="session-agenda-heading"><span className="eyebrow">ON THE AGENDA</span><h3>January 26, 2026</h3><p>Regular council meeting · 6:00 PM</p></div><div className="session-agenda-list">{[...ORDINANCES].sort((a,b) => a.item-b.item).map((o) => <button className={`agenda-ordinance ${o.id === selected.id ? "active" : ""}`} key={o.id} onClick={() => onSelect(o.id)}><span className="agenda-number">{String(o.item).padStart(2,"0")}</span><span><strong>{o.title}</strong><small>{o.reading}{progress.some((p) => p.ordinanceId === o.id) && <> · <Check size={10}/> Explored</>}</small></span><ChevronRight size={14}/></button>)}</div><button className="agenda-source-link" onClick={() => onOpen(officialDocument("agenda", "Official meeting agenda · January 26, 2026", MEETING.agendaUrl))}><FileText size={15}/> Open the complete agenda <ArrowUpRight size={14}/></button><div className="session-hall-photo"><img src={asset("images/council-chambers.png")} alt="The real Cheyenne City Council Chambers at City Hall, 2101 O’Neil Avenue"/><span><Landmark size={12}/> The real Council Chambers</span></div><div className="session-seat-note"><ShieldCheck size={19}/><strong>Explore, don’t impersonate.</strong><p>Your choices are personal reflections. They do not change the real meeting or cast an official vote.</p></div></aside>
+    <div className="session-workspace"><aside className="session-agenda"><div className="session-agenda-heading"><span className="eyebrow">ON THE AGENDA</span><h3>January 26, 2026</h3><p>Regular council meeting · 6:00 PM</p></div><div className="session-agenda-list">{[...ORDINANCES].sort((a,b) => a.item-b.item).map((o) => <button className={`agenda-ordinance ${o.id === selected.id ? "active" : ""}`} key={o.id} onClick={() => onSelect(o.id)}><span className="agenda-number">{String(o.item).padStart(2,"0")}</span><span><strong>{o.title}</strong><small>{o.reading}{progress.some((p) => p.ordinanceId === o.id) && <> · <Check size={10}/> Explored</>}</small></span><ChevronRight size={14}/></button>)}</div><button className="agenda-source-link" onClick={() => onOpen(officialDocument("agenda", "Official meeting agenda · January 26, 2026", MEETING.agendaUrl))}><FileText size={15}/> Open the complete agenda <ArrowUpRight size={14}/></button><div className="session-hall-photo"><Image src={asset("images/council-chambers.png")} alt="The real Cheyenne City Council Chambers at City Hall, 2101 O’Neil Avenue" fill sizes="(max-width: 900px) 100vw, 320px"/><span><Landmark size={12}/> The real Council Chambers</span></div><div className="session-seat-note"><ShieldCheck size={19}/><strong>Explore, don’t impersonate.</strong><p>Your choices are personal reflections. They do not change the real meeting or cast an official vote.</p></div></aside>
       <div className="ordinance-workspace"><div className="workspace-heading"><div className={`ordinance-icon ${selected.color}`}><OrdinanceIcon ordinance={selected} size={23}/></div><div><span className="eyebrow">AGENDA ITEM {String(selected.item).padStart(2,"0")} · {selected.category.toUpperCase()}</span><h2>{selected.title}</h2></div><span className="pill pill-neutral">{selected.reading}</span></div><div className="workspace-steps">{STAGES.map((s, i) => <button key={s.id} className={`${stage === s.id ? "active" : ""} ${i < stageIndex ? "completed" : ""}`} onClick={() => { setStage(s.id); setSaved(false); }}><span>{i < stageIndex ? <Check size={13}/> : i+1}</span><s.icon size={14}/><strong>{s.label}</strong></button>)}</div>
         <div className="workspace-stage">
           {stage === "read" && <div className="read-stage"><div className="evidence-caption"><span className="status-dot"/> From the official January 26 agenda</div><h3>Start with the actual ordinance.</h3><p className="stage-introduction">{selected.description} Here is the agenda language, without a fictional storyline.</p><blockquote className="ordinance-text"><span className="eyebrow">ORDINANCE · {selected.reading.toUpperCase()}</span><p>{selected.fullTitle}</p><footer>{selected.committee}</footer></blockquote><div className="record-facts"><div><MapPin size={16}/><span>Geographic scope<strong>{selected.area}</strong></span></div><div><Landmark size={16}/><span>Legislative stage<strong>{selected.outcomeLabel}</strong></span></div></div><button className="button button-outline" onClick={() => onOpen(officialDocument(selected.id, `${selected.title} · supporting document`, selected.sourceUrl))}><FileText size={16}/> Read the supporting document <ArrowUpRight size={15}/></button><div className="stage-source-note"><ShieldCheck size={16}/><p>An agenda is a proposal record, not proof of enactment. Follow the session and check the minutes for the recorded action.</p></div></div>}
-          {stage === "watch" && <div className="watch-stage"><div className="evidence-caption"><span className="status-dot"/> Official City of Cheyenne meeting video</div><h3>Hear the discussion in the room.</h3><p className="stage-introduction">Watch the archived meeting{selected.timestamp ? " from this ordinance’s agenda segment" : " and follow the agenda"}. Public testimony is a speaker’s perspective, not a verified impact finding.</p><div className="meeting-video"><iframe src={`https://www.youtube-nocookie.com/embed/${MEETING.youtubeId}?start=${selected.timestamp}`} title={`Official Cheyenne City Council meeting: ${selected.title}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/></div><div className="watch-source-actions"><button className="button button-outline" onClick={() => onOpen(transcriptDocument)}><FileText size={16}/> Read timestamped transcript</button><a className="button button-outline" href={`${MEETING.videoUrl}`} target="_blank" rel="noreferrer"><Video size={16}/> Official video <ArrowUpRight size={14}/></a></div><div className="stage-source-note"><AlertCircle size={16}/><p>Captions are automatically generated and may misidentify people. The official video and minutes are the primary records.</p></div></div>}
+          {stage === "watch" && <div className="watch-stage"><div className="evidence-caption"><span className="status-dot"/> Official City of Cheyenne meeting video</div><h3>Hear the discussion in the room.</h3><p className="stage-introduction">Watch the archived meeting{selected.timestamp ? " from this ordinance’s agenda segment" : " and follow the agenda"}. Public testimony is a speaker’s perspective, not a verified impact finding.</p><div className="meeting-video"><ClickToLoadYouTube videoId={MEETING.youtubeId} startSeconds={selected.timestamp} title={`Official Cheyenne City Council meeting: ${selected.title}`}/></div><div className="watch-source-actions"><button className="button button-outline" onClick={() => onOpen(transcriptDocument)}><FileText size={16}/> Read timestamped transcript</button><a className="button button-outline" href={`${MEETING.videoUrl}`} target="_blank" rel="noreferrer"><Video size={16}/> Official video <ArrowUpRight size={14}/></a></div><div className="stage-source-note"><AlertCircle size={16}/><p>Captions are automatically generated and may misidentify people. The official video and minutes are the primary records.</p></div></div>}
           {stage === "impact" && <div className="impact-stage"><div className="stage-heading-row"><div><div className="evidence-caption"><span className="status-dot"/> An evidence-led look beyond the chamber</div><h3>Follow the change into Cheyenne.</h3></div><div className="scenario-control"><button className={!proposed ? "active" : ""} onClick={() => setProposed(false)}>Before</button><button className={proposed ? "active" : ""} onClick={() => setProposed(true)}>If enacted</button></div></div><ImpactSummary ordinance={selected} proposed={proposed}/><ImpactMap selected={selected} onSelect={onSelect} proposed={proposed}/><div className="map-scope-note"><MapPin size={14}/> General locations only · not legal parcel or city boundaries<button onClick={() => onMap(selected.id)}>Open full impact map <ArrowUpRight size={13}/></button></div><div className="knowledge-check"><div className="knowledge-check-title"><Lightbulb size={18}/><span>RECORD CHECK</span></div><h4>{checkpoint.question}</h4><div className="knowledge-answers">{checkpoint.answers.map((choice, i) => <button key={choice} className={answer === i ? i === checkpoint.correct ? "correct" : "incorrect" : ""} onClick={() => setAnswer(i)}><span>{answer === i && i === checkpoint.correct ? <Check size={13}/> : String.fromCharCode(65+i)}</span>{choice}</button>)}</div>{answer !== null && <p className={answer === checkpoint.correct ? "answer-correct" : "answer-incorrect"}>{answer === checkpoint.correct ? "That’s right. The answer follows the original agenda and meeting record." : "Not quite. Revisit the ordinance language above and try again."}</p>}</div></div>}
           {stage === "reflect" && <div className="reflect-stage"><div className="evidence-caption"><MessageSquareText size={14}/> Your personal civic notebook</div><h3>What’s your perspective?</h3><p className="stage-introduction">You’ve seen the record. Save where you stand and the questions you’d bring to the real conversation.</p><div className="position-choices">{[{ id:"support", label:"I support this", icon: CheckCircle2 },{id:"questions",label:"I have questions",icon: MessageSquareText},{id:"oppose",label:"I’m concerned",icon: AlertCircle}].map((p) => <button key={p.id} className={position === p.id ? "selected" : ""} onClick={() => { setPosition(p.id); setSaved(false); }}><p.icon size={20}/>{p.label}</button>)}</div><label className="reflection-label" htmlFor="reflection">Your notes, questions, or reasoning<span>Optional · {reflection.length.toLocaleString()} / 5,000</span></label><textarea id="reflection" className="reflection-input" rows={7} value={reflection} maxLength={5000} onChange={(e) => { setReflection(e.target.value); setSaved(false); }} placeholder="What does this mean for your neighborhood? Which details would you want the council to clarify?"/><div className="suggested-questions"><strong>Questions worth exploring</strong>{selected.questions.map((q) => <button key={q} onClick={() => { setReflection((r) => `${r}${r ? "\n" : ""}${q}`.slice(0,5000)); setSaved(false); }}><PlusQuestion/> {q}</button>)}</div><button className="button button-primary" disabled={saving || (!position && !reflection.trim())} onClick={() => void save("reflect")}>{saving ? <LoaderCircle className="spin" size={16}/> : saved ? <Check size={16}/> : <BookOpen size={16}/>} {saved ? "Saved to your notebook" : "Save my perspective"}</button><div className="stage-source-note"><ShieldCheck size={16}/><p>Saved to your anonymous visitor notebook. This is not an official vote or public comment and is not submitted to the city.</p></div></div>}
         </div>
@@ -86,7 +96,9 @@ function meetingTranscriptDoc(meeting: Meeting): SourceDocument | null {
   return {
     title: `${meeting.bodyLabel} transcript · ${meeting.shortDate}`,
     kind: "text",
-    url: sourceContentUrl(repo, path),
+    url: meeting.transcript.local && meeting.transcript.publicPath
+      ? asset(meeting.transcript.publicPath)
+      : sourceContentUrl(repo, path),
     originalUrl: githubUrl(repo, path),
     downloadUrl: rawUrl(repo, path),
     repo,
@@ -180,6 +192,7 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
   const docs = meetingDocuments(meeting);
   const transcript = meetingTranscriptDoc(meeting);
   const videoId = youtubeId(meeting.official.video);
+  const officialSourceUrl = meeting.official.granicus || meeting.official.video;
   const items = meeting.items ?? [];
   return (
     <section className="session-page page-enter">
@@ -225,7 +238,7 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
             </button>
           )}
           {(meeting.upcoming || meeting.body === "city-council") && (
-            <div className="session-hall-photo"><img src={asset("images/council-chambers.png")} alt="The real Cheyenne City Council Chambers at City Hall"/><span><Landmark size={12}/> The Council Chambers</span></div>
+            <div className="session-hall-photo"><Image src={asset("images/council-chambers.png")} alt="The real Cheyenne City Council Chambers at City Hall" fill sizes="(max-width: 900px) 100vw, 320px"/><span><Landmark size={12}/> The Council Chambers</span></div>
           )}
           <div className="session-seat-note"><ShieldCheck size={19}/><strong>Explore, don’t impersonate.</strong><p>Everything here links to real public records. Your notes are personal reflections, never official votes.</p></div>
         </aside>
@@ -270,7 +283,7 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
                 <h3>{meeting.dateLabel}.</h3>
                 <p className="stage-introduction">This meeting is part of a preserved public record. Open any source below — every link leads to the original city or repository document.</p>
                 {videoId ? (
-                  <div className="meeting-video"><iframe src={`https://www.youtube-nocookie.com/embed/${videoId}`} title={`Official meeting video: ${meeting.bodyLabel}, ${meeting.shortDate}`} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen/></div>
+                  <div className="meeting-video"><ClickToLoadYouTube videoId={videoId} title={`Official meeting video: ${meeting.bodyLabel}, ${meeting.shortDate}`}/></div>
                 ) : (
                   <div className="meeting-video meeting-video-placeholder"><Video size={28}/><p>{meeting.official.video ? "This meeting’s video is hosted on the official archive." : meeting.notes?.includes("Meeting Cancelled") ? "This meeting was cancelled." : "No video is on file for this meeting."}</p></div>
                 )}
@@ -290,7 +303,7 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
               </div>
             )}
           </div>
-          <div className="workspace-footer"><span><ShieldCheck size={15}/> Real records. Your own understanding.</span>{meeting.official.granicus || meeting.official.video ? <a className="button button-outline" href={(meeting.official.granicus || meeting.official.video)!} target="_blank" rel="noreferrer">Official source <ArrowUpRight size={15}/></a> : null}</div>
+          <div className="workspace-footer"><span><ShieldCheck size={15}/> Real records. Your own understanding.</span>{officialSourceUrl ? <a className="button button-outline" href={officialSourceUrl} target="_blank" rel="noreferrer">Official source <ArrowUpRight size={15}/></a> : null}</div>
         </div>
       </div>
     </section>

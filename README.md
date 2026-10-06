@@ -32,24 +32,32 @@ of official links captured on October 3, 2026. It keeps same-day City Council se
 
 | Body | Meetings | Coverage |
 | --- | ---: | --- |
-| City Council | 470 | **May 27, 2008 → September 28, 2026** (specials & budget sessions included) |
-| Finance Committee | 123 | January 2022 → **October 6, 2026 (upcoming)** |
-| Public Services Committee | 118 | January 2022 → **October 5, 2026 (upcoming)** |
-| Work Sessions / Committee of the Whole | 117 | October 2018 → August 2026 |
-| Board of County Commissioners | 58 | January 2024 → March 2026 |
-| Planning Commission | 47 | January 2024 → July 2026 |
-| Historic Preservation Board | 7 | 2026 |
-| Board of Adjustment | 6 | 2026 |
-| Urban Renewal Authority | 2 | 2026 |
+| City Council | 526 | **May 27, 2008 → September 28, 2026** (specials & budget sessions included) |
+| Finance Committee | 123 | January 4, 2022 → **October 6, 2026 (upcoming)** |
+| Public Services Committee | 119 | January 5, 2022 → **October 5, 2026 (upcoming)** |
+| Work Sessions / Committee of the Whole | 115 | October 3, 2018 → August 28, 2026 |
+| Board of County Commissioners | 58 | January 2, 2024 → March 17, 2026 |
+| Planning Commission | 47 | January 11, 2024 → July 6, 2026 |
+| Historic Preservation Board | 7 | January 13 → July 14, 2026 |
+| Board of Adjustment | 6 | January 15 → July 16, 2026 |
+| Urban Renewal Authority | 2 | February 5 → May 7, 2026 |
 
-**948 meeting entries · 2,685 archived documents · 84 timestamped transcript files.** Committee PDF
-files from older snapshots are included where available; counts are generated from the committed
-indexes rather than hard-coded. The next posted meetings are Public Services Committee, Monday
-October 5 (11 agenda items), and Finance Committee, Tuesday October 6 (6 agenda items).
+**1,003 meeting entries · 5,118 archived documents · 85 transcript files** (84 dated transcript
+attachments across 82 meetings and one undated transcript whose meeting date is not established).
+These are reproducible counts from the committed repository snapshots and official-links snapshot;
+the former 948-entry README total was stale. Meeting IDs are keyed by government body, date, and
+explicit session note; the archive is not padded with unverified placeholders to match another tally.
+The next posted meetings are Public Services Committee, Monday October 5 (11 agenda items), and
+Finance Committee, Tuesday October 6 (6 agenda items).
 
 Each meeting links to available official agendas, minutes, and video, plus repository documents and
-a timestamped transcript where one exists. Upcoming agendas and their access details are shown as
-posted; agenda items are proposals, not recorded decisions.
+a timestamped transcript where one exists. The archive transcript snapshot currently covers 82
+meetings; of 134 meeting records with video links, 83 have no transcript in the source material
+(74 from 2025 and 9 from 2026: 46 YouTube and 37 Granicus). `npm run transcripts:fetch` can opt in to a caption-only YouTube import;
+Granicus is not polled or scraped, and supplied VTT files can be imported by meeting ID. Imported
+transcripts are stored in this repository and copied into the static site at build time. Meeting
+pages do not load third-party video until a visitor explicitly chooses the player. Upcoming agendas
+and their access details are shown as posted; agenda items are proposals, not recorded decisions.
 
 ## Data — built from the public-record repositories
 
@@ -59,7 +67,8 @@ Every record shown by the site is drawn from these GitHub repositories
 | Repository | Contents |
 | --- | --- |
 | [cheyenne-archives-2025-2026](https://github.com/therealwindycity/cheyenne-archives-2025-2026) | Council & other body meeting records, 2025–2026 |
-| [The-Real-Windy-City-](https://github.com/therealwindycity/The-Real-Windy-City-) | Verbatim timestamped 2026 meeting transcripts (with official video links) |
+| [The-Real-Windy-City-](https://github.com/therealwindycity/The-Real-Windy-City-) | Timestamped 2026 meeting transcripts and transcript variants |
+| [TheReelWindyCity](https://github.com/therealwindycity/TheReelWindyCity) | Site source, generated caption imports, and the local transcript cache (when populated) |
 | [cheyenne-archives-2023-2024](https://github.com/therealwindycity/cheyenne-archives-2023-2024) | Meeting records, 2023–2024 |
 | [cheyenne-archives-2022](https://github.com/therealwindycity/cheyenne-archives-2022) | Meeting records, 2022 |
 | [cheyenne-archives-2018-2021](https://github.com/therealwindycity/cheyenne-archives-2018-2021) | Meeting records, 2018–2021 |
@@ -76,8 +85,13 @@ Every record shown by the site is drawn from these GitHub repositories
 * **Official documents for the guided session** ship with the site in `public/sources/`:
   the January 26 agenda capture (the archived agenda page), the official Record of Proceedings for
   January 26, 2026, and the Chapter 1.28 administrative-inspection-warrants policy brief.
-* **Transcripts** are auto-generated captions, lightly de-duplicated — names and quotations should
-  be verified against the official meeting video.
+* **Transcripts** preserve creator-provided or auto-generated captions, labeled by source and stored
+  in Git. The opt-in `npm run transcripts:fetch` step uses `yt-dlp` to fetch subtitles only (never
+  meeting audio/video); it is not part of `npm run build` or a page view. A WebVTT import can attach
+  Granicus captions by exact meeting ID without polling that service. Locally committed caption
+  files are served from the static site, shown as timestamp-linked excerpts, and included in the
+  semantic-search compiler when `npm run data:embed` is run. Verify names and quotations against
+  official minutes and video before quoting.
 * **Wyoming Pulse** is the statewide news desk in the app. It groups source-linked headlines into
   nine moving sector streams (statewide, government, public safety, weather, roads, energy/land,
   schools/health, community/economy, and Wyoming sports). The ten publisher feeds are Oil City News,
@@ -129,8 +143,7 @@ favicon, and truthful `WebSite` structured data from `src/app/layout.tsx`. In ad
 interactive application, `/meetings/` is a crawlable archive directory and `/meetings/<meeting-id>/`
 contains a statically rendered page for **every indexed meeting**. The `/transcripts/` directory
 indexes all timestamped transcript files and preserved transcript variants. The sitemap at
-`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, meeting and transcript directories, four standalone Live Government Hub pages, and all meeting pages. Each meeting page links to its official records, all 2,685 associated archive
-documents, and every attached transcript without inventing actions or outcomes. Every sitemap entry
+`https://therealwindycity.github.io/TheReelWindyCity/sitemap.xml` lists the homepage, meeting and transcript directories, four standalone Live Government Hub pages, and all meeting pages. Each meeting page links to its official records, its associated repository documents, and every attached transcript without inventing actions or outcomes. Every sitemap entry
 carries a `<lastmod>` set to the archive snapshot date (`captured` in `src/data/meetings.json`), not to
 build time — Google discounts a lastmod that is simply "now" on each deploy — with `daily` change
 frequency for still-changing posted agendas and `yearly` for settled historical records.
@@ -198,7 +211,10 @@ npm run typecheck      # TypeScript
 npm run lint           # ESLint
 npm run data:refresh   # re-pull repository indexes from GitHub
 npm run data:assemble  # rebuild public/data from src/data snapshots
-npm run data:embed     # compile transcript-tree.json into MiniLM vectors (GitHub ONNX mirror, HF fallback)
+npm run data:embed     # compile repository + local transcript captions into MiniLM vectors
+npm run transcripts:report # list video-linked meetings still missing transcript files
+npm run transcripts:fetch  # opt-in: fetch YouTube subtitles only (requires yt-dlp)
+# Local Granicus import: node scripts/harvest-transcripts.mjs --import-vtt ./captions.vtt --meeting '<meeting-id>'
 npm run test:vectors   # schema + citation checks on the compiled semantic index
 npm run test:e2e       # Playwright smoke tests (start the site first; see below)
 npm run test:seo       # audit the exported out/ surface (run after npm run build)

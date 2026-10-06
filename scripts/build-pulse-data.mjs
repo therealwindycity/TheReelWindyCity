@@ -200,10 +200,7 @@ const sourceStatuses = [
 const errors = sourceStatuses
   .filter((source) => source.status === "unavailable")
   .map((source) => `${source.name}: ${source.error ?? "source request failed"}`);
-const mode = publisherSnapshotMode(
-  nws.alerts.length + wydot.alerts.length,
-  publisherResults.reduce((total, result) => total + result.alerts.length, 0),
-);
+const mode = publisherSnapshotMode([nws, wydot], publisherResults);
 const rssCount = alerts.filter((alert) => alert.source.startsWith("rss-")).length;
 const counts = {
   total: alerts.length,

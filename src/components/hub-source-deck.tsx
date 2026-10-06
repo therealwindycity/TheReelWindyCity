@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore, type KeyboardEvent } from "react";
 import {
   ArrowUpRight,
   AudioLines,
@@ -42,6 +42,25 @@ const SLOW_FRAME_MS = 12_000;
 
 const SOURCE_HASH = /^#source-(.+)$/;
 
+function subscribeSourceHash(onChange: () => void) {
+  window.addEventListener("hashchange", onChange);
+  return () => window.removeEventListener("hashchange", onChange);
+}
+
+function readSourceHash() {
+  return window.location.hash;
+}
+
+function sourceIdFromHash(hash: string) {
+  const match = SOURCE_HASH.exec(hash);
+  if (!match) return null;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return null;
+  }
+}
+
 export default function HubSourceDeck({
   sources,
   initialSourceId = "agenda",
@@ -49,31 +68,12 @@ export default function HubSourceDeck({
   sources: HubSource[];
   initialSourceId?: string;
 }) {
-  const [activeId, setActiveId] = useState(initialSourceId);
+  const [selectedId, setSelectedId] = useState(initialSourceId);
   const [sessions, setSessions] = useState<Record<string, FrameSession>>({});
   const frameRef = useRef<HTMLIFrameElement>(null);
-  const hydrated = useRef(false);
-
-  /**
-   * The address bar tracks the open window so a source can be linked and
-   * re-found: /hub/#source-scanner opens straight onto the scanner feed.
-   */
-  useEffect(() => {
-    const match = SOURCE_HASH.exec(window.location.hash);
-    if (!match) return;
-    const id = decodeURIComponent(match[1]);
-    if (sources.some((source) => source.id === id)) setActiveId(id);
-  }, [sources]);
-
-  useEffect(() => {
-    // Skip the first pass so an incoming #source-… link is read before it is rewritten.
-    if (!hydrated.current) {
-      hydrated.current = true;
-      return;
-    }
-    const next = `#source-${activeId}`;
-    if (window.location.hash !== next) window.history.replaceState(null, "", next);
-  }, [activeId]);
+  const locationHash = useSyncExternalStore(subscribeSourceHash, readSourceHash, () => "");
+  const requestedId = sourceIdFromHash(locationHash);
+  const activeId = requestedId && sources.some((source) => source.id === requestedId) ? requestedId : selectedId;
 
   const active = sources.find((source) => source.id === activeId) ?? sources[0];
   const session = active ? sessions[active.id] : undefined;
@@ -108,6 +108,15 @@ export default function HubSourceDeck({
     setSessions((prev) => ({ ...prev, [id]: { nonce: (prev[id]?.nonce ?? 0) + 1, state: "loading" } }));
   }
 
+  function selectSource(id: string) {
+    setSelectedId(id);
+    const next = `#source-${id}`;
+    if (window.location.hash !== next) {
+      window.history.replaceState(null, "", next);
+      window.dispatchEvent(new Event("hashchange"));
+    }
+  }
+
   function handleTabKeyDown(event: KeyboardEvent<HTMLButtonElement>, index: number) {
     let nextIndex = index;
     if (event.key === "ArrowRight") nextIndex = (index + 1) % sources.length;
@@ -118,7 +127,7 @@ export default function HubSourceDeck({
     event.preventDefault();
     const next = sources[nextIndex];
     if (!next) return;
-    setActiveId(next.id);
+    selectSource(next.id);
     document.getElementById(`gov-source-tab-${next.id}`)?.focus();
   }
 
@@ -157,7 +166,7 @@ export default function HubSourceDeck({
               aria-controls="gov-source-panel"
               tabIndex={selected ? 0 : -1}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
-              onClick={() => setActiveId(source.id)}
+              onClick={() => selectSource(source.id)}
             >
               <TabIcon size={15} aria-hidden="true" />
               <span>{source.shortLabel}</span>

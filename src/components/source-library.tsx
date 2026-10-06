@@ -15,19 +15,32 @@ export function documentFromFile(file: SourceFile): SourceDocument {
 }
 function formatSize(bytes: number) { return bytes > 1048576 ? `${(bytes / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(bytes / 1024))} KB`; }
 
-export function SourceLibrary({ initialFiles, initialQuery = "", bookmarks, onOpen, onBookmark }: { initialFiles: SourceFile[]; initialQuery?: string; bookmarks: SavedBookmark[]; onOpen: (doc: SourceDocument) => void; onBookmark: (repo: string, path: string) => Promise<void> }) {
+type SourceLibraryProps = { initialFiles: SourceFile[]; initialQuery?: string; bookmarks: SavedBookmark[]; onOpen: (doc: SourceDocument) => void; onBookmark: (repo: string, path: string) => Promise<void> };
+
+export function SourceLibrary(props: SourceLibraryProps) {
+  return <SourceLibraryState key={props.initialQuery ?? ""} {...props}/>;
+}
+
+function SourceLibraryState({ initialFiles, initialQuery = "", bookmarks, onOpen, onBookmark }: SourceLibraryProps) {
   const [repo, setRepo] = useState(ARCHIVE_REPO);
   const [files, setFiles] = useState(initialFiles);
   const [query, setQuery] = useState(initialQuery);
   const [filter, setFilter] = useState("All sources");
-  const [page, setPage] = useState(1);
+  const [pageState, setPageState] = useState<{ key: string; value: number }>({ key: "", value: 1 });
+  const pageKey = JSON.stringify([repo, query, filter]);
+  const page = pageState.key === pageKey ? pageState.value : 1;
+  const setPage = (next: number | ((current: number) => number)) => {
+    setPageState((previous) => {
+      const current = previous.key === pageKey ? previous.value : 1;
+      return { key: pageKey, value: typeof next === "function" ? next(current) : next };
+    });
+  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [snapshot, setSnapshot] = useState(true);
   const [retry, setRetry] = useState(0);
   const input = useRef<HTMLInputElement>(null);
   const cache = useRef(new Map<string, SourceFile[]>([[ARCHIVE_REPO, initialFiles]]));
-  useEffect(() => { setQuery(initialQuery); setPage(1); }, [initialQuery]);
   useEffect(() => {
     let cancelled = false;
     const cached = cache.current.get(repo);
@@ -36,7 +49,6 @@ export function SourceLibrary({ initialFiles, initialQuery = "", bookmarks, onOp
     fetchArchive(repo).then((data) => { if (!cancelled) { cache.current.set(repo, data.files); setFiles(data.files); setSnapshot(data.snapshot); } }).catch((e) => { if (!cancelled && !cached) setError(e.message || "Unable to reach this archive."); }).finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [repo, retry]);
-  useEffect(() => { setPage(1); }, [repo, query, filter]);
   const matches = useMemo(() => files.filter((file) => {
     const p = file.path.toLowerCase();
     if (query && !p.includes(query.toLowerCase().trim())) return false;
@@ -70,7 +82,12 @@ export function SourceLibrary({ initialFiles, initialQuery = "", bookmarks, onOp
 
 type DocumentViewerProps = { document: SourceDocument; bookmarks: SavedBookmark[]; onClose: () => void; onBookmark: (repo: string, path: string) => Promise<void>; onCopy: (success: boolean) => void };
 
-export function DocumentViewer({ document: doc, bookmarks, onClose, onBookmark, onCopy }: DocumentViewerProps) {
+export function DocumentViewer(props: DocumentViewerProps) {
+  const key = `${props.document.external ? "external" : "local"}:${props.document.url}:${props.document.path ?? ""}`;
+  return <DocumentViewerContent key={key} {...props}/>;
+}
+
+function DocumentViewerContent({ document: doc, bookmarks, onClose, onBookmark, onCopy }: DocumentViewerProps) {
   const [loaded, setLoaded] = useState<LoadedSource | null>(doc.external ? { kind: "binary" } : null);
   const close = useRef<HTMLButtonElement>(null);
   useEffect(() => {
@@ -92,13 +109,14 @@ export function DocumentViewer({ document: doc, bookmarks, onClose, onBookmark, 
     return () => { window.document.body.style.overflow = old; window.removeEventListener("keydown", handleKey); };
   }, [onClose]);
   useEffect(() => {
-    if (doc.external) { setLoaded(null); return; }
+    if (doc.external) return;
     let cancelled = false;
-    setLoaded(null);
     loadSource(doc.url, doc.path || doc.url).then((result) => { if (!cancelled) setLoaded(result); });
     return () => { cancelled = true; };
-  }, [doc]);
+  }, [doc.external, doc.path, doc.url]);
   useEffect(() => () => { if (loaded && loaded.kind === "pdf") URL.revokeObjectURL(loaded.objectUrl); }, [loaded]);
   const saved = bookmarks.some((b) => b.repo === doc.repo && b.path === doc.path);
-  return <div className="modal-backdrop" onClick={onClose}><section className="document-modal" role="dialog" aria-modal="true" aria-labelledby="source-document-title" onClick={(e) => e.stopPropagation()}><div className="document-header"><div className="document-title-icon"><FileText size={23}/></div><div><span className="eyebrow">ORIGINAL SOURCE MATERIAL</span><h2 id="source-document-title">{doc.title}</h2></div><button ref={close} className="icon-button modal-close" aria-label="Close source reader" onClick={onClose}><X size={21}/></button></div><div className="document-actions"><a className="button button-small button-outline" href={doc.originalUrl} target="_blank" rel="noreferrer"><ExternalLink size={14}/> Original source</a><a className="button button-small button-outline" href={doc.downloadUrl} target="_blank" rel="noreferrer"><Download size={14}/> Download</a>{doc.repo && doc.path && <button className={`button button-small ${saved ? "button-tinted" : "button-outline"}`} onClick={() => void onBookmark(doc.repo!, doc.path!)}>{saved ? <Check size={14}/> : <Bookmark size={14}/>} {saved ? "Saved to notebook" : "Save source"}</button>}<button className="button button-small button-outline document-copy" onClick={() => { void navigator.clipboard.writeText(doc.originalUrl).then(() => onCopy(true)).catch(() => onCopy(false)); }}><Link2 size={14}/> Copy source link</button></div>{doc.warning && <div className="document-warning"><AlertCircle size={15}/>{doc.warning}</div>}<div className="document-content">{doc.external ? <div className="empty-state"><ExternalLink size={40}/><h3>Read the original record</h3><p>This document is hosted at its official source. Use the buttons above to read it or download the complete record.</p><a className="button button-primary" href={doc.originalUrl} target="_blank" rel="noreferrer">Open original source <ArrowUpRight size={16}/></a></div> : !loaded ? <div className="empty-state"><LoaderCircle size={28} className="spin"/><p>Opening the original document…</p></div> : loaded.kind === "pdf" ? <iframe title={doc.title} src={loaded.objectUrl} className="document-frame"/> : loaded.kind === "html" ? <iframe title={doc.title} srcDoc={loaded.html} sandbox="allow-popups allow-popups-to-escape-sandbox" className="document-frame"/> : loaded.kind === "text" ? <pre className="document-text">{loaded.text}</pre> : loaded.kind === "binary" ? <div className="empty-state"><File size={40}/><h3>This file can be downloaded</h3><p>Archives and binary source files don’t have an inline text preview. The complete original is available below.</p><a className="button button-primary" href={doc.downloadUrl} target="_blank" rel="noreferrer"><Download size={16}/> Download original file</a></div> : <div className="empty-state"><AlertCircle size={30}/><h3>Preview unavailable</h3><p>{loaded.message}</p><a className="button button-primary" href={doc.originalUrl} target="_blank" rel="noreferrer">Read at the original source <ArrowUpRight size={16}/></a></div>}</div><div className="document-footer"><span className="status-dot"/> Original public record · no generated content<span>Having trouble viewing? Use “Original source”.</span></div></section></div>;
+  const documentRepo = doc.repo;
+  const documentPath = doc.path;
+  return <div className="modal-backdrop" onClick={onClose}><section className="document-modal" role="dialog" aria-modal="true" aria-labelledby="source-document-title" onClick={(e) => e.stopPropagation()}><div className="document-header"><div className="document-title-icon"><FileText size={23}/></div><div><span className="eyebrow">ORIGINAL SOURCE MATERIAL</span><h2 id="source-document-title">{doc.title}</h2></div><button ref={close} className="icon-button modal-close" aria-label="Close source reader" onClick={onClose}><X size={21}/></button></div><div className="document-actions"><a className="button button-small button-outline" href={doc.originalUrl} target="_blank" rel="noreferrer"><ExternalLink size={14}/> Original source</a><a className="button button-small button-outline" href={doc.downloadUrl} target="_blank" rel="noreferrer"><Download size={14}/> Download</a>{documentRepo && documentPath && <button className={`button button-small ${saved ? "button-tinted" : "button-outline"}`} onClick={() => void onBookmark(documentRepo, documentPath)}>{saved ? <Check size={14}/> : <Bookmark size={14}/>} {saved ? "Saved to notebook" : "Save source"}</button>}<button className="button button-small button-outline document-copy" onClick={() => { void navigator.clipboard.writeText(doc.originalUrl).then(() => onCopy(true)).catch(() => onCopy(false)); }}><Link2 size={14}/> Copy source link</button></div>{doc.warning && <div className="document-warning"><AlertCircle size={15}/>{doc.warning}</div>}<div className="document-content">{doc.external ? <div className="empty-state"><ExternalLink size={40}/><h3>Read the original record</h3><p>This document is hosted at its official source. Use the buttons above to read it or download the complete record.</p><a className="button button-primary" href={doc.originalUrl} target="_blank" rel="noreferrer">Open original source <ArrowUpRight size={16}/></a></div> : !loaded ? <div className="empty-state"><LoaderCircle size={28} className="spin"/><p>Opening the original document…</p></div> : loaded.kind === "pdf" ? <iframe title={doc.title} src={loaded.objectUrl} className="document-frame"/> : loaded.kind === "html" ? <iframe title={doc.title} srcDoc={loaded.html} sandbox="allow-popups allow-popups-to-escape-sandbox" className="document-frame"/> : loaded.kind === "text" ? <pre className="document-text">{loaded.text}</pre> : loaded.kind === "binary" ? <div className="empty-state"><File size={40}/><h3>This file can be downloaded</h3><p>Archives and binary source files don’t have an inline text preview. The complete original is available below.</p><a className="button button-primary" href={doc.downloadUrl} target="_blank" rel="noreferrer"><Download size={16}/> Download original file</a></div> : <div className="empty-state"><AlertCircle size={30}/><h3>Preview unavailable</h3><p>{loaded.message}</p><a className="button button-primary" href={doc.originalUrl} target="_blank" rel="noreferrer">Read at the original source <ArrowUpRight size={16}/></a></div>}</div><div className="document-footer"><span className="status-dot"/> Original public record · no generated content<span>Having trouble viewing? Use “Original source”.</span></div></section></div>;
 }
