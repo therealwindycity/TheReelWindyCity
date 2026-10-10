@@ -15,6 +15,7 @@ const HUB_LINKS = [
   { href: "hub/meetings/", label: "Meetings" },
   { href: "hub/signals/", label: "Live signals" },
   { href: "hub/learn/", label: "Learn the record" },
+  { href: "hub/wyoming/", label: "Wyoming" },
 ];
 
 export default function CivicHubLayout({ children }: { children: ReactNode }) {
@@ -45,6 +46,7 @@ export default function CivicHubLayout({ children }: { children: ReactNode }) {
         <div><strong>CIVIC CHEYENNE</strong><span>Public information, connected to its sources.</span></div>
         <p>Independent civic-learning project. Third-party feeds and embeds may be delayed, unavailable, or changed by their publishers.</p>
         <nav aria-label="Footer navigation">
+          <a href={asset("hub/wyoming/")}>Wyoming ecosystem</a>
           <a href={asset("meetings/")}>Meeting archive</a>
           <a href={asset("transcripts/")}>Transcript archive</a>
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noopener noreferrer">Official city records <ArrowUpRight size={12} aria-hidden="true" /></a>

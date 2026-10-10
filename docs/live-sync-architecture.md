@@ -246,3 +246,24 @@ npm run test:sync      # the full red-team regression suite (43 tests)
 validated, versioned raw material. Promoting an agenda into the curated snapshot
 (`src/data/official-meetings.json`) stays a human-reviewed step by design — the
 same no-invented-data discipline the rest of the site follows.
+
+---
+
+## Statewide watch is on, and it is not the Cheyenne pipeline
+
+`.github/workflows/live_wyoming_watch.yml` runs once a day. It covers all 23
+counties and 99 incorporated municipalities. It does not call
+`live_city_sync.yml`, and it does not write `src/data/`.
+
+| Door | What the job does |
+| --- | --- |
+| Cheyenne `view_id=5` | Not fetched. The hourly municipal watch already owns it. |
+| Agenda Center, CMS page, clerk index, clerk HTML page, PDF folder | Fetched, reduced to dated document rows, hashed. A structural surprise fails that surface closed. |
+| Casper’s older portal | Its own stream. It is not merged with the PHP index. |
+| County clerk host | Pinned host check. A redirect to another host fails closed. Commission meetings are not parsed. |
+| No opened agenda page | Recorded. No URL is invented, including from a directory email domain. |
+
+Baselines that parse land in `data/wyoming-sync-state.json`. Promoting a row
+into the public meeting snapshot is still a human step. Code:
+`scripts/monitor/wyoming-watch.mjs`, `scripts/lib/wyoming-adapters.mjs`.
+Test: `npm run test:wyoming-watch`.

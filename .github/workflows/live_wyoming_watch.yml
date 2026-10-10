@@ -1,0 +1,89 @@
+name: Live Wyoming Watch
+
+# Daily check of every Wyoming county and incorporated municipality.
+# Calibrated posting pages are parsed and hashed. County clerk hosts are
+# checked for an unexpected redirect. Cheyenne view_id=5 is not fetched here.
+# Places with no opened agenda page are recorded and not requested.
+# This job never calls the Cheyenne PDF sync and never edits the public snapshot.
+
+on:
+  schedule:
+    # 13:17 UTC is 7:17am Mountain Daylight Time, off the hour, after the
+    # municipal watcher's :23 runs have had the night.
+    - cron: "17 13 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: wyoming-ecosystem-watch
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Watch every Wyoming government
+        id: watch
+        continue-on-error: true
+        timeout-minutes: 20
+        run: node scripts/monitor/wyoming-watch.mjs --check --update-state --state data/wyoming-sync-state.json --out .sync/wyoming-watch.json
+
+      - name: Explain this run in the summary
+        if: always()
+        run: |
+          {
+            echo "## Live Wyoming Watch"
+            echo ""
+            if [ ! -f .sync/wyoming-watch.json ]; then
+              echo "No report was written. The watcher did not finish."
+            else
+              echo "| field | value |"
+              echo "| --- | --- |"
+              echo "| governments | $(jq -r '.governments' .sync/wyoming-watch.json) |"
+              echo "| surfaces | $(jq -r '.surfaces' .sync/wyoming-watch.json) |"
+              echo "| fetched | $(jq -r '.fetched' .sync/wyoming-watch.json) |"
+              echo "| recorded, not fetched | $(jq -r '.recorded' .sync/wyoming-watch.json) |"
+              echo "| delegated to Cheyenne watch | $(jq -r '.delegated' .sync/wyoming-watch.json) |"
+              echo "| content changed | $(jq -r '.changed' .sync/wyoming-watch.json) |"
+              echo "| structural failures | $(jq -r '.structural' .sync/wyoming-watch.json) |"
+              echo ""
+              echo "Structural failures (a page loaded, but it was not the calibrated door):"
+              echo ""
+              jq -r '.results[] | select(.structural == true) | "- \(.name): \(.reason) — \(.error)"' .sync/wyoming-watch.json
+              echo ""
+              echo "Unreachable calibrated doors (not treated as no changes):"
+              echo ""
+              jq -r '.results[] | select(.reason == "source-unavailable") | "- \(.name): \(.error)"' .sync/wyoming-watch.json
+            fi
+            echo ""
+            echo "This job does not promote meetings into the public snapshot."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Commit baselines that parsed
+        run: |
+          git config user.name "civic-cheyenne-watcher"
+          git config user.email "civic-cheyenne-watcher@users.noreply.github.com"
+          git add data/wyoming-sync-state.json
+          if git diff --cached --quiet; then
+            echo "No baseline change."
+          else
+            git commit -m "Record Wyoming watch baselines ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+            git pull --rebase origin main
+            git push origin main
+          fi
+
+      - name: Fail closed if a calibrated surface changed shape
+        if: steps.watch.outcome == 'failure'
+        run: exit 1

@@ -119,9 +119,17 @@ try {
   const sitemapResponse = await context.request.get(new URL('sitemap.xml', publicBase).toString());
   const sitemapText = await sitemapResponse.text();
   const meetingIndex = JSON.parse(await readFile('public/data/meetings.json', 'utf8'));
+  const ecosystem = JSON.parse(await readFile('src/data/wyoming-ecosystem.json', 'utf8'));
+  const statewidePages = 3 + ecosystem.counties.length * 2 + ecosystem.municipalities.length * 2;
   const sitemapLocations = [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== meetingIndex.meetings.length + 7) {
-    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+  const expectedSitemap = meetingIndex.meetings.length + 7 + statewidePages;
+  if (sitemapResponse.status() !== 200 || sitemapLocations.length !== expectedSitemap) {
+    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, ${statewidePages} statewide pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+  }
+  const casperResponse = await context.request.get(new URL('civic/places/casper/', publicBase).toString());
+  const casperHtml = await casperResponse.text();
+  if (casperResponse.status() !== 200 || !casperHtml.includes('Casper') || !casperHtml.includes('civic record') || !casperHtml.includes('PLACE ARCHIVE') || casperHtml.includes('Five real ordinances from the January 26 session')) {
+    throw new Error(`Expected the Casper civic to replace the Cheyenne ordinance experience (status ${casperResponse.status()})`);
   }
   const archiveResponse = await context.request.get(new URL('meetings/', publicBase).toString());
   const archiveHtml = await archiveResponse.text();

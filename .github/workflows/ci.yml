@@ -17,6 +17,12 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Wyoming ecosystem catalog invariants
+        run: npm run test:ecosystem
+      - name: Wyoming statewide watch
+        run: npm run test:wyoming-watch
+      - name: Place archive repo rules
+        run: npm run test:places
       - name: Sync pipeline tests (red-team regression suite)
         run: npm run test:sync
       - name: Wyoming Pulse RSS parsing and source-data tests
