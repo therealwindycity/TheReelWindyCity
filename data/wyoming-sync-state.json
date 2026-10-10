@@ -1,0 +1,744 @@
+{
+  "version": 1,
+  "updatedAt": null,
+  "targets": {
+    "county-albany": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.albanycountywy.gov/",
+      "contentHash": null
+    },
+    "county-big-horn": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.bighorncountywy.gov/",
+      "contentHash": null
+    },
+    "county-campbell": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.campbellcountywy.gov/",
+      "contentHash": null
+    },
+    "county-carbon": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.carboncountywy.gov/",
+      "contentHash": null
+    },
+    "county-converse": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.conversecountywy.gov/",
+      "contentHash": null
+    },
+    "county-crook": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.crookcounty.wy.gov/",
+      "contentHash": null
+    },
+    "county-fremont": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.fremontcountywy.gov/",
+      "contentHash": null
+    },
+    "county-goshen": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.goshencounty.org/",
+      "contentHash": null
+    },
+    "county-hot-springs": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.hscounty.com/",
+      "contentHash": null
+    },
+    "county-johnson": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.johnsoncowy.gov/",
+      "contentHash": null
+    },
+    "county-laramie": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.laramiecountywy.gov/",
+      "contentHash": null
+    },
+    "county-lincoln": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.lincolncountywy.gov/",
+      "contentHash": null
+    },
+    "county-natrona": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.natronacounty-wy.gov/",
+      "contentHash": null
+    },
+    "county-niobrara": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.niobraracounty.org/",
+      "contentHash": null
+    },
+    "county-park": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.parkcounty-wy.gov/",
+      "contentHash": null
+    },
+    "county-platte": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.plattecountywyoming.com/",
+      "contentHash": null
+    },
+    "county-sheridan": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.sheridancountywy.gov/",
+      "contentHash": null
+    },
+    "county-sublette": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.sublettecountywy.gov/",
+      "contentHash": null
+    },
+    "county-sweetwater": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.sweetwatercountywy.gov/",
+      "contentHash": null
+    },
+    "county-teton": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.tetoncountywy.gov/",
+      "contentHash": null
+    },
+    "county-uinta": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.uintacountywy.gov/",
+      "contentHash": null
+    },
+    "county-washakie": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.washakiecountywy.gov/",
+      "contentHash": null
+    },
+    "county-weston": {
+      "architectureId": "county-site-unobserved",
+      "mode": "host-check",
+      "url": "https://www.westongov.com/",
+      "contentHash": null
+    },
+    "place-afton": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-albin": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-alpine": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-baggs": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-bairoil": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-bar-nunn": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-basin": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-bear-river": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-big-piney": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-buffalo": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-burlington": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-burns": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-byron": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-casper": {
+      "architectureId": "clerk-file-index",
+      "mode": "parse",
+      "url": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
+      "contentHash": null
+    },
+    "place-cheyenne": {
+      "architectureId": "granicus-publisher",
+      "mode": "delegate",
+      "url": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5",
+      "contentHash": null
+    },
+    "place-chugwater": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-clearmont": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-cody": {
+      "architectureId": "clerk-html-page",
+      "mode": "parse",
+      "url": "https://www.codywy.gov/99/Agendas-and-Minutes",
+      "contentHash": null
+    },
+    "place-cokeville": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-cowley": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-dayton": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-deaver": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-diamondville": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-dixon": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-douglas": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-dubois": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-east-thermopolis": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-edgerton": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-elk-mountain": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-encampment": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-evanston": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-evansville": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-fort-laramie": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-frannie": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-gillette": {
+      "architectureId": "pdf-packet-folder",
+      "mode": "parse",
+      "url": "https://www.gillettewy.gov/files/assets/public/v/1/city-council/documents/meetings/council-agenda/full-agenda/",
+      "contentHash": null
+    },
+    "place-glendo": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-glenrock": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-granger": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-green-river": {
+      "architectureId": "civicplus-agenda-center",
+      "mode": "parse",
+      "url": "https://www.grwyo.org/AgendaCenter",
+      "contentHash": null
+    },
+    "place-greybull": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-guernsey": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-hanna": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-hartville": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-hudson": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-hulett": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-jackson": {
+      "architectureId": "civicplus-cms-page",
+      "mode": "parse",
+      "url": "https://www.jacksonwy.gov/491/Agendas-Minutes",
+      "contentHash": null
+    },
+    "place-kaycee": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-kemmerer": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-kirby": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-la-barge": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-lagrange": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-lander": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-laramie": {
+      "architectureId": "civicplus-agenda-center",
+      "mode": "parse",
+      "url": "https://cityoflaramie.org/AgendaCenter",
+      "contentHash": null
+    },
+    "place-lingle": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-lost-springs": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-lovell": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-lusk": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-lyman": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-manderson": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-manville": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-marbleton": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-medicine-bow": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-meeteetse": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-midwest": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-mills": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-moorcroft": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-mountain-view": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-newcastle": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-opal": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-pavillion": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-pine-bluffs": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-pine-haven": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-pinedale": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-powell": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-ranchester": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-rawlins": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-riverside": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-riverton": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-rock-river": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-rock-springs": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-rolling-hills": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-saratoga": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-sheridan": {
+      "architectureId": "clerk-html-page",
+      "mode": "parse",
+      "url": "https://www.sheridanwy.gov/government/clerk_s_office/agendas_and_minutes",
+      "contentHash": null
+    },
+    "place-shoshoni": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-sinclair": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-star-valley-ranch": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-sundance": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-superior": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-ten-sleep": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-thayne": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-thermopolis": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-torrington": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-upton": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-van-tassell": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-wamsutter": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-wheatland": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-worland": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-wright": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-yoder": {
+      "architectureId": "unobserved",
+      "mode": "record",
+      "url": null,
+      "contentHash": null
+    },
+    "place-casper-older-portal": {
+      "architectureId": "clerk-file-index",
+      "mode": "parse",
+      "url": "https://www.casperwy.gov/cms/One.aspx?portalId=63067&pageId=84270",
+      "contentHash": null
+    }
+  }
+}

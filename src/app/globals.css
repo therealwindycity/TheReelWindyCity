@@ -1778,3 +1778,109 @@
   .irl-bar-row:has(.irl-bar-caption),.irl-bar-row:has(.irl-index){grid-template-columns:minmax(70px,1.3fr) minmax(40px,2fr) auto}
   .irl-bar-caption,.irl-index{display:none}
 }
+
+/* ------------------------------------------------------------------ */
+/* Statewide Wyoming ecosystem                                        */
+/* ------------------------------------------------------------------ */
+.eco-hero{align-items:stretch;gap:22px}
+.eco-hero>div:first-child{flex:1;min-width:0}
+.eco-hero h1{max-width:740px;font-size:clamp(28px,3.4vw,40px);letter-spacing:-1.2px}
+.eco-hero p:not(.gov-kicker){max-width:720px;margin-top:10px;color:#5d6b60;font-size:14px;line-height:1.65}
+.eco-hero .gov-hero-actions{margin-top:18px}
+.eco-stat-board{display:grid;grid-template-columns:1fr 1fr;gap:8px;min-width:280px;margin:0}
+.eco-stat-board>div{display:flex;flex-direction:column;gap:3px;padding:12px 13px;border:1px solid #e3eadf;border-radius:8px;background:#f7faf4}
+.eco-stat-board strong{color:#24372c;font-size:22px;letter-spacing:-.6px;line-height:1}
+.eco-stat-board span{color:#6d7b70;font-size:11px;line-height:1.35}
+.eco-map-section{margin-top:28px}
+.eco-map-layout{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(280px,.7fr);gap:14px;min-height:640px}
+.eco-map-canvas-wrap{position:relative;min-height:560px;overflow:hidden;border:1px solid #e0e7dc;border-radius:12px;background:#eef2ea}
+.eco-map-canvas{position:absolute;inset:0}
+.eco-map-canvas .maplibregl-ctrl-attrib{font-size:10px}
+.eco-map-place{position:absolute;top:12px;left:12px;z-index:2;display:flex;align-items:center;gap:6px;padding:7px 10px;border-radius:6px;background:rgba(255,255,255,.92);color:#314438;font-size:11px;font-weight:700}
+.eco-map-side{display:flex;flex-direction:column;gap:10px;min-height:0;max-height:720px}
+.eco-filters{display:flex;flex-wrap:wrap;gap:6px}
+.eco-filters>button{padding:7px 9px;border:1px solid #dce5d8;border-radius:999px;background:#fff;color:#4d6149;font-size:11px;font-weight:700}
+.eco-filters>button.active,.eco-filters>button:hover{background:#315d43;border-color:#315d43;color:#fff}
+.eco-map-card{padding:14px;border:1px solid #e0e7dc;border-radius:10px;background:#fff}
+.eco-map-card h3{margin:6px 0 4px;color:#24372c;font-size:18px}
+.eco-map-card p,.eco-map-card a{color:#5d6b60;font-size:12px;line-height:1.45}
+.eco-map-card a{color:#315d43;font-weight:700;overflow-wrap:anywhere}
+.eco-map-list{flex:1;margin:0;padding:0;overflow:auto;list-style:none;border:1px solid #e0e7dc;border-radius:10px;background:#fff}
+.eco-map-list button{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;text-align:left;border-bottom:1px solid #f0f3ec}
+.eco-map-list button.active,.eco-map-list button:hover{background:#f4f8f0}
+.eco-map-list i{width:8px;height:8px;flex:0 0 8px;border-radius:50%}
+.eco-map-list strong{display:block;color:#24372c;font-size:12px}
+.eco-map-list small{color:#7a877c;font-size:10px}
+.eco-arch-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:26px}
+.eco-arch-card{padding:16px;border:1px solid #e0e7dc;border-radius:10px;background:#fff}
+.eco-arch-card h3{margin:6px 0 8px;color:#24372c;font-size:16px}
+.eco-arch-card p,.eco-arch-card small,.eco-arch-card a{color:#5d6b60;font-size:13px;line-height:1.55}
+.eco-arch-card small{display:block;margin-top:8px}
+.eco-arch-card a{display:inline-flex;align-items:center;gap:5px;margin-top:8px;color:#315d43;font-weight:700}
+.eco-scope{margin-top:26px;padding:18px 20px;border:1px solid #e0e7dc;border-radius:10px;background:#fff}
+.eco-scope h2{margin-bottom:10px;color:#24372c;font-size:20px}
+.eco-scope li{margin:0 0 8px;color:#4e5c52;font-size:14px;line-height:1.55}
+.eco-captured{display:flex;align-items:center;gap:7px;margin-top:16px;color:#6d7b70;font-size:12px}
+.eco-principle-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:8px 0 28px}
+.eco-principle-grid article{padding:16px;border:1px solid #e0e7dc;border-radius:10px;background:#fff}
+.eco-principle-grid h2{margin-bottom:8px;color:#24372c;font-size:18px}
+.eco-principle-grid p{color:#4e5c52;font-size:14px;line-height:1.6}
+.eco-arch-block{margin-top:22px;padding-top:8px;border-top:1px solid #e3eadf}
+.eco-arch-count{margin:0 0 8px;color:#6d806a;font-size:12px;font-weight:700;letter-spacing:.3px}
+.eco-steps{display:flex;flex-direction:column;gap:10px;margin:14px 0 0;padding:0;list-style:none}
+.eco-steps li{display:grid;grid-template-columns:36px minmax(0,1fr);gap:10px;padding:12px;border:1px solid #e0e7dc;border-radius:8px;background:#fff}
+.eco-steps li>span{color:#315d43;font-size:12px;font-weight:700}
+.eco-steps h3{margin-bottom:4px;color:#24372c;font-size:15px}
+.eco-steps p{color:#4e5c52;font-size:13px;line-height:1.55}
+.eco-steps p+p{margin-top:6px}
+.eco-fact-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:8px 0 18px}
+.eco-fact-grid>div{padding:12px;border:1px solid #e0e7dc;border-radius:8px;background:#fff}
+.eco-fact-grid span{display:block;margin-bottom:4px;color:#6d806a;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase}
+.eco-fact-grid strong{color:#24372c;font-size:14px;font-weight:700;line-height:1.4}
+.eco-website{margin:8px 0;padding:12px 14px;border:1px solid #e0e7dc;border-radius:8px;background:#fff}
+.eco-website a{color:#315d43;font-size:14px;font-weight:700;overflow-wrap:anywhere}
+.eco-website small,.eco-source-line,.eco-missing{display:block;margin-top:4px;color:#6d7b70;font-size:12px;line-height:1.5}
+.eco-source-line a{color:#315d43}
+.eco-entities{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 0;padding:0;list-style:none}
+.eco-entities li{padding:12px 14px;border:1px solid #e0e7dc;border-radius:8px;background:#fff}
+.eco-entities strong{color:#24372c;font-size:15px}
+.eco-entities small{display:block;margin-top:3px;color:#6d806a;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+.eco-entities p{margin-top:6px;color:#4e5c52;font-size:13px;line-height:1.5}
+.eco-related{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
+.eco-related a{padding:7px 10px;border:1px solid #dce5d8;border-radius:999px;background:#fff;color:#315d43;font-size:12px;font-weight:700}
+.eco-related a:hover{background:#f4f8f0}
+.eco-office-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0;padding:0;list-style:none}
+.eco-office-row li{padding:12px;border:1px solid #e0e7dc;border-radius:8px;background:#fff}
+.eco-office-row strong{display:block;color:#24372c;font-size:14px}
+.eco-office-row span{display:block;margin-top:4px;color:#5d6b60;font-size:12px;line-height:1.45}
+.eco-county-block{margin-top:28px}
+.eco-county-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:8px}
+.eco-county-head h2{font-size:22px}
+.eco-county-head h2 a{color:#24372c}
+.eco-county-head p{color:#5d6b60;font-size:13px}
+.eco-county-head a{color:#315d43}
+.eco-table-wrap{overflow-x:auto;border:1px solid #e0e7dc;border-radius:10px;background:#fff}
+.eco-table{width:100%;border-collapse:collapse;font-size:13px}
+.eco-table caption{padding:10px 12px;color:#6d7b70;font-size:12px;text-align:left}
+.eco-table th,.eco-table td{padding:8px 12px;border-top:1px solid #eef2ea;text-align:left;vertical-align:top}
+.eco-table thead th{color:#6d806a;font-size:11px;letter-spacing:.4px;text-transform:uppercase}
+.eco-table a{color:#315d43;font-weight:700}
+.statewide-entry{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:18px 0 8px;padding:16px 18px;border:1px solid var(--border);border-radius:10px;background:#f7faf4}
+.statewide-entry h2{margin:6px 0 6px;font-size:20px;letter-spacing:-.4px}
+.statewide-entry p{max-width:640px;color:var(--muted);font-size:13px;line-height:1.55}
+@media(max-width:1000px){
+  .eco-map-layout,.eco-arch-grid,.eco-principle-grid,.eco-fact-grid,.eco-entities,.eco-office-row{grid-template-columns:1fr 1fr}
+  .eco-map-layout{grid-template-columns:1fr}
+  .eco-map-canvas-wrap{min-height:420px}
+  .eco-map-side{max-height:none}
+}
+@media(max-width:760px){
+  .eco-hero{flex-direction:column}
+  .eco-stat-board{min-width:0;width:100%}
+  .eco-arch-grid,.eco-principle-grid,.eco-fact-grid,.eco-entities,.eco-office-row{grid-template-columns:1fr}
+  .statewide-entry{align-items:flex-start;flex-direction:column}
+}
+.place-picker-modal .source-search{margin:0 0 12px}
+.place-picker-modal a{display:flex;align-items:center;gap:8px;padding:8px 4px;color:#24372c;text-decoration:none}
+.place-picker-modal a small{display:block;color:#6d7b70}
+.civic-shell .brand-wordmark>span{letter-spacing:.3px;font-size:10px;white-space:normal;max-width:130px;line-height:1.25}

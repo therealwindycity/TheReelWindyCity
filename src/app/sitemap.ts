@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { MEETINGS, MEETINGS_CAPTURED } from "@/lib/civic-data";
 import { SITE_URL, siteUrl } from "@/lib/site-config";
+import { civicRoutes } from "@/lib/civic-places";
+import { ECOSYSTEM_CAPTURED, ecosystemRoutes } from "@/lib/wyoming-ecosystem";
 
 export const dynamic = "force-static";
 
@@ -23,7 +25,9 @@ function snapshotDate(): Date {
  * Every meeting has its own statically rendered, canonical detail page. Keep
  * every indexed meeting in the sitemap, with a lastmod that reflects when the
  * underlying record snapshot changed — historical records are frozen, while
- * posted agendas are still being updated by the city.
+ * posted agendas are still being updated by the city. Statewide ecosystem
+ * pages use the catalog capture date instead, so a new government record does
+ * not pretend to be a change to a 2008 meeting.
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = snapshotDate();
@@ -71,6 +75,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    ...ecosystemRoutes().map((route): MetadataRoute.Sitemap[number] => ({
+      url: siteUrl(route),
+      lastModified: new Date(`${ECOSYSTEM_CAPTURED}T00:00:00.000Z`),
+      changeFrequency: "monthly",
+      priority: route === "hub/wyoming/" ? 0.8 : 0.6,
+    })),
+    ...civicRoutes().map((route): MetadataRoute.Sitemap[number] => ({
+      url: siteUrl(route),
+      lastModified: new Date(`${ECOSYSTEM_CAPTURED}T00:00:00.000Z`),
+      changeFrequency: "weekly",
+      priority: 0.7,
+    })),
     ...MEETINGS.map((meeting): MetadataRoute.Sitemap[number] => ({
       url: siteUrl(`meetings/${meeting.id}/`),
       lastModified,

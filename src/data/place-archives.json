@@ -1,0 +1,1227 @@
+{
+  "owner": "therealwindycity",
+  "volumeSize": 250,
+  "generatedAt": "2026-10-10T07:40:58.778Z",
+  "places": [
+    {
+      "id": "afton",
+      "layer": "place",
+      "name": "Afton",
+      "repo": "civic-wy-place-afton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-afton",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "albin",
+      "layer": "place",
+      "name": "Albin",
+      "repo": "civic-wy-place-albin",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-albin",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "alpine",
+      "layer": "place",
+      "name": "Alpine",
+      "repo": "civic-wy-place-alpine",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-alpine",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "baggs",
+      "layer": "place",
+      "name": "Baggs",
+      "repo": "civic-wy-place-baggs",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-baggs",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "bairoil",
+      "layer": "place",
+      "name": "Bairoil",
+      "repo": "civic-wy-place-bairoil",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-bairoil",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "bar-nunn",
+      "layer": "place",
+      "name": "Bar Nunn",
+      "repo": "civic-wy-place-bar-nunn",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-bar-nunn",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "basin",
+      "layer": "place",
+      "name": "Basin",
+      "repo": "civic-wy-place-basin",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-basin",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "bear-river",
+      "layer": "place",
+      "name": "Bear River",
+      "repo": "civic-wy-place-bear-river",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-bear-river",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "big-piney",
+      "layer": "place",
+      "name": "Big Piney",
+      "repo": "civic-wy-place-big-piney",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-big-piney",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "buffalo",
+      "layer": "place",
+      "name": "Buffalo",
+      "repo": "civic-wy-place-buffalo",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-buffalo",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "burlington",
+      "layer": "place",
+      "name": "Burlington",
+      "repo": "civic-wy-place-burlington",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-burlington",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "burns",
+      "layer": "place",
+      "name": "Burns",
+      "repo": "civic-wy-place-burns",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-burns",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "byron",
+      "layer": "place",
+      "name": "Byron",
+      "repo": "civic-wy-place-byron",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-byron",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "casper",
+      "layer": "place",
+      "name": "Casper",
+      "repo": "civic-wy-place-casper",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-casper",
+      "sourceUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "cheyenne",
+      "layer": "place",
+      "name": "Cheyenne",
+      "repo": "civic-wy-place-cheyenne",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-cheyenne",
+      "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "chugwater",
+      "layer": "place",
+      "name": "Chugwater",
+      "repo": "civic-wy-place-chugwater",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-chugwater",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "clearmont",
+      "layer": "place",
+      "name": "Clearmont",
+      "repo": "civic-wy-place-clearmont",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-clearmont",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "cody",
+      "layer": "place",
+      "name": "Cody",
+      "repo": "civic-wy-place-cody",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-cody",
+      "sourceUrl": "https://www.codywy.gov/99/Agendas-and-Minutes",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "cokeville",
+      "layer": "place",
+      "name": "Cokeville",
+      "repo": "civic-wy-place-cokeville",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-cokeville",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "cowley",
+      "layer": "place",
+      "name": "Cowley",
+      "repo": "civic-wy-place-cowley",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-cowley",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "dayton",
+      "layer": "place",
+      "name": "Dayton",
+      "repo": "civic-wy-place-dayton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-dayton",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "deaver",
+      "layer": "place",
+      "name": "Deaver",
+      "repo": "civic-wy-place-deaver",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-deaver",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "diamondville",
+      "layer": "place",
+      "name": "Diamondville",
+      "repo": "civic-wy-place-diamondville",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-diamondville",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "dixon",
+      "layer": "place",
+      "name": "Dixon",
+      "repo": "civic-wy-place-dixon",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-dixon",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "douglas",
+      "layer": "place",
+      "name": "Douglas",
+      "repo": "civic-wy-place-douglas",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-douglas",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "dubois",
+      "layer": "place",
+      "name": "Dubois",
+      "repo": "civic-wy-place-dubois",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-dubois",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "east-thermopolis",
+      "layer": "place",
+      "name": "East Thermopolis",
+      "repo": "civic-wy-place-east-thermopolis",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-east-thermopolis",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "edgerton",
+      "layer": "place",
+      "name": "Edgerton",
+      "repo": "civic-wy-place-edgerton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-edgerton",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "elk-mountain",
+      "layer": "place",
+      "name": "Elk Mountain",
+      "repo": "civic-wy-place-elk-mountain",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-elk-mountain",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "encampment",
+      "layer": "place",
+      "name": "Encampment",
+      "repo": "civic-wy-place-encampment",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-encampment",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "evanston",
+      "layer": "place",
+      "name": "Evanston",
+      "repo": "civic-wy-place-evanston",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-evanston",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "evansville",
+      "layer": "place",
+      "name": "Evansville",
+      "repo": "civic-wy-place-evansville",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-evansville",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "fort-laramie",
+      "layer": "place",
+      "name": "Fort Laramie",
+      "repo": "civic-wy-place-fort-laramie",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-fort-laramie",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "frannie",
+      "layer": "place",
+      "name": "Frannie",
+      "repo": "civic-wy-place-frannie",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-frannie",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "gillette",
+      "layer": "place",
+      "name": "Gillette",
+      "repo": "civic-wy-place-gillette",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-gillette",
+      "sourceUrl": "https://www.gillettewy.gov/files/assets/public/v/1/city-council/documents/meetings/council-agenda/full-agenda/11.04.2025-council-packet.pdf",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "glendo",
+      "layer": "place",
+      "name": "Glendo",
+      "repo": "civic-wy-place-glendo",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-glendo",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "glenrock",
+      "layer": "place",
+      "name": "Glenrock",
+      "repo": "civic-wy-place-glenrock",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-glenrock",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "granger",
+      "layer": "place",
+      "name": "Granger",
+      "repo": "civic-wy-place-granger",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-granger",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "green-river",
+      "layer": "place",
+      "name": "Green River",
+      "repo": "civic-wy-place-green-river",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-green-river",
+      "sourceUrl": "https://www.grwyo.org/AgendaCenter",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "greybull",
+      "layer": "place",
+      "name": "Greybull",
+      "repo": "civic-wy-place-greybull",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-greybull",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "guernsey",
+      "layer": "place",
+      "name": "Guernsey",
+      "repo": "civic-wy-place-guernsey",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-guernsey",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "hanna",
+      "layer": "place",
+      "name": "Hanna",
+      "repo": "civic-wy-place-hanna",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-hanna",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "hartville",
+      "layer": "place",
+      "name": "Hartville",
+      "repo": "civic-wy-place-hartville",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-hartville",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "hudson",
+      "layer": "place",
+      "name": "Hudson",
+      "repo": "civic-wy-place-hudson",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-hudson",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "hulett",
+      "layer": "place",
+      "name": "Hulett",
+      "repo": "civic-wy-place-hulett",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-hulett",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "jackson",
+      "layer": "place",
+      "name": "Jackson",
+      "repo": "civic-wy-place-jackson",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-jackson",
+      "sourceUrl": "https://www.jacksonwy.gov/491/Agendas-Minutes",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "kaycee",
+      "layer": "place",
+      "name": "Kaycee",
+      "repo": "civic-wy-place-kaycee",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-kaycee",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "kemmerer",
+      "layer": "place",
+      "name": "Kemmerer",
+      "repo": "civic-wy-place-kemmerer",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-kemmerer",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "kirby",
+      "layer": "place",
+      "name": "Kirby",
+      "repo": "civic-wy-place-kirby",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-kirby",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "la-barge",
+      "layer": "place",
+      "name": "La Barge",
+      "repo": "civic-wy-place-la-barge",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-la-barge",
+      "sourceUrl": "https://www.townoflabarge.org/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lagrange",
+      "layer": "place",
+      "name": "LaGrange",
+      "repo": "civic-wy-place-lagrange",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lagrange",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lander",
+      "layer": "place",
+      "name": "Lander",
+      "repo": "civic-wy-place-lander",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lander",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "laramie",
+      "layer": "place",
+      "name": "Laramie",
+      "repo": "civic-wy-place-laramie",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-laramie",
+      "sourceUrl": "https://cityoflaramie.org/AgendaCenter",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lingle",
+      "layer": "place",
+      "name": "Lingle",
+      "repo": "civic-wy-place-lingle",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lingle",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lost-springs",
+      "layer": "place",
+      "name": "Lost Springs",
+      "repo": "civic-wy-place-lost-springs",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lost-springs",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lovell",
+      "layer": "place",
+      "name": "Lovell",
+      "repo": "civic-wy-place-lovell",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lovell",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lusk",
+      "layer": "place",
+      "name": "Lusk",
+      "repo": "civic-wy-place-lusk",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lusk",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lyman",
+      "layer": "place",
+      "name": "Lyman",
+      "repo": "civic-wy-place-lyman",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-lyman",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "manderson",
+      "layer": "place",
+      "name": "Manderson",
+      "repo": "civic-wy-place-manderson",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-manderson",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "manville",
+      "layer": "place",
+      "name": "Manville",
+      "repo": "civic-wy-place-manville",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-manville",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "marbleton",
+      "layer": "place",
+      "name": "Marbleton",
+      "repo": "civic-wy-place-marbleton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-marbleton",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "medicine-bow",
+      "layer": "place",
+      "name": "Medicine Bow",
+      "repo": "civic-wy-place-medicine-bow",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-medicine-bow",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "meeteetse",
+      "layer": "place",
+      "name": "Meeteetse",
+      "repo": "civic-wy-place-meeteetse",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-meeteetse",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "midwest",
+      "layer": "place",
+      "name": "Midwest",
+      "repo": "civic-wy-place-midwest",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-midwest",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "mills",
+      "layer": "place",
+      "name": "Mills",
+      "repo": "civic-wy-place-mills",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-mills",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "moorcroft",
+      "layer": "place",
+      "name": "Moorcroft",
+      "repo": "civic-wy-place-moorcroft",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-moorcroft",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "mountain-view",
+      "layer": "place",
+      "name": "Mountain View",
+      "repo": "civic-wy-place-mountain-view",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-mountain-view",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "newcastle",
+      "layer": "place",
+      "name": "Newcastle",
+      "repo": "civic-wy-place-newcastle",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-newcastle",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "opal",
+      "layer": "place",
+      "name": "Opal",
+      "repo": "civic-wy-place-opal",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-opal",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "pavillion",
+      "layer": "place",
+      "name": "Pavillion",
+      "repo": "civic-wy-place-pavillion",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-pavillion",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "pine-bluffs",
+      "layer": "place",
+      "name": "Pine Bluffs",
+      "repo": "civic-wy-place-pine-bluffs",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-pine-bluffs",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "pine-haven",
+      "layer": "place",
+      "name": "Pine Haven",
+      "repo": "civic-wy-place-pine-haven",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-pine-haven",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "pinedale",
+      "layer": "place",
+      "name": "Pinedale",
+      "repo": "civic-wy-place-pinedale",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-pinedale",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "powell",
+      "layer": "place",
+      "name": "Powell",
+      "repo": "civic-wy-place-powell",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-powell",
+      "sourceUrl": "https://www.cityofpowell.com/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "ranchester",
+      "layer": "place",
+      "name": "Ranchester",
+      "repo": "civic-wy-place-ranchester",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-ranchester",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "rawlins",
+      "layer": "place",
+      "name": "Rawlins",
+      "repo": "civic-wy-place-rawlins",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-rawlins",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "riverside",
+      "layer": "place",
+      "name": "Riverside",
+      "repo": "civic-wy-place-riverside",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-riverside",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "riverton",
+      "layer": "place",
+      "name": "Riverton",
+      "repo": "civic-wy-place-riverton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-riverton",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "rock-river",
+      "layer": "place",
+      "name": "Rock River",
+      "repo": "civic-wy-place-rock-river",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-rock-river",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "rock-springs",
+      "layer": "place",
+      "name": "Rock Springs",
+      "repo": "civic-wy-place-rock-springs",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-rock-springs",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "rolling-hills",
+      "layer": "place",
+      "name": "Rolling Hills",
+      "repo": "civic-wy-place-rolling-hills",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-rolling-hills",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "saratoga",
+      "layer": "place",
+      "name": "Saratoga",
+      "repo": "civic-wy-place-saratoga",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-saratoga",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "sheridan",
+      "layer": "place",
+      "name": "Sheridan",
+      "repo": "civic-wy-place-sheridan",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-sheridan",
+      "sourceUrl": "https://www.sheridanwy.gov/government/clerk_s_office/agendas_and_minutes",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "shoshoni",
+      "layer": "place",
+      "name": "Shoshoni",
+      "repo": "civic-wy-place-shoshoni",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-shoshoni",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "sinclair",
+      "layer": "place",
+      "name": "Sinclair",
+      "repo": "civic-wy-place-sinclair",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-sinclair",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "star-valley-ranch",
+      "layer": "place",
+      "name": "Star Valley Ranch",
+      "repo": "civic-wy-place-star-valley-ranch",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-star-valley-ranch",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "sundance",
+      "layer": "place",
+      "name": "Sundance",
+      "repo": "civic-wy-place-sundance",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-sundance",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "superior",
+      "layer": "place",
+      "name": "Superior",
+      "repo": "civic-wy-place-superior",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-superior",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "ten-sleep",
+      "layer": "place",
+      "name": "Ten Sleep",
+      "repo": "civic-wy-place-ten-sleep",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-ten-sleep",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "thayne",
+      "layer": "place",
+      "name": "Thayne",
+      "repo": "civic-wy-place-thayne",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-thayne",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "thermopolis",
+      "layer": "place",
+      "name": "Thermopolis",
+      "repo": "civic-wy-place-thermopolis",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-thermopolis",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "torrington",
+      "layer": "place",
+      "name": "Torrington",
+      "repo": "civic-wy-place-torrington",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-torrington",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "upton",
+      "layer": "place",
+      "name": "Upton",
+      "repo": "civic-wy-place-upton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-upton",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "van-tassell",
+      "layer": "place",
+      "name": "Van Tassell",
+      "repo": "civic-wy-place-van-tassell",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-van-tassell",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "wamsutter",
+      "layer": "place",
+      "name": "Wamsutter",
+      "repo": "civic-wy-place-wamsutter",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-wamsutter",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "wheatland",
+      "layer": "place",
+      "name": "Wheatland",
+      "repo": "civic-wy-place-wheatland",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-wheatland",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "worland",
+      "layer": "place",
+      "name": "Worland",
+      "repo": "civic-wy-place-worland",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-worland",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "wright",
+      "layer": "place",
+      "name": "Wright",
+      "repo": "civic-wy-place-wright",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-wright",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "yoder",
+      "layer": "place",
+      "name": "Yoder",
+      "repo": "civic-wy-place-yoder",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-place-yoder",
+      "sourceUrl": null,
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "albany",
+      "layer": "county",
+      "name": "Albany County",
+      "repo": "civic-wy-county-albany",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-albany",
+      "sourceUrl": "https://www.albanycountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "big-horn",
+      "layer": "county",
+      "name": "Big Horn County",
+      "repo": "civic-wy-county-big-horn",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-big-horn",
+      "sourceUrl": "https://www.bighorncountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "campbell",
+      "layer": "county",
+      "name": "Campbell County",
+      "repo": "civic-wy-county-campbell",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-campbell",
+      "sourceUrl": "https://www.campbellcountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "carbon",
+      "layer": "county",
+      "name": "Carbon County",
+      "repo": "civic-wy-county-carbon",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-carbon",
+      "sourceUrl": "https://www.carboncountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "converse",
+      "layer": "county",
+      "name": "Converse County",
+      "repo": "civic-wy-county-converse",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-converse",
+      "sourceUrl": "https://www.conversecountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "crook",
+      "layer": "county",
+      "name": "Crook County",
+      "repo": "civic-wy-county-crook",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-crook",
+      "sourceUrl": "https://www.crookcounty.wy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "fremont",
+      "layer": "county",
+      "name": "Fremont County",
+      "repo": "civic-wy-county-fremont",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-fremont",
+      "sourceUrl": "https://www.fremontcountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "goshen",
+      "layer": "county",
+      "name": "Goshen County",
+      "repo": "civic-wy-county-goshen",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-goshen",
+      "sourceUrl": "https://www.goshencounty.org/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "hot-springs",
+      "layer": "county",
+      "name": "Hot Springs County",
+      "repo": "civic-wy-county-hot-springs",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-hot-springs",
+      "sourceUrl": "https://www.hscounty.com/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "johnson",
+      "layer": "county",
+      "name": "Johnson County",
+      "repo": "civic-wy-county-johnson",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-johnson",
+      "sourceUrl": "https://www.johnsoncowy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "laramie",
+      "layer": "county",
+      "name": "Laramie County",
+      "repo": "civic-wy-county-laramie",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-laramie",
+      "sourceUrl": "https://www.laramiecountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "lincoln",
+      "layer": "county",
+      "name": "Lincoln County",
+      "repo": "civic-wy-county-lincoln",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-lincoln",
+      "sourceUrl": "https://www.lincolncountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "natrona",
+      "layer": "county",
+      "name": "Natrona County",
+      "repo": "civic-wy-county-natrona",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-natrona",
+      "sourceUrl": "https://www.natronacounty-wy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "niobrara",
+      "layer": "county",
+      "name": "Niobrara County",
+      "repo": "civic-wy-county-niobrara",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-niobrara",
+      "sourceUrl": "https://www.niobraracounty.org/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "park",
+      "layer": "county",
+      "name": "Park County",
+      "repo": "civic-wy-county-park",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-park",
+      "sourceUrl": "https://www.parkcounty-wy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "platte",
+      "layer": "county",
+      "name": "Platte County",
+      "repo": "civic-wy-county-platte",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-platte",
+      "sourceUrl": "https://www.plattecountywyoming.com/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "sheridan",
+      "layer": "county",
+      "name": "Sheridan County",
+      "repo": "civic-wy-county-sheridan",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sheridan",
+      "sourceUrl": "https://www.sheridancountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "sublette",
+      "layer": "county",
+      "name": "Sublette County",
+      "repo": "civic-wy-county-sublette",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sublette",
+      "sourceUrl": "https://www.sublettecountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "sweetwater",
+      "layer": "county",
+      "name": "Sweetwater County",
+      "repo": "civic-wy-county-sweetwater",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sweetwater",
+      "sourceUrl": "https://www.sweetwatercountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "teton",
+      "layer": "county",
+      "name": "Teton County",
+      "repo": "civic-wy-county-teton",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-teton",
+      "sourceUrl": "https://www.tetoncountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "uinta",
+      "layer": "county",
+      "name": "Uinta County",
+      "repo": "civic-wy-county-uinta",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-uinta",
+      "sourceUrl": "https://www.uintacountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "washakie",
+      "layer": "county",
+      "name": "Washakie County",
+      "repo": "civic-wy-county-washakie",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-washakie",
+      "sourceUrl": "https://www.washakiecountywy.gov/",
+      "documents": [],
+      "errors": []
+    },
+    {
+      "id": "weston",
+      "layer": "county",
+      "name": "Weston County",
+      "repo": "civic-wy-county-weston",
+      "repoUrl": "https://github.com/therealwindycity/civic-wy-county-weston",
+      "sourceUrl": "https://www.westongov.com/",
+      "documents": [],
+      "errors": []
+    }
+  ]
+}

@@ -22,6 +22,7 @@ const SITE_URL = `${ORIGIN}${BASE_PATH}/`;
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, "out");
 const index = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "meetings.json"), "utf8"));
+const ecosystem = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "wyoming-ecosystem.json"), "utf8"));
 const transcriptIndex = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "transcript-vectors.json"), "utf8"));
 const MEETINGS = index.meetings;
 
@@ -228,7 +229,20 @@ if (!sitemap) {
   const blocks = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map((match) => match[1]);
   const locations = blocks.map((block) => matchAll(block, /<loc>([^<]*)<\/loc>/g)[0]);
   const hubUrls = ["hub/", "hub/meetings/", "hub/signals/", "hub/learn/"].map((route) => `${SITE_URL}${route}`);
-  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, ...hubUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
+  const ecosystemRoutes = [
+    "hub/wyoming/",
+    "hub/wyoming/architecture/",
+    "hub/wyoming/entities/",
+    ...ecosystem.counties.map((county) => `hub/wyoming/counties/${county.id}/`),
+    ...ecosystem.municipalities.map((place) => `hub/wyoming/places/${place.id}/`),
+  ];
+  const ecosystemUrls = ecosystemRoutes.map((route) => `${SITE_URL}${route}`);
+  const civicRoutes = [
+    ...ecosystem.municipalities.map((place) => `civic/places/${place.id}/`),
+    ...ecosystem.counties.map((county) => `civic/counties/${county.id}/`),
+  ];
+  const civicUrls = civicRoutes.map((route) => `${SITE_URL}${route}`);
+  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, ...hubUrls, ...ecosystemUrls, ...civicUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
 
   check(locations.length === expected.length, `Sitemap lists ${locations.length} URLs, expected ${expected.length}`);
   check(new Set(locations).size === locations.length, "Sitemap contains duplicate <loc> entries");
@@ -263,9 +277,73 @@ if (!sitemap) {
   // lastmod must describe the record snapshot, not the moment of the build.
   const lastmods = [...new Set(matchAll(sitemap, /<lastmod>([^<]*)<\/lastmod>/g))];
   const snapshot = index.captured;
-  check(lastmods.length === 1, `Sitemap mixes ${lastmods.length} different lastmod values (${lastmods.join(", ")})`);
-  check(lastmods[0]?.startsWith(snapshot), `Sitemap lastmod ${lastmods[0]} does not match the index snapshot date ${snapshot}`);
+  check(new Set(lastmods.map((value) => value.slice(0, 10))).size <= 2, `Sitemap mixes unexpected lastmod dates (${lastmods.join(", ")})`);
+  check(lastmods.every((value) => value.startsWith(snapshot) || value.startsWith(ecosystem.captured)), `Sitemap lastmod is not a known snapshot (${lastmods.join(", ")})`);
+  for (const block of blocks) {
+    const loc = matchAll(block, /<loc>([^<]*)<\/loc>/g)[0];
+    const lastmod = matchAll(block, /<lastmod>([^<]*)<\/lastmod>/g)[0];
+    const expectedDate = loc?.includes("/hub/wyoming/") || loc?.includes("/civic/") ? ecosystem.captured : snapshot;
+    check(lastmod?.startsWith(expectedDate), `${loc}: lastmod ${lastmod} does not match ${expectedDate}`);
+  }
   check(locations.every((url) => url.startsWith(SITE_URL)), "Sitemap contains URLs outside the canonical site root");
+}
+
+/* ------------------------------------------------------------------ */
+/* 4b. Statewide ecosystem pages                                        */
+/* ------------------------------------------------------------------ */
+const ecosystemPages = [
+  { route: "hub/wyoming/", heading: "not one Granicus table", marker: "DISPARATE SITES" },
+  { route: "hub/wyoming/architecture/", heading: "do not transfer unchanged", marker: "ADAPTERS" },
+  { route: "hub/wyoming/entities/", heading: "Every Wyoming city, town, and county", marker: "Offices present in every county" },
+];
+for (const page of ecosystemPages) {
+  const html = read(path.join(page.route, "index.html"));
+  if (!html) {
+    failures.push(`Missing statewide ecosystem page: out/${page.route}index.html`);
+    continue;
+  }
+  const canonicalUrl = `${SITE_URL}${page.route}`;
+  const titleTags = matchAll(html, /<title>([^<]*)<\/title>/g);
+  const canonicalTags = matchAll(html, /<link rel="canonical" href="([^"]*)"/g);
+  const h1Tags = matchAll(html, /<h1[^>]*>([\s\S]*?)<\/h1>/g);
+  check(titleTags.length === 1, `${page.route}: expected one title, found ${titleTags.length}`);
+  check(canonicalTags.length === 1 && canonicalTags[0] === canonicalUrl, `${page.route}: canonical ${canonicalTags[0]} does not match ${canonicalUrl}`);
+  check(h1Tags.length === 1, `${page.route}: expected one <h1>, found ${h1Tags.length}`);
+  check(visibleText(h1Tags[0] ?? "").toLowerCase().includes(page.heading.toLowerCase()), `${page.route}: heading does not include "${page.heading}"`);
+  check(html.includes(page.marker), `${page.route}: missing "${page.marker}"`);
+  check(visibleText(html).length > 700, `${page.route}: page text is only ${visibleText(html).length} characters`);
+  check(!/<iframe\b[^>]*\ssrc="https?:/i.test(html), `${page.route}: eagerly loads a third-party iframe`);
+}
+for (const place of ecosystem.municipalities) {
+  const html = read(path.join("hub", "wyoming", "places", place.id, "index.html"));
+  const canonicalUrl = `${SITE_URL}hub/wyoming/places/${place.id}/`;
+  if (!html) {
+    failures.push(`Missing municipality page: ${place.id}`);
+    continue;
+  }
+  const h1 = visibleText(matchAll(html, /<h1[^>]*>([\s\S]*?)<\/h1>/g)[0] ?? "");
+  check(h1.includes(place.name), `${place.id}: heading "${h1}" does not name the municipality`);
+  check(html.includes(`rel="canonical" href="${canonicalUrl}"`), `${place.id}: canonical is missing`);
+  check(visibleText(html).length > 700, `${place.id}: municipality page is only ${visibleText(html).length} characters`);
+}
+for (const route of [`civic/places/${ecosystem.municipalities[0].id}/`, `civic/counties/${ecosystem.counties[0].id}/`]) {
+  const html = read(path.join(route, "index.html"));
+  if (!html) {
+    failures.push(`Missing civic switch page: out/${route}index.html`);
+    continue;
+  }
+  check(html.includes("PLACE ARCHIVE"), `${route}: civic page does not name its archive`);
+  check((html.match(/<h1/g) || []).length === 1, `${route}: expected one h1`);
+}
+for (const county of ecosystem.counties) {
+  const html = read(path.join("hub", "wyoming", "counties", county.id, "index.html"));
+  if (!html) {
+    failures.push(`Missing county page: ${county.id}`);
+    continue;
+  }
+  const h1 = visibleText(matchAll(html, /<h1[^>]*>([\s\S]*?)<\/h1>/g)[0] ?? "");
+  check(h1.includes(`${county.name} County`), `${county.id}: heading "${h1}" does not name the county`);
+  check(visibleText(html).length > 700, `${county.id}: county page is only ${visibleText(html).length} characters`);
 }
 
 /* ------------------------------------------------------------------ */
