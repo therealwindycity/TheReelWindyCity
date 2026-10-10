@@ -28,9 +28,9 @@ function flag(name, fallback) {
 const SITE_URL = (flag("site", process.env.LIVE_SITE_URL) || "https://therealwindycity.github.io/TheReelWindyCity/").replace(/\/?$/, "/");
 const RETRIES = Number(flag("retries", process.env.SEO_LIVE_RETRIES || 3));
 const RETRY_DELAY_MS = Number(flag("delay", process.env.SEO_LIVE_DELAY_MS || 10_000));
-// Home, meetings, transcripts and the four hub routes are the sitemap entries
-// that are not meeting records.
-const STATIC_PAGES = ["", "meetings/", "transcripts/", "hub/", "hub/meetings/", "hub/signals/", "hub/learn/"];
+// Home, meetings, transcripts, the profile page, and the four hub routes are the
+// sitemap entries that are not meeting records.
+const STATIC_PAGES = ["", "meetings/", "transcripts/", "mynewspace/", "hub/", "hub/meetings/", "hub/signals/", "hub/learn/"];
 
 const failures = [];
 const notes = [];

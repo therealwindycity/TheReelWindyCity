@@ -207,6 +207,42 @@ for (const affordance of ["gov-frame-gate", "Load window"]) {
   check(Boolean(hubHome && hubHome.includes(affordance)), `hub/: missing click-to-load affordance "${affordance}"`);
 }
 
+/* ------------------------------------------------------------------ */
+/* 3b. MyNewSpace profile page                                          */
+/* ------------------------------------------------------------------ */
+const newspace = read(path.join("mynewspace", "index.html"));
+if (!newspace) {
+  failures.push("Missing MyNewSpace profile page: out/mynewspace/index.html");
+} else {
+  const canonicalUrl = `${SITE_URL}mynewspace/`;
+  const titleTags = matchAll(newspace, /<title>([^<]*)<\/title>/g);
+  const canonicalTags = matchAll(newspace, /<link rel="canonical" href="([^"]*)"/g);
+  const h1Tags = matchAll(newspace, /<h1[^>]*>([\s\S]*?)<\/h1>/g);
+  check(titleTags.length === 1, `mynewspace/: expected one title, found ${titleTags.length}`);
+  check(canonicalTags.length === 1 && canonicalTags[0] === canonicalUrl, `mynewspace/: canonical ${canonicalTags[0]} does not match ${canonicalUrl}`);
+  check(h1Tags.length === 1, `mynewspace/: expected one <h1>, found ${h1Tags.length}`);
+  check(/<meta name="robots" content="[^"]*index/.test(newspace), "mynewspace/: missing indexable robots directive");
+  check(visibleText(newspace).length > 1200, `mynewspace/: page text is only ${visibleText(newspace).length} characters — the profile must carry the record, not a stub`);
+  check(!/https:\/\/github\.io(\/|\{|\s|")/.test(newspace), "mynewspace/: links a bare github.io host instead of the project URL");
+  // The parody is a paraphrase, and the page has to say so.
+  check(newspace.includes("Not affiliated with"), "mynewspace/: missing the MySpace non-affiliation note");
+  check(newspace.includes("localStorage"), "mynewspace/: does not tell the visitor that customization stays local");
+  // The profile text must come from the archive, not from the theme.
+  for (const marker of ["Record snapshot", "gov-freshness", "My Top 8 Friends", "Friend Space", "Who I"]) {
+    check(newspace.includes(marker), `mynewspace/: missing expected profile content "${marker}"`);
+  }
+  // Like the hub, the Arena window is visitor-initiated: the frame is in the
+  // markup so the page describes a real window, but it carries no src, so no
+  // request leaves the browser until someone asks for it.
+  const frames = [...newspace.matchAll(/<iframe\b[^>]*>/g)].map((match) => match[0]);
+  check(frames.length > 0, "mynewspace/: expected the Arena iframe in the exported markup");
+  const gated = frames.filter((tag) => !/\ssrc=/.test(tag));
+  check(gated.length === frames.length, `mynewspace/: ${frames.length - gated.length} frames ship with a src and load before the visitor asks`);
+  check(frames.some((tag) => /sandbox=/.test(tag)), "mynewspace/: the Arena window is not sandboxed");
+  check(newspace.includes("Load Arena window"), "mynewspace/: missing the click-to-load affordance for Arena");
+  check(newspace.includes("X-Frame-Options"), "mynewspace/: does not warn that Arena may refuse to be framed");
+}
+
 // Every page that shows posted agenda items must say how old the snapshot is.
 for (const route of ["hub/", "hub/meetings/"]) {
   const html = read(path.join(route, "index.html"));
@@ -242,7 +278,7 @@ if (!sitemap) {
     ...ecosystem.counties.map((county) => `civic/counties/${county.id}/`),
   ];
   const civicUrls = civicRoutes.map((route) => `${SITE_URL}${route}`);
-  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, ...hubUrls, ...ecosystemUrls, ...civicUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
+  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, `${SITE_URL}mynewspace/`, ...hubUrls, ...ecosystemUrls, ...civicUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
 
   check(locations.length === expected.length, `Sitemap lists ${locations.length} URLs, expected ${expected.length}`);
   check(new Set(locations).size === locations.length, "Sitemap contains duplicate <loc> entries");
@@ -395,6 +431,6 @@ if (failures.length) {
 }
 
 console.log(
-  `SEO audit passed: ${MEETINGS.length} meeting pages and four standalone hub pages exported with canonicals, ` +
-    `plus home, archive and transcript indexes in the sitemap (lastmod ${index.captured}).`,
+  `SEO audit passed: ${MEETINGS.length} meeting pages, four standalone hub pages, and the MyNewSpace profile ` +
+    `exported with canonicals, plus home, archive and transcript indexes in the sitemap (lastmod ${index.captured}).`,
 );

@@ -24,6 +24,42 @@ The dedicated hub is published as its own small set of crawlable pages under [`/
 
 The hub is an independent learning tool, not a City of Cheyenne service. External sites control their own availability, embedded-player policies, and update cadence; emergencies should be directed to 911 or the responsible authority.
 
+## MyNewSpace profile page
+
+[`/mynewspace/`](https://therealwindycity.github.io/TheReelWindyCity/mynewspace/) is a separate, self-contained
+surface on the same Pages deployment: a 2006 profile-page format whose fields are filled from this repository's
+archive, plus a **customization studio** so a visitor can restyle their own view.
+
+* **The record is the content.** The identity table, the meeting count, the Top 8 (the eight largest Wyoming
+  municipalities by the WAM directory figure), the "who I'd like to meet" list (the `fail-closed` majority of the
+  catalog), and the Friend Space entries (the January 26, 2026 ordinance items with their recorded outcome and
+  Granicus links) are read out of `src/data/meetings.json` and the ecosystem catalog at build time. Nothing on the
+  page is invented to fit the theme, and the record-snapshot freshness note rides along.
+* **Arena is the code generator.** The studio's Arena window is click-to-load and ships with no `src`, so no request
+  leaves the browser until a visitor asks for it — and because Arena publishes no embed-widget endpoint, the frame URL
+  is an editable setting with a direct-link fallback, and the page says plainly that a `frame-ancestors` refusal from
+  the other origin is expected, not a bug. Four prompt recipes and a copyable **data sheet** of the page's real values
+  go with it, so generated CSS is written against the actual numbers instead of placeholders.
+* **The code console is the part that always works.** Pasted CSS and HTML are applied live. CSS is stripped of
+  `expression()`, `behavior:`, `-moz-binding`, `@import`, `data:` URLs and any literal `</style>`; the HTML module is
+  rendered in a `srcdoc` iframe with `sandbox` and no same-origin access, so a `<marquee>` still scrolls but the
+  module cannot read the page or its storage. Module order and hiding are applied through CSS `order` and
+  `display:none`, which means the exported document never changes shape for anybody else.
+* **There is no server to save to.** Everything a visitor writes lives in `localStorage` under `mynewspace.custom.v1`
+  and is labelled "yours" where it replaces a published value. The Friend Space composer is a note-to-self, not a
+  comment system, and the masthead says so. The page is a format homage: wordmark, layout language, and palette are
+  paraphrase, with a non-affiliation note in the chrome.
+
+* **One image, clearly marked.** The blurb photo is a generated illustration in the register of a 2006 camera-phone
+  snapshot, and the page stamps it "GENERATED ILLUSTRATION · NOT A RECORD PHOTO". A source-backed project does not get
+  to pass a synthetic picture off as an archival document, so it is labelled at the point of use rather than in a
+  footnote.
+
+`tests/seo-audit.mjs` locks the export (canonical, single `<h1>`, unfired iframe, sanitization notes), and
+`tests/civic-smoke.mjs` drives the studio in a browser: it asserts the frame has no `src` before the click, that a
+hostile stylesheet payload cannot break out of the injected `<style>` tag, that the custom module stays sealed, and
+that a saved theme survives a reload and can be reset back to the published profile.
+
 ## Wyoming ecosystem
 
 Cheyenne is the only government whose watcher is switched on. The statewide catalog at [`/hub/wyoming/`](https://therealwindycity.github.io/TheReelWindyCity/hub/wyoming/) plots the other doors instead of pretending they are the same Granicus table.
@@ -285,9 +321,12 @@ enables this automatically via the API when run by a maintainer).
 | `/api/archive` live GitHub trees | Bundled repository indexes in `public/data/` |
 | `/api/sources/content` proxy | Direct `raw.githubusercontent.com` loads in the visitor's browser, with client-side format sniffing (archived HTML-as-PDF pages render in sandboxed frames) |
 | `/api/official-source` | Static documents in `public/sources/`, with graceful “open the original source” links where no local copy exists |
+| Profile customization (accounts, profile-HTML box, comments) | Arena window + code console writing to browser `localStorage`; no accounts, no moderation queue, no upload path |
 
 ## Notes & disclaimers
 
+* `/mynewspace/` is an affectionate parody of the 2006 profile-page *format*. It is not affiliated with, endorsed by,
+  or derived from MySpace or its owner; the name, layout language, and colours are paraphrase.
 * A civic learning experience, **not an official city service**. Proposed effects are described
   from the public record; no rent, tax, traffic, or development estimates are invented.
 * Map markers and circles show general scope only — not surveyed parcel boundaries or the

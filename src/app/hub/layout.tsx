@@ -49,6 +49,7 @@ export default function CivicHubLayout({ children }: { children: ReactNode }) {
           <a href={asset("hub/wyoming/")}>Wyoming ecosystem</a>
           <a href={asset("meetings/")}>Meeting archive</a>
           <a href={asset("transcripts/")}>Transcript archive</a>
+          <a href={asset("mynewspace/")}>MyNewSpace profile</a>
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noopener noreferrer">Official city records <ArrowUpRight size={12} aria-hidden="true" /></a>
         </nav>
       </footer>

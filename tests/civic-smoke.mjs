@@ -69,6 +69,13 @@ try {
     contentType: 'application/json',
     body: JSON.stringify({ status: 'ok', items: [] }),
   }));
+  // The Arena window is visitor-initiated; the smoke check opens it, so stub the
+  // host instead of depending on arena.ai uptime or its frame policy.
+  await context.route('https://arena.ai/**', (route) => route.fulfill({
+    status: 200,
+    contentType: 'text/html',
+    body: '<!doctype html><title>Arena fixture</title><h1>Arena agent window</h1>',
+  }));
   const rssHosts = [
     'capcity.news', 'kgab.com', 'kfbcradio.com', 'shortgo.co',
     'www.wyomingpublicmedia.org', 'wyofile.com', 'oilcity.news', 'county17.com',
@@ -122,9 +129,17 @@ try {
   const ecosystem = JSON.parse(await readFile('src/data/wyoming-ecosystem.json', 'utf8'));
   const statewidePages = 3 + ecosystem.counties.length * 2 + ecosystem.municipalities.length * 2;
   const sitemapLocations = [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  const expectedSitemap = meetingIndex.meetings.length + 7 + statewidePages;
+  const expectedSitemap = meetingIndex.meetings.length + 8 + statewidePages;
   if (sitemapResponse.status() !== 200 || sitemapLocations.length !== expectedSitemap) {
-    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, ${statewidePages} statewide pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, the MyNewSpace profile, ${statewidePages} statewide pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+  }
+  const newspaceResponse = await context.request.get(new URL('mynewspace/', publicBase).toString());
+  const newspaceHtml = await newspaceResponse.text();
+  if (newspaceResponse.status() !== 200 || !newspaceHtml.includes('mynewspace') || !newspaceHtml.includes('My Top 8 Friends')) {
+    throw new Error(`Expected the static MyNewSpace profile page to be exported (status ${newspaceResponse.status()})`);
+  }
+  if (sitemapLocations.length && !sitemapLocations.includes(`${publicBase}mynewspace/`)) {
+    throw new Error('MyNewSpace profile page is missing from the sitemap');
   }
   const casperResponse = await context.request.get(new URL('civic/places/casper/', publicBase).toString());
   const casperHtml = await casperResponse.text();
@@ -323,6 +338,55 @@ try {
   await expect(page.getByRole('heading', { name: 'Wyoming sports archive' })).toBeVisible();
   await expect(page.locator('.pulse-stream-story').first()).toBeVisible();
   console.log('PASS: nine sector marquees expand to source-linked Wyoming news history, including sports');
+
+  // MyNewSpace: the profile is the published record, the studio is the visitor's.
+  await page.goto(`${publicBase}mynewspace/`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: /mynewspace/ }).first()).toBeVisible();
+  await expectCanonical(page, `${canonicalUrl}mynewspace/`);
+  await expect(page.getByText('Not affiliated with')).toBeVisible();
+  await expect(page.locator('.nsp-snapshot')).toContainText('Record snapshot');
+  const arenaFrame = page.locator('#nsp-studio iframe');
+  if (await arenaFrame.evaluate((frame) => frame.hasAttribute('src'))) {
+    throw new Error('The Arena window loaded before the visitor asked for it');
+  }
+  await expect(page.getByRole('button', { name: /Load Arena window/ })).toBeVisible();
+  await page.getByRole('button', { name: /Load Arena window/ }).click();
+  await expect(arenaFrame).toHaveAttribute('src', /arena\.ai/);
+  console.log('PASS: MyNewSpace ships an unfired Arena window that opens only on request');
+
+  await page.getByRole('tab', { name: 'Code console' }).click();
+  await page.getByLabel('Custom CSS').fill('#nsp-sec-about{display:none!important}</style><img src=x onerror="window.__pwned=1">\n@import url("https://evil.example/x.css");');
+  await page.getByRole('button', { name: /Apply stylesheet/ }).click();
+  await expect(page.locator('#nsp-sec-about')).toBeHidden();
+  const injected = await page.evaluate(() => document.getElementById('nsp-custom-css')?.textContent ?? '');
+  if (injected.includes('</style>') || injected.includes('@import') || injected.includes('onerror')) {
+    throw new Error(`Custom CSS was not neutralized before injection: ${injected.slice(0, 160)}`);
+  }
+  if (await page.evaluate(() => window.__pwned !== undefined)) {
+    throw new Error('Custom CSS executed script in the page');
+  }
+  await page.getByLabel('Custom HTML module').fill('<marquee>read the agenda</marquee><script>window.__pwned2=1<\/script>');
+  await page.getByRole('button', { name: /Save module/ }).click();
+  const moduleFrame = page.locator('.nsp-module-frame');
+  await expect(moduleFrame).toHaveAttribute('srcdoc', /marquee/);
+  await expect(moduleFrame).toHaveAttribute('sandbox', '');
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#nsp-sec-about')).toBeHidden();
+  await expect(page.getByLabel('Custom CSS')).toHaveValue(/nsp-sec-about/);
+  if (await page.evaluate(() => window.__pwned2 !== undefined)) {
+    throw new Error('The sealed custom module reached the host page');
+  }
+  console.log('PASS: studio CSS/HTML is sanitized, sandboxed, applied, and persisted per browser');
+
+  await page.getByRole('button', { name: 'Reset', exact: true }).click();
+  await expect(page.locator('#nsp-sec-about')).toBeVisible();
+  await expect(page.getByLabel('Custom CSS')).toHaveValue('');
+  await page.getByLabel('Your note').fill('Checking the second reading against the minutes.');
+  await page.getByRole('button', { name: 'Post to my view' }).click();
+  await expect(page.locator('.nsp-wall-local li')).toHaveCount(1);
+  await expect(page.locator('.nsp-wall-notice')).toContainText('this browser');
+  await page.screenshot({ path: 'test-output/mynewspace.png', fullPage: true, animations: 'disabled' });
+  console.log('PASS: MyNewSpace resets to the published profile and keeps a note local');
 
   const mobile = await browser.newContext({ viewport: { width: 390, height: 844 }, ignoreHTTPSErrors: true, isMobile: true, deviceScaleFactor: 1 });
   await mobile.route('https://tiles.openfreemap.org/**', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(MINIMAL_STYLE) }));
