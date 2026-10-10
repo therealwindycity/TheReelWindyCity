@@ -69,6 +69,27 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
   const frameRef = useRef<HTMLIFrameElement>(null);
   const copyRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
+  // Which tab is open is part of the URL, not just local state: a shared
+  // "#studio-code" link opens the console, and a reload returns you where you
+  // were. Read after mount so the exported HTML always hydrates onto the same
+  // first tab the server rendered.
+  useEffect(() => {
+    const match = /^#studio-(arena|theme|modules|code)$/.exec(window.location.hash);
+    if (match) setTab(match[1] as TabId);
+  }, []);
+
+  // Only after the visitor picks a tool — the URL of someone who never opened
+  // the studio stays exactly as it was shared.
+  const hashOwned = useRef(false);
+  useEffect(() => {
+    if (!hashOwned.current) {
+      hashOwned.current = true;
+      return;
+    }
+    const next = `#studio-${tab}`;
+    if (window.location.hash !== next) window.history.replaceState(null, "", next);
+  }, [tab]);
+
   const factSheet = useMemo(() => buildFactSheet(facts), [facts]);
   const arenaUrl = /^https:\/\/[^\s]+$/i.test(arenaDraft.trim()) ? arenaDraft.trim() : DEFAULT_ARENA_URL;
   const arenaHost = hostOf(arenaUrl);
@@ -143,7 +164,8 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
           <p>
             Back in 2006 you pasted HTML into a box and your profile stopped looking like everyone else&apos;s. Here
             the box is an <strong>Arena</strong> window: ask for what you want, paste what comes back, and your
-            profile changes &mdash; in this browser, for you, saved locally.
+            profile changes &mdash; in this browser, for you, saved locally. The address bar tracks which tool is
+            open, so a saved view can be linked.
           </p>
         </div>
         <div className="nsp-studio-state">

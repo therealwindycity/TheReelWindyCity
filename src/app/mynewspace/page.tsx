@@ -170,7 +170,7 @@ export default function MyNewSpaceProfile() {
           <span aria-hidden="true">|</span>
           <a href="#nsp-studio">Update Info</a>
           <span aria-hidden="true">|</span>
-          <a href="#nsp-studio">Edit Photos</a>
+          <a href="#studio-theme">Edit Theme</a>
           <span aria-hidden="true">|</span>
           <a href="#nsp-sec-wall">Friend Space</a>
           <span aria-hidden="true">|</span>
