@@ -40,8 +40,11 @@ archive, plus a **customization studio** so a visitor can restyle their own view
   is an editable setting with a direct-link fallback, and the page says plainly that a `frame-ancestors` refusal from
   the other origin is expected, not a bug. Four prompt recipes and a copyable **data sheet** of the page's real values
   go with it, so generated CSS is written against the actual numbers instead of placeholders.
+  Which tool is open is written to the address bar (`#studio-code`, `#studio-theme`, `#studio-modules`) after the
+  first pick, so a saved view can be shared; a visitor who never opens the studio keeps the plain URL.
 * **The code console is the part that always works.** Pasted CSS and HTML are applied live. CSS is stripped of
-  `expression()`, `behavior:`, `-moz-binding`, `@import`, `data:` URLs and any literal `</style>`; the HTML module is
+  `expression()`, `behavior:`, `-moz-binding`, `@import`, `data:` URLs and **every angle bracket** (a `</style>`
+  breakout needs exactly one, so none survive); the HTML module is
   rendered in a `srcdoc` iframe with `sandbox` and no same-origin access, so a `<marquee>` still scrolls but the
   module cannot read the page or its storage. Module order and hiding are applied through CSS `order` and
   `display:none`, which means the exported document never changes shape for anybody else.
