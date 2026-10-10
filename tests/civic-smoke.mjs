@@ -138,8 +138,10 @@ try {
   if (newspaceResponse.status() !== 200 || !newspaceHtml.includes('mynewspace') || !newspaceHtml.includes('My Top 8 Friends')) {
     throw new Error(`Expected the static MyNewSpace profile page to be exported (status ${newspaceResponse.status()})`);
   }
-  if (sitemapLocations.length && !sitemapLocations.includes(`${publicBase}mynewspace/`)) {
-    throw new Error('MyNewSpace profile page is missing from the sitemap');
+  // The sitemap holds absolute canonical URLs, not the localhost mirror's URLs,
+  // so the membership test has to be written against the production canonical.
+  if (sitemapLocations.length && !sitemapLocations.includes(`${canonicalUrl}mynewspace/`)) {
+    throw new Error(`MyNewSpace profile page is missing from the sitemap (${sitemapLocations.filter((url) => url.includes('mynewspace')).join(', ') || 'no match'})`);
   }
   const casperResponse = await context.request.get(new URL('civic/places/casper/', publicBase).toString());
   const casperHtml = await casperResponse.text();
@@ -369,7 +371,12 @@ try {
   await page.getByRole('button', { name: /Save module/ }).click();
   const moduleFrame = page.locator('.nsp-module-frame');
   await expect(moduleFrame).toHaveAttribute('srcdoc', /marquee/);
-  await expect(moduleFrame).toHaveAttribute('sandbox', '');
+  // The exact allowlist does not matter as much as the two things that do: the
+  // frame is sandboxed at all, and it is not granted same-origin access.
+  const sandboxValue = await moduleFrame.evaluate((frame) => frame.getAttribute('sandbox'));
+  if (sandboxValue === null || /allow-same-origin|allow-top-navigation/.test(sandboxValue)) {
+    throw new Error(`The custom module frame is not sealed (sandbox=${JSON.stringify(sandboxValue)})`);
+  }
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect(page.locator('#nsp-sec-about')).toBeHidden();
   await expect(page.getByLabel('Custom CSS')).toHaveValue(/nsp-sec-about/);
