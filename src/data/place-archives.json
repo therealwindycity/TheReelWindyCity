@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-10T07:40:58.778Z",
+  "generatedAt": "2026-10-10T14:50:40.698Z",
   "places": [
     {
       "id": "afton",
@@ -141,7 +141,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-casper",
       "sourceUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 404 from https://www.casperwy.gov/government/city_council/Documents/Government/City%20Council/Agendas%20and%20Minutes/Pre%20Meetings/2026/Agendas/10-06-2026%20Pre-Meeting%20Agenda.pdf?t=202610051524000"
+      ]
     },
     {
       "id": "cheyenne",
@@ -350,7 +352,14 @@
       "repo": "civic-wy-place-gillette",
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-gillette",
       "sourceUrl": "https://www.gillettewy.gov/files/assets/public/v/1/city-council/documents/meetings/council-agenda/full-agenda/11.04.2025-council-packet.pdf",
-      "documents": [],
+      "documents": [
+        {
+          "name": "11.04.2025-council-packet.pdf",
+          "sourceUrl": "https://www.gillettewy.gov/files/assets/public/v/1/city-council/documents/meetings/council-agenda/full-agenda/11.04.2025-council-packet.pdf",
+          "volume": 1,
+          "repo": "civic-wy-place-gillette"
+        }
+      ],
       "errors": []
     },
     {
@@ -831,7 +840,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-sheridan",
       "sourceUrl": "https://www.sheridanwy.gov/government/clerk_s_office/agendas_and_minutes",
       "documents": [],
-      "errors": []
+      "errors": [
+        "Host drift from https://www.sheridanwy.gov/UserFiles/Servers/Server_14895975/Image/Government/City%20Clerk/Remaining%202026%20City%20Council%20Calendar%20with%20PC%20and%20BOA.pdf to https://cdnsm5-hosted.civiclive.com/UserFiles/Servers/Server_14895975/Image/Government/City%20Clerk/Remaining%202026%20City%20Council%20Calendar%20with%20PC%20and%20BOA.pdf"
+      ]
     },
     {
       "id": "shoshoni",
@@ -1010,7 +1021,74 @@
       "repo": "civic-wy-county-big-horn",
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-big-horn",
       "sourceUrl": "https://www.bighorncountywy.gov/",
-      "documents": [],
+      "documents": [
+        {
+          "name": "BHC-Economic.pdf",
+          "sourceUrl": "http://www.bighorncountywy.gov/images/downloads/BHC-Economic.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Request_For_Proposals-Big_Horn_County_WY.PDF",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Request_For_Proposals-Big_Horn_County_WY.PDF",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "PUBLIC_NOTICE.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/downloads/PUBLIC_NOTICE.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Grounds_Kepper_Job_Description.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Grounds_Kepper_Job_Description.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "BIG_Horn_County_Facilitie_Job_Description.docx",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/BIG_Horn_County_Facilitie_Job_Description.docx",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Job_Application.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Job_Application.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Board-member-handbook-2023.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Board-member-handbook-2023.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Board_Membership_Application_2025.doc",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Board_Membership_Application_2025.doc",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Weed_and_Pest_PETITION_and_MAP_2025.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Weed_and_Pest_PETITION_and_MAP_2025.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "Commissioners_Scholarship_Application_2026.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Commissioners_Scholarship_Application_2026.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "MedWheelHPP_Sept1996_and_ammend.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/MedWheelHPP_Sept1996_and_ammend.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        }
+      ],
       "errors": []
     },
     {
@@ -1051,7 +1129,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-crook",
       "sourceUrl": "https://www.crookcounty.wy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "Host drift from https://www.crookcounty.wy.gov/elected_officials/History%20of%20Elected%20Officials.pdf to https://cms2.revize.com/revize/crookscountynew/elected_officials/History%20of%20Elected%20Officials.pdf"
+      ]
     },
     {
       "id": "fremont",
@@ -1071,7 +1151,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-goshen",
       "sourceUrl": "https://www.goshencounty.org/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "Host drift from https://www.goshencounty.org/ to https://www.goshencountywy.gov/"
+      ]
     },
     {
       "id": "hot-springs",
@@ -1081,7 +1163,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-hot-springs",
       "sourceUrl": "https://www.hscounty.com/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 403 from https://www.hscounty.com/"
+      ]
     },
     {
       "id": "johnson",
@@ -1111,7 +1195,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-lincoln",
       "sourceUrl": "https://www.lincolncountywy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 403 from https://www.lincolncountywy.gov/"
+      ]
     },
     {
       "id": "natrona",
@@ -1121,7 +1207,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-natrona",
       "sourceUrl": "https://www.natronacounty-wy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 403 from https://www.natronacounty-wy.gov/"
+      ]
     },
     {
       "id": "niobrara",
@@ -1130,7 +1218,56 @@
       "repo": "civic-wy-county-niobrara",
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-niobrara",
       "sourceUrl": "https://www.niobraracounty.org/",
-      "documents": [],
+      "documents": [
+        {
+          "name": "Resolution%2026-05-%20Partial%20Fire%20Ban-%20Unincorporated%20Areas%20Nio%20Co.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_commissioners/_pdfs/2026/Resolution%2026-05-%20Partial%20Fire%20Ban-%20Unincorporated%20Areas%20Nio%20Co.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "County%20Planning%20and%20Zoning%20Authorities.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/County%20Planning%20and%20Zoning%20Authorities.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "2027%20EXEMPTION%20AND%20REMINDER%20INFO.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_assessor/_PDF/2026/2027%20EXEMPTION%20AND%20REMINDER%20INFO.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "LTHO%20Application.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_assessor/_PDF/2026/LTHO%20Application.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "2025%20Niobrara%20County%20Land%20Use%20Plan.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_county_clerk/_pdfs/2025/2025%20Niobrara%20County%20Land%20Use%20Plan.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "RES%2025-12%202026%20Commissioner%20Meeting%20Dates.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_commissioners/_pdfs/2025/RES%2025-12%202026%20Commissioner%20Meeting%20Dates.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "RES%2025-13%202026%20Official%20County%20Holidays.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_commissioners/_pdfs/2025/RES%2025-13%202026%20Official%20County%20Holidays.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "2026%20Planning%20and%20Zoning%20Dates.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/2026%20Planning%20and%20Zoning%20Dates.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        }
+      ],
       "errors": []
     },
     {
@@ -1140,7 +1277,26 @@
       "repo": "civic-wy-county-park",
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-park",
       "sourceUrl": "https://www.parkcounty-wy.gov/",
-      "documents": [],
+      "documents": [
+        {
+          "name": "Pri2026-Hand-Count-Audit-Results-Summary.pdf",
+          "sourceUrl": "https://parkcounty-wy.gov/wp-content/uploads/2026/08/Pri2026-Hand-Count-Audit-Results-Summary.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-park"
+        },
+        {
+          "name": "Road%20and%20Bridge%20Standards-DRAFT%201-08.13.2026.pdf",
+          "sourceUrl": "https://parkcounty-wy.gov/wp-content/uploads/Documents/Public%20Works/Documents/Road%20and%20Bridge%20Standards-DRAFT%201-08.13.2026.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-park"
+        },
+        {
+          "name": "Doc%20Alert%20Press%20Release.pdf",
+          "sourceUrl": "https://parkcounty-wy.gov/wp-content/uploads/Documents/Elections/Documents/Doc%20Alert%20Press%20Release.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-park"
+        }
+      ],
       "errors": []
     },
     {
@@ -1161,7 +1317,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sheridan",
       "sourceUrl": "https://www.sheridancountywy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 403 from https://www.sheridancountywy.gov/"
+      ]
     },
     {
       "id": "sublette",
@@ -1181,7 +1339,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sweetwater",
       "sourceUrl": "https://www.sweetwatercountywy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "Host drift from https://www.sweetwatercountywy.gov/document_center/Land%20Use/Nuisance.pdf to https://cms7files.revize.com/sweetwaterwy24/document_center/Land%20Use/Nuisance.pdf"
+      ]
     },
     {
       "id": "teton",
@@ -1220,7 +1380,56 @@
       "repo": "civic-wy-county-weston",
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-weston",
       "sourceUrl": "https://www.westongov.com/",
-      "documents": [],
+      "documents": [
+        {
+          "name": "September-19-2025-Special-Meeting-Notice.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2025/09/September-19-2025-Special-Meeting-Notice.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "Board-openings-WC-EMS-District.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2025/09/Board-openings-WC-EMS-District.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "030426-Board-Openings.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2026/03/030426-Board-Openings.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "Weston-County-Emergency-Medical-Services-District.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2025/03/Weston-County-Emergency-Medical-Services-District.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "WestonCounty_NRMP_May2022_Final.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2024/05/WestonCounty_NRMP_May2022_Final.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "School-District-Tax.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2023/07/School-District-Tax.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "2026-2027-Scholarship-Application.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2026/03/2026-2027-Scholarship-Application.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        },
+        {
+          "name": "County-Health-Officer-Job-Description.pdf",
+          "sourceUrl": "https://www.westongov.com/wp-content/uploads/2021/06/County-Health-Officer-Job-Description.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-weston"
+        }
+      ],
       "errors": []
     }
   ]
