@@ -379,7 +379,11 @@ try {
   }
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect(page.locator('#nsp-sec-about')).toBeHidden();
+  // The studio opens on the Arena tab again, so the console has to be re-opened
+  // before its fields can show what came back out of localStorage.
+  await page.getByRole('tab', { name: 'Code console' }).click();
   await expect(page.getByLabel('Custom CSS')).toHaveValue(/nsp-sec-about/);
+  await expect(page.getByLabel('Custom HTML module')).toHaveValue(/marquee/);
   if (await page.evaluate(() => window.__pwned2 !== undefined)) {
     throw new Error('The sealed custom module reached the host page');
   }
