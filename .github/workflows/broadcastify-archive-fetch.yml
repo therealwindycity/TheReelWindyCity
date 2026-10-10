@@ -141,7 +141,7 @@ jobs:
             echo "::error::No Broadcastify credentials configured. Set repository secrets BCFY_USERNAME + BCFY_PASSWORD (or BCFY_SESSION_COOKIE) under Settings → Secrets and variables → Actions."
             exit 1
           fi
-          probe="$(curl -sS -o /dev/null -w '%{http_code} %{content_type}' --max-time 90 \
+          probe="$(curl -sS -o /dev/null -w '%{http_code}:%{content_type}' --max-time 90 \
             -r 0-1023 -L -b "$JAR" -H "User-Agent: $BCFY_UA" \
             "https://www.broadcastify.com/archives/download/$ARCHIVE_ID" || true)"
           echo "Premium probe on $ARCHIVE_ID: $probe"
