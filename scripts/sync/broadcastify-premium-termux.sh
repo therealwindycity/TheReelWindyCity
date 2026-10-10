@@ -6,9 +6,10 @@
 #   Creating the project's databases and publishing the website is automated in
 #   GitHub Actions: deploy-pages.yml re-runs the linkage-database sync before
 #   every build and deploys to Pages (hourly + on push to main), and
-#   citizen_connect_sync.yml refreshes the Socrata record daily. This script's
-#   job is the one thing CI cannot do: use YOUR Premium session to download the
-#   audio itself.
+#   citizen_connect_sync.yml refreshes the Socrata record daily, and
+#   broadcastify-archive-fetch.yml downloads archive audio from Actions using
+#   repository secrets. This script is the phone/local alternative: it signs
+#   in with YOUR credentials directly and prints the download wiring.
 #
 # WHAT THIS DOES
 #   Logs in to Broadcastify with your username + password, captures the session

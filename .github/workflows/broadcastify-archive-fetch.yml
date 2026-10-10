@@ -1,0 +1,231 @@
+name: Fetch Broadcastify Archive Audio (Premium)
+
+# =============================================================================
+# On-demand Premium audio fetch — the last step that used to need a phone.
+#
+# Given an archive block id (e.g. 47003-1784499221 — every linked log in
+# src/data/scanner-archive-links.json carries one under links[].archive.id),
+# this workflow signs in to Broadcastify with the account's Premium
+# credentials, verifies archive access, downloads the ~30-minute MP3 block,
+# and either:
+#   artifact (default) — uploads it as a run artifact you download from the
+#                        Actions run page (90-day retention, nothing committed)
+#   commit             — commits the MP3 plus a provenance sidecar under
+#                        public/audio/broadcastify/ and pushes to the branch
+#                        you dispatched from; the hourly deploy-pages run
+#                        publishes it to the site within the hour
+#
+# Credentials (repository secrets — set once under Settings → Secrets):
+#   BCFY_USERNAME + BCFY_PASSWORD   Broadcastify account (durable; preferred)
+#   BCFY_SESSION_COOKIE (optional)  a bcfyuser1 value copied from a signed-in
+#                                   desktop Chrome (expires; fallback only)
+#
+# SAFETY
+#   * workflow_dispatch ONLY. Never add a pull_request trigger: secrets are
+#     not passed to fork PRs, and this workflow must never run with them
+#     outside the owner's own branches.
+#   * It is your Premium subscription and your credentials — this workflow
+#     only fetches audio you have paid for, one block per run, under the
+#     archive audio's CC BY 3.0 US license. Revoke the secrets any time.
+#   * Fail-closed: bad credentials, an expired session, a non-Premium
+#     account, or a response that is not audio stops the run before anything
+#     is uploaded or committed. An HTML error page is never published.
+#   * Shares the municipal-data-sync write lane so a commit-mode push can
+#     never race another sync pushing the same branch.
+#
+# Usage: Actions → "Fetch Broadcastify Archive Audio (Premium)" → Run workflow
+#   archive_id: 47003-1784499221   (welfare check #2026-00023988, 2026-07-19)
+#   mode:       artifact | commit
+# =============================================================================
+
+on:
+  workflow_dispatch:
+    inputs:
+      archive_id:
+        description: "Archive block id (feed-unixStart), e.g. 47003-1784499221"
+        required: true
+        type: string
+      mode:
+        description: "artifact = download from the run page; commit = commit under public/audio/ and push"
+        required: false
+        default: "artifact"
+        type: choice
+        options: [artifact, commit]
+      reason:
+        description: "Why this fetch is running (audit trail)"
+        required: false
+        default: "on-demand fetch"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: municipal-data-sync
+  cancel-in-progress: false
+
+env:
+  BCFY_USERNAME: ${{ secrets.BCFY_USERNAME }}
+  BCFY_PASSWORD: ${{ secrets.BCFY_PASSWORD }}
+  BCFY_SESSION_COOKIE: ${{ secrets.BCFY_SESSION_COOKIE }}
+  ARCHIVE_ID: ${{ inputs.archive_id }}
+  FETCH_MODE: ${{ inputs.mode }}
+  FETCH_REASON: ${{ inputs.reason }}
+  BCFY_UA: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      bytes: ${{ steps.download.outputs.bytes }}
+      sha256: ${{ steps.download.outputs.sha256 }}
+    steps:
+      - name: Check out source (for the linkage artifact provenance note)
+        uses: actions/checkout@v4
+
+      - name: Validate inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! [[ "$ARCHIVE_ID" =~ ^[0-9]+-[0-9]+$ ]]; then
+            echo "::error::archive_id must look like <feedId>-<unixStart>, e.g. 47003-1784499221 (got: $ARCHIVE_ID)"
+            exit 1
+          fi
+          if [ "$FETCH_MODE" != "artifact" ] && [ "$FETCH_MODE" != "commit" ]; then
+            echo "::error::mode must be 'artifact' or 'commit' (got: $FETCH_MODE)"
+            exit 1
+          fi
+          echo "Fetching archive block $ARCHIVE_ID (mode: $FETCH_MODE) — $FETCH_REASON"
+
+      - name: Note the linked logs this block carries (from the database)
+        shell: bash
+        continue-on-error: true
+        run: |
+          if [ -f src/data/scanner-archive-links.json ]; then
+            node -e '
+              const fs = require("fs");
+              const a = JSON.parse(fs.readFileSync("src/data/scanner-archive-links.json", "utf8"));
+              const id = process.env.ARCHIVE_ID;
+              const hits = (a.links || []).filter((l) => l.archive && l.archive.id === id);
+              const names = hits.slice(0, 5).map((h) => h.id).join(", ");
+              console.log(`linkage database: block ${id} carries ${hits.length} linked log(s)` + (hits.length ? ": " + names + (hits.length > 5 ? " …" : "") : ""));
+            '
+          fi
+
+      - name: Authenticate to Broadcastify (Premium) and verify archive access
+        shell: bash
+        run: |
+          set -euo pipefail
+          JAR="$RUNNER_TEMP/bcfy-cookies.txt"
+          if [ -n "${BCFY_SESSION_COOKIE:-}" ]; then
+            printf '.broadcastify.com\tTRUE\t/\tTRUE\t0\tbcfyuser1\t%s\n' "${BCFY_SESSION_COOKIE#bcfyuser1=}" > "$JAR"
+            echo "::add-mask::$BCFY_SESSION_COOKIE"
+            echo "Using the BCFY_SESSION_COOKIE secret."
+          elif [ -n "${BCFY_USERNAME:-}" ] && [ -n "${BCFY_PASSWORD:-}" ]; then
+            curl -sS -X POST "https://www.broadcastify.com/login/" \
+              -H "Origin: https://www.broadcastify.com" \
+              -H "Referer: https://www.broadcastify.com/login/" \
+              -H "User-Agent: $BCFY_UA" \
+              --data-urlencode "username=$BCFY_USERNAME" \
+              --data-urlencode "password=$BCFY_PASSWORD" \
+              --data-urlencode "action=auth" \
+              --data-urlencode "redirect=https://www.broadcastify.com" \
+              -c "$JAR" -o /dev/null --max-time 60
+            if ! grep -q $'\tbcfyuser1\t' "$JAR"; then
+              echo "::error::Broadcastify sign-in did not yield a session cookie. Check the BCFY_USERNAME/BCFY_PASSWORD secrets, or set BCFY_SESSION_COOKIE from a signed-in desktop Chrome."
+              exit 1
+            fi
+            echo "Signed in with the BCFY_USERNAME/BCFY_PASSWORD secrets."
+          else
+            echo "::error::No Broadcastify credentials configured. Set repository secrets BCFY_USERNAME + BCFY_PASSWORD (or BCFY_SESSION_COOKIE) under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          probe="$(curl -sS -o /dev/null -w '%{http_code} %{content_type}' --max-time 90 \
+            -r 0-1023 -L -b "$JAR" -H "User-Agent: $BCFY_UA" \
+            "https://www.broadcastify.com/archives/download/$ARCHIVE_ID" || true)"
+          echo "Premium probe on $ARCHIVE_ID: $probe"
+          case "$probe" in
+            200:audio/*|206:audio/*|200:application/octet-stream|206:application/octet-stream) ;;
+            *)
+              echo "::error::Premium archive access was refused for $ARCHIVE_ID (probe: $probe). Is the Premium subscription active on this account?"
+              exit 1
+              ;;
+          esac
+
+      - name: Download the archive block
+        id: download
+        shell: bash
+        run: |
+          set -euo pipefail
+          JAR="$RUNNER_TEMP/bcfy-cookies.txt"
+          OUT="$RUNNER_TEMP/$ARCHIVE_ID.mp3"
+          curl -sSL --max-time 900 -b "$JAR" -H "User-Agent: $BCFY_UA" \
+            -o "$OUT" "https://www.broadcastify.com/archives/download/$ARCHIVE_ID"
+          size="$(wc -c < "$OUT")"
+          first="$(head -c 1 "$OUT")"
+          if [ "$size" -lt 100000 ] || [ "$first" = "<" ]; then
+            echo "::error::Download for $ARCHIVE_ID is $size bytes and does not look like audio (first byte: '$first'). Refusing to publish an error page."
+            exit 1
+          fi
+          sum="$(sha256sum "$OUT" | cut -d' ' -f1)"
+          echo "Downloaded $ARCHIVE_ID: $size bytes (sha256 $sum)."
+          echo "bytes=$size" >> "$GITHUB_OUTPUT"
+          echo "sha256=$sum" >> "$GITHUB_OUTPUT"
+          echo "file=$OUT" >> "$GITHUB_OUTPUT"
+
+      - name: Upload the MP3 as a run artifact
+        if: ${{ env.FETCH_MODE == 'artifact' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: broadcastify-${{ env.ARCHIVE_ID }}
+          path: ${{ steps.download.outputs.file }}
+          retention-days: 90
+
+      - name: Commit the MP3 + provenance sidecar to the branch
+        if: ${{ env.FETCH_MODE == 'commit' }}
+        shell: bash
+        env:
+          BYTES: ${{ steps.download.outputs.bytes }}
+          SHA256: ${{ steps.download.outputs.sha256 }}
+        run: |
+          set -euo pipefail
+          dest="public/audio/broadcastify"
+          mkdir -p "$dest"
+          cp "${{ steps.download.outputs.file }}" "$dest/$ARCHIVE_ID.mp3"
+          cat > "$dest/$ARCHIVE_ID.json" <<META
+          {
+            "archiveId": "$ARCHIVE_ID",
+            "feedId": "${ARCHIVE_ID%%-*}",
+            "source": "https://www.broadcastify.com/archives/download/$ARCHIVE_ID",
+            "fetchedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+            "fetchedBy": "broadcastify-archive-fetch.yml (${FETCH_REASON})",
+            "bytes": ${BYTES:-0},
+            "sha256": "${SHA256:-unknown}",
+            "license": "CC BY 3.0 US (Broadcastify audio archives)"
+          }
+          META
+          git config user.name "CivicCheyenne-SyncBot"
+          git config user.email "sync@civiccheyenne.local"
+          git add "$dest"
+          if git diff --cached --quiet; then
+            echo "Audio for $ARCHIVE_ID is already committed; nothing to do."
+          else
+            git commit -m "Archive audio: $ARCHIVE_ID (${FETCH_REASON})"
+            git pull --rebase origin "$GITHUB_REF_NAME"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+            echo "Committed and pushed $ARCHIVE_ID to $GITHUB_REF_NAME. The hourly deploy-pages run publishes it within the hour."
+          fi
+
+      - name: Summary
+        if: ${{ always() }}
+        shell: bash
+        run: |
+          echo "Archive block : $ARCHIVE_ID (feed ${ARCHIVE_ID%%-*})"
+          echo "Mode          : $FETCH_MODE"
+          echo "Size / sha256 : ${{ steps.download.outputs.bytes }} bytes / ${{ steps.download.outputs.sha256 }}"
+          if [ "$FETCH_MODE" = "artifact" ]; then
+            echo "Download it from this run's Artifacts (Actions run page → Artifacts → broadcastify-$ARCHIVE_ID)."
+          else
+            echo "Committed under public/audio/broadcastify/ — the hourly Pages deploy publishes it within the hour."
+          fi
