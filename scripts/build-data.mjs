@@ -23,6 +23,7 @@
  *   public/transcripts/<meeting-id>.md   locally hosted caption files committed under src/data/transcripts
  *   public/data/transcript-vectors.json  compiled semantic-search corpus (from src/data, if present)
  *   public/data/citizen-connect.json   bundled historical incident-record aggregates (from src/data)
+ *   public/data/scanner-archive-links.json  Socrata ↔ scanner-archive log→block links (from src/data)
  */
 import { execFileSync } from "node:child_process";
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
@@ -468,6 +469,20 @@ function assemble() {
     console.warn('note: no citizen-connect artifact; run "npm run data:citizen-connect"');
   }
 
+  // 7. Socrata ↔ Broadcastify scanner-archive linkage artifact (produced by
+  //    scripts/sync/scanner-archive-links.mjs). Same contract as citizen-connect:
+  //    the site bundles src/data/… at build time; the public/ copy makes the
+  //    log → archive-block database reusable without a rebuild. Never fatal if
+  //    the sync has not run — a committed seed snapshot ships in the repo.
+  const scannerLinks = path.join(SRC_DATA, "scanner-archive-links.json");
+  let linkCount = 0;
+  if (existsSync(scannerLinks)) {
+    copyFileSync(scannerLinks, path.join(PUBLIC_DATA, "scanner-archive-links.json"));
+    try { linkCount = JSON.parse(readFileSync(scannerLinks, "utf8"))?.summary?.total ?? 0; } catch { /* leave at 0 */ }
+  } else {
+    console.warn('note: no scanner-archive-links artifact; run "npm run data:scanner-archive-links"');
+  }
+
   const files = readdirSync(PUBLIC_DATA);
   console.log(
     `Assembled public/data (${files.length} files) · official-sources manifest (${Object.keys(available).length} documents) · ` +
@@ -475,7 +490,8 @@ function assemble() {
       `${meetingIndex.stats.pastMeetings} past, ${meetingIndex.stats.totalDocuments} archived documents, ` +
       `${meetingIndex.stats.totalTranscripts} linked transcripts (${meetingIndex.stats.totalTranscriptFiles} files incl. undated), ` +
       `earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}) · ` +
-      `citizen-connect (${ccRecords.toLocaleString("en-US")} records).`,
+      `citizen-connect (${ccRecords.toLocaleString("en-US")} records) · ` +
+      `scanner-archive-links (${linkCount.toLocaleString("en-US")} logs).`,
   );
 }
 

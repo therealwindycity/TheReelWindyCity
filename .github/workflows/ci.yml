@@ -23,6 +23,8 @@ jobs:
         run: npm run test:pulse
       - name: Filename-dated archive indexing regression tests
         run: npm run test:filenames
+      - name: Scanner-archive linkage tests (Socrata ↔ Broadcastify join)
+        run: npm run test:scanner-archive-links
       - name: Local transcript coverage and caption-import tests
         run: npm run test:transcripts
       - name: Build static site

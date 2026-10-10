@@ -15,6 +15,9 @@
     "data:citizen-connect": "node scripts/sync/citizen-connect.mjs",
     "data:citizen-connect:full": "node scripts/sync/citizen-connect.mjs --mode all --records-start 2023-01-01",
     "data:citizen-connect:plan": "node scripts/sync/citizen-connect.mjs --dry-run",
+    "data:scanner-archive-links": "node scripts/sync/scanner-archive-links.mjs",
+    "data:scanner-archive-links:full": "node scripts/sync/scanner-archive-links.mjs --start 2020-01-01 --out public/data/scanner-archive-links-full.json",
+    "data:scanner-archive-links:plan": "node scripts/sync/scanner-archive-links.mjs --dry-run",
     "data:pulse": "node scripts/build-pulse-data.mjs",
     "data:pulse:seed": "node scripts/refresh-pulse-seed.mjs",
     "data:embed": "node scripts/embed-transcripts.mjs",
@@ -32,7 +35,8 @@
     "sync:parse": "node scripts/extractors/parse_agenda_pdf.mjs",
     "sync:analyze": "node scripts/analysis/red_team_analyzer.mjs",
     "test:sync": "node --test tests/sync/sync-pipeline.test.mjs",
-    "test:citizen-connect": "node --test tests/sync/citizen-connect.test.mjs"
+    "test:citizen-connect": "node --test tests/sync/citizen-connect.test.mjs",
+    "test:scanner-archive-links": "node --test tests/sync/scanner-archive-links.test.mjs"
   },
   "dependencies": {
     "@playwright/test": "^1.63.0",
