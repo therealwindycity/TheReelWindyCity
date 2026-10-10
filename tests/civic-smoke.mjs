@@ -128,8 +128,8 @@ try {
   }
   const casperResponse = await context.request.get(new URL('civic/places/casper/', publicBase).toString());
   const casperHtml = await casperResponse.text();
-  if (casperResponse.status() !== 200 || !casperHtml.includes('Casper civic record') || casperHtml.includes('Five real ordinances from the January 26 session')) {
-    throw new Error('Expected the Casper civic to replace the Cheyenne ordinance experience');
+  if (casperResponse.status() !== 200 || !casperHtml.includes('Casper') || !casperHtml.includes('civic record') || !casperHtml.includes('PLACE ARCHIVE') || casperHtml.includes('Five real ordinances from the January 26 session')) {
+    throw new Error(`Expected the Casper civic to replace the Cheyenne ordinance experience (status ${casperResponse.status()})`);
   }
   const archiveResponse = await context.request.get(new URL('meetings/', publicBase).toString());
   const archiveHtml = await archiveResponse.text();
