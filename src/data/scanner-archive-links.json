@@ -1,0 +1,1710 @@
+{
+ "schema": 1,
+ "generatedBy": "sync",
+ "capturedAt": "2026-10-10T01:16:44.887Z",
+ "source": {
+  "socrata": {
+   "name": "Cheyenne / Laramie County Citizen Connect",
+   "publisher": "Cheyenne Police Department & Laramie County Sheriff's Office",
+   "platform": "Tyler Technologies (Socrata) Citizen Connect",
+   "appUrl": "https://laramiecounty-letmsp.connect.socrata.com/",
+   "apiBase": "https://laramiecounty-letmsp.connect.socrata.com",
+   "recordEndpoint": "/api/tickets/details.json",
+   "layers": [
+    {
+     "layer": "Incidents",
+     "datasetId": "35sf-bu8v",
+     "entryId": "pds_5",
+     "dateField": "call_date_time",
+     "typeField": "incident_type"
+    },
+    {
+     "layer": "Cases",
+     "datasetId": "cvz7-2j69",
+     "entryId": "pds_4",
+     "dateField": "reported_date_time",
+     "typeField": "occurred_incident_type"
+    }
+   ],
+   "timezone": "America/Denver",
+   "timestampNote": "ticket_created_at is local wall time (America/Denver); converted to Unix for the join."
+  },
+  "broadcastify": {
+   "base": "https://www.broadcastify.com",
+   "feeds": [
+    {
+     "id": "47003",
+     "name": "Laramie County Law Enforcement",
+     "status": "active",
+     "carries": "Cheyenne PD, Laramie County SO, Pine Bluffs PD, Wyoming State Patrol",
+     "listEndpoint": "/archives/api/archives.php?feedId=47003&date=MM/DD/YYYY",
+     "downloadEndpoint": "/archives/download/<archiveId>",
+     "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003",
+     "playback": "Archive playback and downloads require a Broadcastify Premium subscription; the listing (ids, time ranges) is public."
+    }
+   ],
+   "archiveAvailability": {
+    "feeds": [
+     "47003",
+     "47019",
+     "46189"
+    ],
+    "from": "2026-04-13",
+    "to": "2026-10-09",
+    "probed": {
+     "46189": {
+      "empty": [],
+      "full": [
+       "2026-07-19"
+      ]
+     },
+     "47003": {
+      "empty": [
+       "2024-07-19",
+       "2025-10-09",
+       "2026-01-15",
+       "2026-04-09",
+       "2026-04-10",
+       "2026-04-12"
+      ],
+      "full": [
+       "2026-04-13",
+       "2026-04-14",
+       "2026-04-15",
+       "2026-05-15",
+       "2026-06-01",
+       "2026-06-15",
+       "2026-07-01",
+       "2026-07-18",
+       "2026-07-19"
+      ]
+     },
+     "47019": {
+      "empty": [
+       "2025-10-09",
+       "2026-01-15"
+      ],
+      "full": [
+       "2026-04-15",
+       "2026-07-19"
+      ]
+     }
+    },
+    "legacyFeedsRemoved": [
+     "31486",
+     "37907",
+     "44794"
+    ],
+    "deeperHistory": "Broadcastify Calls retains a full year of per-transmission calls per system but requires a login and a paid Calls Client API key (bcfy.io/dev). Legacy Broadcastify feeds 31486/37907/44794 answer \"Invalid feed\" — their archives are removed. No other public archive of WyoLink scanner audio was found."
+   }
+  }
+ },
+ "coverage": {
+  "requestedStart": "2026-07-18",
+  "requestedEnd": "2026-07-20",
+  "days": 3,
+  "bbox": {
+   "north": 41.1125,
+   "south": 41.0975,
+   "west": -104.8075,
+   "east": -104.7925
+  },
+  "feeds": [
+   "47003"
+  ],
+  "archiveDates": {
+   "from": "2026-07-17",
+   "to": "2026-07-21",
+   "count": 5
+  },
+  "socrataLogCount": 45,
+  "archiveBlockCount": 242,
+  "recordWindowNote": "Record-level link table for the requested window. Socrata history reaches 2020-01-01; run with --start 2020-01-01 for the full table (pass --out for large outputs). See historySummary for the linkable share per year."
+ },
+ "historySummary": {
+  "source": "src/data/citizen-connect.json daily trend (publisher totals per day)",
+  "scannerAudioAvailability": {
+   "feeds": [
+    "47003",
+    "47019",
+    "46189"
+   ],
+   "from": "2026-04-13",
+   "to": "2026-10-09",
+   "probed": {
+    "46189": {
+     "empty": [],
+     "full": [
+      "2026-07-19"
+     ]
+    },
+    "47003": {
+     "empty": [
+      "2024-07-19",
+      "2025-10-09",
+      "2026-01-15",
+      "2026-04-09",
+      "2026-04-10",
+      "2026-04-12"
+     ],
+     "full": [
+      "2026-04-13",
+      "2026-04-14",
+      "2026-04-15",
+      "2026-05-15",
+      "2026-06-01",
+      "2026-06-15",
+      "2026-07-01",
+      "2026-07-18",
+      "2026-07-19"
+     ]
+    },
+    "47019": {
+     "empty": [
+      "2025-10-09",
+      "2026-01-15"
+     ],
+     "full": [
+      "2026-04-15",
+      "2026-07-19"
+     ]
+    }
+   },
+   "legacyFeedsRemoved": [
+    "31486",
+    "37907",
+    "44794"
+   ],
+   "deeperHistory": "Broadcastify Calls retains a full year of per-transmission calls per system but requires a login and a paid Calls Client API key (bcfy.io/dev). Legacy Broadcastify feeds 31486/37907/44794 answer \"Invalid feed\" — their archives are removed. No other public archive of WyoLink scanner audio was found."
+  },
+  "perYear": [
+   {
+    "year": "2020",
+    "socrataLogs": 76,
+    "incidents": 1,
+    "cases": 75,
+    "linkableLogs": 0
+   },
+   {
+    "year": "2021",
+    "socrataLogs": 428,
+    "incidents": 3,
+    "cases": 425,
+    "linkableLogs": 0
+   },
+   {
+    "year": "2022",
+    "socrataLogs": 1171,
+    "incidents": 200,
+    "cases": 971,
+    "linkableLogs": 0
+   },
+   {
+    "year": "2023",
+    "socrataLogs": 115004,
+    "incidents": 104392,
+    "cases": 10612,
+    "linkableLogs": 0
+   },
+   {
+    "year": "2024",
+    "socrataLogs": 122648,
+    "incidents": 112759,
+    "cases": 9889,
+    "linkableLogs": 0
+   },
+   {
+    "year": "2025",
+    "socrataLogs": 116348,
+    "incidents": 106659,
+    "cases": 9689,
+    "linkableLogs": 0
+   },
+   {
+    "year": "2026",
+    "socrataLogs": 91078,
+    "incidents": 83976,
+    "cases": 7102,
+    "linkableLogs": 57578
+   }
+  ]
+ },
+ "summary": {
+  "total": 45,
+  "linked": 45,
+  "unlinked": 0,
+  "unlinkedByReason": {},
+  "byDay": {
+   "2026-07-18": {
+    "total": 13,
+    "linked": 13
+   },
+   "2026-07-19": {
+    "total": 16,
+    "linked": 16
+   },
+   "2026-07-20": {
+    "total": 16,
+    "linked": 16
+   }
+  },
+  "byAgency": [
+   {
+    "name": "Laramie County Sheriff's Department - WY0110000",
+    "total": 42,
+    "linked": 42
+   },
+   {
+    "name": "Cheyenne Police Department - WY0110100",
+    "total": 3,
+    "linked": 3
+   }
+  ],
+  "byType": [
+   {
+    "type": "Traffic Stop",
+    "total": 13,
+    "linked": 13
+   },
+   {
+    "type": "Security Check",
+    "total": 11,
+    "linked": 11
+   },
+   {
+    "type": "Welfare Check - Routine",
+    "total": 2,
+    "linked": 2
+   },
+   {
+    "type": "911 Hang Up",
+    "total": 2,
+    "linked": 2
+   },
+   {
+    "type": "Accident - No Injuries",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Special Detail",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Traffic Complaint - Serious",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Accident - Property Damage",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Noise Complaint",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Burglary",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Larceny",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Assist Agency",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Hit And Run",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Accident - Hit and Run",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Criminal Entry -In Veh/Structure",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "VIN Inspection",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Civil Paper Service",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Suspicious Vehicle",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Fraud\\Forgery",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Towed Vehicle",
+    "total": 1,
+    "linked": 1
+   },
+   {
+    "type": "Fraud",
+    "total": 1,
+    "linked": 1
+   }
+  ],
+  "archiveBlocks": {
+   "total": 242,
+   "withLogs": 34,
+   "empty": 208
+  },
+  "linkedOffsetSeconds": {
+   "min": 34,
+   "max": 1769,
+   "mean": 911
+  },
+  "welfareChecks": [
+   {
+    "id": "2026-00023874",
+    "at": "2026-07-18T15:22:35.000",
+    "type": "Welfare Check - Routine",
+    "agency": "Laramie County Sheriff's Department - WY0110000",
+    "linkStatus": "linked",
+    "archiveId": "47003-1784409721",
+    "offsetSeconds": 34,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784409721"
+   },
+   {
+    "id": "2026-00023988",
+    "at": "2026-07-19T16:40:08.000",
+    "type": "Welfare Check - Routine",
+    "agency": "Laramie County Sheriff's Department - WY0110000",
+    "linkStatus": "linked",
+    "archiveId": "47003-1784499221",
+    "offsetSeconds": 1587,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784499221"
+   }
+  ]
+ },
+ "links": [
+  {
+   "id": "2026-00023827",
+   "at": "2026-07-18T01:25:51.000",
+   "atUnix": 1784359551,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784357810",
+    "start": "12:56 AM",
+    "end": "01:26 AM",
+    "startTs": 1784357810,
+    "endTs": 1784359610,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784357810",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784357810",
+    "offsetSeconds": 1741
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023847",
+   "at": "2026-07-18T08:51:24.000",
+   "atUnix": 1784386284,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784384661",
+    "start": "08:24 AM",
+    "end": "08:54 AM",
+    "startTs": 1784384661,
+    "endTs": 1784386461,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784384661",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784384661",
+    "offsetSeconds": 1623
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023852",
+   "at": "2026-07-18T10:46:31.000",
+   "atUnix": 1784393191,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784391821",
+    "start": "10:23 AM",
+    "end": "10:53 AM",
+    "startTs": 1784391821,
+    "endTs": 1784393621,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784391821",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784391821",
+    "offsetSeconds": 1370
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023871",
+   "at": "2026-07-18T13:53:37.000",
+   "atUnix": 1784404417,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784404351",
+    "start": "01:52 PM",
+    "end": "02:11 PM",
+    "startTs": 1784404351,
+    "endTs": 1784405498,
+    "duration": 1147,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784404351",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784404351",
+    "offsetSeconds": 66
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023874",
+   "at": "2026-07-18T15:22:35.000",
+   "atUnix": 1784409755,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Welfare Check - Routine",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.795,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784409721",
+    "start": "03:22 PM",
+    "end": "03:52 PM",
+    "startTs": 1784409721,
+    "endTs": 1784411521,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784409721",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784409721",
+    "offsetSeconds": 34
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023876",
+   "at": "2026-07-18T15:36:36.000",
+   "atUnix": 1784410596,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Accident - No Injuries",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784409721",
+    "start": "03:22 PM",
+    "end": "03:52 PM",
+    "startTs": 1784409721,
+    "endTs": 1784411521,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784409721",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784409721",
+    "offsetSeconds": 875
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023880",
+   "at": "2026-07-18T16:34:02.000",
+   "atUnix": 1784414042,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Special Detail",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784413301",
+    "start": "04:21 PM",
+    "end": "04:51 PM",
+    "startTs": 1784413301,
+    "endTs": 1784415101,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784413301",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784413301",
+    "offsetSeconds": 741
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023882",
+   "at": "2026-07-18T17:10:29.000",
+   "atUnix": 1784416229,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "911 Hang Up",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.795,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784415091",
+    "start": "04:51 PM",
+    "end": "05:21 PM",
+    "startTs": 1784415091,
+    "endTs": 1784416891,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784415091",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784415091",
+    "offsetSeconds": 1138
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023885",
+   "at": "2026-07-18T17:53:12.000",
+   "atUnix": 1784418792,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Complaint - Serious",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784418671",
+    "start": "05:51 PM",
+    "end": "06:21 PM",
+    "startTs": 1784418671,
+    "endTs": 1784420471,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784418671",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784418671",
+    "offsetSeconds": 121
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023893",
+   "at": "2026-07-18T19:19:08.000",
+   "atUnix": 1784423948,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "911 Hang Up",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.805,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784422251",
+    "start": "06:50 PM",
+    "end": "07:20 PM",
+    "startTs": 1784422251,
+    "endTs": 1784424051,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784422251",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784422251",
+    "offsetSeconds": 1697
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023892",
+   "at": "2026-07-18T19:22:10.000",
+   "atUnix": 1784424130,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784424041",
+    "start": "07:20 PM",
+    "end": "07:50 PM",
+    "startTs": 1784424041,
+    "endTs": 1784425841,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784424041",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784424041",
+    "offsetSeconds": 89
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023926",
+   "at": "2026-07-18T22:43:00.000",
+   "atUnix": 1784436180,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784434781",
+    "start": "10:19 PM",
+    "end": "10:49 PM",
+    "startTs": 1784434781,
+    "endTs": 1784436581,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784434781",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784434781",
+    "offsetSeconds": 1399
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "-559065",
+   "at": "2026-07-18T15:36:00.000",
+   "atUnix": 1784410560,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Accident - Property Damage",
+   "layer": "Cases",
+   "datasetId": "cvz7-2j69",
+   "entryId": "pds_4",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784409721",
+    "start": "03:22 PM",
+    "end": "03:52 PM",
+    "startTs": 1784409721,
+    "endTs": 1784411521,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784409721",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784409721",
+    "offsetSeconds": 839
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023944",
+   "at": "2026-07-19T00:21:44.000",
+   "atUnix": 1784442104,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784441941",
+    "start": "12:19 AM",
+    "end": "12:49 AM",
+    "startTs": 1784441941,
+    "endTs": 1784443741,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784441941",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784441941",
+    "offsetSeconds": 163
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023945",
+   "at": "2026-07-19T00:40:37.000",
+   "atUnix": 1784443237,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784441941",
+    "start": "12:19 AM",
+    "end": "12:49 AM",
+    "startTs": 1784441941,
+    "endTs": 1784443741,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784441941",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784441941",
+    "offsetSeconds": 1296
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023946",
+   "at": "2026-07-19T00:54:31.000",
+   "atUnix": 1784444071,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784443731",
+    "start": "12:48 AM",
+    "end": "01:18 AM",
+    "startTs": 1784443731,
+    "endTs": 1784445531,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784443731",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784443731",
+    "offsetSeconds": 340
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023951",
+   "at": "2026-07-19T01:04:26.000",
+   "atUnix": 1784444666,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Noise Complaint",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.795,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784443731",
+    "start": "12:48 AM",
+    "end": "01:18 AM",
+    "startTs": 1784443731,
+    "endTs": 1784445531,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784443731",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784443731",
+    "offsetSeconds": 935
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023954",
+   "at": "2026-07-19T02:47:50.000",
+   "atUnix": 1784450870,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Burglary",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784449101",
+    "start": "02:18 AM",
+    "end": "02:48 AM",
+    "startTs": 1784449101,
+    "endTs": 1784450901,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784449101",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784449101",
+    "offsetSeconds": 1769
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023962",
+   "at": "2026-07-19T05:27:45.000",
+   "atUnix": 1784460465,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Larceny",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784459841",
+    "start": "05:17 AM",
+    "end": "05:47 AM",
+    "startTs": 1784459841,
+    "endTs": 1784461641,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784459841",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784459841",
+    "offsetSeconds": 624
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023971",
+   "at": "2026-07-19T10:43:03.000",
+   "atUnix": 1784479383,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Assist Agency",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.795,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784477741",
+    "start": "10:15 AM",
+    "end": "10:45 AM",
+    "startTs": 1784477741,
+    "endTs": 1784479541,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784477741",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784477741",
+    "offsetSeconds": 1642
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023986",
+   "at": "2026-07-19T15:25:19.000",
+   "atUnix": 1784496319,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Hit And Run",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784495641",
+    "start": "03:14 PM",
+    "end": "03:44 PM",
+    "startTs": 1784495641,
+    "endTs": 1784497441,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784495641",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784495641",
+    "offsetSeconds": 678
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023988",
+   "at": "2026-07-19T16:40:08.000",
+   "atUnix": 1784500808,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Welfare Check - Routine",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784499221",
+    "start": "04:13 PM",
+    "end": "04:43 PM",
+    "startTs": 1784499221,
+    "endTs": 1784501021,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784499221",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784499221",
+    "offsetSeconds": 1587
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00039161",
+   "at": "2026-07-19T17:27:41.000",
+   "atUnix": 1784503661,
+   "agency": "Cheyenne Police Department - WY0110100",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784502801",
+    "start": "05:13 PM",
+    "end": "05:43 PM",
+    "startTs": 1784502801,
+    "endTs": 1784504601,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784502801",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784502801",
+    "offsetSeconds": 860
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023994",
+   "at": "2026-07-19T17:38:05.000",
+   "atUnix": 1784504285,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784502801",
+    "start": "05:13 PM",
+    "end": "05:43 PM",
+    "startTs": 1784502801,
+    "endTs": 1784504601,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784502801",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784502801",
+    "offsetSeconds": 1484
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00023995",
+   "at": "2026-07-19T17:45:05.000",
+   "atUnix": 1784504705,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784504591",
+    "start": "05:43 PM",
+    "end": "06:13 PM",
+    "startTs": 1784504591,
+    "endTs": 1784506391,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784504591",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784504591",
+    "offsetSeconds": 114
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024031",
+   "at": "2026-07-19T22:34:12.000",
+   "atUnix": 1784522052,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784520701",
+    "start": "10:11 PM",
+    "end": "10:41 PM",
+    "startTs": 1784520701,
+    "endTs": 1784522501,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784520701",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784520701",
+    "offsetSeconds": 1351
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024038",
+   "at": "2026-07-19T23:14:16.000",
+   "atUnix": 1784524456,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784524281",
+    "start": "11:11 PM",
+    "end": "11:41 PM",
+    "startTs": 1784524281,
+    "endTs": 1784526081,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784524281",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784524281",
+    "offsetSeconds": 175
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "-559020",
+   "at": "2026-07-19T15:25:19.000",
+   "atUnix": 1784496319,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Accident - Hit and Run",
+   "layer": "Cases",
+   "datasetId": "cvz7-2j69",
+   "entryId": "pds_4",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784495641",
+    "start": "03:14 PM",
+    "end": "03:44 PM",
+    "startTs": 1784495641,
+    "endTs": 1784497441,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784495641",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784495641",
+    "offsetSeconds": 678
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "-558974",
+   "at": "2026-07-19T02:47:50.000",
+   "atUnix": 1784450870,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Criminal Entry -In Veh/Structure",
+   "layer": "Cases",
+   "datasetId": "cvz7-2j69",
+   "entryId": "pds_4",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784449101",
+    "start": "02:18 AM",
+    "end": "02:48 AM",
+    "startTs": 1784449101,
+    "endTs": 1784450901,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784449101",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784449101",
+    "offsetSeconds": 1769
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024054",
+   "at": "2026-07-20T00:36:59.000",
+   "atUnix": 1784529419,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784527861",
+    "start": "12:11 AM",
+    "end": "12:41 AM",
+    "startTs": 1784527861,
+    "endTs": 1784529661,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784527861",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784527861",
+    "offsetSeconds": 1558
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024089",
+   "at": "2026-07-20T08:48:34.000",
+   "atUnix": 1784558914,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784558292",
+    "start": "08:38 AM",
+    "end": "09:08 AM",
+    "startTs": 1784558292,
+    "endTs": 1784560092,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784558292",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784558292",
+    "offsetSeconds": 622
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00039280",
+   "at": "2026-07-20T08:48:34.000",
+   "atUnix": 1784558914,
+   "agency": "Cheyenne Police Department - WY0110100",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784558292",
+    "start": "08:38 AM",
+    "end": "09:08 AM",
+    "startTs": 1784558292,
+    "endTs": 1784560092,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784558292",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784558292",
+    "offsetSeconds": 622
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024148",
+   "at": "2026-07-20T11:01:35.000",
+   "atUnix": 1784566895,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "VIN Inspection",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784565452",
+    "start": "10:37 AM",
+    "end": "11:07 AM",
+    "startTs": 1784565452,
+    "endTs": 1784567252,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784565452",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784565452",
+    "offsetSeconds": 1443
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024111",
+   "at": "2026-07-20T11:30:14.000",
+   "atUnix": 1784568614,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Civil Paper Service",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784567242",
+    "start": "11:07 AM",
+    "end": "11:37 AM",
+    "startTs": 1784567242,
+    "endTs": 1784569042,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784567242",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784567242",
+    "offsetSeconds": 1372
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024120",
+   "at": "2026-07-20T12:14:25.000",
+   "atUnix": 1784571265,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Suspicious Vehicle",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.795,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784570822",
+    "start": "12:07 PM",
+    "end": "12:37 PM",
+    "startTs": 1784570822,
+    "endTs": 1784572622,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784570822",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784570822",
+    "offsetSeconds": 443
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024137",
+   "at": "2026-07-20T13:51:30.000",
+   "atUnix": 1784577090,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784576192",
+    "start": "01:36 PM",
+    "end": "02:06 PM",
+    "startTs": 1784576192,
+    "endTs": 1784577992,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784576192",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784576192",
+    "offsetSeconds": 898
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024151",
+   "at": "2026-07-20T15:22:15.000",
+   "atUnix": 1784582535,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Fraud\\Forgery",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784581562",
+    "start": "03:06 PM",
+    "end": "03:36 PM",
+    "startTs": 1784581562,
+    "endTs": 1784583362,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784581562",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784581562",
+    "offsetSeconds": 973
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00031560",
+   "at": "2026-07-20T16:47:46.000",
+   "atUnix": 1784587666,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Towed Vehicle",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.11,
+   "lng": -104.795,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784586932",
+    "start": "04:35 PM",
+    "end": "05:05 PM",
+    "startTs": 1784586932,
+    "endTs": 1784588732,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784586932",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784586932",
+    "offsetSeconds": 734
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024168",
+   "at": "2026-07-20T17:09:01.000",
+   "atUnix": 1784588941,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784588722",
+    "start": "05:05 PM",
+    "end": "05:35 PM",
+    "startTs": 1784588722,
+    "endTs": 1784590522,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784588722",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784588722",
+    "offsetSeconds": 219
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024169",
+   "at": "2026-07-20T17:11:57.000",
+   "atUnix": 1784589117,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784588722",
+    "start": "05:05 PM",
+    "end": "05:35 PM",
+    "startTs": 1784588722,
+    "endTs": 1784590522,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784588722",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784588722",
+    "offsetSeconds": 395
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024178",
+   "at": "2026-07-20T17:41:28.000",
+   "atUnix": 1784590888,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.1,
+   "lng": -104.805,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784590512",
+    "start": "05:35 PM",
+    "end": "06:05 PM",
+    "startTs": 1784590512,
+    "endTs": 1784592312,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784590512",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784590512",
+    "offsetSeconds": 376
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024205",
+   "at": "2026-07-20T19:20:58.000",
+   "atUnix": 1784596858,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Security Check",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784595882",
+    "start": "07:04 PM",
+    "end": "07:34 PM",
+    "startTs": 1784595882,
+    "endTs": 1784597682,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784595882",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784595882",
+    "offsetSeconds": 976
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00024245",
+   "at": "2026-07-20T22:51:47.000",
+   "atUnix": 1784609507,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784608412",
+    "start": "10:33 PM",
+    "end": "11:03 PM",
+    "startTs": 1784608412,
+    "endTs": 1784610212,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784608412",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784608412",
+    "offsetSeconds": 1095
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "2026-00039496",
+   "at": "2026-07-20T22:51:47.000",
+   "atUnix": 1784609507,
+   "agency": "Cheyenne Police Department - WY0110100",
+   "type": "Traffic Stop",
+   "layer": "Incidents",
+   "datasetId": "35sf-bu8v",
+   "entryId": "pds_5",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784608412",
+    "start": "10:33 PM",
+    "end": "11:03 PM",
+    "startTs": 1784608412,
+    "endTs": 1784610212,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784608412",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784608412",
+    "offsetSeconds": 1095
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  },
+  {
+   "id": "-558979",
+   "at": "2026-07-20T15:22:15.000",
+   "atUnix": 1784582535,
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "type": "Fraud",
+   "layer": "Cases",
+   "datasetId": "cvz7-2j69",
+   "entryId": "pds_4",
+   "lat": 41.105,
+   "lng": -104.8,
+   "feedId": "47003",
+   "linkStatus": "linked",
+   "archive": {
+    "feedId": "47003",
+    "id": "47003-1784581562",
+    "start": "03:06 PM",
+    "end": "03:36 PM",
+    "startTs": 1784581562,
+    "endTs": 1784583362,
+    "duration": 1800,
+    "reqs": 0,
+    "url": "https://www.broadcastify.com/archives/download/47003-1784581562",
+    "archivePageUrl": "https://www.broadcastify.com/archives/feed/?feedId=47003&archive=47003-1784581562",
+    "offsetSeconds": 973
+   },
+   "alsoArchivedOn": [],
+   "unlinkedReason": null
+  }
+ ]
+}

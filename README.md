@@ -191,6 +191,25 @@ call-type concentration, and workload counts by boundary. It deliberately does *
 “crime,” treat Cases as a one-to-one conversion from Incidents, infer risk from unadjusted ward counts, or
 claim the publisher’s blurred pin locations are addresses. The agencies say sexual assaults and juvenile
 matters are withheld and names/addresses are removed; the source refreshes roughly every three days.
+
+The scanner-archive linkage system (`scripts/sync/scanner-archive-links.mjs`, pure logic in
+`scripts/lib/scanner-archive.mjs`) joins the two public record streams: every record-level
+Socrata log from the Citizen Connect dashboard API is linked to the Broadcastify
+*Laramie County Law Enforcement* feed (47003) archive block that contains its initiation
+timestamp — block id, time range, offset into the recording, and download URL — and every
+archive block is reconciled in the summary, so each log traces to its dispatch audio and each
+recording traces back to the logs it carries. The bundled seed (`src/data/scanner-archive-links.json`)
+links all 45 CAD logs from the July 18–20, 2026 Prosser Rd / South Greeley Hwy window,
+including the July 19 welfare check (#2026-00023988 → block `47003-1784499221`, 26m27s in).
+Socrata history reaches 2020-01-01, but Broadcastify feed archives retain only ~6 months
+(earliest probed block: 2026-04-13), so `npm run data:scanner-archive-links:full` links the
+full history and marks older logs unlinked with an explicit reason; the artifact’s
+`historySummary` rolls up, per year, how many logs are linkable. Deeper audio history exists
+only in Broadcastify Calls (a full year of per-transmission calls, login and paid API key
+required); the legacy feeds (31486/37907/44794) answer “Invalid feed”, and no other public
+archive of WyoLink audio was found. Raw inputs are checkpointed in the ignored
+`.cache/scanner-archive-links/`, so `--offline` rebuilds the artifact without the network.
+Regression suite: `npm run test:scanner-archive-links`. The website's database is created by the deploy pipeline itself: `deploy-pages.yml` re-runs the linkage sync (a rolling ~6-month linkable window, falling back to the committed seed when a publisher is unreachable) before every build, so the site always serves a current log→archive table, and `citizen_connect_sync.yml` refreshes the Socrata record the same way on a daily schedule. Audio downloads run in Actions too: `.github/workflows/broadcastify-archive-fetch.yml` (dispatch it with an archive block id — every linked log carries one — and it signs in with repository secrets, verifies Premium access, and returns the MP3 as a run artifact or commits it under `public/audio/` with a provenance sidecar). Wire your Broadcastify Premium credentials into that workflow with `scripts/sync/broadcastify-secrets-setup.sh` — one paste on your own machine (or in Termux after `pkg install gh`): it prompts with echo off and stores them as encrypted Actions secrets (`BCFY_USERNAME` / `BCFY_PASSWORD`, optional `BCFY_SESSION_COOKIE`) via `gh secret set`. Credentials are never written to the repository or the website — do not put them in a web page or a script file; a public Pages site cannot hold secrets safely. The phone/local alternative is `scripts/sync/broadcastify-premium-termux.sh`, which signs in from Termux and prints the download wiring; archive playback and downloads require a Premium subscription. For a true one-paste Termux run — sign in, download the entire linked archive (every block in the linkage database; pass a block id for just one), and optionally push your login to GitHub Actions secrets — use `scripts/sync/broadcastify-termux-onestep.sh` (the copy-paste block is in its header).
 Read the Method & limits tab and open the original dashboard before citing a figure. This is historical
 public information, not dispatch or emergency guidance.
 

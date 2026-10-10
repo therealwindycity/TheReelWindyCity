@@ -23,6 +23,9 @@ public/transcripts/*.md
 
 # generated citizen-connect copy (src/data/citizen-connect.json is the source of truth)
 public/data/citizen-connect.json
+# generated scanner-archive linkage copies (src/data/scanner-archive-links.json is the source of truth)
+public/data/scanner-archive-links.json
+public/data/scanner-archive-links-full.json
 
 # scratch
 .sync/

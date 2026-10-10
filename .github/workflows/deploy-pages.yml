@@ -28,6 +28,22 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Restore scanner-archive linkage cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/scanner-archive-links
+          key: scanner-archive-links-${{ github.run_id }}
+          restore-keys: scanner-archive-links-
+      - name: Refresh the Socrata ↔ scanner-archive linkage database
+        # Rebuilds the log → archive-block database for every linkable day.
+        # Broadcastify feed archives keep a rolling ~6-month window, so the
+        # sync window rolls with it. The sync fails closed; on any publisher
+        # problem this step is skipped and the build falls back to the
+        # committed seed artifact — an outage can never blank the public
+        # database. --allow-large: the full linkable window is ~60k rows by
+        # design (see MAX_COMMITTED_LINKS in the sync script).
+        continue-on-error: true
+        run: node scripts/sync/scanner-archive-links.mjs --start "$(date -u -d '180 days ago' +%F)" --allow-large
       - name: Enable GitHub Pages (if not already enabled)
         uses: actions/configure-pages@v5
         continue-on-error: true
