@@ -27,8 +27,15 @@
  *   --from-file <html>      offline input for tests / forensic re-checks.
  *   --url <url>             override the watched endpoint.
  *   --state <path>          override the baseline file (default data/sync-state.json).
+ *   --snapshot <path>       override the curated snapshot used by --seed
+ *                           (default src/data/official-meetings.json).
  *   --out <path>            also write the JSON result to a file (used by the watch
  *                           workflow to pass outputs along).
+ *   --publish <path>        additionally write the site-facing detected-table
+ *                           artifact ({checkedAt, contentHash, source, meetings})
+ *                           — the file the static build merges so the public
+ *                           calendar stays current even when PDF ingestion is
+ *                           blocked. Used by the watch workflow's publish job.
  */
 
 import { existsSync, readFileSync } from "node:fs";
@@ -179,11 +186,13 @@ async function main() {
   const seed = process.argv.includes("--seed");
   const tolerateSourceUnavailable = process.argv.includes("--tolerate-source-unavailable");
   const outFile = flag("--out");
+  const publishFile = flag("--publish");
 
   let records;
+  const seedSnapshotPath = flag("--snapshot") || SNAPSHOT;
   if (seed) {
-    if (!existsSync(SNAPSHOT)) throw new Error(`missing ${SNAPSHOT}`);
-    records = recordsFromOfficialSnapshot(JSON.parse(readFileSync(SNAPSHOT, "utf8")));
+    if (!existsSync(seedSnapshotPath)) throw new Error(`missing ${seedSnapshotPath}`);
+    records = recordsFromOfficialSnapshot(JSON.parse(readFileSync(seedSnapshotPath, "utf8")), { futureOnly: true });
     console.log(`Seeded baseline from curated snapshot: ${records.length} upcoming meeting(s).`);
   } else {
     let html;
@@ -201,6 +210,7 @@ async function main() {
   }
 
   const hash = contentHash(records);
+  const publishSource = seed ? `seeded from ${seedSnapshotPath}` : flag("--url") || DEFAULT_URL;
   const previous = seed ? null : loadState(statePath);
   const changed = !previous || previous.contentHash !== hash;
   const changedList = changed ? changedRecords(records, previous?.meetings) : [];
@@ -236,6 +246,15 @@ async function main() {
     console.log(`Baseline written: ${statePath} (hash ${hash.slice(0, 12)}…).`);
   }
   if (outFile) atomicWrite(outFile, `${JSON.stringify(result, null, 2)}\n`);
+  if (publishFile) {
+    // The publish artifact is the site-facing form of this detection: exactly
+    // the semantic records the portal table currently holds, plus the metadata
+    // needed to audit when they were read and from where. The site build merges
+    // this file so the public calendar stays current even while agenda-document
+    // ingestion is blocked (see scripts/lib/upcoming-merge.mjs).
+    atomicWrite(publishFile, `${JSON.stringify({ checkedAt: result.checkedAt, contentHash: hash, source: publishSource, meetings: records }, null, 2)}\n`);
+    console.log(`Published detected table: ${publishFile} (${records.length} record(s)).`);
+  }
 
   console.log(JSON.stringify({ ...result, meetings: records.length, changedMeetings: changedList.length }));
   if (suppressed) {

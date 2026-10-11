@@ -15,12 +15,14 @@
 import { test, describe } from "node:test";
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { collapseWhitespace, normalizeUrl, normalizeDate, normalizeTime, stableStringify, contentHash, sortRecords } from "../../scripts/lib/canonical.mjs";
 import { extractUpcomingRecords, recordsFromOfficialSnapshot, bodySlug } from "../../scripts/lib/upcoming-table.mjs";
+import { applyCuratedUpcoming, applyDetectedRecord, cheyenneTodayISO, displayTime, isUpcomingDate } from "../../scripts/lib/upcoming-merge.mjs";
+import { applyToSnapshot } from "../../scripts/sync/apply-agenda.mjs";
 import { extractPdfLayout, ExtractionError } from "../../scripts/lib/pdf-layout.mjs";
 import { makePdf, column, interleaveColumns } from "./pdf-fixture.mjs";
 
@@ -55,6 +57,14 @@ describe("OM1#2 canonical field normalization", () => {
 
   test("normalizeUrl handles relative garbage without throwing", () => {
     assert.equal(normalizeUrl(" psc-2026/psc-10-05-26-agenda.pdf "), "psc-2026/psc-10-05-26-agenda.pdf");
+  });
+
+  test("normalizeUrl resolves the portal's protocol-relative agenda links to https (the wedged-sync fix)", () => {
+    const link = "//cheyenne.granicus.com/agendaviewer.php?view_id=5&event_id=1448&jsid=8817263541";
+    assert.equal(normalizeUrl(link), "https://cheyenne.granicus.com/agendaviewer.php?event_id=1448&view_id=5");
+    // Whatever the URL form, it must be fetchable — this exact shape is what
+    // the sync plan hands to fetch(), which throws on scheme-less URLs.
+    assert.doesNotThrow(() => new URL(normalizeUrl(link)));
   });
 
   test("date and time forms collapse to one canonical form each", () => {
@@ -125,15 +135,56 @@ describe("OM1#2 watcher CLI — seed, detect, fail closed", () => {
   const fixtureHtml = readFileSync(path.join(FIXTURES, "granicus-upcoming.html"), "utf8");
   const state = path.join(OUT, "sync-state.json");
 
+  // The seeded snapshot and the live fixture must describe the SAME (future)
+  // meetings, and "future" must be measured against the wall clock — the suite
+  // would otherwise rot the moment the fixture's hardcoded dates passed. These
+  // helpers rewrite both sides to dates relative to today in city time.
+  const today = cheyenneTodayISO();
+  const futureDate = (offsetDays) => {
+    const base = new Date(`${today}T12:00:00Z`);
+    base.setUTCDate(base.getUTCDate() + offsetDays);
+    const iso = base.toISOString().slice(0, 10);
+    const md = base.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+    return { iso, md };
+  };
+  const first = futureDate(2);
+  const second = futureDate(3);
+  const extra = futureDate(4);
+  const futureFixtureHtml = () => fixtureHtml
+    .replace(/Oct 5, 2026/g, first.md)
+    .replace(/Oct 6, 2026/g, second.md);
+  const seedSnapshot = path.join(OUT, "seed-official-meetings.json");
+  writeFileSync(seedSnapshot, `${JSON.stringify({
+    upcoming: [
+      { body: "public-services-committee", bodyLabel: "Public Services Committee", date: first.iso, time: "12:00 p.m.", granicusUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1447&view_id=5" },
+      { body: "finance-committee", bodyLabel: "Finance Committee", date: second.iso, time: "12:00 p.m.", granicusUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1446&view_id=5" },
+    ],
+  }, null, 2)}\n`);
+
   test("seed builds the baseline from the curated snapshot (no network)", () => {
-    runCli("scripts/monitor/upcoming-meetings.mjs", ["--seed", "--state", state]);
+    runCli("scripts/monitor/upcoming-meetings.mjs", ["--seed", "--state", state, "--snapshot", seedSnapshot]);
     const seeded = JSON.parse(readFileSync(state, "utf8"));
     assert.equal(seeded.meetings.length, 2);
     assert.match(seeded.contentHash, /^[0-9a-f]{64}$/);
   });
 
+  test("seeding skips date-passed entries so the baseline matches the portal's forward-only table", () => {
+    const stale = path.join(OUT, "seed-stale-snapshot.json");
+    writeFileSync(stale, `${JSON.stringify({
+      upcoming: [
+        { body: "public-services-committee", bodyLabel: "Public Services Committee", date: "2020-01-06", time: "12:00 p.m.", granicusUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1&view_id=5" },
+        { body: "finance-committee", bodyLabel: "Finance Committee", date: second.iso, time: "12:00 p.m.", granicusUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1446&view_id=5" },
+      ],
+    }, null, 2)}\n`);
+    const staleState = path.join(OUT, "sync-state-stale.json");
+    runCli("scripts/monitor/upcoming-meetings.mjs", ["--seed", "--state", staleState, "--snapshot", stale]);
+    const seeded = JSON.parse(readFileSync(staleState, "utf8"));
+    assert.equal(seeded.meetings.length, 1, "a stale curated entry must not enter the baseline");
+    assert.equal(seeded.meetings[0].date, second.iso);
+  });
+
   test("day one is a zero-false-positive: live fixture matching the snapshot reads as UNCHANGED", () => {
-    writeFileSync(path.join(OUT, "upcoming.html"), fixtureHtml);
+    writeFileSync(path.join(OUT, "upcoming.html"), futureFixtureHtml());
     const result = runCli("scripts/monitor/upcoming-meetings.mjs", [
       "--check", "--from-file", path.join(OUT, "upcoming.html"), "--state", state, "--out", path.join(OUT, "watch.json"),
     ]);
@@ -143,7 +194,10 @@ describe("OM1#2 watcher CLI — seed, detect, fail closed", () => {
   });
 
   test("a semantic change is detected and pinpointed to the changed meeting", () => {
-    const moved = fixtureHtml.replace("Oct 5, 2026<br />&nbsp;-&nbsp;<br />12:00 PM", "Oct 5, 2026<br />&nbsp;-&nbsp;<br />1:30 PM");
+    const moved = futureFixtureHtml().replace(
+      `${first.md}<br />&nbsp;-&nbsp;<br />12:00 PM`,
+      `${first.md}<br />&nbsp;-&nbsp;<br />1:30 PM`,
+    );
     writeFileSync(path.join(OUT, "moved.html"), moved);
     runCli("scripts/monitor/upcoming-meetings.mjs", [
       "--check", "--from-file", path.join(OUT, "moved.html"), "--state", state, "--out", path.join(OUT, "watch-moved.json"),
@@ -156,11 +210,11 @@ describe("OM1#2 watcher CLI — seed, detect, fail closed", () => {
   });
 
   test("a brand-new posted meeting is detected as changed", () => {
-    const added = fixtureHtml.replace(
+    const added = futureFixtureHtml().replace(
       "</tbody>",
       `        <tr class="odd">
           <td class="Name">Board of Adjustment</td>
-          <td class="Date">Oct 7, 2026<br />&nbsp;-&nbsp;<br />3:00 PM</td>
+          <td class="Date">${extra.md}<br />&nbsp;-&nbsp;<br />3:00 PM</td>
           <td class="Agenda"><a href="https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&amp;event_id=1448&amp;utm_source=widget">Agenda</a></td>
           <td class="Events">&nbsp;</td>
         </tr>
@@ -358,7 +412,11 @@ describe("OM2#1 layout-aware engine vs. column interleaving", () => {
 /** Build a realistic multi-page PSC agenda PDF from the REAL posted item texts. */
 function buildPscAgendaPdf() {
   const snapshot = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "official-meetings.json"), "utf8"));
-  const psc = snapshot.upcoming.find((meeting) => meeting.id === "public-services-committee-2026-10-05");
+  // The meeting lives in the forward calendar while it is upcoming and moves to
+  // 'posted' once its date passes — the fixture builds from either.
+  const psc = [...(snapshot.upcoming || []), ...(snapshot.posted || [])].find(
+    (meeting) => meeting.id === "public-services-committee-2026-10-05",
+  );
   assert.ok(psc, "curated snapshot must contain the Oct 5 PSC meeting");
 
   const kindPrefix = (kind) => {
@@ -797,3 +855,328 @@ describe("end-to-end sync chain (build-plan → extract → analyze → draft �
 
 mkdirSync(OUT, { recursive: true });
 mkdirSync(path.join(OUT, "empty-dir"), { recursive: true });
+
+/* ================================================================== */
+/* Stale-agenda defect: the upcoming date gate & detected-table merge  */
+/* ================================================================== */
+
+describe("upcoming date gate (the 'stuck on last week' fix)", () => {
+  test("cheyenneTodayISO returns an ISO date in the city's timezone", () => {
+    assert.match(cheyenneTodayISO(), /^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  test("the city's day flips at midnight in Denver, not at the builder's UTC", () => {
+    // October 2026 is MDT (UTC-6): 23:59 Oct 11 local ↔ 05:59 Oct 12 UTC.
+    assert.equal(cheyenneTodayISO(new Date("2026-10-12T05:59:59Z")), "2026-10-11");
+    assert.equal(cheyenneTodayISO(new Date("2026-10-12T06:00:00Z")), "2026-10-12");
+  });
+
+  test("isUpcomingDate accepts today and future, rejects past and malformed", () => {
+    assert.equal(isUpcomingDate("2026-10-11", "2026-10-11"), true);
+    assert.equal(isUpcomingDate("2026-12-01", "2026-10-11"), true);
+    assert.equal(isUpcomingDate("2026-10-05", "2026-10-11"), false, "a meeting from last week must not stay upcoming");
+    assert.equal(isUpcomingDate("not-a-date", "2026-10-11"), false);
+    assert.equal(isUpcomingDate(undefined, "2026-10-11"), false);
+  });
+
+  test("displayTime renders canonical 24h times the way the site prints them", () => {
+    assert.equal(displayTime("12:00"), "12:00 p.m.");
+    assert.equal(displayTime("18:00"), "6:00 p.m.");
+    assert.equal(displayTime("00:15"), "12:15 a.m.");
+    assert.equal(displayTime(""), undefined);
+    assert.equal(displayTime("25:00"), undefined);
+  });
+
+  test("applyCuratedUpcoming keeps a future entry upcoming with its rich data", () => {
+    const meeting = { official: {}, notes: [] };
+    applyCuratedUpcoming(meeting, {
+      body: "city-council", date: "2099-01-01", dayLabel: "Monday", time: "6:00 p.m.",
+      location: "Council Chambers", items: [{ number: "1", kind: "Resolution", text: "x" }], zoom: { joinUrl: "u" },
+      agendaPath: "cc-2026/cc-01-01-26-agenda.pdf",
+    }, { todayISO: "2026-10-11" });
+    assert.equal(meeting.upcoming, true);
+    assert.equal(meeting.location, "Council Chambers");
+    assert.equal(meeting.items.length, 1);
+    assert.ok(meeting.official.agenda);
+  });
+
+  test("applyCuratedUpcoming DEMOTES a past-dated entry while preserving its captured data", () => {
+    const meeting = { official: {}, notes: [] };
+    applyCuratedUpcoming(meeting, {
+      body: "public-services-committee", date: "2026-10-05", time: "12:00 p.m.",
+      items: [{ number: "9", kind: "Ordinance · 3rd reading", text: "Annexing land south of Interstate 80" }],
+      agendaPath: "psc-2026/psc-10-05-26-agenda.pdf",
+    }, { todayISO: "2026-10-11" });
+    assert.equal(meeting.upcoming, undefined, "the stale entry must leave the Upcoming view");
+    assert.ok(meeting.items.length, "captured agenda items must survive the demotion");
+    assert.ok(meeting.official.agenda, "the captured agenda link must survive the demotion");
+  });
+
+  test("applyDetectedRecord ignores past records and merges future ones conservatively", () => {
+    const opts = { todayISO: "2026-10-11", dayLabelFor: () => "Monday", provenanceNote: "detected note" };
+    const record = {
+      body: "city-council", bodyLabel: "City Council Meeting", date: "2026-10-12", time: "18:00",
+      agendaUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1451&view_id=5",
+    };
+
+    assert.equal(
+      applyDetectedRecord(() => ({}), { ...record, date: "2026-10-05" }, { ...opts, existing: undefined }),
+      null,
+      "a past detection must be ignored (the archive supersedes it)",
+    );
+
+    const created = applyDetectedRecord(
+      () => ({ id: "city-council-2026-10-12", body: "city-council", date: "2026-10-12", notes: [], official: {} }),
+      record,
+      { ...opts, existing: undefined },
+    );
+    assert.ok(created.created);
+    assert.equal(created.meeting.upcoming, true);
+    assert.equal(created.meeting.time, "6:00 p.m.", "canonical 24h portal time becomes the site's display time");
+    assert.ok(created.meeting.notes.includes("detected note"), "newly detected meetings carry a provenance note");
+    assert.ok(created.meeting.official.agenda);
+    assert.equal(created.meeting.items, undefined, "never invents agenda items from the portal table");
+
+    const existingMeeting = {
+      id: "city-council-2026-10-12", body: "city-council", date: "2026-10-12", notes: [],
+      official: { agenda: "https://existing.example" }, time: "6:00 p.m.",
+      items: [{ number: "1", kind: "Resolution", text: "real" }],
+    };
+    const merged = applyDetectedRecord(() => existingMeeting, record, { ...opts, existing: existingMeeting });
+    assert.equal(merged.created, false);
+    assert.equal(merged.meeting.official.agenda, "https://existing.example", "curated data wins over the detected link");
+    assert.deepEqual(merged.meeting.items, existingMeeting.items);
+    assert.equal(merged.meeting.notes.includes("detected note"), false, "no provenance note on an already-curated meeting");
+  });
+});
+
+describe("apply-agenda: validated extractions reach the site snapshot", () => {
+  const validAgenda = (over = {}) => ({
+    meetingId: "city-council-2026-10-12",
+    sourceUrl: "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1451",
+    fetchedAt: "2026-10-11T00:00:00Z",
+    pages: 3,
+    items: [
+      { number: "1", kind: "Minutes", text: "Approve council minutes", consent: false, section: "Agenda", page: 1, quote: "1. Minutes" },
+      { number: "9", kind: "Ordinance · 3rd reading", text: "Annexing land", consent: false, section: "Agenda", page: 2, quote: "9. ORDINANCE" },
+    ],
+    ...over,
+  });
+
+  test("creates a forward-calendar entry with the site's public item shape", () => {
+    const next = applyToSnapshot({ captured: "2026-10-11", upcoming: [], posted: [] }, validAgenda(), { todayISO: "2026-10-11" });
+    assert.equal(next.upcoming.length, 1);
+    const entry = next.upcoming[0];
+    assert.equal(entry.id, "city-council-2026-10-12");
+    assert.equal(entry.bodyLabel, "City Council");
+    assert.equal(entry.dayLabel, "Monday");
+    for (const item of entry.items) {
+      assert.deepEqual(Object.keys(item).sort(), ["kind", "number", "text"], "public items keep exactly number/kind/text");
+    }
+    assert.equal(entry.granicusUrl, "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1451");
+  });
+
+  test("updates an existing entry without clobbering curated Zoom/location", () => {
+    const snapshot = {
+      upcoming: [{
+        id: "city-council-2026-10-12", body: "city-council", bodyLabel: "City Council", date: "2026-10-12",
+        time: "6:00 p.m.", location: "Council Chambers", zoom: { joinUrl: "https://zoom.example" },
+        granicusUrl: "old", items: [{ number: "1", kind: "Minutes", text: "old" }],
+      }],
+      posted: [],
+    };
+    const next = applyToSnapshot(snapshot, validAgenda(), { todayISO: "2026-10-11" });
+    const entry = next.upcoming[0];
+    assert.equal(entry.items.length, 2, "items refresh from the extraction");
+    assert.equal(entry.zoom.joinUrl, "https://zoom.example");
+    assert.equal(entry.location, "Council Chambers");
+    assert.equal(entry.time, "6:00 p.m.");
+  });
+
+  test("relocates date-passed entries from upcoming to posted (never deletes data)", () => {
+    const snapshot = {
+      upcoming: [
+        { id: "public-services-committee-2026-10-05", body: "public-services-committee", date: "2026-10-05", items: [{ number: "9", kind: "Ordinance · 3rd reading", text: "x" }] },
+        { id: "city-council-2026-10-12", body: "city-council", date: "2026-10-12", items: [{ number: "1", kind: "Minutes", text: "y" }] },
+      ],
+      posted: [],
+    };
+    const next = applyToSnapshot(snapshot, validAgenda(), { todayISO: "2026-10-11" });
+    assert.equal(next.upcoming.some((entry) => entry.date === "2026-10-05"), false, "stale entry leaves the forward calendar");
+    assert.equal(next.posted[0].id, "public-services-committee-2026-10-05", "stale entry is preserved as history");
+    assert.equal(next.upcoming.length, 1);
+  });
+
+  test("fails closed on unknown bodies, unusable ids, and empty extractions", () => {
+    assert.throws(
+      () => applyToSnapshot({ upcoming: [], posted: [] }, validAgenda({ meetingId: "regional-parks-2026-10-12" }), { todayISO: "2026-10-11" }),
+      /unknown body/,
+    );
+    assert.throws(
+      () => applyToSnapshot({ upcoming: [], posted: [] }, validAgenda({ meetingId: "nonsense" }), { todayISO: "2026-10-11" }),
+      /unusable meeting id/,
+    );
+    assert.throws(
+      () => applyToSnapshot({ upcoming: [], posted: [] }, validAgenda({ items: [] }), { todayISO: "2026-10-11" }),
+      /no items/,
+    );
+  });
+
+  test("recordsFromOfficialSnapshot futureOnly seeding matches the portal's forward-only table", () => {
+    const snapshot = {
+      upcoming: [
+        { body: "public-services-committee", bodyLabel: "Public Services Committee", date: "2026-10-05", time: "12:00 p.m.", granicusUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1447&view_id=5" },
+        { body: "city-council", bodyLabel: "City Council", date: "2026-10-12", time: "6:00 p.m.", granicusUrl: "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1451&view_id=5" },
+      ],
+    };
+    assert.equal(recordsFromOfficialSnapshot(snapshot).length, 2, "ungated mapping is unchanged for callers that want everything");
+    const futureOnly = recordsFromOfficialSnapshot(snapshot, { futureOnly: true, todayISO: "2026-10-11" });
+    assert.equal(futureOnly.length, 1, "a stale curated entry must not enter the seeded baseline");
+    assert.equal(futureOnly[0].body, "city-council");
+  });
+});
+
+describe("calendar-publishing pipeline (detected table + snapshot apply)", () => {
+  function loadWorkflow(name) {
+    return parseYaml(readFileSync(path.join(ROOT, ".github", "workflows", name), "utf8"));
+  }
+
+  test("watch workflow publishes the detected table even when the sync fails", () => {
+    const workflow = loadWorkflow("live_city_watch.yml");
+    const publish = workflow.jobs.publish_table;
+    assert.ok(publish, "a publish_table job must exist");
+    assert.deepEqual(publish.needs, ["watch", "sync"]);
+    assert.match(publish.if, /always\(\)/, "the table must publish regardless of the sync outcome");
+    assert.match(publish.if, /needs\.watch\.outputs\.changed == 'true'/, "only a positive detection publishes");
+    assert.match(publish.if, /github\.ref == 'refs\/heads\/main'/, "production data writes land on main only");
+    assert.equal(publish.concurrency.group, "municipal-data-sync", "the publish joins the writer's lane");
+    assert.equal(publish.concurrency["cancel-in-progress"], false);
+    const writeStep = publish.steps.find((step) => step.name?.includes("Write the detected upcoming table"));
+    assert.ok(writeStep, "write step missing");
+    assert.match(writeStep.run, /src\/data\/detected-upcoming\.json/);
+    const commitStep = publish.steps.find((step) => step.name?.includes("Commit the detected table"));
+    assert.ok(commitStep, "commit step missing");
+    assert.match(commitStep.run, /git diff --cached --quiet/, "no-op publishes must not create empty commits");
+    assert.match(commitStep.run, /git pull --rebase origin main/, "parallel writer-lane jobs must rebase before pushing");
+    const resultStep = workflow.jobs.watch.steps.find((step) => step.id === "result");
+    assert.match(resultStep.run, /records=/, "watch job must publish the detected records so the publisher never re-fetches");
+  });
+
+  test("sync workflow folds validated extractions into the site snapshot before committing", () => {
+    const workflow = loadWorkflow("live_city_sync.yml");
+    const steps = workflow.jobs.sync_and_rebuild.steps;
+    const validateIndex = steps.findIndex((step) => step.name?.includes("Validate outputs"));
+    const applyIndex = steps.findIndex((step) => step.name?.includes("Apply the validated agenda to the site snapshot"));
+    const commitIndex = steps.findIndex((step) => step.name?.includes("Commit structural diff"));
+    assert.ok(applyIndex > validateIndex, "snapshot apply must run after the validation gate");
+    assert.ok(commitIndex > applyIndex, "snapshot apply must run before any git write");
+    assert.match(steps[applyIndex].run, /apply-agenda\.mjs --plan/);
+    assert.match(
+      steps[commitIndex].run,
+      /git add data\/ src\/data\/official-meetings\.json/,
+      "the site snapshot must be part of the guarded commit",
+    );
+  });
+});
+
+/* ================================================================== */
+/* OM2#1b — the Granicus HTML agenda (no combined PDF exists)          */
+/* ================================================================== */
+
+describe("Granicus HTML agenda extraction (GeneratedAgendaViewer)", () => {
+  // A real capture of the portal's Oct 12, 2026 agenda page, plus the archived
+  // January 26, 2026 page the site already bundles. Both are the modern portal
+  // shape: HTML fragments (no <html>/doctype), items in numbered table cells,
+  // NO combined-PDF link anywhere.
+  const octoberHtml = readFileSync(path.join(FIXTURES, "granicus-generated-agenda.html"), "utf8");
+  const januaryHtml = readFileSync(path.join(ROOT, "public", "sources", "2026-01-26-agenda.html"), "utf8");
+
+  test("content-based detection recognizes real agenda pages and rejects viewer chrome", async () => {
+    const { looksLikeGranicusAgendaHtml, htmlAgendaLayout } = await import("../../scripts/lib/agenda-html.mjs");
+    assert.equal(looksLikeGranicusAgendaHtml(octoberHtml), true, "the real October portal page must be detected");
+    assert.equal(looksLikeGranicusAgendaHtml(januaryHtml), true, "the archived January page must be detected");
+    assert.equal(
+      looksLikeGranicusAgendaHtml("<html><body><h1>AgendaViewer</h1><p>portal maintenance</p></body></html>"),
+      false,
+      "chrome without agenda content must fall through to PDF-link resolution",
+    );
+    // The numbered-item grammar is the detector's core signal.
+    const items = htmlAgendaLayout(octoberHtml).pages[0].readingLines.filter((line) => /^\d{1,3}[a-z]?\.\s+\S/i.test(line.text));
+    assert.ok(items.length >= 3, "detection requires actual numbered agenda rows");
+  });
+
+  test("htmlAgendaLayout feeds parseAgendaStructure: real items with kinds, from the January page", async () => {
+    const { htmlAgendaLayout } = await import("../../scripts/lib/agenda-html.mjs");
+    const { parseAgendaStructure } = await import("../../scripts/lib/agenda-structure.mjs");
+    const layout = htmlAgendaLayout(januaryHtml);
+    const structured = parseAgendaStructure(layout.pages);
+    assert.equal(layout.pageCount, 1, "an HTML agenda is a single pseudo-page for evidence scoping");
+    assert.ok(structured.items.length >= 20, `expected the full January agenda, got ${structured.items.length} items`);
+    const adu = structured.items.find((item) => item.number === "9");
+    assert.ok(adu, "January item 9 missing");
+    assert.match(adu.text, /Accessory Dwelling Units/i);
+    assert.equal(adu.kind, "Ordinance · 2nd reading");
+    // Anti-hallucination contract, same as the PDF path: every quote is a
+    // literal substring of the extracted page text (whitespace-collapsed,
+    // exactly as scripts/lib/validate.mjs checks it).
+    const pageText = layout.text.replace(/\s+/g, " ").trim();
+    for (const item of structured.items) {
+      const quote = item.quote.replace(/\s+/g, " ").trim();
+      assert.ok(pageText.includes(quote), `quote not present in extracted text for item ${item.number}`);
+    }
+  });
+
+  test("fetchDocument returns an HTML agenda document instead of failing NO_PDF_LINK", async () => {
+    const { fetchDocument } = await import("../../scripts/extractors/parse_agenda_pdf.mjs");
+    const { createServer } = await import("node:http");
+    const server = createServer((request, response) => {
+      // GeneratedAgendaViewer pages are served as HTML fragments without a
+      // doctype — exactly what the real portal sends.
+      response.writeHead(200, { "content-type": "text/html" });
+      response.end(octoberHtml);
+    });
+    await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const base = `http://127.0.0.1:${server.address().port}`;
+    try {
+      const fetched = await fetchDocument(`${base}/AgendaViewer.php?view_id=5&event_id=1448`);
+      assert.ok(fetched.html, "the agenda page must be returned as an HTML document");
+      assert.match(fetched.finalUrl, /AgendaViewer\.php\?view_id=5&event_id=1448$/);
+    } finally {
+      server.close();
+    }
+  });
+
+  test("the full pipeline ingests the October 12 HTML agenda end to end", () => {
+    const sandbox = path.join(OUT, "repo-html-agenda");
+    mkdirSync(sandbox, { recursive: true });
+    const htmlPath = path.join(sandbox, "generated-agenda.html");
+    copyFileSync(path.join(FIXTURES, "granicus-generated-agenda.html"), htmlPath);
+    const htmlMeetingId = "city-council-2026-10-12";
+
+    runCli("scripts/sync/build-plan.mjs", [], {
+      cwd: sandbox,
+      env: { PDF_SOURCE_URLS: "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1448", MEETING_IDS: htmlMeetingId, SYNC_REASON: "e2e-html-agenda" },
+    });
+    const planPath = path.join(sandbox, ".sync", "plan.json");
+    const plan = JSON.parse(readFileSync(planPath, "utf8"));
+    plan.meetings[0].url = undefined;
+    plan.meetings[0].file = htmlPath;
+    writeFileSync(planPath, JSON.stringify(plan, null, 2));
+
+    runCli("scripts/extractors/parse_agenda_pdf.mjs", ["--plan", planPath], { cwd: sandbox });
+    const resolved = JSON.parse(readFileSync(planPath, "utf8"));
+    const dir = path.join(sandbox, resolved.meetings[0].dir);
+    const agenda = JSON.parse(readFileSync(path.join(dir, "agenda.json"), "utf8"));
+    assert.equal(agenda.extraction.engine, "granicus-html-agenda-v1");
+    assert.ok(agenda.items.length >= 10, `expected the October agenda items, got ${agenda.items.length}`);
+    assert.ok(
+      agenda.items.some((item) => /Annexing/i.test(item.text)),
+      "the October annexation items must be extracted from the HTML agenda",
+    );
+
+    runCli("scripts/analysis/red_team_analyzer.mjs", ["--plan", planPath], { cwd: sandbox });
+    runCli("scripts/actions/draft_objection.mjs", ["--plan", planPath, "--to", "clerk@example.org"], { cwd: sandbox });
+    // Step 5 — the same evidence gate the sync workflow runs before committing.
+    runCli("scripts/lib/validate.mjs", ["--plan", planPath], { cwd: sandbox });
+  });
+});

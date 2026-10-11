@@ -36,6 +36,11 @@ import {
   parseMunicipalMeetingFilename,
 } from "./lib/filename-dates.mjs";
 import { sampleTranscriptCues, timestampedMarkdownCues, youtubeVideoId } from "./lib/transcript-harvest.mjs";
+import {
+  applyCuratedUpcoming,
+  applyDetectedRecord,
+  cheyenneTodayISO,
+} from "./lib/upcoming-merge.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC_DATA = path.join(ROOT, "src", "data");
@@ -318,16 +323,52 @@ function collectMeetings() {
   for (const row of official.financeCommittee) mergeOfficial("finance-committee", row);
   for (const row of official.publicServicesCommittee) mergeOfficial("public-services-committee", row);
 
-  for (const upcoming of official.upcoming) {
+  // Date gate for the upcoming view: an entry is "upcoming" only while its date
+  // has not passed in city time. A stale snapshot can therefore never keep last
+  // week's meetings in the "Upcoming agendas" view — the next build demotes
+  // them into the year archive while preserving their captured agenda data.
+  const todayISO = cheyenneTodayISO();
+  const dayLabelFor = (date) => dateLabel(date).split(",")[0];
+
+  for (const upcoming of official.upcoming || []) {
     const meeting = ensure(upcoming.body, upcoming.date);
-    meeting.upcoming = true;
-    meeting.dayLabel = upcoming.dayLabel;
-    meeting.time = upcoming.time;
-    meeting.location = upcoming.location;
-    meeting.items = upcoming.items;
-    meeting.zoom = upcoming.zoom;
-    meeting.official.agenda = cityUrl(upcoming.agendaPath);
-    if (upcoming.granicusUrl) meeting.official.granicus = upcoming.granicusUrl;
+    applyCuratedUpcoming(meeting, { ...upcoming, agendaPath: upcoming.agendaPath ? cityUrl(upcoming.agendaPath) : undefined }, { todayISO, dayLabelFor });
+  }
+
+  // Agendas already transcribed for meetings that have since taken place stay
+  // in the index as historical entries (the sync pipeline moves stale curated
+  // entries here so the upcoming array remains a true forward calendar).
+  for (const posted of official.posted || []) {
+    const meeting = ensure(posted.body, posted.date);
+    applyCuratedUpcoming(meeting, { ...posted, agendaPath: posted.agendaPath ? cityUrl(posted.agendaPath) : undefined }, { todayISO, dayLabelFor });
+    delete meeting.upcoming;
+  }
+
+  // The live watcher publishes the semantic records it reads from the city's
+  // upcoming-meetings table (src/data/detected-upcoming.json). Merge any record
+  // the curated snapshot does not already cover, so the calendar stays current
+  // even while agenda-PDF ingestion is blocked or pending. Defensive by design:
+  // a malformed or half-written file must never break the site build.
+  const detectedPath = path.join(SRC_DATA, "detected-upcoming.json");
+  if (existsSync(detectedPath)) {
+    try {
+      const detected = JSON.parse(readFileSync(detectedPath, "utf8"));
+      if (!Array.isArray(detected.meetings)) throw new Error("meetings[] missing");
+      let merged = 0;
+      for (const record of detected.meetings) {
+        const existing = [...meetings.values()].find((meeting) => meeting.body === record.body && meeting.date === record.date);
+        const result = applyDetectedRecord((body, date) => ensure(body, date), record, {
+          existing,
+          todayISO,
+          dayLabelFor,
+          provenanceNote: "Agenda posted on the city portal; item details are transcribed into this index when the posted agenda is processed",
+        });
+        if (result) merged += 1;
+      }
+      if (merged) console.log(`Merged ${merged} detected upcoming meeting(s) from the live portal watch.`);
+    } catch (error) {
+      console.warn(`note: ignoring unusable detected-upcoming.json (${error.message})`);
+    }
   }
 
   // Locally harvested or manually supplied captions are first-class archive
@@ -377,6 +418,12 @@ function collectMeetings() {
   }
 
   const list = [...meetings.values()].map((meeting) => {
+    // The same date-gate rule applies to notes: a meeting whose date has
+    // passed must not keep advertising "Upcoming — agenda posted" from a
+    // stale curated capture. The agenda itself was really posted; say that.
+    if (meeting.date < todayISO) {
+      meeting.notes = meeting.notes.map((note) => (note.startsWith("Upcoming") ? "Agenda posted" : note));
+    }
     if (!meeting.notes.length) delete meeting.notes;
     meeting.docs.sort((a, b) => a.path.localeCompare(b.path));
     return meeting;

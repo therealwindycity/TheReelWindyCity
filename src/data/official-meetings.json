@@ -1,6 +1,6 @@
 {
-  "$comment": "Official meeting index captured 2026-10-03 from the City of Cheyenne Minutes-and-Agendas page and Granicus portal. Council clip IDs and dates use the official Granicus archive listing; same-day sessions are represented separately. Upcoming agendas and their Zoom details are transcribed from the city's posted agenda PDFs.",
-  "captured": "2026-10-03",
+  "$comment": "Official meeting index captured 2026-10-03 from the City of Cheyenne Minutes-and-Agendas page and Granicus portal; forward calendar re-captured 2026-10-11 from the Granicus upcoming-meetings table. Council clip IDs and dates use the official Granicus archive listing; same-day sessions are represented separately. Upcoming agendas and their Zoom details are transcribed from the city's posted agenda documents. Passed meetings move to 'posted' with their transcribed agendas preserved as history.",
+  "captured": "2026-10-11",
   "sources": {
     "officialPage": "https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas",
     "granicusPage": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5",
@@ -13,129 +13,206 @@
   },
   "upcoming": [
     {
-      "id": "public-services-committee-2026-10-05",
-      "body": "public-services-committee",
-      "bodyLabel": "Public Services Committee",
-      "date": "2026-10-05",
+      "id": "city-council-2026-10-12",
+      "body": "city-council",
+      "bodyLabel": "City Council Meeting",
+      "date": "2026-10-12",
       "dayLabel": "Monday",
-      "time": "12:00 p.m.",
-      "location": "Council Chambers, 2101 O'Neil Ave.",
-      "agendaPath": "psc-2026/psc-10-05-26-agenda.pdf",
-      "granicusUrl": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1447",
-      "zoom": {
-        "joinUrl": "https://us02web.zoom.us/j/89824535358",
-        "webinarId": "898 2453 5358",
-        "passcode": "PS10052026",
-        "callIn": "253-205-0468",
-        "callInPasscode": "0111761018"
-      },
+      "granicusUrl": "https://cheyenne.granicus.com/agendaviewer.php?view_id=5&event_id=1448",
       "items": [
+        {
+          "number": "1",
+          "kind": "Other",
+          "text": "CALL MEETING TO ORDER."
+        },
+        {
+          "number": "2",
+          "kind": "Other",
+          "text": "CALL ROLL."
+        },
+        {
+          "number": "3",
+          "kind": "Other",
+          "text": "PLEDGE OF ALLEGIANCE."
+        },
+        {
+          "number": "4",
+          "kind": "Other",
+          "text": "CONSENT AGENDA. (All agenda items listed with the designation of [CA] are considered to be routine items by the governing body and will be enacted by one motion. There will be no separate discussion on these items unless a member of the governing body so requests and support by two other members is received. Any item removed from the Consent Agenda will be considered in its normal sequence on the agenda.)"
+        },
+        {
+          "number": "5",
+          "kind": "Minutes",
+          "text": "MINUTES FROM REGULAR MEETING OF THE GOVERNING BODY ON SEPTEMBER 28, 2026."
+        },
+        {
+          "number": "6",
+          "kind": "Other",
+          "text": "PUBLIC HEARINGS: a) Public Hearing to determine whether compliance if annexation conditions required by Wyoming Statute §15-1-402 exist for about 8.18 acres of land and right-of-way located south of US-30 and north of Commerce Circle."
+        },
+        {
+          "number": "7",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (PUBLIC SERVICES COMMITTEE)"
+        },
+        {
+          "number": "8",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne establishing the zoning classification of AG Agricultural and LI Light Industrial for land annexed to the City of Cheyenne located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (PUBLIC SERVICES COMMITTEE)"
+        },
         {
           "number": "9",
           "kind": "Ordinance · 3rd reading",
-          "text": "Annexing to the City of Cheyenne, Wyoming, land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25 from AG Agricultural and LI Light Industrial to BP Business Park. (PUBLIC SERVICES COMMITTEE)"
         },
         {
           "number": "10",
           "kind": "Ordinance · 3rd reading",
-          "text": "Amending the Official Zoning Map of the City of Cheyenne establishing the zoning classification of AG Agricultural and LI Light Industrial for land annexed to the City of Cheyenne located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+          "text": "Annexing to the City of Cheyenne, Wyoming, land west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (PUBLIC SERVICES COMMITTEE)"
         },
         {
           "number": "11",
           "kind": "Ordinance · 3rd reading",
-          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25 from AG Agricultural and LI Light Industrial to BP Business Park."
-        },
-        {
-          "number": "13",
-          "kind": "Ordinance · 3rd reading",
-          "text": "Annexing to the City of Cheyenne, Wyoming, land west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue."
-        },
-        {
-          "number": "14",
-          "kind": "Ordinance · 3rd reading",
           "text": "Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification AG – Agricultural for land annexed to the City of Cheyenne, located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (PUBLIC SERVICES COMMITTEE)"
         },
         {
-          "number": "15",
+          "number": "12",
           "kind": "Ordinance · 3rd reading",
-          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue from AG – Agricultural to LI – Light Industrial."
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue from AG – Agricultural to LI – Light Industrial. (PUBLIC SERVICES COMMITTEE)"
+        },
+        {
+          "number": "13",
+          "kind": "Ordinance · 1st reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land south of US-30 and north of Commerce Circle. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "14",
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification of BP – Business Park for land annexed to the City of Cheyenne, located south of Tate Road, north of Commerce Circle, and west of and adjacent to Christensen Road. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "15",
+          "kind": "Ordinance · 1st reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land south of East Fox Farm Road, north of East Allison Road and east of and adjacent to south College Drive. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "16",
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification of AG - Agricultural for land annexed to the City of Cheyenne, located south of East Fox Farm Road, north of East Allison Road and east of and adjacent to South College Drive. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "17",
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of East Fox Farm Road, north of East Allison Road and east of and adjacent to South College Drive from AG – Agricultural to BP – Business Park. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "18",
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending Sections 1.4.3, 1.4.4, 2.2.3, 5.1.4, and 5.7.2 of the Cheyenne Unified Development Code to add and clarify Specified Use Allowances, clarify processes for Agricultural Uses and providing definitions. (SPONSOR – DR. ALDRICH)"
         },
         {
           "number": "19",
-          "kind": "Resolution",
-          "text": "Amending the Future Land Use Map of PlanCheyenne by changing the land use designation from Agricultural/Rural, Open Space and Parks, and Mixed-Use Employment to Community Business and removing the Natural and Cultural Resources area designation for property generally located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (Postponed from September 28, 2026)"
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending Section 6.2.8 of the Cheyenne Unified Development Code to allow for unpaved parking in certain site-specific situations. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "20",
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending Section 6.08.020 of the Municipal Code of the City of Cheyenne, Wyoming, to revise exceptions to restrictions on keeping livestock within the City. (SPONSOR – DR. ALDRICH)"
         },
         {
           "number": "21",
+          "kind": "Ordinance · 1st reading",
+          "text": "Amending Section 9.12.080 of the Municipal Code of the City of Cheyenne, Wyoming, to allow electric fencing for certain agricultural and livestock uses. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "22",
           "kind": "Resolution",
-          "text": "Amending the Future Land Use Map of PlanCheyenne changing the land use designation from Mixed-Use Residential to Mixed-Use Employment for property generally located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (Postponed from September 28, 2026)"
+          "text": "Amending the Future Land Use Map of PlanCheyenne by changing the land use designation from Agricultural/Rural, Open Space and Parks, and Mixed-Use Employment to Community Business and removing the Natural and Cultural Resources area designation for property generally located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (PUBLIC SERVICES COMMITTEE) (POSTPONED FROM SEPTEMBER 28, 2026)"
+        },
+        {
+          "number": "23",
+          "kind": "Resolution",
+          "text": "Amending the Future Land Use Map of PlanCheyenne changing the land use designation from Mixed-Use Residential to Mixed-Use Employment for property generally located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (PUBLIC SERVICES COMMITTEE) (POSTPONED FROM SEPTEMBER 28, 2026)"
         },
         {
           "number": "24",
           "kind": "Resolution",
-          "text": "Authorizing the Mayor and the City Clerk to sign a Final Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (Sponsor – Dr. Aldrich)"
+          "text": "Authorizing the Mayor and the City Clerk to sign a Final Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (PUBLIC SERVICES COMMITTEE)"
         },
-        {
-          "number": "27",
-          "kind": "Resolution",
-          "text": "Appointing the City of Cheyenne's representatives to the Wyoming Association of Risk Management Joint Powers Board and the Wyoming Association of Risk Management Property Insurance Joint Powers Board. (Sponsors – Dr. Aldrich, Dr. Rinne and Mr. White)"
-        },
-        {
-          "number": "28",
-          "kind": "Preliminary plats",
-          "text": "a) Preliminary Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
-        }
-      ]
-    },
-    {
-      "id": "finance-committee-2026-10-06",
-      "body": "finance-committee",
-      "bodyLabel": "Finance Committee",
-      "date": "2026-10-06",
-      "dayLabel": "Tuesday",
-      "time": "12:00 p.m.",
-      "location": "Council Chambers, 2101 O'Neil Ave.",
-      "agendaPath": "fc-2026/fc-10-06-26-agenda.pdf",
-      "granicusUrl": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1446",
-      "zoom": {
-        "joinUrl": "https://us02web.zoom.us/j/89350085776",
-        "webinarId": "893 5008 5776",
-        "passcode": "FC10062026",
-        "callIn": "346-248-7799",
-        "callInPasscode": "8105191301"
-      },
-      "items": [
         {
           "number": "25",
           "kind": "Resolution",
-          "text": "Reappropriating $250,000 from General Fund Reserves for repair and replacement of cart paths at the Airport Golf Course. (Sponsors – Dr. Emmons, Mr. Esquibel, Dr. Rinne, Mr. Segrave and Mr. Wolfe)"
+          "text": "Reappropriating $250,000 from General Fund Reserves for repair and replacement of cart paths at the Airport Golf Course. (FINANCE COMMITTEE)"
         },
         {
           "number": "26",
           "kind": "Resolution",
-          "text": "Authorizing the Mayor to Execute a Memorandum of Understanding with participating counties, cities and towns, regarding the allocation of Impact Assistance Funds associated with the Cheyenne Prairie Generating Station Expansion Project application before the Industrial Siting Council. (Sponsor – Mr. Esquibel)"
+          "text": "Authorizing the Mayor to Execute a Memorandum of Understanding with participating counties, cities and towns, regarding the allocation of Impact Assistance Funds associated with the Cheyenne Prairie Generating Station Expansion Project application before the Industrial Siting Council. (FINANCE COMMITTEE)"
         },
         {
-          "number": "29d",
-          "kind": "Leases / Contracts / Legal",
-          "text": "Agreement between the City of Cheyenne, Transit Program and the Wyoming Department of Health Aging Division to provide transportation support services to persons 60 years or older under the Title III-B Program Grant for FY 2027. (Title III-B Division of Aging Grant)"
+          "number": "27",
+          "kind": "Resolution",
+          "text": "Appointing the City of Cheyenne’s representatives to the Wyoming Association of Risk Management Joint Powers Board and the Wyoming Association of Risk Management Property Insurance Joint Powers Board. (PUBLIC SERVICES COMMITTEE)"
         },
         {
-          "number": "29e",
-          "kind": "Leases / Contracts / Legal",
-          "text": "Professional Services Agreement between the City of Cheyenne and Martin/Martin Wyoming, Inc. for the redesign of the Municipal Building Parking Lot. (2021 Specific Purpose Option Tax Fund)"
+          "number": "28",
+          "kind": "Resolution",
+          "text": "Re-appropriating the Fiscal Year 2027 Budget of the City of Cheyenne according to the provisions of W.S. §§ 16-4-112 & 16-4-113. (SPONSOR – MR. ESQUIBEL)"
         },
         {
-          "number": "29f",
-          "kind": "Leases / Contracts / Legal",
-          "text": "Contract between the City of Cheyenne, Office of Youth Alternatives and the Laramie County Community Juvenile Services Joint Powers Board for case management services and substance abuse testing and assessments. (Revenue to the City)"
+          "number": "29",
+          "kind": "Resolution",
+          "text": "Amending the City’s General Fund Balance Policy to provide for fiscal year-end review of certain General Fund balances and potential transfers to the Stormwater Runoff Management System Account, up to an aggregate amount of ten million dollars ($10,000,000). (SPONSOR – DR. ALDRICH)"
         },
         {
-          "number": "29g",
-          "kind": "Leases / Contracts / Legal",
-          "text": "Professional Services Agreement between the City of Cheyenne and TDSi – The Design Studio, inc. for the Johnson Pool – Evaluation and Design Project. (2026 Specific Purpose Option Tax Fund)"
+          "number": "30",
+          "kind": "Resolution",
+          "text": "Adopting the revised City of Cheyenne, Wyoming, Investment Policy Statement. (SPONSOR – MR. ESQUIBEL)"
+        },
+        {
+          "number": "31",
+          "kind": "Resolution",
+          "text": "Authorizing up to an $18,063,014 Interfund Loan from the One Percent Sales Tax Capital Projects fund to the Special Purpose Option Sales Tax Capital Projects Fund to facilitate projects approved by voters at the August 18, 2026 Specific Purpose Option Tax Election. (SPONSOR – MR. ESQUIBEL)"
+        },
+        {
+          "number": "32",
+          "kind": "Resolution",
+          "text": "Granting Special Use approval for a gaming center pursuant to Unified Development Code Section 2.2.7 and granting local approval of a site-specific application for a Simulcasting Permit to be issued by the Wyoming Gaming Commission pursuant to Wyo. Stat. § 11-25-210 for property located at 3307 Nationway. (SPONSOR – DR. ALDRICH)"
+        },
+        {
+          "number": "33",
+          "kind": "Other",
+          "text": "PRELIMINARY PLATS: a) [CA] Preliminary Plat for Hitching Post District City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (PUBLIC SERVICES COMMITTEE)"
+        },
+        {
+          "number": "34",
+          "kind": "Other",
+          "text": "LEASES/CONTRACTS/LEGAL: a) [CA] Agreement between the City of Cheyenne, Transit Program and the Wyoming Department of Health Aging Division to provide transportation support services to persons 60 years or older under the Title III-B Program Grant for FY 2027. (Title III-B Division of Aging Grant) (FINANCE COMMITTEE) b) Professional Services Agreement between the City of Cheyenne and Martin/Martin Wyoming, Inc. for the redesign of the Municipal Building Parking Lot. (2021 Specific Purpose Option Tax Fund) (FINANCE COMMITTEE) c) [CA] Contract between the City of Cheyenne, Office of Youth Alternatives and the Laramie County Community Juvenile Services Joint Powers Board for case management services and substance abuse testing and assessments. (Revenue to the City) (FINANCE COMMITTEE) d) [CA] Professional Services Agreement between the City of Cheyenne and TDSi – The Design Studio, inc. for the Johnson Pool – Evaluation and Design Project. (2026 Specific Purpose Option Tax Fund) (FINANCE COMMITTEE) e) [CA] 2026 Development Agreement between the City of Cheyenne, Granite Peak Development, LP, Laramie Land Holdings, LLC, 2R Investments, LLC, Granite Peak Transloading, LLC and those entities’ assigns under common ownership and Clear Creek Land Company LLC and Swan Ranch LLC, relative to the Swan Ranch Development Area. (Revenue to the City) f) [CA] Grant of Easement between the City of Cheyenne and the Department of the Air Force to grant and convey to the City a non-exclusive easement on F.E. Warren Air Force Base property for the construction, use, operation and maintenance of a parking lot to serve patrons of Cheyenne Frontier Days."
+        },
+        {
+          "number": "35",
+          "kind": "Other",
+          "text": "CONSIDERATION OF BIDS/PURCHASES/REQUESTS FOR PROPOSALS: a) [CA] Consideration to Purchase between the City of Cheyenne, and Lenco Industries, Inc. d/b/a Lenco Armored Vehicles for the purchase of two (2) BearCat G3 Armored Vehicles for the Cheyenne Police Department. (General Fund Reserves and Federal Forfeiture Funds)"
+        },
+        {
+          "number": "36",
+          "kind": "Other",
+          "text": "ANNOUNCEMENTS/REPORTS/MOTIONS: a) VOUCHER REPORT."
+        },
+        {
+          "number": "37",
+          "kind": "Other",
+          "text": "OTHER BUSINESS:"
+        },
+        {
+          "number": "38",
+          "kind": "Other",
+          "text": "ADJOURN."
         }
-      ]
+      ],
+      "time": "6:00 p.m.",
+      "location": "Council Chambers, 2101 O'Neil Ave."
     }
   ],
   "cityCouncil": [
@@ -884,6 +961,135 @@
       "d": "2025-01-06",
       "a": "psc-2025/psc-01-06-25-agenda.pdf",
       "m": "psc-2025/psc-01-06-25-minutes.pdf"
+    }
+  ],
+  "posted": [
+    {
+      "id": "public-services-committee-2026-10-05",
+      "body": "public-services-committee",
+      "bodyLabel": "Public Services Committee",
+      "date": "2026-10-05",
+      "dayLabel": "Monday",
+      "time": "12:00 p.m.",
+      "location": "Council Chambers, 2101 O'Neil Ave.",
+      "agendaPath": "psc-2026/psc-10-05-26-agenda.pdf",
+      "granicusUrl": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1447",
+      "zoom": {
+        "joinUrl": "https://us02web.zoom.us/j/89824535358",
+        "webinarId": "898 2453 5358",
+        "passcode": "PS10052026",
+        "callIn": "253-205-0468",
+        "callInPasscode": "0111761018"
+      },
+      "items": [
+        {
+          "number": "9",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+        },
+        {
+          "number": "10",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne establishing the zoning classification of AG Agricultural and LI Light Industrial for land annexed to the City of Cheyenne located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+        },
+        {
+          "number": "11",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of Interstate 80, southeast of Otto Road, and west of Interstate 25 from AG Agricultural and LI Light Industrial to BP Business Park."
+        },
+        {
+          "number": "13",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Annexing to the City of Cheyenne, Wyoming, land west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue."
+        },
+        {
+          "number": "14",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification AG – Agricultural for land annexed to the City of Cheyenne, located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (PUBLIC SERVICES COMMITTEE)"
+        },
+        {
+          "number": "15",
+          "kind": "Ordinance · 3rd reading",
+          "text": "Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue from AG – Agricultural to LI – Light Industrial."
+        },
+        {
+          "number": "19",
+          "kind": "Resolution",
+          "text": "Amending the Future Land Use Map of PlanCheyenne by changing the land use designation from Agricultural/Rural, Open Space and Parks, and Mixed-Use Employment to Community Business and removing the Natural and Cultural Resources area designation for property generally located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (Postponed from September 28, 2026)"
+        },
+        {
+          "number": "21",
+          "kind": "Resolution",
+          "text": "Amending the Future Land Use Map of PlanCheyenne changing the land use designation from Mixed-Use Residential to Mixed-Use Employment for property generally located west of South Greeley Highway, south of West College Drive, and southwest of and adjacent to the intersection of Apple Street and York Avenue. (Postponed from September 28, 2026)"
+        },
+        {
+          "number": "24",
+          "kind": "Resolution",
+          "text": "Authorizing the Mayor and the City Clerk to sign a Final Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25. (Sponsor – Dr. Aldrich)"
+        },
+        {
+          "number": "27",
+          "kind": "Resolution",
+          "text": "Appointing the City of Cheyenne's representatives to the Wyoming Association of Risk Management Joint Powers Board and the Wyoming Association of Risk Management Property Insurance Joint Powers Board. (Sponsors – Dr. Aldrich, Dr. Rinne and Mr. White)"
+        },
+        {
+          "number": "28",
+          "kind": "Preliminary plats",
+          "text": "a) Preliminary Plat for Hitching Post District, City of Cheyenne, Laramie County, Wyoming, located south of Interstate 80, southeast of Otto Road, and west of Interstate 25."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "id": "finance-committee-2026-10-06",
+      "body": "finance-committee",
+      "bodyLabel": "Finance Committee",
+      "date": "2026-10-06",
+      "dayLabel": "Tuesday",
+      "time": "12:00 p.m.",
+      "location": "Council Chambers, 2101 O'Neil Ave.",
+      "agendaPath": "fc-2026/fc-10-06-26-agenda.pdf",
+      "granicusUrl": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1446",
+      "zoom": {
+        "joinUrl": "https://us02web.zoom.us/j/89350085776",
+        "webinarId": "893 5008 5776",
+        "passcode": "FC10062026",
+        "callIn": "346-248-7799",
+        "callInPasscode": "8105191301"
+      },
+      "items": [
+        {
+          "number": "25",
+          "kind": "Resolution",
+          "text": "Reappropriating $250,000 from General Fund Reserves for repair and replacement of cart paths at the Airport Golf Course. (Sponsors – Dr. Emmons, Mr. Esquibel, Dr. Rinne, Mr. Segrave and Mr. Wolfe)"
+        },
+        {
+          "number": "26",
+          "kind": "Resolution",
+          "text": "Authorizing the Mayor to Execute a Memorandum of Understanding with participating counties, cities and towns, regarding the allocation of Impact Assistance Funds associated with the Cheyenne Prairie Generating Station Expansion Project application before the Industrial Siting Council. (Sponsor – Mr. Esquibel)"
+        },
+        {
+          "number": "29d",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Agreement between the City of Cheyenne, Transit Program and the Wyoming Department of Health Aging Division to provide transportation support services to persons 60 years or older under the Title III-B Program Grant for FY 2027. (Title III-B Division of Aging Grant)"
+        },
+        {
+          "number": "29e",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Professional Services Agreement between the City of Cheyenne and Martin/Martin Wyoming, Inc. for the redesign of the Municipal Building Parking Lot. (2021 Specific Purpose Option Tax Fund)"
+        },
+        {
+          "number": "29f",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Contract between the City of Cheyenne, Office of Youth Alternatives and the Laramie County Community Juvenile Services Joint Powers Board for case management services and substance abuse testing and assessments. (Revenue to the City)"
+        },
+        {
+          "number": "29g",
+          "kind": "Leases / Contracts / Legal",
+          "text": "Professional Services Agreement between the City of Cheyenne and TDSi – The Design Studio, inc. for the Johnson Pool – Evaluation and Design Project. (2026 Specific Purpose Option Tax Fund)"
+        }
+      ],
+      "notes": []
     }
   ]
 }

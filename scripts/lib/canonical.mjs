@@ -50,7 +50,14 @@ export function normalizeUrl(raw) {
   if (!text) return "";
   let url;
   try {
-    url = new URL(text);
+    // Protocol-relative links ("//host/path") are how the Granicus upcoming
+    // widget emits agenda URLs. They parse as URLs only with a scheme, and
+    // passing them to fetch() throws "Failed to parse URL" — which is exactly
+    // how the sync pipeline was wedged in a daily failure loop while the
+    // portal's real agenda sat one well-formed URL away. Resolve them against
+    // https: here, at the single canonicalization point, so every consumer
+    // (watcher records, sync plan, site links) sees an absolute URL.
+    url = new URL(text.startsWith("//") ? `https:${text}` : text);
   } catch {
     // Not a parseable absolute URL — return the collapsed text lowercased so that
     // trivial case/whitespace differences do not trigger syncs either.

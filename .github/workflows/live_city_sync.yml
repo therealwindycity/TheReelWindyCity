@@ -106,6 +106,15 @@ jobs:
       - name: Validate outputs before any git write (OM3#2 — structural soundness + evidence gate)
         run: node scripts/lib/validate.mjs --plan .sync/plan.json
 
+      - name: Apply the validated agenda to the site snapshot
+        # The pipeline commits raw artifacts under data/ (never src/data/ —
+        # OM1#1b), but the static site only reads src/data/official-meetings.json.
+        # This step is the validated bridge: it folds the extracted agenda items
+        # into the snapshot the build consumes and relocates date-passed entries
+        # out of the forward calendar. Runs after the validator gate, before any
+        # git command, so only checked data can reach the site.
+        run: node scripts/sync/apply-agenda.mjs --plan .sync/plan.json
+
       - name: Refresh watch baseline (idempotent, self-healing)
         # Best effort: if Granicus is unreachable here the stale baseline simply
         # re-fires the next watch run, which re-runs this pipeline and commits
@@ -123,7 +132,7 @@ jobs:
           # for this document is stale — clearing it lets the next real change
           # trigger immediately instead of waiting out the retry window.
           rm -f data/sync-blocked.json
-          git add data/
+          git add data/ src/data/official-meetings.json
 
           if git diff --cached --quiet; then
             echo "No structural variations detected. Skipping deployment loop."
