@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-10T14:50:40.698Z",
+  "generatedAt": "2026-10-11T14:52:03.074Z",
   "places": [
     {
       "id": "afton",
@@ -142,7 +142,7 @@
       "sourceUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "documents": [],
       "errors": [
-        "HTTP 404 from https://www.casperwy.gov/government/city_council/Documents/Government/City%20Council/Agendas%20and%20Minutes/Pre%20Meetings/2026/Agendas/10-06-2026%20Pre-Meeting%20Agenda.pdf?t=202610051524000"
+        "Host drift from https://www.casperwy.gov/Documents/Government/City%20Council/Agendas%20and%20Minutes/Pre%20Meetings/2026/Agendas/10-06-2026%20Pre-Meeting%20Agenda.pdf?t=202610051524000 to https://cms2.revize.com/revize/casperwy/Documents/Government/City%20Council/Agendas%20and%20Minutes/Pre%20Meetings/2026/Agendas/10-06-2026%20Pre-Meeting%20Agenda.pdf?t=202610051524000"
       ]
     },
     {
