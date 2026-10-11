@@ -119,9 +119,19 @@ export function parseAgendaStructure(pages) {
 
       if (/^ACTION\s*:/i.test(text)) {
         actionBuffer.push(text.replace(/^ACTION\s*:\s*/i, ""));
+        // Verbatim contiguity: the quote must remain a literal passage of the
+        // source. ACTION lines sit between the item's own lines in the
+        // document, so they join the quote (while staying out of item.text).
+        if (item) item.quote = collapseWhitespace(`${item.quote} ${text}`);
         continue;
       }
-      if (/^(supporting document|additional information|page \d+)/i.test(text)) continue; // document chrome
+      if (/^(supporting document|additional information|page \d+)/i.test(text)) {
+        // Document chrome is excluded from item text but not from the quote —
+        // a quote that silently skips source lines would no longer be a
+        // substring of the extracted text and would fail the evidence gate.
+        if (item) item.quote = collapseWhitespace(`${item.quote} ${text}`);
+        continue;
+      }
 
       const start = parseItemStart(text);
       if (start) {

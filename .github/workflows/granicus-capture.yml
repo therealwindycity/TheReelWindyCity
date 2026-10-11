@@ -1,0 +1,50 @@
+name: Granicus Forensic Capture
+
+# =============================================================================
+# Read-only diagnostic companion to the Live Municipal Watch.
+#
+# When the sync pipeline's extraction step fails (NO_PDF_LINK / CORRUPT / …),
+# the blocked-change marker records THAT ingestion failed — never WHY, because
+# the failing document never reaches a commit. This workflow captures the
+# evidence a human needs to unblock it: the live upcoming table's semantic
+# records, plus the raw agenda viewer pages and a full inventory of the links,
+# frames and embeds they contain (exactly what the extractor sees).
+#
+# It writes nothing to the repository — results land in the run's artifacts and
+# step summary only. Dispatch it from the branch you are debugging on.
+#
+# Provenance: this workflow produced the evidence for the 2026-10 stale-agenda
+# fix — the protocol-relative agenda links (which wedged the sync fetch) and
+# the GeneratedAgendaViewer HTML agenda (which has no combined-PDF link at all).
+# =============================================================================
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Capture the live portal table and agenda viewer pages
+        run: node scripts/monitor/capture-upcoming.mjs --out-dir .sync/forensic
+
+      - name: Upload the forensic bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: granicus-forensic
+          path: .sync/forensic
+          retention-days: 14
+          if-no-files-found: error
