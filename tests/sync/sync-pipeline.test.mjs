@@ -412,7 +412,11 @@ describe("OM2#1 layout-aware engine vs. column interleaving", () => {
 /** Build a realistic multi-page PSC agenda PDF from the REAL posted item texts. */
 function buildPscAgendaPdf() {
   const snapshot = JSON.parse(readFileSync(path.join(ROOT, "src", "data", "official-meetings.json"), "utf8"));
-  const psc = snapshot.upcoming.find((meeting) => meeting.id === "public-services-committee-2026-10-05");
+  // The meeting lives in the forward calendar while it is upcoming and moves to
+  // 'posted' once its date passes — the fixture builds from either.
+  const psc = [...(snapshot.upcoming || []), ...(snapshot.posted || [])].find(
+    (meeting) => meeting.id === "public-services-committee-2026-10-05",
+  );
   assert.ok(psc, "curated snapshot must contain the Oct 5 PSC meeting");
 
   const kindPrefix = (kind) => {
