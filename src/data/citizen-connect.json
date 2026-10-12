@@ -1,7 +1,7 @@
 {
  "schema": 2,
  "generatedBy": "sync",
- "capturedAt": "2026-10-11T11:30:16.485Z",
+ "capturedAt": "2026-10-12T11:35:49.807Z",
  "source": {
   "name": "Cheyenne / Laramie County Citizen Connect",
   "publisher": "Cheyenne Police Department & Laramie County Sheriff's Office",
@@ -16,10 +16,10 @@
  },
  "coverage": {
   "requestedStart": "2020-01-01",
-  "requestedEnd": "2026-10-10",
-  "days": 2475,
+  "requestedEnd": "2026-10-11",
+  "days": 2476,
   "weekdayOccurrences": {
-   "Su": 353,
+   "Su": 354,
    "Mo": 353,
    "Tu": 353,
    "We": 354,
@@ -61,8 +61,8 @@
   }
  ],
  "totals": {
-  "all": 447377,
-  "incidents": 408577,
+  "all": 447534,
+  "incidents": 408734,
   "cases": 38800
  },
  "rhythm": {
@@ -78,123 +78,123 @@
   "cells": {
    "Su": [
     [
-     2467,
-     2252,
+     2483,
+     2268,
      215
     ],
     [
-     1806,
-     1605,
+     1814,
+     1613,
      201
     ],
     [
-     1289,
-     1114,
+     1294,
+     1119,
      175
     ],
     [
-     808,
-     712,
+     810,
+     714,
      96
     ],
     [
-     586,
-     528,
+     588,
+     530,
      58
     ],
     [
-     538,
-     493,
+     541,
+     496,
      45
     ],
     [
-     532,
-     482,
+     533,
+     483,
      50
     ],
     [
-     860,
-     760,
+     863,
+     763,
      100
     ],
     [
-     1516,
-     1386,
+     1519,
+     1389,
      130
     ],
     [
-     1892,
-     1712,
+     1896,
+     1716,
      180
     ],
     [
-     2195,
-     2008,
+     2200,
+     2013,
      187
     ],
     [
-     2304,
-     2109,
+     2315,
+     2120,
      195
     ],
     [
-     2325,
-     2099,
+     2330,
+     2104,
      226
     ],
     [
-     2455,
-     2220,
+     2463,
+     2228,
      235
     ],
     [
-     2319,
-     2091,
+     2326,
+     2098,
      228
     ],
     [
-     2304,
-     2066,
+     2311,
+     2073,
      238
     ],
     [
-     2387,
-     2147,
+     2397,
+     2157,
      240
     ],
     [
-     2811,
-     2545,
+     2819,
+     2553,
      266
     ],
     [
-     2786,
-     2524,
+     2795,
+     2533,
      262
     ],
     [
-     2807,
-     2571,
+     2816,
+     2580,
      236
     ],
     [
-     2654,
-     2429,
+     2664,
+     2439,
      225
     ],
     [
-     2568,
-     2355,
+     2578,
+     2365,
      213
     ],
     [
-     2279,
-     2111,
+     2284,
+     2116,
      168
     ],
     [
-     2541,
-     2371,
+     2547,
+     2377,
      170
     ]
    ],
@@ -933,11 +933,11 @@
   },
   "dowTotals": {
    "Su": {
-    "total": 47029,
-    "incidents": 42690,
+    "total": 47186,
+    "incidents": 42847,
     "cases": 4339,
-    "occurrences": 353,
-    "perOccurrence": 133.2
+    "occurrences": 354,
+    "perOccurrence": 133.3
    },
    "Mo": {
     "total": 66529,
@@ -985,146 +985,146 @@
   "hour": [
    {
     "hour": 0,
-    "total": 17412,
-    "incidents": 16219,
+    "total": 17428,
+    "incidents": 16235,
     "cases": 1193
    },
    {
     "hour": 1,
-    "total": 12406,
-    "incidents": 11390,
+    "total": 12414,
+    "incidents": 11398,
     "cases": 1016
    },
    {
     "hour": 2,
-    "total": 8207,
-    "incidents": 7436,
+    "total": 8212,
+    "incidents": 7441,
     "cases": 771
    },
    {
     "hour": 3,
-    "total": 5264,
-    "incidents": 4807,
+    "total": 5266,
+    "incidents": 4809,
     "cases": 457
    },
    {
     "hour": 4,
-    "total": 4525,
-    "incidents": 4146,
+    "total": 4527,
+    "incidents": 4148,
     "cases": 379
    },
    {
     "hour": 5,
-    "total": 5388,
-    "incidents": 4960,
+    "total": 5391,
+    "incidents": 4963,
     "cases": 428
    },
    {
     "hour": 6,
-    "total": 6416,
-    "incidents": 5817,
+    "total": 6417,
+    "incidents": 5818,
     "cases": 599
    },
    {
     "hour": 7,
-    "total": 15877,
-    "incidents": 14796,
+    "total": 15880,
+    "incidents": 14799,
     "cases": 1081
    },
    {
     "hour": 8,
-    "total": 25232,
-    "incidents": 23425,
+    "total": 25235,
+    "incidents": 23428,
     "cases": 1807
    },
    {
     "hour": 9,
-    "total": 24217,
-    "incidents": 22072,
+    "total": 24221,
+    "incidents": 22076,
     "cases": 2145
    },
    {
     "hour": 10,
-    "total": 26590,
-    "incidents": 24239,
+    "total": 26595,
+    "incidents": 24244,
     "cases": 2351
    },
    {
     "hour": 11,
-    "total": 26573,
-    "incidents": 24332,
+    "total": 26584,
+    "incidents": 24343,
     "cases": 2241
    },
    {
     "hour": 12,
-    "total": 25936,
-    "incidents": 23554,
+    "total": 25941,
+    "incidents": 23559,
     "cases": 2382
    },
    {
     "hour": 13,
-    "total": 26431,
-    "incidents": 24035,
+    "total": 26439,
+    "incidents": 24043,
     "cases": 2396
    },
    {
     "hour": 14,
-    "total": 26059,
-    "incidents": 23493,
+    "total": 26066,
+    "incidents": 23500,
     "cases": 2566
    },
    {
     "hour": 15,
-    "total": 24754,
-    "incidents": 22353,
+    "total": 24761,
+    "incidents": 22360,
     "cases": 2401
    },
    {
     "hour": 16,
-    "total": 22611,
-    "incidents": 20131,
+    "total": 22621,
+    "incidents": 20141,
     "cases": 2480
    },
    {
     "hour": 17,
-    "total": 23183,
-    "incidents": 20959,
+    "total": 23191,
+    "incidents": 20967,
     "cases": 2224
    },
    {
     "hour": 18,
-    "total": 22070,
-    "incidents": 20082,
+    "total": 22079,
+    "incidents": 20091,
     "cases": 1988
    },
    {
     "hour": 19,
-    "total": 21759,
-    "incidents": 19921,
+    "total": 21768,
+    "incidents": 19930,
     "cases": 1838
    },
    {
     "hour": 20,
-    "total": 21027,
-    "incidents": 19339,
+    "total": 21037,
+    "incidents": 19349,
     "cases": 1688
    },
    {
     "hour": 21,
-    "total": 19199,
-    "incidents": 17568,
+    "total": 19209,
+    "incidents": 17578,
     "cases": 1631
    },
    {
     "hour": 22,
-    "total": 17728,
-    "incidents": 16349,
+    "total": 17733,
+    "incidents": 16354,
     "cases": 1379
    },
    {
     "hour": 23,
-    "total": 18513,
-    "incidents": 17154,
+    "total": 18519,
+    "incidents": 17160,
     "cases": 1359
    }
   ]
@@ -15981,6 +15981,12 @@
     "total": 245,
     "incidents": 245,
     "cases": 0
+   },
+   {
+    "date": "2026-10-11",
+    "total": 157,
+    "incidents": 157,
+    "cases": 0
    }
   ],
   "monthly": [
@@ -16634,11 +16640,11 @@
    },
    {
     "label": "2026-10",
-    "total": 3102,
-    "incidents": 2962,
+    "total": 3259,
+    "incidents": 3119,
     "cases": 140,
-    "days": 10,
-    "perDay": 310.2
+    "days": 11,
+    "perDay": 296.3
    }
   ],
   "yearly": [
@@ -16692,11 +16698,11 @@
    },
    {
     "label": "2026",
-    "total": 91702,
-    "incidents": 84563,
+    "total": 91859,
+    "incidents": 84720,
     "cases": 7139,
-    "days": 283,
-    "perDay": 324
+    "days": 284,
+    "perDay": 323.4
    }
   ]
  },
@@ -16706,84 +16712,84 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Traffic Stop",
-    "count": 55328,
-    "share": 13.267
+    "count": 55336,
+    "share": 13.264
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Security Check",
-    "count": 33059,
-    "share": 7.927
+    "count": 33068,
+    "share": 7.926
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Traffic Stop",
-    "count": 31321,
+    "count": 31330,
     "share": 7.51
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Security Check",
-    "count": 21735,
+    "count": 21743,
     "share": 5.212
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Civil Paper Service",
-    "count": 20025,
-    "share": 4.802
+    "count": 20027,
+    "share": 4.8
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Field Interview",
-    "count": 15364,
-    "share": 3.684
+    "count": 15372,
+    "share": 3.685
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "VIN Inspection",
-    "count": 8255,
+    "count": 8256,
     "share": 1.979
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "School Visit",
-    "count": 7909,
+    "count": 7911,
     "share": 1.896
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "911 Hang Up",
-    "count": 7019,
-    "share": 1.683
+    "count": 7026,
+    "share": 1.684
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Trespass\\Unwanted",
-    "count": 6892,
+    "count": 6895,
     "share": 1.653
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Welfare Check - Routine",
-    "count": 4252,
-    "share": 1.02
+    "count": 4253,
+    "share": 1.019
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Larceny",
-    "count": 4192,
+    "count": 4194,
     "share": 1.005
    },
    {
@@ -16791,35 +16797,35 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Abandoned Vehicle",
     "count": 4111,
-    "share": 0.986
+    "share": 0.985
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Suspicious Circumstances",
-    "count": 4104,
-    "share": 0.984
+    "count": 4110,
+    "share": 0.985
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Accident - No Injuries",
-    "count": 3992,
-    "share": 0.957
+    "count": 3996,
+    "share": 0.958
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Suspicious Person",
-    "count": 3969,
+    "count": 3972,
     "share": 0.952
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Disturbance",
-    "count": 3665,
-    "share": 0.879
+    "count": 3672,
+    "share": 0.88
    },
    {
     "layer": "Cases",
@@ -16832,8 +16838,8 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Welfare Check - Urgent",
-    "count": 3538,
-    "share": 0.848
+    "count": 3541,
+    "share": 0.849
    },
    {
     "layer": "Incidents",
@@ -16846,14 +16852,14 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Special Detail",
-    "count": 3447,
-    "share": 0.827
+    "count": 3448,
+    "share": 0.826
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Parking Complaint",
-    "count": 2961,
+    "count": 2962,
     "share": 0.71
    },
    {
@@ -16874,7 +16880,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "911 Hang Up",
-    "count": 2625,
+    "count": 2626,
     "share": 0.629
    },
    {
@@ -16888,7 +16894,7 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Wanted Person",
-    "count": 2457,
+    "count": 2459,
     "share": 0.589
    },
    {
@@ -16903,20 +16909,20 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Towed Vehicle",
     "count": 2434,
-    "share": 0.584
+    "share": 0.583
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Suspicious Vehicle",
-    "count": 2278,
+    "count": 2279,
     "share": 0.546
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Domestic Verbal",
-    "count": 2089,
+    "count": 2091,
     "share": 0.501
    },
    {
@@ -16930,7 +16936,7 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Traffic Complaint - Serious",
-    "count": 1952,
+    "count": 1954,
     "share": 0.468
    },
    {
@@ -16944,28 +16950,28 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Special Detail",
-    "count": 1918,
+    "count": 1920,
     "share": 0.46
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Wanted Person",
-    "count": 1886,
-    "share": 0.452
+    "count": 1888,
+    "share": 0.453
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Property - Lost\\Found",
-    "count": 1771,
+    "count": 1772,
     "share": 0.425
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Alarm",
-    "count": 1705,
+    "count": 1706,
     "share": 0.409
    },
    {
@@ -16973,20 +16979,20 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Disturbance - Verbal",
     "count": 1662,
-    "share": 0.399
+    "share": 0.398
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "REDDI Report",
-    "count": 1651,
+    "count": 1654,
     "share": 0.396
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Impaired Person",
-    "count": 1602,
+    "count": 1603,
     "share": 0.384
    },
    {
@@ -17021,7 +17027,7 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Vandalism",
-    "count": 1506,
+    "count": 1508,
     "share": 0.361
    },
    {
@@ -17042,7 +17048,7 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Harassment",
-    "count": 1217,
+    "count": 1218,
     "share": 0.292
    },
    {
@@ -17053,24 +17059,24 @@
     "share": 0.289
    },
    {
+    "layer": "Incidents",
+    "agency": "Cheyenne Police Department - WY0110100",
+    "type": "Traffic Complaint - Minor",
+    "count": 1191,
+    "share": 0.285
+   },
+   {
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Assault - Simple",
     "count": 1191,
-    "share": 0.286
-   },
-   {
-    "layer": "Incidents",
-    "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Traffic Complaint - Minor",
-    "count": 1189,
     "share": 0.285
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Welfare Check - Routine",
-    "count": 1159,
+    "count": 1161,
     "share": 0.278
    },
    {
@@ -17105,14 +17111,14 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Motorist Assist",
-    "count": 1050,
+    "count": 1051,
     "share": 0.252
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Suspicious Circumstances",
-    "count": 1045,
+    "count": 1046,
     "share": 0.251
    },
    {
@@ -17134,7 +17140,7 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Disturbance - Physical",
     "count": 1020,
-    "share": 0.245
+    "share": 0.244
    },
    {
     "layer": "Incidents",
@@ -17154,7 +17160,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Disturbance",
-    "count": 941,
+    "count": 943,
     "share": 0.226
    },
    {
@@ -17168,8 +17174,8 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Suspicious Person",
-    "count": 936,
-    "share": 0.224
+    "count": 937,
+    "share": 0.225
    },
    {
     "layer": "Incidents",
@@ -17189,8 +17195,8 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Keep The Peace",
-    "count": 911,
-    "share": 0.218
+    "count": 912,
+    "share": 0.219
    },
    {
     "layer": "Incidents",
@@ -17231,7 +17237,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Domestic Physical",
-    "count": 854,
+    "count": 855,
     "share": 0.205
    },
    {
@@ -17245,7 +17251,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Suspicious Vehicle",
-    "count": 837,
+    "count": 840,
     "share": 0.201
    },
    {
@@ -17263,16 +17269,16 @@
     "share": 0.192
    },
    {
-    "layer": "Cases",
-    "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Domestic Violence",
-    "count": 795,
-    "share": 0.191
-   },
-   {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Assault",
+    "count": 796,
+    "share": 0.191
+   },
+   {
+    "layer": "Cases",
+    "agency": "Cheyenne Police Department - WY0110100",
+    "type": "Domestic Violence",
     "count": 795,
     "share": 0.191
    },
@@ -17295,7 +17301,7 @@
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Backup",
     "count": 782,
-    "share": 0.188
+    "share": 0.187
    },
    {
     "layer": "Incidents",
@@ -17350,8 +17356,8 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Larceny - Vehicle",
-    "count": 697,
-    "share": 0.167
+    "count": 700,
+    "share": 0.168
    },
    {
     "layer": "Incidents",
@@ -17428,20 +17434,20 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Fireworks Complaint",
     "count": 657,
-    "share": 0.158
-   },
-   {
-    "layer": "Incidents",
-    "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Motorist Assist",
-    "count": 656,
     "share": 0.157
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Nuisance",
-    "count": 655,
+    "count": 657,
+    "share": 0.157
+   },
+   {
+    "layer": "Incidents",
+    "agency": "Laramie County Sheriff's Department - WY0110000",
+    "type": "Motorist Assist",
+    "count": 656,
     "share": 0.157
    },
    {
@@ -17463,13 +17469,13 @@
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Suspicious Circumstance",
     "count": 632,
-    "share": 0.152
+    "share": 0.151
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Towed Vehicle",
-    "count": 618,
+    "count": 619,
     "share": 0.148
    },
    {
@@ -17498,7 +17504,7 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "School Visit",
     "count": 607,
-    "share": 0.146
+    "share": 0.145
    },
    {
     "layer": "Incidents",
@@ -17553,7 +17559,7 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Runaway",
-    "count": 543,
+    "count": 544,
     "share": 0.13
    },
    {
@@ -17567,7 +17573,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Hazardous Road Conditions",
-    "count": 520,
+    "count": 521,
     "share": 0.125
    },
    {
@@ -17581,8 +17587,8 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Keep The Peace",
-    "count": 515,
-    "share": 0.123
+    "count": 517,
+    "share": 0.124
    },
    {
     "layer": "Incidents",
@@ -17602,7 +17608,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Alarm",
-    "count": 488,
+    "count": 489,
     "share": 0.117
    },
    {
@@ -17617,7 +17623,7 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Traffic Enforcement Request",
     "count": 486,
-    "share": 0.117
+    "share": 0.116
    },
    {
     "layer": "Incidents",
@@ -17637,8 +17643,8 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Assist",
-    "count": 473,
-    "share": 0.113
+    "count": 474,
+    "share": 0.114
    },
    {
     "layer": "Incidents",
@@ -17662,16 +17668,16 @@
     "share": 0.112
    },
    {
-    "layer": "Cases",
-    "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Dead Body",
-    "count": 465,
-    "share": 0.111
-   },
-   {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Bar Check",
+    "count": 466,
+    "share": 0.112
+   },
+   {
+    "layer": "Cases",
+    "agency": "Cheyenne Police Department - WY0110100",
+    "type": "Dead Body",
     "count": 465,
     "share": 0.111
    },
@@ -17721,7 +17727,7 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Violation of Order",
-    "count": 403,
+    "count": 404,
     "share": 0.097
    },
    {
@@ -17735,8 +17741,8 @@
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Animal Call",
-    "count": 398,
-    "share": 0.095
+    "count": 399,
+    "share": 0.096
    },
    {
     "layer": "Incidents",
@@ -17764,7 +17770,7 @@
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Traffic Enforcement Request",
     "count": 390,
-    "share": 0.094
+    "share": 0.093
    },
    {
     "layer": "Incidents",
@@ -17790,6 +17796,13 @@
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
+    "type": "Citizen Concern",
+    "count": 379,
+    "share": 0.091
+   },
+   {
+    "layer": "Incidents",
+    "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Vandalism",
     "count": 379,
     "share": 0.091
@@ -17811,16 +17824,9 @@
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Citizen Concern",
+    "type": "REDDI Report",
     "count": 378,
     "share": 0.091
-   },
-   {
-    "layer": "Incidents",
-    "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "REDDI Report",
-    "count": 377,
-    "share": 0.09
    },
    {
     "layer": "Incidents",
@@ -17916,15 +17922,15 @@
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Harassment - Digital",
+    "type": "Shots Fired",
     "count": 338,
     "share": 0.081
    },
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Shots Fired",
-    "count": 336,
+    "type": "Harassment - Digital",
+    "count": 338,
     "share": 0.081
    },
    {
@@ -18021,15 +18027,15 @@
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Accident - With Injuries",
+    "type": "Threat",
     "count": 291,
     "share": 0.07
    },
    {
     "layer": "Incidents",
     "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Threat",
-    "count": 290,
+    "type": "Accident - With Injuries",
+    "count": 291,
     "share": 0.07
    },
    {
@@ -18160,15 +18166,15 @@
    },
    {
     "layer": "Incidents",
-    "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Weapons Incident",
-    "count": 230,
+    "agency": "Laramie County Sheriff's Department - WY0110000",
+    "type": "Behavioral Problems",
+    "count": 231,
     "share": 0.055
    },
    {
     "layer": "Incidents",
-    "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Behavioral Problems",
+    "agency": "Cheyenne Police Department - WY0110100",
+    "type": "Weapons Incident",
     "count": 230,
     "share": 0.055
    },
@@ -18195,15 +18201,15 @@
    },
    {
     "layer": "Incidents",
-    "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Administrative",
-    "count": 226,
+    "agency": "Cheyenne Police Department - WY0110100",
+    "type": "Traffic Complaint - Past",
+    "count": 227,
     "share": 0.054
    },
    {
     "layer": "Incidents",
-    "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Traffic Complaint - Past",
+    "agency": "Laramie County Sheriff's Department - WY0110000",
+    "type": "Administrative",
     "count": 226,
     "share": 0.054
    },
@@ -18246,8 +18252,8 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Found Drugs",
-    "count": 214,
-    "share": 0.051
+    "count": 215,
+    "share": 0.052
    },
    {
     "layer": "Incidents",
@@ -18414,7 +18420,7 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Bar Check",
-    "count": 157,
+    "count": 158,
     "share": 0.038
    },
    {
@@ -18551,6 +18557,13 @@
     "share": 0.034
    },
    {
+    "layer": "Incidents",
+    "agency": "Laramie County Sheriff's Department - WY0110000",
+    "type": "Shots Fired",
+    "count": 140,
+    "share": 0.034
+   },
+   {
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Disturbance - Noise",
@@ -18561,13 +18574,6 @@
     "layer": "Cases",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Runaway",
-    "count": 139,
-    "share": 0.033
-   },
-   {
-    "layer": "Incidents",
-    "agency": "Laramie County Sheriff's Department - WY0110000",
-    "type": "Shots Fired",
     "count": 139,
     "share": 0.033
    },
@@ -18645,8 +18651,8 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Larceny - Detnd & Coop - Weapon",
-    "count": 118,
-    "share": 0.028
+    "count": 119,
+    "share": 0.029
    },
    {
     "layer": "Cases",
@@ -18940,7 +18946,7 @@
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Accident",
     "count": 73,
-    "share": 0.018
+    "share": 0.017
    },
    {
     "layer": "Incidents",
@@ -19764,6 +19770,13 @@
    {
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
+    "type": "Robbery",
+    "count": 23,
+    "share": 0.006
+   },
+   {
+    "layer": "Incidents",
+    "agency": "Cheyenne Police Department - WY0110100",
     "type": "Shots Fired - Past",
     "count": 22,
     "share": 0.005
@@ -19793,13 +19806,6 @@
     "layer": "Incidents",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "REDDI Report - Past",
-    "count": 22,
-    "share": 0.005
-   },
-   {
-    "layer": "Incidents",
-    "agency": "Cheyenne Police Department - WY0110100",
-    "type": "Robbery",
     "count": 22,
     "share": 0.005
    },
@@ -22251,19 +22257,19 @@
   "agencies": [
    {
     "name": "Cheyenne Police Department - WY0110100",
-    "count": 276298,
+    "count": 276395,
     "share": 66.25
    },
    {
     "name": "Laramie County Sheriff's Department - WY0110000",
-    "count": 140751,
+    "count": 140802,
     "share": 33.75
    }
   ],
   "layers": [
    {
     "name": "Incidents",
-    "count": 380504
+    "count": 380652
    },
    {
     "name": "Cases",
@@ -22272,8 +22278,8 @@
   ],
   "coverage": {
    "start": "2023-01-01",
-   "end": "2026-10-10",
-   "days": 1379,
+   "end": "2026-10-11",
+   "days": 1380,
    "source": "record-level details.json pull"
   }
  },
@@ -22286,8 +22292,8 @@
     "complete": false,
     "coverage": {
      "start": "2023-01-01",
-     "end": "2026-10-10",
-     "days": 1379,
+     "end": "2026-10-11",
+     "days": 1380,
      "source": "record-level details.json pull"
     },
     "unassigned": 11,
@@ -22295,17 +22301,17 @@
      {
       "id": "3",
       "name": "Dr. Michelle Aldrich",
-      "count": 97045
+      "count": 97081
      },
      {
       "id": "2",
       "name": "Bryan M. Cook",
-      "count": 44454
+      "count": 44467
      },
      {
       "id": "1",
       "name": "Scott Roybal",
-      "count": 160289
+      "count": 160340
      }
     ]
    },
@@ -22316,8 +22322,8 @@
     "complete": false,
     "coverage": {
      "start": "2023-01-01",
-     "end": "2026-10-10",
-     "days": 1379,
+     "end": "2026-10-11",
+     "days": 1380,
      "source": "record-level details.json pull"
     },
     "unassigned": 11,
@@ -22345,22 +22351,22 @@
      {
       "id": "2",
       "name": "PBPD",
-      "count": 1040
+      "count": 1041
      },
      {
       "id": "13",
       "name": "SO-E",
-      "count": 8315
+      "count": 8318
      },
      {
       "id": "10",
       "name": "SO-W",
-      "count": 6935
+      "count": 6940
      },
      {
       "id": "3",
       "name": "BURNS",
-      "count": 1580
+      "count": 1581
      },
      {
       "id": "5",
@@ -22375,7 +22381,7 @@
      {
       "id": "12",
       "name": "SO-S",
-      "count": 63233
+      "count": 63258
      },
      {
       "id": "7",
@@ -22385,7 +22391,7 @@
      {
       "id": "11",
       "name": "SO-N",
-      "count": 28913
+      "count": 28926
      },
      {
       "id": "8",
@@ -22401,8 +22407,8 @@
     "complete": false,
     "coverage": {
      "start": "2023-01-01",
-     "end": "2026-10-10",
-     "days": 1379,
+     "end": "2026-10-11",
+     "days": 1380,
      "source": "record-level details.json pull"
     },
     "unassigned": 11,
@@ -22612,8 +22618,8 @@
   ],
   "coverage": {
    "start": "2023-01-01",
-   "end": "2026-10-10",
-   "days": 1379,
+   "end": "2026-10-11",
+   "days": 1380,
    "source": "record-level details.json pull"
   }
  },
@@ -22662,553 +22668,553 @@
     "label": "Unverified Locations"
    },
    {
-    "window": "2026-01-01/2026-10-10",
+    "window": "2026-01-01/2026-10-11",
     "year": "2026",
-    "count": 5890,
+    "count": 5899,
     "label": "Unverified Locations"
    }
   ]
  },
  "sample": [
   {
-   "id": "2026-00055361",
-   "at": "2026-10-10T23:52:21.000",
-   "agency": "Cheyenne Police Department - WY0110100",
+   "id": "2026-00034393",
+   "at": "2026-10-11T23:53:58.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
    "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.145,
-   "lng": -104.79
+   "type": "Security Check",
+   "lat": 41.12,
+   "lng": -104.84
   },
   {
-   "id": "2026-00055360",
-   "at": "2026-10-10T23:38:17.000",
+   "id": "2026-00055471",
+   "at": "2026-10-11T23:37:47.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
-   "type": "Traffic Complaint - Serious",
-   "lat": 41.18,
+   "type": "Suspicious Vehicle",
+   "lat": 41.135,
    "lng": -104.775
   },
   {
-   "id": "2026-00034331",
-   "at": "2026-10-10T23:32:39.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Larceny - Vehicle",
-   "lat": 41,
-   "lng": -104.775
-  },
-  {
-   "id": "2026-00055359",
-   "at": "2026-10-10T23:29:44.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Security Check",
-   "lat": 41.145,
-   "lng": -104.75
-  },
-  {
-   "id": "2026-00055358",
-   "at": "2026-10-10T23:26:25.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Security Check",
-   "lat": 41.16,
-   "lng": -104.785
-  },
-  {
-   "id": "2026-00055357",
-   "at": "2026-10-10T23:23:42.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Hit And Run",
-   "lat": 41.14,
-   "lng": -104.815
-  },
-  {
-   "id": "2026-00055355",
-   "at": "2026-10-10T23:19:01.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Missing Person",
-   "lat": 41.135,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00055354",
-   "at": "2026-10-10T23:18:37.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Field Interview",
-   "lat": 41.14,
-   "lng": -104.79
-  },
-  {
-   "id": "2026-00055353",
-   "at": "2026-10-10T23:12:15.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Shots Fired",
-   "lat": 41.115,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00055352",
-   "at": "2026-10-10T23:09:24.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.155,
-   "lng": -104.76
-  },
-  {
-   "id": "2026-00055351",
-   "at": "2026-10-10T23:08:31.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Security Check",
-   "lat": 41.145,
-   "lng": -104.77
-  },
-  {
-   "id": "2026-00055350",
-   "at": "2026-10-10T23:05:49.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.115,
-   "lng": -104.815
-  },
-  {
-   "id": "2026-00055348",
-   "at": "2026-10-10T22:58:30.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Disturbance",
-   "lat": 41.11,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00055347",
-   "at": "2026-10-10T22:46:08.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Security Check",
-   "lat": 41.095,
-   "lng": -104.78
-  },
-  {
-   "id": "2026-00055345",
-   "at": "2026-10-10T22:42:08.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.135,
-   "lng": -104.8
-  },
-  {
-   "id": "2026-00055344",
-   "at": "2026-10-10T22:40:07.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.13,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00034329",
-   "at": "2026-10-10T22:35:28.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "School Visit",
-   "lat": 41.105,
-   "lng": -104.78
-  },
-  {
-   "id": "2026-00034330",
-   "at": "2026-10-10T22:34:02.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Domestic Verbal",
-   "lat": 41.255,
-   "lng": -105.09
-  },
-  {
-   "id": "2026-00034328",
-   "at": "2026-10-10T22:33:20.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Disturbance",
-   "lat": 41.255,
-   "lng": -104.785
-  },
-  {
-   "id": "2026-00055343",
-   "at": "2026-10-10T22:30:03.000",
+   "id": "2026-00055469",
+   "at": "2026-10-11T23:19:49.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
    "type": "Accident - No Injuries",
-   "lat": 41.135,
-   "lng": -104.815
-  },
-  {
-   "id": "2026-00055346",
-   "at": "2026-10-10T22:19:43.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Larceny - Vehicle",
-   "lat": 41.125,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00055341",
-   "at": "2026-10-10T22:19:12.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Trespass\\Unwanted",
-   "lat": 41.13,
-   "lng": -104.815
-  },
-  {
-   "id": "2026-00055342",
-   "at": "2026-10-10T22:14:19.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Harassment - Digital",
-   "lat": 41.155,
-   "lng": -104.74
-  },
-  {
-   "id": "2026-00055340",
-   "at": "2026-10-10T22:08:49.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Security Check",
-   "lat": 41.13,
+   "lat": 41.145,
    "lng": -104.83
   },
   {
-   "id": "2026-00034327",
-   "at": "2026-10-10T21:56:50.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "id": "2026-00055468",
+   "at": "2026-10-11T23:17:17.000",
+   "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
-   "type": "Impaired Person",
-   "lat": 41.19,
-   "lng": -104.355
+   "type": "Alarm",
+   "lat": 41.13,
+   "lng": -104.825
   },
   {
-   "id": "2026-00055339",
-   "at": "2026-10-10T21:50:25.000",
+   "id": "2026-00055470",
+   "at": "2026-10-11T22:50:35.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Harassment",
+   "lat": 41.14,
+   "lng": -104.75
+  },
+  {
+   "id": "2026-00055466",
+   "at": "2026-10-11T22:50:02.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
    "type": "Field Interview",
-   "lat": 41.145,
-   "lng": -104.81
-  },
-  {
-   "id": "2026-00055338",
-   "at": "2026-10-10T21:36:39.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Disturbance",
-   "lat": 41.14,
-   "lng": -104.79
-  },
-  {
-   "id": "2026-00055337",
-   "at": "2026-10-10T21:36:29.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Domestic Verbal",
-   "lat": 41.155,
-   "lng": -104.725
-  },
-  {
-   "id": "2026-00055336",
-   "at": "2026-10-10T21:36:29.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "911 Hang Up",
-   "lat": 41.145,
+   "lat": 41.15,
    "lng": -104.8
   },
   {
-   "id": "2026-00055334",
-   "at": "2026-10-10T21:24:14.000",
+   "id": "2026-00034391",
+   "at": "2026-10-11T22:33:36.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Welfare Check - Routine",
+   "lat": 41.1,
+   "lng": -105.125
+  },
+  {
+   "id": "2026-00055464",
+   "at": "2026-10-11T22:16:57.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
+   "type": "911 Hang Up",
+   "lat": 41.155,
+   "lng": -104.765
+  },
+  {
+   "id": "2026-00055463",
+   "at": "2026-10-11T22:04:38.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Wanted Person",
+   "lat": 41.135,
+   "lng": -104.79
+  },
+  {
+   "id": "2026-00034390",
+   "at": "2026-10-11T21:59:49.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
    "type": "Security Check",
-   "lat": 41.16,
+   "lat": 41.135,
+   "lng": -104.805
+  },
+  {
+   "id": "2026-00055465",
+   "at": "2026-10-11T21:42:10.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Assault",
+   "lat": 41.105,
+   "lng": -104.815
+  },
+  {
+   "id": "2026-00034389",
+   "at": "2026-10-11T21:39:10.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Wanted Person",
+   "lat": 41.18,
+   "lng": -104.75
+  },
+  {
+   "id": "2026-00055462",
+   "at": "2026-10-11T21:26:37.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Suspicious Circumstances",
+   "lat": 41.125,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00055461",
+   "at": "2026-10-11T21:15:55.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Suspicious Circumstances",
+   "lat": 41.15,
+   "lng": -104.79
+  },
+  {
+   "id": "2026-00055460",
+   "at": "2026-10-11T21:14:33.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Disturbance",
+   "lat": 41.165,
+   "lng": -104.765
+  },
+  {
+   "id": "2026-00034388",
+   "at": "2026-10-11T21:13:38.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Security Check",
+   "lat": 41.1,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00055459",
+   "at": "2026-10-11T21:10:24.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "911 Hang Up",
+   "lat": 41.14,
    "lng": -104.77
   },
   {
-   "id": "2026-00055333",
-   "at": "2026-10-10T21:16:32.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.16,
-   "lng": -104.775
-  },
-  {
-   "id": "2026-00034326",
-   "at": "2026-10-10T21:11:54.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Suspicious Circumstances",
-   "lat": 41.11,
-   "lng": -104.845
-  },
-  {
-   "id": "2026-00034325",
-   "at": "2026-10-10T21:06:45.000",
+   "id": "2026-00034387",
+   "at": "2026-10-11T21:09:23.000",
    "agency": "Laramie County Sheriff's Department - WY0110000",
    "layer": "Incidents",
    "type": "Traffic Stop",
    "lat": 41.12,
-   "lng": -104.85
-  },
-  {
-   "id": "2026-00055335",
-   "at": "2026-10-10T20:52:19.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Harassment",
-   "lat": 41.125,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00055332",
-   "at": "2026-10-10T20:52:15.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Suspicious Circumstances",
-   "lat": 41.17,
-   "lng": -104.78
-  },
-  {
-   "id": "2026-00055331",
-   "at": "2026-10-10T20:50:35.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Domestic Verbal",
-   "lat": 41.11,
-   "lng": -104.825
-  },
-  {
-   "id": "2026-00034323",
-   "at": "2026-10-10T20:50:14.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41,
-   "lng": -104.905
-  },
-  {
-   "id": "2026-00055330",
-   "at": "2026-10-10T20:41:50.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Impaired Person",
-   "lat": 41.115,
-   "lng": -104.81
-  },
-  {
-   "id": "2026-00055329",
-   "at": "2026-10-10T20:38:21.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "911 Hang Up",
-   "lat": 41.185,
-   "lng": -104.82
-  },
-  {
-   "id": "2026-00055327",
-   "at": "2026-10-10T20:28:33.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.14,
-   "lng": -104.775
-  },
-  {
-   "id": "2026-00055326",
-   "at": "2026-10-10T20:21:34.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.145,
-   "lng": -104.76
-  },
-  {
-   "id": "2026-00055324",
-   "at": "2026-10-10T20:10:20.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "REDDI Report",
-   "lat": 41.16,
-   "lng": -104.795
-  },
-  {
-   "id": "2026-00055323",
-   "at": "2026-10-10T20:05:38.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.14,
    "lng": -104.77
   },
   {
-   "id": "2026-00034322",
-   "at": "2026-10-10T20:02:00.000",
+   "id": "2026-00034386",
+   "at": "2026-10-11T21:08:08.000",
    "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "911 Hang Up",
-   "lat": 41.11,
-   "lng": -104.79
-  },
-  {
-   "id": "2026-00055322",
-   "at": "2026-10-10T19:58:24.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Unknown\\3rd Party Report",
-   "lat": 41.165,
-   "lng": -104.8
-  },
-  {
-   "id": "2026-00034321",
-   "at": "2026-10-10T19:51:28.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Suspicious Vehicle",
-   "lat": 41.22,
-   "lng": -104.775
-  },
-  {
-   "id": "2026-00055321",
-   "at": "2026-10-10T19:51:14.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "911 Hang Up",
-   "lat": 41.165,
-   "lng": -104.8
-  },
-  {
-   "id": "2026-00034320",
-   "at": "2026-10-10T19:35:59.000",
-   "agency": "Laramie County Sheriff's Department - WY0110000",
-   "layer": "Incidents",
-   "type": "Administrative",
-   "lat": 41.14,
-   "lng": -104.73
-  },
-  {
-   "id": "2026-00055316",
-   "at": "2026-10-10T19:34:49.000",
-   "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
    "type": "Traffic Stop",
-   "lat": 41.135,
+   "lat": 41.15,
    "lng": -104.825
   },
   {
-   "id": "2026-00055315",
-   "at": "2026-10-10T19:26:11.000",
+   "id": "2026-00034385",
+   "at": "2026-10-11T20:55:18.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Towed Vehicle",
+   "lat": 41.14,
+   "lng": -105.04
+  },
+  {
+   "id": "2026-00034384",
+   "at": "2026-10-11T20:50:59.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "School Visit",
+   "lat": 41.1,
+   "lng": -104.78
+  },
+  {
+   "id": "2026-00034383",
+   "at": "2026-10-11T20:48:38.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Security Check",
+   "lat": 41.1,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00055458",
+   "at": "2026-10-11T20:42:29.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
-   "type": "Abandonment",
-   "lat": 41.16,
+   "type": "911 Hang Up",
+   "lat": 41.14,
+   "lng": -104.825
+  },
+  {
+   "id": "2026-00034382",
+   "at": "2026-10-11T20:42:24.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Security Check",
+   "lat": 41.11,
    "lng": -104.805
   },
   {
-   "id": "2026-00055313",
-   "at": "2026-10-10T19:20:39.000",
+   "id": "2026-00055456",
+   "at": "2026-10-11T20:32:47.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
-   "type": "Hazardous Road Conditions",
-   "lat": 41.16,
-   "lng": -104.81
-  },
-  {
-   "id": "2026-00055325",
-   "at": "2026-10-10T19:18:29.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Animal Call",
-   "lat": 41.18,
-   "lng": -104.845
-  },
-  {
-   "id": "2026-00055312",
-   "at": "2026-10-10T19:17:00.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Trespass\\Unwanted",
-   "lat": 41.145,
-   "lng": -104.835
-  },
-  {
-   "id": "2026-00055314",
-   "at": "2026-10-10T19:15:22.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "Welfare Check - Routine",
-   "lat": 41.135,
-   "lng": -104.825
-  },
-  {
-   "id": "2026-00055311",
-   "at": "2026-10-10T19:05:58.000",
-   "agency": "Cheyenne Police Department - WY0110100",
-   "layer": "Incidents",
-   "type": "911 Hang Up",
+   "type": "Traffic Stop",
    "lat": 41.14,
-   "lng": -104.815
+   "lng": -104.775
   },
   {
-   "id": "2026-00034319",
-   "at": "2026-10-10T19:05:47.000",
+   "id": "2026-00055457",
+   "at": "2026-10-11T20:32:19.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "REDDI Report",
+   "lat": 41.14,
+   "lng": -104.785
+  },
+  {
+   "id": "2026-00055455",
+   "at": "2026-10-11T20:24:41.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Wanted Person",
+   "lat": 41.145,
+   "lng": -104.77
+  },
+  {
+   "id": "2026-00034381",
+   "at": "2026-10-11T20:17:29.000",
    "agency": "Laramie County Sheriff's Department - WY0110000",
    "layer": "Incidents",
-   "type": "Vandalism",
-   "lat": 41.08,
+   "type": "Suspicious Vehicle",
+   "lat": 41.09,
    "lng": -104.8
   },
   {
-   "id": "2026-00034318",
-   "at": "2026-10-10T18:58:00.000",
+   "id": "2026-00034380",
+   "at": "2026-10-11T20:17:06.000",
    "agency": "Laramie County Sheriff's Department - WY0110000",
    "layer": "Incidents",
-   "type": "Traffic Stop",
-   "lat": 41.1,
-   "lng": -104.79
+   "type": "Suspicious Circumstances",
+   "lat": 41.115,
+   "lng": -104.805
   },
   {
-   "id": "2026-00034317",
-   "at": "2026-10-10T18:47:15.000",
+   "id": "2026-00055451",
+   "at": "2026-10-11T19:54:31.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Suspicious Circumstances",
+   "lat": 41.16,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00034378",
+   "at": "2026-10-11T19:51:06.000",
    "agency": "Laramie County Sheriff's Department - WY0110000",
    "layer": "Incidents",
    "type": "Traffic Stop",
-   "lat": 41.135,
+   "lat": 41.185,
+   "lng": -104.835
+  },
+  {
+   "id": "2026-00055450",
+   "at": "2026-10-11T19:30:37.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Welfare Check - Urgent",
+   "lat": 41.145,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00055449",
+   "at": "2026-10-11T19:22:37.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Traffic Stop",
+   "lat": 41.145,
    "lng": -104.82
   },
   {
-   "id": "2026-00055317",
-   "at": "2026-10-10T18:33:12.000",
+   "id": "2026-00055452",
+   "at": "2026-10-11T19:21:38.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
-   "type": "Citizen Concern",
-   "lat": 41.165,
-   "lng": -104.795
+   "type": "Parking Complaint",
+   "lat": 41.15,
+   "lng": -104.825
   },
   {
-   "id": "2026-00055320",
-   "at": "2026-10-10T18:28:51.000",
+   "id": "2026-00034376",
+   "at": "2026-10-11T19:11:45.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Domestic Physical",
+   "lat": 41.115,
+   "lng": -104.79
+  },
+  {
+   "id": "2026-00055454",
+   "at": "2026-10-11T19:08:16.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Nuisance",
+   "lat": 41.145,
+   "lng": -104.755
+  },
+  {
+   "id": "2026-00055453",
+   "at": "2026-10-11T19:02:53.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Traffic Complaint - Minor",
+   "lat": 41.18,
+   "lng": -104.83
+  },
+  {
+   "id": "2026-00055448",
+   "at": "2026-10-11T18:57:07.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Accident - No Injuries",
+   "lat": 41.135,
+   "lng": -104.705
+  },
+  {
+   "id": "2026-00055447",
+   "at": "2026-10-11T18:50:47.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Traffic Complaint - Serious",
+   "lat": 41.14,
+   "lng": -104.785
+  },
+  {
+   "id": "2026-00034377",
+   "at": "2026-10-11T18:47:52.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Violation of Order",
+   "lat": 41.115,
+   "lng": -104.79
+  },
+  {
+   "id": "2026-00034375",
+   "at": "2026-10-11T18:47:49.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Threat",
+   "lat": 41.12,
+   "lng": -104.775
+  },
+  {
+   "id": "2026-00055445",
+   "at": "2026-10-11T18:43:06.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Traffic Stop",
+   "lat": 41.145,
+   "lng": -104.77
+  },
+  {
+   "id": "2026-00034374",
+   "at": "2026-10-11T18:42:48.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "REDDI Report",
+   "lat": 41.16,
+   "lng": -104.715
+  },
+  {
+   "id": "2026-00055443",
+   "at": "2026-10-11T18:22:29.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Motorist Assist",
+   "lat": 41.18,
+   "lng": -104.825
+  },
+  {
+   "id": "2026-00034373",
+   "at": "2026-10-11T18:16:29.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "School Visit",
+   "lat": 41.225,
+   "lng": -104.83
+  },
+  {
+   "id": "2026-00055442",
+   "at": "2026-10-11T18:00:41.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "911 Hang Up",
+   "lat": 41.16,
+   "lng": -104.755
+  },
+  {
+   "id": "2026-00034372",
+   "at": "2026-10-11T17:56:34.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Traffic Stop",
+   "lat": 41.03,
+   "lng": -104.78
+  },
+  {
+   "id": "2026-00034371",
+   "at": "2026-10-11T17:53:07.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Security Check",
+   "lat": 41.1,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00034370",
+   "at": "2026-10-11T17:38:44.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Behavioral Problems",
+   "lat": 41.2,
+   "lng": -104.355
+  },
+  {
+   "id": "2026-00055441",
+   "at": "2026-10-11T17:29:08.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Runaway",
+   "lat": 41.135,
+   "lng": -104.75
+  },
+  {
+   "id": "2026-00034368",
+   "at": "2026-10-11T17:20:05.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Security Check",
+   "lat": 41.135,
+   "lng": -104.805
+  },
+  {
+   "id": "2026-00055439",
+   "at": "2026-10-11T17:18:06.000",
    "agency": "Cheyenne Police Department - WY0110100",
    "layer": "Incidents",
    "type": "Larceny",
    "lat": 41.16,
+   "lng": -104.775
+  },
+  {
+   "id": "2026-00055438",
+   "at": "2026-10-11T17:17:15.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Accident - No Injuries",
+   "lat": 41.145,
+   "lng": -104.76
+  },
+  {
+   "id": "2026-00034366",
+   "at": "2026-10-11T17:10:55.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Security Check",
+   "lat": 41.11,
+   "lng": -104.8
+  },
+  {
+   "id": "2026-00055435",
+   "at": "2026-10-11T16:39:30.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Domestic Verbal",
+   "lat": 41.15,
+   "lng": -104.715
+  },
+  {
+   "id": "2026-00055436",
+   "at": "2026-10-11T16:37:18.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Vandalism",
+   "lat": 41.125,
+   "lng": -104.82
+  },
+  {
+   "id": "2026-00055434",
+   "at": "2026-10-11T16:32:07.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Robbery",
+   "lat": 41.135,
    "lng": -104.79
+  },
+  {
+   "id": "2026-00055433",
+   "at": "2026-10-11T16:14:27.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "Welfare Check - Routine",
+   "lat": 41.14,
+   "lng": -104.81
+  },
+  {
+   "id": "2026-00055432",
+   "at": "2026-10-11T16:10:30.000",
+   "agency": "Cheyenne Police Department - WY0110100",
+   "layer": "Incidents",
+   "type": "911 Hang Up",
+   "lat": 41.095,
+   "lng": -104.78
+  },
+  {
+   "id": "2026-00034369",
+   "at": "2026-10-11T16:09:08.000",
+   "agency": "Laramie County Sheriff's Department - WY0110000",
+   "layer": "Incidents",
+   "type": "Animal Call",
+   "lat": 41.16,
+   "lng": -104.255
   }
  ],
  "completeness": {
@@ -23227,8 +23233,8 @@
  "sampleDescription": "Most recent 60 located records returned by the publisher's public pin endpoint; subject to the stated refresh delay.",
  "recordCoverage": {
   "start": "2023-01-01",
-  "end": "2026-10-10",
-  "days": 1379,
+  "end": "2026-10-11",
+  "days": 1380,
   "source": "record-level details.json pull"
  }
 }
