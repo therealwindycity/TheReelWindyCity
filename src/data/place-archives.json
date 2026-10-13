@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-12T15:00:10.605Z",
+  "generatedAt": "2026-10-13T14:58:21.903Z",
   "places": [
     {
       "id": "afton",
@@ -1196,7 +1196,7 @@
       "sourceUrl": "https://www.lincolncountywy.gov/",
       "documents": [],
       "errors": [
-        "HTTP 403 from https://www.lincolncountywy.gov/"
+        "Host drift from https://www.lincolncountywy.gov/Documents/Services/Community%20Resources%20Directory/2022%20Lincoln%20County%20%20Directory.pdf to https://cms5.revize.com/revize/lincolncountynew25/Documents/Services/Community%20Resources%20Directory/2022%20Lincoln%20County%20%20Directory.pdf"
       ]
     },
     {
@@ -1317,9 +1317,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sheridan",
       "sourceUrl": "https://www.sheridancountywy.gov/",
       "documents": [],
-      "errors": [
-        "HTTP 403 from https://www.sheridancountywy.gov/"
-      ]
+      "errors": []
     },
     {
       "id": "sublette",
