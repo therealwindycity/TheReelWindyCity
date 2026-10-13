@@ -43,3 +43,18 @@ Raw audio stays in a temp folder outside the repo and is deleted after each wind
 ```bash
 python3 live_capture.py --replay ./samples --stub --no-push --repo ../..
 ```
+
+## Run it in GitHub Actions (no laptop needed)
+
+`stream_transcribe.py` listens to a public live stream on a GitHub runner, transcribes each 30-second window, and commits and pushes it to the branch you start from. Workflow: `.github/workflows/live_meeting_transcribe.yml` (manual trigger only).
+
+1. Start it from the Actions tab: **Live Meeting Transcribe (stream to transcript)** > **Run workflow**. Choose the branch, paste the stream URL if it differs from the default, and set minutes (up to 300).
+2. Commits land on that branch under `live-transcripts/<date>-cheyenne-council/`.
+3. Refresh the branch on your phone or in the repo, or ask the session to read the newest `chunks/` files.
+
+Limits:
+
+- **Zoom is not supported.** Zoom meetings are not public streams, and a bot joining as a participant is not something this repo does. The City streams Council meetings on YouTube and Facebook. The default URL is `https://www.youtube.com/@TheCityofCheyenne/live`. If the live URL changes, paste the exact `watch?v=` link into `stream_url`.
+- **YouTube may refuse datacenter IPs.** GitHub runners can get "confirm you're not a bot" errors from YouTube. If the run logs show that, the fallback is to run `stream_transcribe.py` from your own machine, or to use the City's own HLS URL.
+- **YouTube terms.** Downloading media from YouTube outside its download features is restricted by its terms of service. Using yt-dlp this way is a gray area. Use it for your own transcription of a public meeting, don't redistribute the audio, and consider asking the City for an official feed.
+- **Timing.** Windows are timestamped in Mountain time (`TZ` is set in the workflow). After a restart, the timeline is approximate and the restart is logged.
