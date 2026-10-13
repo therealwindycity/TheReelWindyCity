@@ -1,0 +1,106 @@
+name: Live Meeting Transcribe (stream to transcript)
+
+# =============================================================================
+# Listens to a live meeting stream (default: City of Cheyenne YouTube live) and
+# commits a transcript to live-transcripts/<date>-<meeting>/ every ~30 seconds
+# of audio, pushing to the branch this workflow was dispatched from.
+#
+# Start it from the Actions tab (or GitHub mobile app) as the meeting begins.
+# It runs until `minutes` elapses or the stream ends.
+#
+# SAFETY
+#   * workflow_dispatch ONLY. No schedule, no pull_request, no push triggers.
+#   * Inputs go through env: and are validated by the script (never interpolated
+#     into run:), so a crafted input cannot execute shell code.
+#   * Pushes go to the dispatched branch only (GITHUB_TOKEN, contents: write).
+#   * Machine transcripts are public once pushed. Verify quotes against the
+#     official recording before using them.
+# =============================================================================
+
+on:
+  workflow_dispatch:
+    inputs:
+      stream_url:
+        description: "Live stream page URL (YouTube live, or a direct HLS/http audio URL)"
+        required: false
+        default: "https://www.youtube.com/@TheCityofCheyenne/live"
+        type: string
+      minutes:
+        description: "How long to listen, in minutes (1-300)"
+        required: false
+        default: "180"
+        type: string
+      model:
+        description: "Speech model (small.en is more accurate; base.en is faster)"
+        required: false
+        default: "small.en"
+        type: choice
+        options:
+          - small.en
+          - base.en
+
+permissions:
+  contents: write
+
+concurrency:
+  # One live transcript at a time; queued runs wait instead of racing on the push.
+  group: live-meeting-transcribe
+  cancel-in-progress: false
+
+jobs:
+  transcribe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      # Local time for the chunk timestamps and the output folder date.
+      TZ: America/Denver
+      STREAM_URL: ${{ inputs.stream_url }}
+      MINUTES: ${{ inputs.minutes }}
+      MODEL: ${{ inputs.model }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install ffmpeg, yt-dlp and faster-whisper
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --upgrade pip
+          pip install yt-dlp faster-whisper
+
+      - name: Configure git identity
+        run: |
+          git config user.name "live-meeting-bot"
+          git config user.email "live-meeting-bot@users.noreply.github.com"
+
+      - name: Listen and transcribe
+        working-directory: scripts/live-meeting
+        run: |
+          python3 stream_transcribe.py \
+            --url "$STREAM_URL" \
+            --minutes "$MINUTES" \
+            --model "$MODEL" \
+            --repo "$GITHUB_WORKSPACE" \
+            --branch "$GITHUB_REF_NAME"
+
+      - name: Summary
+        if: always()
+        env:
+          MEETING_DIR: live-transcripts
+        run: |
+          {
+            echo "## Live Meeting Transcribe"
+            echo ""
+            echo "| field | value |"
+            echo "| --- | --- |"
+            echo "| stream | $STREAM_URL |"
+            echo "| listen window | $MINUTES min |"
+            echo "| model | $MODEL |"
+            echo ""
+            echo "Transcript: \`$MEETING_DIR/<date>-cheyenne-council/transcript.md\` on this branch."
+            echo "Each 30-second window is also a file under \`chunks/\`."
+          } >> "$GITHUB_STEP_SUMMARY"
