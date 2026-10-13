@@ -1,8 +1,8 @@
 {
-  "contentHash": "dcfece8ee47aeff39d5dcdac76d3b8b02f0facf670e5701f609d92e141ceae0a",
-  "attemptedAt": "2026-10-12T21:40:32Z",
-  "attempts": 4,
-  "meetingIds": "city-council-2026-10-12",
+  "contentHash": "24bfd063f0abb95cf528c88f31e7bf19e69604bcae23df510f8aa7c424345a7f",
+  "attemptedAt": "2026-10-13T19:55:13Z",
+  "attempts": 1,
+  "meetingIds": "public-services-committee-2026-10-19,finance-committee-2026-10-20",
   "reason": "scheduled-watch-sync-failed",
   "retryAfterMs": 86400000
 }
