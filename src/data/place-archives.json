@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-13T14:58:21.903Z",
+  "generatedAt": "2026-10-14T15:07:41.634Z",
   "places": [
     {
       "id": "afton",
@@ -1219,6 +1219,12 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-niobrara",
       "sourceUrl": "https://www.niobraracounty.org/",
       "documents": [
+        {
+          "name": "October%2013,%202026%20Planning%20and%20Zoning%20Agenda.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/October%2013,%202026%20Planning%20and%20Zoning%20Agenda.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
         {
           "name": "Resolution%2026-05-%20Partial%20Fire%20Ban-%20Unincorporated%20Areas%20Nio%20Co.pdf",
           "sourceUrl": "https://www.niobraracounty.org/_departments/_commissioners/_pdfs/2026/Resolution%2026-05-%20Partial%20Fire%20Ban-%20Unincorporated%20Areas%20Nio%20Co.pdf",
