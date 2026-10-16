@@ -1,7 +1,7 @@
 {
   "contentHash": "24bfd063f0abb95cf528c88f31e7bf19e69604bcae23df510f8aa7c424345a7f",
-  "attemptedAt": "2026-10-15T20:55:41Z",
-  "attempts": 3,
+  "attemptedAt": "2026-10-16T21:52:40Z",
+  "attempts": 4,
   "meetingIds": "public-services-committee-2026-10-19,finance-committee-2026-10-20",
   "reason": "scheduled-watch-sync-failed",
   "retryAfterMs": 86400000
