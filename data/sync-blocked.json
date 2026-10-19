@@ -1,8 +1,8 @@
 {
-  "contentHash": "24bfd063f0abb95cf528c88f31e7bf19e69604bcae23df510f8aa7c424345a7f",
-  "attemptedAt": "2026-10-18T22:47:02Z",
-  "attempts": 6,
-  "meetingIds": "public-services-committee-2026-10-19,finance-committee-2026-10-20",
+  "contentHash": "54705d5442a765f51bbf4d3dfa9d853fd50279e2c4d63ba2063de2927b036824",
+  "attemptedAt": "2026-10-19T20:56:47Z",
+  "attempts": 1,
+  "meetingIds": "finance-committee-2026-10-20",
   "reason": "scheduled-watch-sync-failed",
   "retryAfterMs": 86400000
 }
