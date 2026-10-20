@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-19T15:16:06.450Z",
+  "generatedAt": "2026-10-20T15:13:04.808Z",
   "places": [
     {
       "id": "afton",
@@ -142,7 +142,7 @@
       "sourceUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "documents": [],
       "errors": [
-        "Host drift from https://www.casperwy.gov/Documents/Government/City%20Council/Agendas%20and%20Minutes/Pre%20Meetings/2026/Agendas/10-20-2026%20Pre-Meeting%20Agenda.pdf?t=202610161212370 to https://cms2.revize.com/revize/casperwy/Documents/Government/City%20Council/Agendas%20and%20Minutes/Pre%20Meetings/2026/Agendas/10-20-2026%20Pre-Meeting%20Agenda.pdf?t=202610161212370"
+        "HTTP 403 from https://www.casperwy.gov/government/city_council/agendas_minutes.php"
       ]
     },
     {
@@ -1130,7 +1130,7 @@
       "sourceUrl": "https://www.crookcounty.wy.gov/",
       "documents": [],
       "errors": [
-        "Host drift from https://www.crookcounty.wy.gov/elected_officials/History%20of%20Elected%20Officials.pdf to https://cms2.revize.com/revize/crookscountynew/elected_officials/History%20of%20Elected%20Officials.pdf"
+        "HTTP 403 from https://www.crookcounty.wy.gov/"
       ]
     },
     {
@@ -1141,7 +1141,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-fremont",
       "sourceUrl": "https://www.fremontcountywy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 403 from https://www.fremontcountywy.gov/"
+      ]
     },
     {
       "id": "goshen",
@@ -1344,7 +1346,7 @@
       "sourceUrl": "https://www.sweetwatercountywy.gov/",
       "documents": [],
       "errors": [
-        "Host drift from https://www.sweetwatercountywy.gov/document_center/Land%20Use/Nuisance.pdf to https://cms7files.revize.com/sweetwaterwy24/document_center/Land%20Use/Nuisance.pdf"
+        "HTTP 403 from https://www.sweetwatercountywy.gov/"
       ]
     },
     {
