@@ -50,7 +50,9 @@ export function normalizeUrl(raw) {
   if (!text) return "";
   let url;
   try {
-    url = new URL(text);
+    // Granicus upcoming widgets emit protocol-relative URLs ("//host/path").
+    // Resolve against https: here so downstream fetch() calls receive a valid URL.
+    url = new URL(text.startsWith("//") ? `https:${text}` : text);
   } catch {
     // Not a parseable absolute URL — return the collapsed text lowercased so that
     // trivial case/whitespace differences do not trigger syncs either.

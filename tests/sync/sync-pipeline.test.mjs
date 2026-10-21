@@ -457,6 +457,37 @@ describe("OM2#1 + OM3#2 extractor CLI end-to-end", () => {
     const link = resolvePdfLinkFromHtml(viewerHtml, "https://cheyenne.granicus.com/AgendaViewer.php?view_id=5&event_id=1447");
     assert.equal(link, "https://www.cheyennecity.org/files/sharedassets/public/v/1/your-government/city-council/psc-2026/psc-10-05-26-agenda.pdf?utm_source=viewer");
   });
+
+  test("normalizes protocol-relative Granicus GeneratedAgendaViewer URLs and passes full structural validation", async () => {
+    const { normalizeUrl } = await import("../../scripts/lib/canonical.mjs");
+    const { recordsFromOfficialSnapshot } = await import("../../scripts/lib/upcoming-table.mjs");
+    const { validateMeetingDirectory } = await import("../../scripts/lib/validate.mjs");
+
+    assert.equal(
+      normalizeUrl("//cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=2531"),
+      "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?event_id=2531&view_id=5",
+    );
+
+    const htmlFixture = path.resolve("tests/sync/fixtures/granicus-generated-agenda.html");
+    const htmlMeetingId = "finance-committee-2026-10-20";
+    const htmlOutDir = path.join(OUT, "data", "meetings", "2026", htmlMeetingId);
+    rmSync(htmlOutDir, { recursive: true, force: true });
+
+    runCli("scripts/extractors/parse_agenda_pdf.mjs", ["--file", htmlFixture, "--meeting-id", htmlMeetingId, "--out", htmlOutDir]);
+    runCli("scripts/analysis/red_team_analyzer.mjs", ["--meeting", htmlOutDir]);
+    runCli("scripts/actions/draft_objection.mjs", ["--meeting", htmlOutDir]);
+
+    const agenda = JSON.parse(readFileSync(path.join(htmlOutDir, "agenda.json"), "utf8"));
+    assert.equal(agenda.extraction.engine, "granicus-html-agenda-v1");
+    assert.ok(agenda.items.length >= 2, `expected HTML agenda items, got ${agenda.items.length}`);
+    const problems = validateMeetingDirectory(htmlOutDir);
+    assert.deepEqual(problems, [], `HTML agenda failed structural validation: ${problems.join("; ")}`);
+
+    // Snapshot seeding with futureOnly excludes past October 5/6 rows on October 21, 2026.
+    const official = JSON.parse(readFileSync(path.resolve("src/data/official-meetings.json"), "utf8"));
+    const futureRows = recordsFromOfficialSnapshot(official, { futureOnly: true, todayISO: "2026-10-21" });
+    assert.deepEqual(futureRows, []);
+  });
 });
 
 describe("OM2#1 analyzer — deterministic, evidence-cited findings", () => {

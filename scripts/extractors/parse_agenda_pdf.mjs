@@ -27,6 +27,7 @@ import path from "node:path";
 import { parse } from "node-html-parser";
 import { extractPdfLayout, ExtractionError } from "../lib/pdf-layout.mjs";
 import { parseAgendaStructure } from "../lib/agenda-structure.mjs";
+import { htmlAgendaLayout, looksLikeGranicusAgendaHtml } from "../lib/agenda-html.mjs";
 import { collapseWhitespace, normalizeUrl } from "../lib/canonical.mjs";
 import { atomicWrite } from "../lib/atomic.mjs";
 import { loadPlan, meetingDirectory } from "../sync/plan.mjs";
@@ -90,12 +91,16 @@ export async function fetchDocument(url) {
     if (buffer.length > MAX_BYTES) {
       throw new ExtractionError("TOO_LARGE", `Document is ${Math.round(buffer.length / 1024 / 1024)} MiB (cap ${MAX_BYTES / 1024 / 1024} MiB) — likely the wrong URL`);
     }
-    const looksHtml = buffer.subarray(0, 512).toString("latin1").match(/^\s*(<!doctype html|<html)/i);
+    const looksHtml = buffer.subarray(0, 512).toString("latin1").trimStart().startsWith("<");
     if (looksHtml) {
       const html = buffer.toString("utf8");
+      if (looksLikeGranicusAgendaHtml(html)) {
+        console.log("Detected a Granicus HTML agenda (no combined PDF) → extracting from the official page");
+        return { bytes: new Uint8Array(buffer), sourceUrl: url, finalUrl: response.url || url, html };
+      }
       const pdfLink = resolvePdfLinkFromHtml(html, response.url || url);
       if (!pdfLink) {
-        throw new ExtractionError("NO_PDF_LINK", `Viewer page at ${url} does not link a PDF (portal layout change?) — needs a human look before sync can continue`);
+        throw new ExtractionError("NO_PDF_LINK", `Viewer page at ${url} does not link a PDF and is not a Granicus HTML agenda (portal layout change?) — needs a human look before sync can continue`);
       }
       console.log(`Resolved viewer chrome → ${pdfLink}`);
       return fetchDocument(pdfLink); // one level of indirection is enough for Granicus
@@ -131,16 +136,26 @@ function updatePlan(planPath, results) {
 async function extractMeeting({ url, file, meetingId, out }) {
   let bytes;
   let sourceUrl;
+  let html = null;
   if (url) {
     const fetched = await fetchDocument(url);
     bytes = fetched.bytes;
     sourceUrl = fetched.finalUrl;
+    html = fetched.html || null;
   } else {
     bytes = new Uint8Array(readFileSync(file));
     sourceUrl = path.resolve(file);
+    const head = Buffer.from(bytes.subarray(0, 512)).toString("latin1").trimStart();
+    if (head.startsWith("<")) {
+      const text = Buffer.from(bytes).toString("utf8");
+      if (looksLikeGranicusAgendaHtml(text)) html = text;
+    }
   }
 
-  const layout = await extractPdfLayout(bytes); // throws typed ExtractionError on any failure
+  const isHtmlAgenda = Boolean(html);
+  const layout = isHtmlAgenda
+    ? htmlAgendaLayout(html)
+    : await extractPdfLayout(bytes); // throws typed ExtractionError on any failure
   const structured = parseAgendaStructure(layout.pages);
   const id = meetingId || meetingIdFromUrl(sourceUrl) || `unresolved-${createHash("sha256").update(sourceUrl).digest("hex").slice(0, 8)}`;
   if (!meetingId && !meetingIdFromUrl(sourceUrl)) {
@@ -153,7 +168,7 @@ async function extractMeeting({ url, file, meetingId, out }) {
     sourceUrl,
     sourceSha256: createHash("sha256").update(bytes).digest("hex"),
     fetchedAt: new Date().toISOString(),
-    extraction: { engine: "layout-aware/pdfjs-geom-v1", pageCount: layout.pageCount },
+    extraction: { engine: isHtmlAgenda ? "granicus-html-agenda-v1" : "layout-aware/pdfjs-geom-v1", pageCount: layout.pageCount },
     pages: layout.pageCount,
     pageTexts: layout.pages.map((page) => ({ pageNumber: page.pageNumber, width: page.width, height: page.height, text: page.text })),
     text: layout.text,

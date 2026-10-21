@@ -8,8 +8,9 @@ follow the recorded actions, and trace proposed impacts across the city — no i
 decisions, or statistics.
 
 The guided session covers the **January 26, 2026 regular City Council meeting** (five ordinances,
-three reading stages), the meeting workspace opens on the **next scheduled meeting with a posted
-agenda**, and the source library indexes the complete public-record archive below.
+three reading stages). The meeting workspace opens on the **next confirmed meeting with a posted
+agenda**, or on the latest meeting in the record when no upcoming meeting is confirmed, and the
+source library indexes the complete public-record archive below.
 
 ## Live Government Hub
 
@@ -85,8 +86,8 @@ of official links captured on October 3, 2026. It keeps same-day City Council se
 | Body | Meetings | Coverage |
 | --- | ---: | --- |
 | City Council | 526 | **May 27, 2008 → September 28, 2026** (specials & budget sessions included) |
-| Finance Committee | 123 | January 4, 2022 → **October 6, 2026 (upcoming)** |
-| Public Services Committee | 119 | January 5, 2022 → **October 5, 2026 (upcoming)** |
+| Finance Committee | 123 | January 4, 2022 → **October 6, 2026 (agenda posted; outcome not in this snapshot)** |
+| Public Services Committee | 119 | January 5, 2022 → **October 5, 2026 (agenda posted; outcome not in this snapshot)** |
 | Work Sessions / Committee of the Whole | 115 | October 3, 2018 → August 28, 2026 |
 | Board of County Commissioners | 58 | January 2, 2024 → March 17, 2026 |
 | Planning Commission | 47 | January 11, 2024 → July 6, 2026 |
@@ -94,13 +95,41 @@ of official links captured on October 3, 2026. It keeps same-day City Council se
 | Board of Adjustment | 6 | January 15 → July 16, 2026 |
 | Urban Renewal Authority | 2 | February 5 → May 7, 2026 |
 
-**1,003 meeting entries · 5,118 archived documents · 85 transcript files** (84 dated transcript
-attachments across 82 meetings and one undated transcript whose meeting date is not established).
-These are reproducible counts from the committed repository snapshots and official-links snapshot;
-the former 948-entry README total was stale. Meeting IDs are keyed by government body, date, and
-explicit session note; the archive is not padded with unverified placeholders to match another tally.
-The next posted meetings are Public Services Committee, Monday October 5 (11 agenda items), and
-Finance Committee, Tuesday October 6 (6 agenda items).
+**1,003 meeting entries · 5,118 archived documents · 85 transcript files; 84 linked to dated meeting records**
+(across 82 dated meetings, with 82 meetings carrying compiled searchable text excerpts, 1 undated
+repository transcript file whose meeting date is not established, and 0 transcripts audio-verified
+against official recordings in this snapshot). These are reproducible counts from the committed
+repository snapshots and official-links snapshot; the former 948-entry README total was stale.
+Repository tree listing, compiled text excerpts, and audio verification are tracked separately.
+
+### Calendar status, validity boundaries, and pipeline provenance
+
+`scripts/build-data.mjs` evaluates calendar status against the build clock in **America/Denver**
+(`scripts/lib/civic-calendar.mjs`) while preserving historical source metadata intact:
+
+* Raw `notes` on curated records (such as `"Upcoming — agenda posted"`) remain intact in `meetings.json`
+  and are separated into `publisherStatusAtCapture`, `snapshotCapturedAt`, `scheduledDate`,
+  `scheduledTime`, `calendarStatus`, `calendarStatusEvaluatedAt`, `calendarStatusValidUntil`, and
+  `outcomeStatus`. Historical capture notes are never displayed as current calendar status.
+* **Confirmed future meeting (`upcoming`)**: either `scheduledDate` is after today in `America/Denver`,
+  or `scheduledDate` is today in `America/Denver` **with a verified future start time** (valid until
+  that start instant). Static HTML qualifies such cards as *"as of snapshot"* and client components
+  re-check `calendarStatusValidUntil` against the visitor's clock so stale static HTML expires
+  honestly even if scheduled syncs fail.
+* **Same-day without start time (`same-day-time-unverified`)**: rendered as *"Scheduled for today;
+  start time not verified."* — never advertised as a confirmed future meeting until midnight.
+* **Past start time or past date (`start-time-passed` / `date-passed`)**: rendered as *"Scheduled start
+  time passed; outcome not verified."* or *"Scheduled date passed; outcome not verified."* Passing a
+  scheduled time or date never infers `"held"`, `"completed"`, or `"in progress"`.
+* **Distinct pipeline stages and timestamps**: schedule-table check (`officialScheduleCheckedAt`),
+  watcher baseline (`watcherBaselineCheckedAt`), snapshot capture (`captured`), agenda download,
+  validation (`validateMeetingDirectory()`), and outcome verification remain separate fields. Unarchived
+  schedule rows and failed downloads (`data/sync-blocked.json`) surface as *"Official posting detected;
+  archive unavailable"* with their official city link and are never promoted with invented items, Zoom
+  credentials, or outcomes. Granicus HTML agendas (`GeneratedAgendaViewer.php`, including protocol-relative
+  `//cheyenne.granicus.com/...` URLs) and combined PDFs share the same verbatim-quote structural gate.
+* **Latest dated transcript** (`finance-committee-2026-09-22` in the committed snapshot) is derived
+  directly from dated transcript holdings rather than hardcoded.
 
 Each meeting links to available official agendas, minutes, and video, plus repository documents and
 a timestamped transcript where one exists. The archive transcript snapshot currently covers 82
@@ -297,9 +326,15 @@ npm run test:seo
 ## Development
 
 ```bash
-npm install
+npm ci                 # standard CI / workstation install (includes native sharp prebuild)
 npm run dev            # http://localhost:3000
 ```
+
+> **Restricted-network sandbox note:** In environments that block outbound TLS to GitHub Release CDNs
+> (so `sharp`'s prebuilt binary download fails during `postinstall`), `npm ci --ignore-scripts` installs
+> the JS dependency tree for Next.js static export (`images: { unoptimized: true }`), lint, typecheck,
+> and Node test suites. Because `--ignore-scripts` skips lifecycle scripts, always verify full `npm ci`
+> separately in GitHub Actions CI before treating a build as production-equivalent.
 
 Other scripts:
 

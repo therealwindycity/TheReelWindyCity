@@ -187,32 +187,57 @@ try {
     throw new Error('Expected the Civic Cheyenne favicon to be available');
   }
   console.log(`PASS: SEO metadata, sitemap with ${sitemapLocations.length} URLs, full archive index, oldest/latest static meeting pages, and favicon`);
+  // Verify both raw exported HTML BEFORE hydration and live browser DOM AFTER hydration agree.
+  const rawHomeResponse = await context.request.get(publicBase);
+  const rawHomeHtml = await rawHomeResponse.text();
+  if (rawHomeResponse.status() !== 200) throw new Error(`Expected 200 on ${publicBase}`);
+  if (rawHomeHtml.includes('Upcoming — agenda posted')) {
+    throw new Error('Raw static homepage HTML leaked historical "Upcoming — agenda posted" status note');
+  }
+  if (!rawHomeHtml.includes('85 transcript files; 84 linked to dated meeting records')) {
+    throw new Error('Raw static homepage HTML is missing explicit transcript count denominators');
+  }
+
   await expect(page.getByRole('heading', { name: 'Big decisions. Local impact.' })).toBeVisible();
   await expect(page.locator('.maplibregl-canvas')).toHaveCount(1, { timeout: 20000 });
   await expect(page.locator('.map-loading')).not.toBeVisible({ timeout: 20000 });
   await expect(page.locator('.map-unavailable')).not.toBeVisible();
-  await expect(page.locator('.brief-eyebrow')).toContainText('NEXT UP IN COUNCIL CHAMBERS');
-  await expect(page.locator('.session-brief')).toContainText('Public Services Committee');
-  await expect(page.locator('.session-brief')).toContainText('October 5, 2026');
-  await expect(page.locator('.session-brief')).toContainText('11');
   await expect(page.locator('.source-count')).toContainText('2008');
-  await page.waitForTimeout(1200);
+  await expect(page.locator('.source-count')).toContainText('85 transcript files; 84 linked to dated meeting records');
+  await expect(page.locator('.featured-sources')).toContainText('Finance Committee · September 22, 2026');
+
+  if (meetingIndex.stats.upcomingMeetings > 0) {
+    await expect(page.locator('.brief-eyebrow')).toContainText('NEXT POSTED MEETING AS OF SNAPSHOT');
+    await page.getByRole('button', { name: 'Open posted meeting', exact: true }).click();
+  } else {
+    if (!rawHomeHtml.includes('LATEST IN THE RECORD') || !rawHomeHtml.includes('No upcoming meeting confirmed')) {
+      throw new Error('Raw static HTML did not qualify the absence of confirmed upcoming meetings');
+    }
+    await expect(page.locator('.brief-eyebrow')).toContainText('LATEST IN THE RECORD');
+    await expect(page.locator('.brief-eyebrow')).toContainText('No upcoming meeting confirmed');
+    await expect(page.locator('.session-brief')).toContainText('Finance Committee');
+    await expect(page.locator('.session-brief')).toContainText('October 6, 2026');
+    await expect(page.locator('.session-brief')).not.toContainText('Upcoming — agenda posted');
+    await page.getByRole('button', { name: 'Open the latest meeting', exact: true }).click();
+    await expect(page.getByRole('heading', { name: 'The posted agenda is on file; outcome is not verified.' })).toBeVisible();
+    await expect(page.locator('.session-location-banner')).toContainText('Finance Committee');
+    await expect(page.locator('.session-location-banner')).toContainText('October 6, 2026');
+    await expect(page.locator('.meeting-item')).toHaveCount(6);
+    await expect(page.locator('.meeting-item-stack')).toContainText('Airport Golf Course');
+    await expect(page.getByRole('link', { name: /Join on Zoom/ })).toHaveCount(0);
+  }
+  await page.waitForTimeout(800);
   await page.evaluate(() => { document.documentElement.style.scrollBehavior='auto'; window.scrollTo(0,0); });
   await page.screenshot({ path: 'test-output/overview.png', fullPage: true, animations: 'disabled' });
-  console.log('PASS: dashboard opens on the next posted meeting and shows archive coverage');
+  console.log('PASS: raw static HTML and hydrated dashboard match on calendar status, transcript counts, and past-agenda qualification');
 
-  await page.getByRole('button', { name: 'Open the next meeting', exact: true }).click();
-  await expect(page.getByRole('heading', { name: 'The agenda is posted. Take a look before it happens.' })).toBeVisible();
+  await page.getByLabel('Choose a meeting').selectOption('public-services-committee-2026-10-05');
   await expect(page.locator('.session-location-banner')).toContainText('Public Services Committee');
-  await expect(page.locator('.session-location-banner')).toContainText('Monday, October 5, 2026');
+  await expect(page.locator('.session-location-banner')).toContainText('October 5, 2026');
   await expect(page.locator('.meeting-item')).toHaveCount(11);
   await expect(page.locator('.meeting-item-stack')).toContainText('Hitching Post District');
-  await expect(page.getByRole('link', { name: /Join on Zoom/ })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Join on Zoom/ })).toHaveCount(0);
   await page.screenshot({ path: 'test-output/next-meeting.png', fullPage: true, animations: 'disabled' });
-  await page.locator('.meeting-switcher-quick').getByRole('button', { name: /Finance · Tue/ }).click();
-  await expect(page.locator('.session-location-banner')).toContainText('October 6, 2026');
-  await expect(page.locator('.meeting-item')).toHaveCount(6);
-  await expect(page.locator('.meeting-item-stack')).toContainText('Airport Golf Course');
   await page.locator('.meeting-switcher-quick').getByRole('button', { name: /Guided session/ }).click();
   await expect(page.getByRole('heading', { name: 'Inside Council Chambers.' })).toBeVisible();
   await page.getByRole('button', { name: 'Open the complete agenda' }).click();
@@ -250,10 +275,14 @@ try {
   await page.keyboard.press('Escape');
   await expect(page.locator('.document-modal')).not.toBeVisible();
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
-  await page.locator('.featured-sources button').filter({ hasText: 'Posted agenda' }).click();
-  await expect(page.locator('.document-modal')).toBeVisible();
-  await expect(page.locator('.document-header')).toContainText('October 5, 2026');
-  await page.keyboard.press('Escape');
+  if (meetingIndex.stats.upcomingMeetings > 0) {
+    await page.locator('.featured-sources button').filter({ hasText: 'Posted agenda' }).click();
+    await expect(page.locator('.document-modal')).toBeVisible();
+    await page.keyboard.press('Escape');
+  } else {
+    await expect(page.locator('.featured-sources')).toContainText('Latest in the record');
+    await expect(page.locator('.featured-sources')).toContainText('Latest dated transcript');
+  }
   await page.getByRole('button', { name: /Source library/ }).first().click();
   await page.getByLabel('Choose GitHub archive').selectOption('The-Real-Windy-City-');
   await page.getByLabel('Search all repository source files').fill('2026-01-26');
@@ -292,14 +321,19 @@ try {
 
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
   await page.locator('.session-date-select').click();
-  await expect(page.locator('.featured-meeting').first()).toContainText('Public Services Committee');
-  await expect(page.locator('.featured-meeting').first()).toContainText('Start here');
+  if (meetingIndex.stats.upcomingMeetings > 0) {
+    await expect(page.locator('.featured-meeting').first()).toContainText('Posted');
+  } else {
+    await expect(page.locator('.featured-meeting').first()).toContainText('No upcoming meeting confirmed in this snapshot');
+    await expect(page.locator('.featured-meeting').first()).toContainText('Latest record');
+  }
   const pickerButtons = await page.locator('.meeting-picker-list button').count();
   if (pickerButtons < 600) throw new Error(`Expected the complete meeting index in the picker, found ${pickerButtons}`);
   await expect(page.locator('.meeting-picker-list')).toContainText('May 27, 2008');
   await expect(page.locator('.meeting-picker-list')).toContainText('September 28, 2026');
+  await expect(page.locator('.meeting-picker-list')).not.toContainText('Upcoming — agenda posted');
   await page.locator('.meeting-picker-list button').filter({ hasText: 'September 28, 2026' }).first().click();
-  await expect(page.getByRole('heading', { name: 'Everything the city kept from this meeting.' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Everything indexed from this meeting.' })).toBeVisible();
   await expect(page.locator('.session-location-banner')).toContainText('September 28, 2026');
   await expect(page.locator('.meeting-docs-strip').or(page.locator('.watch-source-actions'))).toBeVisible();
   await page.getByRole('button', { name: 'Explore another meeting', exact: true }).click();
@@ -310,7 +344,21 @@ try {
   await expect(page.locator('.document-header')).toContainText('Finance Committee transcript');
   await expect(page.locator('.document-actions a').filter({ hasText: 'Original source' })).toHaveAttribute('href', /2026-09-22-finance-committee\.md/);
   await page.keyboard.press('Escape');
-  console.log('PASS: every meeting indexed, next meeting featured, archived meeting & transcript open');
+
+  // Verify hydrated DOM on /hub/, /hub/meetings/, /meetings/public-services-committee-2026-10-05/, and /transcripts/ too.
+  await page.goto(`${publicBase}hub/`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: /Local government is easier to follow/ })).toBeVisible();
+  await expect(page.locator('.gov-freshness')).toContainText('Record snapshot');
+  await page.goto(`${publicBase}hub/meetings/`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('heading', { name: /Meetings & agendas/ })).toBeVisible();
+  await expect(page.locator('.gov-freshness')).toContainText('Record snapshot');
+  await page.goto(`${publicBase}meetings/public-services-committee-2026-10-05/`, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('main')).toContainText('Scheduled date passed; outcome not verified');
+  await expect(page.locator('main')).toContainText('Outcome not verified in this snapshot');
+  await expect(page.locator('main')).toContainText('Publisher status at capture (2026-10-03)');
+  await page.goto(`${publicBase}transcripts/`, { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('main')).toContainText('85 transcript files; 84 linked to dated meeting records');
+  console.log('PASS: every meeting indexed, hydrated /hub, /hub/meetings, /meetings/[id], and /transcripts verified');
 
   // The "Open this meeting in Civic Cheyenne" links on the static record pages point at
   // /?meeting=<id>. That deep link must open the named meeting, survive a reload, and move

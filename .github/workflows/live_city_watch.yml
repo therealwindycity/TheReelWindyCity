@@ -59,6 +59,8 @@ jobs:
       hash: ${{ steps.result.outputs.hash }}
       urls: ${{ steps.result.outputs.urls }}
       ids: ${{ steps.result.outputs.ids }}
+      records: ${{ steps.result.outputs.records }}
+      checked_at: ${{ steps.result.outputs.checked_at }}
     steps:
       - uses: actions/checkout@v4
 
@@ -82,6 +84,8 @@ jobs:
             echo "hash=$(jq -r '.contentHash // ""' .sync/watch.json)"
             echo "urls=$(jq -r '[.changedMeetings[]?.agendaUrl | select(length > 0)] | join(",")' .sync/watch.json)"
             echo "ids=$(jq -r '[.changedMeetings[]? | (.body + "-" + .date)] | join(",")' .sync/watch.json)"
+            echo "records=$(jq -c '[.meetings[]? | {body, bodyLabel, date, time, agendaUrl}]' .sync/watch.json)"
+            echo "checked_at=$(jq -r '.checkedAt // ""' .sync/watch.json)"
           } >> "$GITHUB_OUTPUT"
 
       - name: Explain this run in the summary
@@ -168,5 +172,53 @@ jobs:
             exit 0
           fi
           git commit -m "Record a change that failed to sync; the watcher stays quiet until the retry window passes"
+          git pull --rebase origin main
+          git push origin main
+
+  publish_table:
+    # Persist discovered schedule postings to data/detected-upcoming.json even if
+    # downstream PDF/HTML extraction fails. Build-time ingestion keeps discovery
+    # strictly distinct from validated agenda items (Stage 1 vs Stage 3/4).
+    needs: [watch, sync]
+    if: >-
+      ${{
+        always() &&
+        needs.watch.result == 'success' &&
+        needs.watch.outputs.changed == 'true' &&
+        github.ref == 'refs/heads/main'
+      }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    concurrency:
+      group: municipal-data-sync
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Record discovered schedule postings without promoting items
+        env:
+          CHECKED_AT: ${{ needs.watch.outputs.checked_at }}
+          RECORDS: ${{ needs.watch.outputs.records }}
+        run: |
+          set -euo pipefail
+          mkdir -p data
+          jq -n --arg discoveredAt "$CHECKED_AT" --argjson records "$RECORDS" \
+            --arg sourceUrl "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming" \
+            '{version:1, ok:true, discoveredAt:$discoveredAt, sourceUrl:$sourceUrl, meetings:$records}' \
+            > data/detected-upcoming.json
+      - name: Commit discovered postings table (guarded)
+        run: |
+          set -euo pipefail
+          git config user.name "civic-cheyenne-watcher"
+          git config user.email "civic-cheyenne-watcher@users.noreply.github.com"
+          git add data/detected-upcoming.json
+          if git diff --cached --quiet; then
+            echo "Detected postings table already current."
+            exit 0
+          fi
+          git commit -m "Record discovered upcoming-meetings postings (${GITHUB_RUN_ID})"
           git pull --rebase origin main
           git push origin main

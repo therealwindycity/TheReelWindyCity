@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import transcriptVectorIndex from "@/data/transcript-vectors.json";
 import ClickToLoadYouTube from "@/components/click-to-load-youtube";
-import { ARCHIVE_OWNER, MEETINGS, MEETINGS_CAPTURED, readableName, type Meeting } from "@/lib/civic-data";
+import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
+import { ARCHIVE_OWNER, MEETINGS, MEETINGS_CAPTURED, MEETINGS_TIME_ZONE, displayMeetingNotes, formatEvaluationTimestamp, meetingCalendarLabel, meetingOutcomeLabel, readableName, type Meeting } from "@/lib/civic-data";
 import { SITE_NAME, SITE_URL, siteUrl } from "@/lib/site-config";
 
 export const dynamic = "force-static";
@@ -250,7 +251,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
         </nav>
 
         <header className="seo-page-heading">
-          <p className="seo-eyebrow">{meeting.upcoming ? "POSTED PUBLIC AGENDA SNAPSHOT" : "HISTORICAL PUBLIC-RECORD ENTRY"}</p>
+          <p className="seo-eyebrow">{meeting.upcoming ? "POSTED PUBLIC AGENDA SNAPSHOT" : meeting.agendaPosted ? "PUBLIC-RECORD ENTRY · POSTED AGENDA" : "HISTORICAL PUBLIC-RECORD ENTRY"}</p>
           <h1>{meetingHeading(meeting)}</h1>
           <p className="seo-lede">
             This independent index brings together the available public records for the {meeting.bodyLabel} on {meeting.dateLabel}.
@@ -266,16 +267,27 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
           <h2 id="meeting-facts-heading">Meeting record</h2>
           <dl className="seo-facts">
             <div><dt>Government body</dt><dd>{meeting.bodyLabel}</dd></div>
-            <div><dt>Date</dt><dd><time dateTime={meeting.date}>{meeting.dateLabel}</time></dd></div>
-            {meeting.time && <div><dt>Posted time</dt><dd>{meeting.time}</dd></div>}
+            <div><dt>Scheduled date</dt><dd><time dateTime={meeting.date}>{meeting.dateLabel}</time></dd></div>
+            {meeting.time && <div><dt>Scheduled time</dt><dd>{meeting.time}</dd></div>}
             {meeting.location && <div><dt>Posted location</dt><dd>{meeting.location}</dd></div>}
+            <div><dt>Calendar status</dt><dd>{meetingCalendarLabel(meeting)}</dd></div>
+            {meeting.calendarStatusEvaluatedAt && (
+              <div><dt>Calendar status evaluated</dt><dd>{formatEvaluationTimestamp(meeting.calendarStatusEvaluatedAt)} ({MEETINGS_TIME_ZONE})</dd></div>
+            )}
+            <div><dt>Outcome verification</dt><dd>{meetingOutcomeLabel(meeting)}</dd></div>
             <div><dt>Archive documents</dt><dd>{meeting.docs.length}</dd></div>
-            <div><dt>Timestamped transcript</dt><dd>{meeting.transcript ? "Available" : "Not linked in this index"}</dd></div>
-            {meeting.notes?.map((note) => <div key={note}><dt>Archive note</dt><dd>{note}</dd></div>)}
+            <div><dt>Transcript file</dt><dd>{meeting.transcript ? "Listed in repository tree (auto-generated captions; not verified against audio)" : "Not linked in this index"}</dd></div>
+            {meeting.publisherStatusAtCapture && (
+              <div><dt>{`Publisher status at capture (${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED})`}</dt><dd>{meeting.publisherStatusAtCapture}</dd></div>
+            )}
+            {displayMeetingNotes(meeting).map((note) => <div key={note}><dt>Archive note</dt><dd>{note}</dd></div>)}
           </dl>
-          {meeting.upcoming && (
+          <HubSnapshotFreshness note="calendar evaluation and official outcome verification are tracked separately." />
+          {(meeting.upcoming || meeting.agendaPosted) && (
             <p className="seo-record-notice">
-              This agenda snapshot was captured on {MEETINGS_CAPTURED}. Agendas describe proposed business; consult later official minutes for recorded actions.
+              {meeting.upcoming
+                ? `This agenda snapshot was captured on ${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED}. Agendas describe proposed business as of capture; consult official minutes for recorded actions.`
+                : `This agenda was posted for a date that has passed. Passing a scheduled date or time never establishes whether the body met or what it decided; check official minutes, adopted text, and recordings for outcomes.`}
             </p>
           )}
           {meeting.notes?.some((note) => /cancelled|canceled/i.test(note)) && (

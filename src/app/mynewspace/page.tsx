@@ -19,7 +19,9 @@ import {
   type NewspaceModule,
 } from "@/lib/newspace";
 import {
+  FEATURED_MEETING,
   GUIDED_MEETING_ID,
+  LATEST_MEETING,
   MEETINGS,
   MEETINGS_CAPTURED,
   MEETING_STATS,
@@ -28,6 +30,9 @@ import {
   UPCOMING_MEETINGS,
   asset,
   getMeeting,
+  meetingCalendarLabel,
+  noUpcomingMeetingNotice,
+  transcriptCountSummary,
 } from "@/lib/civic-data";
 import { COUNTIES, ECOSYSTEM_CAPTURED, MUNICIPALITIES, countyById, placeById } from "@/lib/wyoming-ecosystem";
 import { SITE_NAME, siteUrl } from "@/lib/site-config";
@@ -43,9 +48,9 @@ const CHEYENNE_COUNTY = CHEYENNE ? countyById(CHEYENNE.countyId) : undefined;
 const MODULE: NewspaceModule = {
   name: "mynewspace",
   headline: "Your city. Your seat at the table. Your own tablecloth, too.",
-  status: NEXT_MEETING.upcoming
-    ? `Next posted meeting · ${NEXT_MEETING.bodyLabel}, ${NEXT_MEETING.dateLabel}${NEXT_MEETING.time ? ` at ${NEXT_MEETING.time}` : ""}`
-    : `Nothing posted for this body · last indexed meeting was ${MEETINGS[0]?.dateLabel ?? "on record"}`,
+  status: NEXT_MEETING
+    ? `Next posted meeting as of snapshot (${MEETINGS_CAPTURED}) · ${NEXT_MEETING.bodyLabel}, ${NEXT_MEETING.dateLabel}${NEXT_MEETING.time ? ` at ${NEXT_MEETING.time}` : ""}`
+    : `No upcoming meeting confirmed in this snapshot · latest record ${LATEST_MEETING?.dateLabel ?? "not established"}`,
   song: "no profile song — silent since 2006 by design",
   location: CHEYENNE ? `${CHEYENNE.name}, WY · ${CHEYENNE.address}` : "Cheyenne, Wyoming",
   accent: NEWSPACE_DEFAULTS.accent,
@@ -290,7 +295,7 @@ export default function MyNewSpaceProfile() {
                     <span>· {meeting.shortDate}</span>
                   </li>
                 ))}
-                {UPCOMING_MEETINGS.length === 0 && <li>No agenda is posted in this snapshot.</li>}
+                {UPCOMING_MEETINGS.length === 0 && <li>No upcoming meeting is confirmed in this snapshot. Check the city’s official calendar for postings after {MEETINGS_CAPTURED}.</li>}
               </ul>
             </div>
           </section>
@@ -315,8 +320,8 @@ export default function MyNewSpaceProfile() {
                   <td>{MEETING_STATS.totalDocuments.toLocaleString()}</td>
                 </tr>
                 <tr>
-                  <th>Linked transcripts</th>
-                  <td>{MEETING_STATS.totalTranscripts}</td>
+                  <th>Transcripts</th>
+                  <td>{transcriptCountSummary()}</td>
                 </tr>
                 <tr>
                   <th>Coverage</th>
@@ -350,7 +355,7 @@ export default function MyNewSpaceProfile() {
                 I am the profile page this city never had: <NewspaceText field="headline" module={MODULE} />{" "}
                 Everything in these modules is copied out of the same archive the rest of {SITE_NAME} publishes —{" "}
                 {MEETING_STATS.totalMeetings.toLocaleString()} indexed public meetings, {MEETING_STATS.totalDocuments.toLocaleString()}{" "}
-                archived documents, {MEETING_STATS.totalTranscripts} linked transcripts, {COUNTIES.length} counties and{" "}
+                archived documents, {transcriptCountSummary()}, {COUNTIES.length} counties and{" "}
                 {MUNICIPALITIES.length} incorporated municipalities in the statewide catalog.
               </p>
               <p>
@@ -379,38 +384,38 @@ export default function MyNewSpaceProfile() {
 
           <section className="nsp-card nsp-module" id="nsp-sec-agenda" aria-labelledby="nsp-agenda-title">
             <h2 className="nsp-card-head" id="nsp-agenda-title">
-              <span>Next public meeting</span>
-              <span>{NEXT_MEETING.items?.length ?? 0} posted items</span>
+              <span>{NEXT_MEETING ? "Next public meeting" : "Latest in the record"}</span>
+              <span>{NEXT_MEETING ? `${NEXT_MEETING.items?.length ?? 0} posted items` : `${FEATURED_MEETING.docs.length} archived files`}</span>
             </h2>
             <div className="nsp-module-body">
               <dl className="nsp-facts">
                 <div>
                   <dt>Body</dt>
                   <dd>
-                    {NEXT_MEETING.bodyLabel}
-                    <small>{NEXT_MEETING.upcoming ? "agenda posted" : "most recent indexed meeting"}</small>
+                    {FEATURED_MEETING.bodyLabel}
+                    <small>{NEXT_MEETING ? "agenda posted" : meetingCalendarLabel(FEATURED_MEETING)}</small>
                   </dd>
                 </div>
                 <div>
                   <dt>When</dt>
                   <dd>
-                    {NEXT_MEETING.shortDate}
-                    <small>{NEXT_MEETING.time ?? "time not in this snapshot"}</small>
+                    {FEATURED_MEETING.shortDate}
+                    <small>{FEATURED_MEETING.time ?? "time not in this snapshot"}</small>
                   </dd>
                 </div>
                 <div>
                   <dt>Where</dt>
                   <dd>
-                    {NEXT_MEETING.location ?? "Council Chambers"}
+                    {FEATURED_MEETING.location ?? "Council Chambers"}
                     <small>2101 O’Neil Avenue, Cheyenne</small>
                   </dd>
                 </div>
               </dl>
-              {NEXT_MEETING.items && NEXT_MEETING.items.length > 0 && (
+              {FEATURED_MEETING.items && FEATURED_MEETING.items.length > 0 && (
                 <>
                   <h3>Posted agenda, in order</h3>
                   <ol className="nsp-topic-list">
-                    {NEXT_MEETING.items.slice(0, 11).map((item) => (
+                    {FEATURED_MEETING.items.slice(0, 11).map((item) => (
                       <li key={`${item.number}-${item.kind}`}>
                         {item.number}. {item.kind}: {item.text}
                       </li>
@@ -422,8 +427,8 @@ export default function MyNewSpaceProfile() {
                 <div>
                   <dt>Agenda</dt>
                   <dd>
-                    {NEXT_MEETING.official.agenda ? (
-                      <a href={NEXT_MEETING.official.agenda} target="_blank" rel="noopener noreferrer">
+                    {FEATURED_MEETING.official.agenda ? (
+                      <a href={FEATURED_MEETING.official.agenda} target="_blank" rel="noopener noreferrer">
                         posted PDF
                       </a>
                     ) : (
@@ -434,8 +439,8 @@ export default function MyNewSpaceProfile() {
                 <div>
                   <dt>Minutes</dt>
                   <dd>
-                    {NEXT_MEETING.official.minutes ? (
-                      <a href={NEXT_MEETING.official.minutes} target="_blank" rel="noopener noreferrer">
+                    {FEATURED_MEETING.official.minutes ? (
+                      <a href={FEATURED_MEETING.official.minutes} target="_blank" rel="noopener noreferrer">
                         official minutes
                       </a>
                     ) : (
@@ -446,12 +451,24 @@ export default function MyNewSpaceProfile() {
                 <div>
                   <dt>Recording</dt>
                   <dd>
-                    <a href={NEXT_MEETING.official.granicus} target="_blank" rel="noopener noreferrer">
-                      Granicus viewer
-                    </a>
+                    {FEATURED_MEETING.official.granicus ? (
+                      <a href={FEATURED_MEETING.official.granicus} target="_blank" rel="noopener noreferrer">
+                        Granicus viewer
+                      </a>
+                    ) : (
+                      <span>not in this snapshot</span>
+                    )}
                   </dd>
                 </div>
               </div>
+              {!NEXT_MEETING && (
+                <p className="nsp-fallback-note">
+                  {noUpcomingMeetingNotice().headline} {noUpcomingMeetingNotice().detail}{" "}
+                  <a href={noUpcomingMeetingNotice().scheduleUrl} target="_blank" rel="noopener noreferrer">
+                    City of Cheyenne meeting calendar
+                  </a>
+                </p>
+              )}
             </div>
           </section>
 

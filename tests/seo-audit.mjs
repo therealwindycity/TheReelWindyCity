@@ -243,8 +243,11 @@ if (!newspace) {
   check(newspace.includes("X-Frame-Options"), "mynewspace/: does not warn that Arena may refuse to be framed");
 }
 
-// Every page that shows posted agenda items must say how old the snapshot is.
-for (const route of ["hub/", "hub/meetings/"]) {
+// Every page that shows posted agenda items must say how old the snapshot is,
+// never advertise past meetings as upcoming, never leak historical capture notes
+// as current status, never infer outcomes from the clock, and state explicit
+// transcript denominators.
+for (const route of ["hub/", "hub/meetings/", "meetings/"]) {
   const html = read(path.join(route, "index.html"));
   check(Boolean(html && html.includes("Record snapshot")), `${route}: missing the record-snapshot freshness note`);
   check(Boolean(html && html.includes("gov-freshness")), `${route}: missing the freshness indicator element`);
@@ -253,7 +256,38 @@ for (const route of ["hub/", "hub/meetings/"]) {
     Boolean(html && new RegExp(`Record snapshot[^<]*${snapshotYear}`).test(html)),
     `${route}: freshness note does not name the snapshot year ${snapshotYear}`,
   );
+  check(
+    Boolean(html && !html.includes("Upcoming — agenda posted")),
+    `${route}: leaked historical capture note "Upcoming — agenda posted" onto current UI`,
+  );
 }
+const homeHtml = read("index.html");
+const transcriptsHtml = read(path.join("transcripts", "index.html"));
+const oct5Html = read(path.join("meetings", "public-services-committee-2026-10-05", "index.html"));
+check(
+  Boolean(homeHtml && !homeHtml.includes("Upcoming — agenda posted")),
+  "index.html: leaked historical capture note 'Upcoming — agenda posted' onto homepage",
+);
+check(
+  Boolean(homeHtml && homeHtml.includes("85 transcript files; 84 linked to dated meeting records")),
+  "index.html: missing explicit transcript denominators ('85 transcript files; 84 linked to dated meeting records')",
+);
+check(
+  Boolean(transcriptsHtml && transcriptsHtml.includes("85 transcript files; 84 linked to dated meeting records")),
+  "transcripts/: missing explicit transcript denominators ('85 transcript files; 84 linked to dated meeting records')",
+);
+check(
+  Boolean(oct5Html && oct5Html.includes("Scheduled date passed; outcome not verified")),
+  "meetings/public-services-committee-2026-10-05/: missing honest post-date status",
+);
+check(
+  Boolean(oct5Html && oct5Html.includes("Outcome not verified in this snapshot")),
+  "meetings/public-services-committee-2026-10-05/: missing separate unverified outcome status",
+);
+check(
+  Boolean(oct5Html && oct5Html.includes("Publisher status at capture (2026-10-03)")),
+  "meetings/public-services-committee-2026-10-05/: missing preserved historical publisher status provenance",
+);
 
 /* ------------------------------------------------------------------ */
 /* 4. Sitemap covers every page with an honest lastmod                  */

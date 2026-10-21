@@ -1884,3 +1884,10 @@
 .place-picker-modal a{display:flex;align-items:center;gap:8px;padding:8px 4px;color:#24372c;text-decoration:none}
 .place-picker-modal a small{display:block;color:#6d7b70}
 .civic-shell .brand-wordmark>span{letter-spacing:.3px;font-size:10px;white-space:normal;max-width:130px;line-height:1.25}
+
+/* Honest "no upcoming meeting confirmed" states (status is resolved at build time). */
+.meeting-switcher-quiet{display:inline-flex;align-items:center;font-size:9.5px;line-height:1.6;color:#71836b;background:#f6f8f1;border:1px dashed #d7e1c8;border-radius:6px;padding:8px 11px}
+.brief-source-note a{color:#4c6b3d;text-decoration:underline;text-underline-offset:2px}
+.brief-source-note a:hover{color:#2f4d2b}
+.nsp-fallback-note{margin-top:12px;padding:10px 12px;border:1px dashed #d9e1cd;border-radius:6px;background:#f7faf2;color:#647057;font-size:10px;line-height:1.8}
+.nsp-fallback-note a{color:#47633b;text-decoration:underline;text-underline-offset:2px}
