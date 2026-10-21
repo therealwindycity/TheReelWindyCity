@@ -1,17 +1,33 @@
-import { MEETING, MEETINGS_CAPTURED, NEXT_MEETING } from "./civic-data";
+import {
+  FEATURED_MEETING,
+  GRANICUS_UPCOMING_URL,
+  MEETING,
+  MEETINGS_CAPTURED,
+  MEETING_STATS,
+  NEXT_MEETING,
+  OFFICIAL_SCHEDULE_CHECKED_AT,
+  OFFICIAL_SCHEDULE_URL,
+  WATCHER_BASELINE_CHECKED_AT,
+} from "./civic-data";
 import { CHEYENNE_SCANNER_FEEDS, WYOMING_CITIES } from "./wyoming-cities";
 
 /** A record snapshot older than this is called out as possibly out of date. */
 export const SNAPSHOT_STALE_AFTER_DAYS = 14;
 
 export type SnapshotFreshness = {
-  /** ISO date of the record snapshot, e.g. "2026-10-03". */
+  /** ISO date of the committed official-meetings snapshot, e.g. "2026-10-03". */
   captured: string;
   /** Human label for the snapshot date, e.g. "October 3, 2026". */
   capturedLabel: string;
-  /** Whole days between the snapshot and the reference date. */
+  /** Separate timestamp when the live city schedule table was recorded, if any (never substituted for `captured`). */
+  scheduleCheckedAt: string | null;
+  /** Separate timestamp of the committed Granicus watcher baseline, if any. */
+  watcherCheckedAt: string | null;
+  /** Build-time evaluation timestamp for `calendarStatus` in America/Denver. */
+  calendarEvaluatedAt: string;
+  /** Whole days between the snapshot date and the reference date in America/Denver. */
   ageInDays: number;
-  /** Short age phrase, e.g. "today", "yesterday", "6 days ago". */
+  /** Short age phrase, e.g. "today", "yesterday", "18 days ago". */
   ageLabel: string;
   /** True when the snapshot is old enough that visitors should double-check it. */
   stale: boolean;
@@ -19,25 +35,32 @@ export type SnapshotFreshness = {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
-function startOfUtcDay(value: Date): number {
-  return Date.UTC(value.getUTCFullYear(), value.getUTCMonth(), value.getUTCDate());
+function denverDayEpochMs(now: Date): number {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Denver",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(now);
+  const get = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
+  return Date.UTC(get("year"), get("month") - 1, get("day"));
 }
 
 /**
- * How old the underlying record snapshot is.
- *
- * The hub is a static export, so "now" is the moment of the build rather than
- * the moment of the visit. That is still the honest number to show: it is when
- * these records were last reconciled with the city's postings.
+ * How old the underlying record snapshot is in America/Denver calendar days.
+ * Keeps `captured`, `scheduleCheckedAt`, `watcherCheckedAt`, and `calendarEvaluatedAt`
+ * distinct rather than conflating schedule-check timestamps with snapshot capture.
  */
 export function getSnapshotFreshness(
   captured: string = MEETINGS_CAPTURED,
   now: Date = new Date(),
 ): SnapshotFreshness {
   const capturedDate = new Date(`${captured}T00:00:00Z`);
-  const capturedMs = Number.isNaN(capturedDate.getTime()) ? startOfUtcDay(now) : startOfUtcDay(capturedDate);
-  // Clock skew or a dated build should never render a negative "-3 days ago".
-  const ageInDays = Math.max(0, Math.round((startOfUtcDay(now) - capturedMs) / DAY_MS));
+  const nowDay = denverDayEpochMs(now);
+  const capturedMs = Number.isNaN(capturedDate.getTime())
+    ? nowDay
+    : Date.UTC(capturedDate.getUTCFullYear(), capturedDate.getUTCMonth(), capturedDate.getUTCDate());
+  const ageInDays = Math.max(0, Math.round((nowDay - capturedMs) / DAY_MS));
 
   let ageLabel = "today";
   if (ageInDays === 1) ageLabel = "yesterday";
@@ -51,6 +74,9 @@ export function getSnapshotFreshness(
       day: "numeric",
       year: "numeric",
     }),
+    scheduleCheckedAt: OFFICIAL_SCHEDULE_CHECKED_AT,
+    watcherCheckedAt: WATCHER_BASELINE_CHECKED_AT,
+    calendarEvaluatedAt: MEETING_STATS.calendarStatusEvaluatedAt ?? "",
     ageInDays,
     ageLabel,
     stale: ageInDays >= SNAPSHOT_STALE_AFTER_DAYS,
@@ -83,26 +109,25 @@ export type HubSource = {
 
 const cheyenne = WYOMING_CITIES.find((city) => city.id === "cheyenne")!;
 const primaryScanner = CHEYENNE_SCANNER_FEEDS[0];
-const postedAgendaUrl = NEXT_MEETING.official.agenda ?? NEXT_MEETING.official.granicus ?? "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming";
-const agendaViewerUrl = NEXT_MEETING.official.granicus ?? postedAgendaUrl;
+const postedAgendaUrl = NEXT_MEETING?.official.agenda ?? NEXT_MEETING?.official.granicus ?? GRANICUS_UPCOMING_URL;
+const agendaViewerUrl = NEXT_MEETING?.official.granicus ?? NEXT_MEETING?.official.agenda ?? GRANICUS_UPCOMING_URL;
 
-/**
- * The hub keeps one source visible at a time. This directory intentionally
- * points at the publisher's own page; embeds are a convenience, never a proxy
- * or a replacement for the original record.
- */
 export function getHubSources(): HubSource[] {
   return [
     {
       id: "agenda",
       shortLabel: "Posted agenda",
-      label: `${NEXT_MEETING.bodyLabel} · ${NEXT_MEETING.shortDate}`,
+      label: NEXT_MEETING
+        ? `${NEXT_MEETING.bodyLabel} · ${NEXT_MEETING.shortDate} (snapshot)`
+        : "City of Cheyenne · Posted agendas & schedule",
       category: "CITY GOVERNMENT",
-      description: "Open the posted agenda and meeting details from the City of Cheyenne’s Granicus publisher.",
+      description: NEXT_MEETING
+        ? "Open the posted agenda and meeting details from the City of Cheyenne’s Granicus publisher."
+        : "Open the City of Cheyenne’s live Granicus schedule for current upcoming postings.",
       embedUrl: agendaViewerUrl,
-      sourceUrl: postedAgendaUrl,
+      sourceUrl: NEXT_MEETING ? postedAgendaUrl : OFFICIAL_SCHEDULE_URL,
       sourceName: "City of Cheyenne · Granicus",
-      context: "An agenda lists items for consideration. It does not show what the body ultimately decided.",
+      context: "An agenda lists items for consideration. It does not show whether a meeting met or what the body decided.",
       mode: "webpage",
       sandbox: "allow-scripts allow-same-origin allow-popups allow-presentation",
     },
@@ -162,5 +187,5 @@ export function getHubSources(): HubSource[] {
 }
 
 export function getFeaturedMeeting() {
-  return NEXT_MEETING;
+  return NEXT_MEETING ?? FEATURED_MEETING;
 }

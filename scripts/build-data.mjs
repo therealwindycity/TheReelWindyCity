@@ -2,31 +2,19 @@
 /**
  * Build-out script for Civic Cheyenne's public-record data.
  *
- * Assembles the static data served by the website from the archive snapshots
- * in src/data/ (which mirror therealwindycity's cheyenne-archives-* and
- * The-Real-Windy-City- transcript repositories on GitHub) and the curated
- * official-meetings snapshot in src/data/official-meetings.json.
- *
- * Usage:
- *   node scripts/build-data.mjs            # assemble public/ data from src/data
- *   node scripts/build-data.mjs --refresh  # first refresh snapshots from GitHub (requires gh CLI)
- *
- * What it produces:
- *   public/data/<repo>.json              full git-tree index for each archive repo (7 repos)
- *   public/data/jan-26-transcript.md     bundled copy of the guided-session transcript
- *   public/sources/2026-01-26-agenda.html     official agenda capture (archived HTML page)
- *   public/sources/2026-01-26-minutes.pdf    official Record of Proceedings, Jan 26, 2026
- *   public/sources/2026-01-26-warrants.pdf   supporting policy brief (Chapter 1.28)
- *   src/data/official-sources.json       manifest of locally bundled official documents
- *   src/data/meetings.json               unified index generated from archive snapshots
- *   public/data/meetings.json            copy of the index for the static website
- *   public/transcripts/<meeting-id>.md   locally hosted caption files committed under src/data/transcripts
- *   public/data/transcript-vectors.json  compiled semantic-search corpus (from src/data, if present)
- *   public/data/citizen-connect.json   bundled historical incident-record aggregates (from src/data)
- *   public/data/scanner-archive-links.json  Socrata ↔ scanner-archive log→block links (from src/data)
+ * Assembles the static data served by the website from:
+ *   1. Archive repository tree snapshots under `src/data/`
+ *   2. Curated official-link snapshot `src/data/official-meetings.json`
+ *   3. Validated pipeline extractions under `data/meetings/<year>/<id>/`
+ *      (accepted ONLY when `validateMeetingDirectory()` reports zero problems;
+ *      failed or corrupt extractions are never promoted into the index)
+ *   4. Schedule discovery artifacts (`data/detected-upcoming.json`,
+ *      `data/source-check.json`, `data/sync-state.json`, `data/sync-blocked.json`)
+ *      with strict separation between discovery, download, validation, indexing,
+ *      calendar evaluation, and outcome verification.
  */
 import { execFileSync } from "node:child_process";
-import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -36,17 +24,25 @@ import {
   parseMunicipalMeetingFilename,
 } from "./lib/filename-dates.mjs";
 import { sampleTranscriptCues, timestampedMarkdownCues, youtubeVideoId } from "./lib/transcript-harvest.mjs";
+import {
+  DENVER_TIME_ZONE,
+  STATIC_BUILD_STALE_HOURS,
+  latestTranscriptRecord,
+  normalizeMeetingDate,
+  resolveMeetingCalendar,
+} from "./lib/civic-calendar.mjs";
+import { validateMeetingDirectory } from "./lib/validate.mjs";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const SRC_DATA = path.join(ROOT, "src", "data");
 const LOCAL_TRANSCRIPTS = path.join(SRC_DATA, "transcripts");
+const VALIDATED_AGENDAS = path.join(ROOT, "data", "meetings");
 const PUBLIC_DATA = path.join(ROOT, "public", "data");
 const PUBLIC_SOURCES = path.join(ROOT, "public", "sources");
 const PUBLIC_TRANSCRIPTS = path.join(ROOT, "public", "transcripts");
 const LOCAL_TRANSCRIPT_REPO = "TheReelWindyCity";
 
 const OWNER = "therealwindycity";
-/** Repository id -> snapshot file under src/data/ */
 const REPOS = [
   { id: "cheyenne-archives-2025-2026", snapshot: "archive-tree.json" },
   { id: "The-Real-Windy-City-", snapshot: "transcript-tree.json" },
@@ -57,7 +53,6 @@ const REPOS = [
   { id: "cheyenne-archives-2008-2013", snapshot: "repos/cheyenne-archives-2008-2013.json" },
 ];
 
-/** Locally bundled official documents for the guided January 26, 2026 session. */
 const OFFICIAL_SOURCES = {
   agenda: "sources/2026-01-26-agenda.html",
   minutes: "sources/2026-01-26-minutes.pdf",
@@ -78,6 +73,32 @@ const BODY_LABELS = {
 const BODY_ORDER = Object.keys(BODY_LABELS);
 const CITY_FILES = "https://www.cheyennecity.org/files/sharedassets/public/v/1/your-government/city-council/";
 const GRANICUS = "https://cheyenne.granicus.com";
+const LIVE_CHECK = path.join(ROOT, "data", "source-check.json");
+const DETECTED_UPCOMING = path.join(ROOT, "data", "detected-upcoming.json");
+const SYNC_STATE = path.join(ROOT, "data", "sync-state.json");
+const SYNC_BLOCKED = path.join(ROOT, "data", "sync-blocked.json");
+const OFFICIAL_SCHEDULE_URL = "https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas";
+const GRANICUS_UPCOMING_URL = `${GRANICUS}/ViewPublisher.php?view_id=5&widget=upcoming`;
+export const LIVE_CHECK_MAX_AGE_HOURS = 72;
+
+function readJsonIfPresent(file) {
+  if (!existsSync(file)) return null;
+  try {
+    return JSON.parse(readFileSync(file, "utf8"));
+  } catch (error) {
+    console.warn(`note: ignoring unreadable ${path.relative(ROOT, file)} (${error.message})`);
+    return null;
+  }
+}
+
+export function buildInstant(argv = process.argv.slice(2), env = process.env) {
+  const index = argv.indexOf("--now");
+  const raw = index !== -1 ? argv[index + 1] : env.CIVIC_BUILD_TIME;
+  if (!raw) return new Date();
+  const parsed = new Date(raw);
+  if (Number.isNaN(parsed.getTime())) throw new Error(`--now / CIVIC_BUILD_TIME is not a valid instant: ${raw}`);
+  return parsed;
+}
 
 function gh(args) {
   return execFileSync("gh", args, { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
@@ -96,10 +117,6 @@ function refreshSnapshots() {
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Unified meeting index                                               */
-/* ------------------------------------------------------------------ */
-
 function dateLabel(date) {
   return new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
     weekday: "long", month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
@@ -109,6 +126,12 @@ function dateLabel(date) {
 function shortDateLabel(date) {
   return new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
     month: "long", day: "numeric", year: "numeric", timeZone: "UTC",
+  });
+}
+
+function weekdayOnlyLabel(date) {
+  return new Date(`${date}T12:00:00Z`).toLocaleDateString("en-US", {
+    weekday: "long", timeZone: "UTC",
   });
 }
 
@@ -168,13 +191,52 @@ function bodyFromRoot(root, folder) {
   return bodyFromFolderName(folder);
 }
 
+function parseBodyAndDateFromMeetingId(meetingId) {
+  const match = String(meetingId || "").match(/^([a-z0-9-]+)-(\d{4}-\d{2}-\d{2})$/);
+  if (!match || !BODY_LABELS[match[1]]) return null;
+  const date = normalizeMeetingDate(match[2]);
+  if (!date) return null;
+  return { id: meetingId, body: match[1], bodyLabel: BODY_LABELS[match[1]], date };
+}
 
-function collectMeetings() {
+function listMeetingArtifactDirs(rootDir) {
+  if (!rootDir || !existsSync(rootDir)) return [];
+  const results = [];
+  for (const yearEntry of readdirSync(rootDir, { withFileTypes: true })) {
+    if (!yearEntry.isDirectory()) continue;
+    const yearDir = path.join(rootDir, yearEntry.name);
+    for (const meetingEntry of readdirSync(yearDir, { withFileTypes: true })) {
+      if (meetingEntry.isDirectory()) results.push(path.join(yearDir, meetingEntry.name));
+    }
+  }
+  return results.sort();
+}
+
+/**
+ * Assemble the meeting index with explicit provenance stages, orthogonal status
+ * axes, preserved raw source notes, and non-promotion of failed downloads.
+ */
+export function collectMeetings(options = {}) {
+  const {
+    now = new Date(),
+    official: officialOverride = null,
+    repos = REPOS,
+    localTranscriptsDir = LOCAL_TRANSCRIPTS,
+    validatedAgendasDir = VALIDATED_AGENDAS,
+    liveCheck: liveCheckOverride = undefined,
+    detectedTable: detectedTableOverride = undefined,
+    syncState: syncStateOverride = undefined,
+    syncBlocked: syncBlockedOverride = undefined,
+  } = options;
+  const nowDate = now instanceof Date ? now : new Date(now);
+  const indexedAt = nowDate.toISOString();
+
   /** @type {Map<string, any>} */
   const meetings = new Map();
   let documentCount = 0;
   let transcriptCount = 0;
   let transcriptFileCount = 0;
+  let localValidatedTranscriptCount = 0;
 
   const ensure = (body, date, note) => {
     const suffix = eventSuffix(note);
@@ -190,6 +252,14 @@ function collectMeetings() {
         notes: [],
         docs: [],
         official: {},
+        ingestionStage: "meeting-indexed",
+        timestamps: {
+          discoveredAt: null,
+          downloadedAt: null,
+          validatedAt: null,
+          indexedAt,
+          outcomeVerifiedAt: null,
+        },
       });
     }
     return meetings.get(key);
@@ -215,10 +285,9 @@ function collectMeetings() {
     }
   };
 
-  /** Filename-dated municipal documents without an explicit body are resolved after all snapshots are loaded. */
   const pendingFilenameDocs = [];
 
-  for (const { id: repo, snapshot } of REPOS) {
+  for (const { id: repo, snapshot } of repos) {
     const tree = JSON.parse(readFileSync(path.join(SRC_DATA, snapshot), "utf8")).tree;
     for (const entry of tree) {
       if (entry.type !== "blob") continue;
@@ -233,13 +302,11 @@ function collectMeetings() {
         if (date) {
           const meeting = ensure(transcript[1], date);
           const candidate = { repo, path: entry.path };
-          // Local tree paths bind transcripts to meeting IDs even without a publisher URL.
           meeting.transcripts ||= [];
           if (!meeting.transcripts.some((item) => item.repo === repo && item.path === entry.path)) {
             meeting.transcripts.push(candidate);
             transcriptCount += 1;
           }
-          // Keep the explicitly cleaned copy as the primary transcript when variants coexist.
           if (!meeting.transcript || entry.path.endsWith(".clean.md")) meeting.transcript = candidate;
         }
         continue;
@@ -261,7 +328,6 @@ function collectMeetings() {
         }
       }
 
-      // Dates may be top-level council folders or body-specific ISO subfolders.
       const parts = entry.path.split("/");
       let folderIndex = -1;
       let folderDate = null;
@@ -283,9 +349,6 @@ function collectMeetings() {
         continue;
       }
 
-      // Agenda-packet snapshots often keep the date only in a filename such as
-      // CHEY-2022-11-01_packet-17.pdf. Do not discard these files just because
-      // there is no dated parent directory.
       if (entry.path.startsWith("agenda-packets/")) {
         const date = parseFilenameDate(file);
         if (date) {
@@ -299,11 +362,12 @@ function collectMeetings() {
     }
   }
 
-  const official = JSON.parse(readFileSync(path.join(SRC_DATA, "official-meetings.json"), "utf8"));
+  const official = officialOverride ?? JSON.parse(readFileSync(path.join(SRC_DATA, "official-meetings.json"), "utf8"));
+  const snapshotCapturedAt = official.captured ?? null;
+
   const mergeOfficial = (body, row) => {
     const meeting = ensure(body, row.d, row.n);
     if (row.c) {
-      // Granicus publishes archive entries by clip_id; event IDs are not interchangeable.
       meeting.official.agenda = `${GRANICUS}/AgendaViewer.php?view_id=5&clip_id=${row.c}`;
       meeting.official.video = `${GRANICUS}/Archive.php?view_id=5&clip_id=${row.c}`;
       if (row.minutes !== false) meeting.official.minutes = `${GRANICUS}/MinutesViewer.php?view_id=5&clip_id=${row.c}`;
@@ -318,28 +382,222 @@ function collectMeetings() {
   for (const row of official.financeCommittee) mergeOfficial("finance-committee", row);
   for (const row of official.publicServicesCommittee) mergeOfficial("public-services-committee", row);
 
-  for (const upcoming of official.upcoming) {
-    const meeting = ensure(upcoming.body, upcoming.date);
-    meeting.upcoming = true;
-    meeting.dayLabel = upcoming.dayLabel;
-    meeting.time = upcoming.time;
-    meeting.location = upcoming.location;
-    meeting.items = upcoming.items;
-    meeting.zoom = upcoming.zoom;
-    meeting.official.agenda = cityUrl(upcoming.agendaPath);
-    if (upcoming.granicusUrl) meeting.official.granicus = upcoming.granicusUrl;
+  // Curated postings from snapshot capture (both current `upcoming[]` and any relocated `posted[]`).
+  for (const upcoming of [...(official.upcoming ?? []), ...(official.posted ?? [])]) {
+    if (!normalizeMeetingDate(upcoming.date)) {
+      console.warn(`note: skipped a curated upcoming row with no resolvable date (${upcoming.id ?? upcoming.body})`);
+      continue;
+    }
+    const isoDate = normalizeMeetingDate(upcoming.date);
+    const meeting = ensure(upcoming.body, isoDate);
+    meeting.dayLabel ||= upcoming.dayLabel || weekdayOnlyLabel(isoDate);
+    meeting.time ||= upcoming.time;
+    meeting.location ||= upcoming.location;
+    meeting.items = upcoming.items ?? meeting.items;
+    meeting.zoom = upcoming.zoom ?? meeting.zoom;
+    if (upcoming.agendaPath) meeting.official.agenda ||= cityUrl(upcoming.agendaPath);
+    if (upcoming.granicusUrl) meeting.official.granicus ||= upcoming.granicusUrl;
+    if (upcoming.status) meeting.status = String(upcoming.status).toLowerCase();
+    if (upcoming.rescheduledTo) meeting.rescheduledTo = upcoming.rescheduledTo;
+    if (upcoming.canceled === true) meeting.canceled = true;
+    meeting.agendaPosted = true;
+    meeting.postedInCapture = true;
+    meeting.ingestionStage = "agenda-validated";
   }
 
-  // Locally harvested or manually supplied captions are first-class archive
-  // files. They bind by an explicit meeting ID in the filename, never by date
-  // alone, and the public copy is served from this static site at build time.
-  if (existsSync(LOCAL_TRANSCRIPTS)) {
+  // Stage 3 & 4 bridge: ingest pipeline extractions under `data/meetings/<year>/<id>/`
+  // ONLY when `validateMeetingDirectory()` confirms verbatim contiguous source quotes
+  // and structural soundness. Any invalid/partial directory is rejected without
+  // mutating or erasing last-known-good records.
+  const rejectedExtractions = [];
+  const validatedExtractions = [];
+  for (const dir of listMeetingArtifactDirs(validatedAgendasDir)) {
+    const problems = validateMeetingDirectory(dir, { requireAnalysis: false });
+    if (problems.length > 0) {
+      const name = path.basename(dir);
+      rejectedExtractions.push({ meetingId: name, dir: path.relative(ROOT, dir), problems });
+      console.warn(`note: rejected unvalidated agenda extraction in ${dir}: ${problems[0]}`);
+      continue;
+    }
+    const agenda = JSON.parse(readFileSync(path.join(dir, "agenda.json"), "utf8"));
+    const parsedId = parseBodyAndDateFromMeetingId(agenda.meetingId);
+    if (!parsedId) {
+      rejectedExtractions.push({ meetingId: agenda.meetingId, dir: path.relative(ROOT, dir), problems: [`unrecognized body/date id: ${agenda.meetingId}`] });
+      continue;
+    }
+    const meeting = ensure(parsedId.body, parsedId.date);
+    meeting.dayLabel ||= weekdayOnlyLabel(parsedId.date);
+    meeting.items = agenda.items.map((item) => ({
+      number: String(item.number),
+      kind: item.kind || "Other",
+      text: item.text,
+    }));
+    if (/granicus\.com/i.test(agenda.sourceUrl)) {
+      meeting.official.granicus ||= agenda.sourceUrl;
+      meeting.official.agenda ||= agenda.sourceUrl;
+    } else if (agenda.sourceUrl) {
+      meeting.official.agenda ||= agenda.sourceUrl;
+    }
+    meeting.agendaPosted = true;
+    meeting.archiveUnavailable = undefined;
+    meeting.ingestionStage = "meeting-indexed";
+    meeting.timestamps.downloadedAt = agenda.fetchedAt ?? null;
+    meeting.timestamps.validatedAt = agenda.fetchedAt ?? indexedAt;
+    validatedExtractions.push({
+      meetingId: agenda.meetingId,
+      downloadedAt: agenda.fetchedAt ?? null,
+      items: agenda.items.length,
+    });
+  }
+
+  // Stage 1: Schedule discovery artifacts (`data/detected-upcoming.json` from watcher
+  // and `data/source-check.json` from bounded build-time check).
+  // Discovered rows lacking validated agenda items are marked `posting-discovered` +
+  // `archiveUnavailable: true` and NEVER acquire invented items, Zoom credentials,
+  // locations, or outcomes.
+  const discoveredPostings = [];
+  const mergeDiscoveredSource = (records, observedAt, sourceKind) => {
+    for (const record of records) {
+      const date = normalizeMeetingDate(record.date);
+      if (!date) continue;
+      const body = record.body || "unknown";
+      const hasKnownBody = Boolean(BODY_LABELS[body]);
+      const bodyLabel = BODY_LABELS[body] || record.bodyLabel || body;
+      const existing = hasKnownBody ? meetings.get(`${body}|${date}|`) : null;
+      const hasValidatedItems = Boolean(existing?.items?.length || existing?.docs?.length);
+      const meeting = ensure(body, date);
+      meeting.bodyLabel ||= bodyLabel;
+      meeting.dayLabel ||= weekdayOnlyLabel(date);
+      meeting.time ||= record.time || undefined;
+      if (record.agendaUrl) {
+        meeting.official.agenda ||= record.agendaUrl;
+        meeting.official.granicus ||= record.agendaUrl;
+        meeting.agendaPosted = true;
+      }
+      meeting.postedOnOfficialTable = true;
+      meeting.sourceObservedAt = observedAt ?? undefined;
+      meeting.timestamps.discoveredAt ||= observedAt ?? null;
+      if (!hasValidatedItems) {
+        meeting.ingestionStage = "posting-discovered";
+        meeting.archiveUnavailable = true;
+      }
+      const resolvedCal = resolveMeetingCalendar({ ...meeting, date }, { now: nowDate });
+      discoveredPostings.push({
+        meetingId: meeting.id,
+        body,
+        bodyLabel,
+        scheduledDate: date,
+        scheduledTime: record.time || null,
+        agendaUrl: record.agendaUrl || null,
+        discoveredAt: observedAt ?? null,
+        source: sourceKind,
+        archiveStatus: hasValidatedItems ? "validated" : "archive-unavailable",
+        promotedWithValidatedItems: hasValidatedItems,
+        calendarStatus: resolvedCal.status,
+        outcomeStatus: resolvedCal.outcomeStatus,
+      });
+    }
+  };
+
+  const detectedTable = detectedTableOverride !== undefined
+    ? detectedTableOverride
+    : readJsonIfPresent(DETECTED_UPCOMING);
+  let detectedTableMeta = null;
+  if (detectedTable) {
+    const discoveredAt = typeof detectedTable.discoveredAt === "string"
+      ? detectedTable.discoveredAt
+      : typeof detectedTable.checkedAt === "string"
+        ? detectedTable.checkedAt
+        : null;
+    const usable = Array.isArray(detectedTable.meetings);
+    detectedTableMeta = {
+      discoveredAt,
+      sourceUrl: detectedTable.sourceUrl ?? detectedTable.source ?? GRANICUS_UPCOMING_URL,
+      meetings: usable ? detectedTable.meetings.length : 0,
+      used: usable,
+    };
+    if (usable) mergeDiscoveredSource(detectedTable.meetings, discoveredAt, "watcher-table");
+  }
+
+  const liveCheck = liveCheckOverride !== undefined
+    ? liveCheckOverride
+    : readJsonIfPresent(LIVE_CHECK);
+  let liveCheckMeta = null;
+  if (liveCheck) {
+    const observedAt = typeof liveCheck.observedAt === "string" ? liveCheck.observedAt : null;
+    const observedMs = observedAt ? Date.parse(observedAt) : Number.NaN;
+    const ageHours = Number.isFinite(observedMs) ? Math.max(0, Math.round((nowDate.getTime() - observedMs) / 3_600_000)) : null;
+    const usable = liveCheck.ok === true
+      && Array.isArray(liveCheck.meetings)
+      && ageHours !== null
+      && ageHours <= LIVE_CHECK_MAX_AGE_HOURS;
+    liveCheckMeta = {
+      observedAt,
+      ok: liveCheck.ok === true,
+      used: usable,
+      stale: ageHours !== null && ageHours > LIVE_CHECK_MAX_AGE_HOURS,
+      ageHours,
+      sourceUrl: liveCheck.sourceUrl ?? GRANICUS_UPCOMING_URL,
+      error: liveCheck.error ?? null,
+      meetings: Array.isArray(liveCheck.meetings) ? liveCheck.meetings.length : 0,
+    };
+    if (!usable) {
+      console.warn(
+        `note: posted-meeting check is not being used (ok=${liveCheck.ok === true}, age=${ageHours ?? "unknown"}h); ` +
+        "the captured snapshot is the public source of record.",
+      );
+    } else {
+      mergeDiscoveredSource(liveCheck.meetings, liveCheckMeta.observedAt, "build-live-check");
+    }
+  }
+
+  // Record failed sync / blocked discovery markers honestly WITHOUT promoting failed
+  // downloads into the `meetings[]` catalog or inventing items, URLs, or outcomes.
+  const syncBlocked = syncBlockedOverride !== undefined
+    ? syncBlockedOverride
+    : readJsonIfPresent(SYNC_BLOCKED);
+  let blockedSyncMeta = null;
+  if (syncBlocked && typeof syncBlocked.meetingIds === "string" && syncBlocked.meetingIds.trim()) {
+    const attemptedAt = typeof syncBlocked.attemptedAt === "string" && Number.isFinite(Date.parse(syncBlocked.attemptedAt))
+      ? syncBlocked.attemptedAt
+      : null;
+    const ids = syncBlocked.meetingIds.split(",").map((id) => id.trim()).filter(Boolean);
+    const entries = ids.map((id) => {
+      const parsed = parseBodyAndDateFromMeetingId(id);
+      const cal = resolveMeetingCalendar({ date: parsed?.date ?? null }, { now: nowDate });
+      return {
+        meetingId: id,
+        body: parsed?.body ?? "unknown",
+        bodyLabel: parsed?.bodyLabel ?? id,
+        scheduledDate: parsed?.date ?? null,
+        scheduledTime: null,
+        agendaUrl: null,
+        discoveredAt: attemptedAt,
+        source: "sync-blocked",
+        archiveStatus: "download-failed",
+        promotedWithValidatedItems: false,
+        calendarStatus: cal.status,
+        outcomeStatus: "unverified",
+      };
+    });
+    for (const entry of entries) discoveredPostings.push(entry);
+    blockedSyncMeta = {
+      attemptedAt,
+      attempts: Number.isFinite(Number(syncBlocked.attempts)) ? Number(syncBlocked.attempts) : 1,
+      reason: syncBlocked.reason ?? "sync-failed",
+      meetingIds: ids,
+      entries,
+    };
+  }
+
+  // Locally harvested or supplied caption files under `src/data/transcripts`.
+  if (existsSync(localTranscriptsDir)) {
     const byId = new Map([...meetings.values()].map((meeting) => [meeting.id, meeting]));
-    for (const file of readdirSync(LOCAL_TRANSCRIPTS).filter((name) => name.toLowerCase().endsWith(".md") && name !== "README.md").sort()) {
+    for (const file of readdirSync(localTranscriptsDir).filter((name) => name.toLowerCase().endsWith(".md") && name !== "README.md").sort()) {
       const meetingId = file.slice(0, -3);
       const meeting = byId.get(meetingId);
       if (!meeting) throw new Error(`Local transcript ${file} does not match a meeting ID in the archive snapshot`);
-      const markdown = readFileSync(path.join(LOCAL_TRANSCRIPTS, file), "utf8");
+      const markdown = readFileSync(path.join(localTranscriptsDir, file), "utf8");
       const cues = timestampedMarkdownCues(markdown);
       const videoUrl = markdown.match(/^\*\*Video:\*\*\s*(https?:\/\/\S+)/m)?.[1] || meeting.official.video;
       const videoId = youtubeVideoId(videoUrl);
@@ -350,6 +608,7 @@ function collectMeetings() {
         meeting.transcripts.push(candidate);
         transcriptCount += 1;
         transcriptFileCount += 1;
+        localValidatedTranscriptCount += 1;
       }
       if (!meeting.transcript) meeting.transcript = candidate;
       if (cues.length) {
@@ -364,9 +623,6 @@ function collectMeetings() {
     }
   }
 
-  // Some supporting PDFs contain a date but do not identify a board in the
-  // filename. Attach those only when the dated snapshot identifies one
-  // unambiguous meeting for that day; do not guess when multiple bodies meet.
   for (const document of pendingFilenameDocs) {
     const sameDayMeetings = [...meetings.values()].filter((meeting) => meeting.date === document.date);
     if (sameDayMeetings.length === 1) {
@@ -376,8 +632,39 @@ function collectMeetings() {
     }
   }
 
+  // Evaluate orthogonal statuses at `nowDate` in America/Denver WITHOUT deleting or
+  // rewriting raw source notes. Historical notes (e.g. "Upcoming — agenda posted")
+  // remain preserved verbatim in `meeting.notes` AND extracted into
+  // `meeting.publisherStatusAtCapture`.
+  for (const meeting of meetings.values()) {
+    const resolved = resolveMeetingCalendar(meeting, { now: nowDate });
+    meeting.snapshotCapturedAt = snapshotCapturedAt;
+    meeting.scheduledDate = resolved.scheduledDate;
+    meeting.scheduledTime = resolved.scheduledTime;
+    meeting.publisherStatusAtCapture = resolved.publisherStatusAtCapture;
+    meeting.calendarStatus = resolved.status;
+    meeting.calendarStatusEvaluatedAt = resolved.evaluatedAt;
+    meeting.calendarStatusValidUntil = resolved.validUntil;
+    meeting.outcomeStatus = resolved.outcomeStatus;
+    meeting.upcoming = resolved.upcoming;
+    if (resolved.outcomeStatus === "minutes-linked" && meeting.ingestionStage === "meeting-indexed") {
+      meeting.ingestionStage = "outcome-verified";
+    }
+
+    const hadUpcomingNote = meeting.notes.some((note) => /^upcoming\b/i.test(note));
+    if ((hadUpcomingNote || meeting.postedInCapture || meeting.postedOnOfficialTable) && (meeting.official.agenda || meeting.official.granicus)) {
+      meeting.agendaPosted = true;
+    }
+    if (resolved.status === "canceled" || resolved.status === "rescheduled") {
+      meeting.agendaPosted = false;
+    }
+    delete meeting.status;
+    delete meeting.canceled;
+  }
+
   const list = [...meetings.values()].map((meeting) => {
     if (!meeting.notes.length) delete meeting.notes;
+    if (!meeting.agendaPosted) delete meeting.agendaPosted;
     meeting.docs.sort((a, b) => a.path.localeCompare(b.path));
     return meeting;
   });
@@ -388,6 +675,17 @@ function collectMeetings() {
     return bodyDelta || a.id.localeCompare(b.id);
   });
 
+  // Count distinct meetings with compiled excerpt text in transcript-vectors.json.
+  const vectorsJson = readJsonIfPresent(path.join(SRC_DATA, "transcript-vectors.json"));
+  const excerptMeetingIds = new Set(
+    (vectorsJson?.items ?? [])
+      .filter((item) => item?.kind === "transcript" && item?.meetingId)
+      .map((item) => item.meetingId),
+  );
+  for (const meeting of list) {
+    if (meeting.transcriptExcerpts?.length) excerptMeetingIds.add(meeting.id);
+  }
+
   const byBody = {};
   for (const meeting of list) {
     const stats = (byBody[meeting.body] ||= { label: BODY_LABELS[meeting.body] || meeting.body, count: 0, first: meeting.date, last: meeting.date });
@@ -396,38 +694,75 @@ function collectMeetings() {
     if (meeting.date > stats.last) stats.last = meeting.date;
   }
   const pastDates = list.filter((meeting) => !meeting.upcoming).map((meeting) => meeting.date);
+  const sameDayUnverifiedMeetings = list.filter((meeting) => meeting.calendarStatus === "same-day-time-unverified").length;
   const stats = {
     totalMeetings: list.length,
     pastMeetings: pastDates.length,
     upcomingMeetings: list.length - pastDates.length,
+    sameDayUnverifiedMeetings,
     earliest: pastDates.length ? pastDates.reduce((a, b) => (a < b ? a : b)) : null,
     latest: pastDates.length ? pastDates.reduce((a, b) => (a > b ? a : b)) : null,
     totalDocuments: documentCount,
+    /** Listed transcript files linked to dated meeting records in this catalog. */
     totalTranscripts: transcriptCount,
+    /** Total transcript `.md` files listed across repository tree + local captions (includes undated files). */
     totalTranscriptFiles: transcriptFileCount,
+    /** Locally stored caption files read and cue-parsed directly during this build. */
+    localValidatedTranscripts: localValidatedTranscriptCount,
+    /** Distinct dated meetings with compiled text excerpts available in the static site. */
+    excerptIndexedMeetings: excerptMeetingIds.size,
+    /** Transcripts verified against official audio/minutes (none — captions are unverified). */
+    audioVerifiedTranscripts: 0,
     byBody,
   };
 
-  return { meetings: list, stats, captured: official.captured, schedules: official.schedules };
+  const syncState = syncStateOverride !== undefined
+    ? syncStateOverride
+    : readJsonIfPresent(SYNC_STATE);
+  const watcherBaselineCheckedAt = typeof syncState?.checkedAt === "string" && Number.isFinite(Date.parse(syncState.checkedAt))
+    ? syncState.checkedAt
+    : null;
+
+  return {
+    meetings: list,
+    stats,
+    captured: snapshotCapturedAt,
+    schedules: official.schedules ?? {},
+    resolvedAt: indexedAt,
+    buildValidUntil: new Date(nowDate.getTime() + STATIC_BUILD_STALE_HOURS * 3_600_000).toISOString(),
+    timeZone: DENVER_TIME_ZONE,
+    scheduleUrl: official.sources?.officialPage ?? OFFICIAL_SCHEDULE_URL,
+    granicusUpcomingUrl: official.sources?.granicusUpcoming ?? GRANICUS_UPCOMING_URL,
+    /** Preserved for callers; distinct from `captured` (`snapshotCapturedAt`). */
+    watcherBaselineCheckedAt,
+    liveCheck: liveCheckMeta,
+    detectedTable: detectedTableMeta,
+    pipeline: {
+      snapshotCapturedAt,
+      watcherBaselineCheckedAt,
+      scheduleCheckedAt: liveCheckMeta?.ok ? liveCheckMeta.observedAt : (detectedTableMeta?.discoveredAt ?? null),
+      blockedSync: blockedSyncMeta,
+      validatedExtractions,
+      rejectedExtractions,
+      discoveredPostings,
+    },
+    latestTranscript: latestTranscriptRecord(list),
+  };
 }
 
-function assemble() {
+function assemble({ now = new Date() } = {}) {
   mkdirSync(PUBLIC_DATA, { recursive: true });
   mkdirSync(PUBLIC_SOURCES, { recursive: true });
 
-  // 1. Repository indexes for the source library (client-side fetch).
   for (const { id, snapshot } of REPOS) {
     const from = path.join(SRC_DATA, snapshot);
     if (!existsSync(from)) throw new Error(`Missing snapshot ${from}; run with --refresh`);
     copyFileSync(from, path.join(PUBLIC_DATA, `${id}.json`));
   }
 
-  // 2. Bundled transcript for the guided session.
   const transcript = path.join(SRC_DATA, "jan-26-transcript.md");
   if (existsSync(transcript)) copyFileSync(transcript, path.join(PUBLIC_DATA, "jan-26-transcript.md"));
 
-  // 3. Official source documents are curated into public/sources (see README).
-  //    Keep only entries whose backing file actually exists.
   const available = {};
   for (const [id, rel] of Object.entries(OFFICIAL_SOURCES)) {
     if (existsSync(path.join(ROOT, "public", rel))) available[id] = rel;
@@ -435,8 +770,6 @@ function assemble() {
   }
   writeFileSync(path.join(SRC_DATA, "official-sources.json"), JSON.stringify(available, null, 2) + "\n");
 
-  // 4. Locally hosted caption transcripts (the original text also stays in Git).
-  // Clear old generated copies first so removed source captions do not leak into a later export.
   rmSync(PUBLIC_TRANSCRIPTS, { recursive: true, force: true });
   if (existsSync(LOCAL_TRANSCRIPTS)) {
     mkdirSync(PUBLIC_TRANSCRIPTS, { recursive: true });
@@ -445,21 +778,14 @@ function assemble() {
     }
   }
 
-  // 5. Unified meeting index (current first; distinct same-day sessions stay separate).
-  const meetingIndex = collectMeetings();
+  const meetingIndex = collectMeetings({ now });
   const meetingsJson = JSON.stringify(meetingIndex, null, 2) + "\n";
   writeFileSync(path.join(SRC_DATA, "meetings.json"), meetingsJson);
   writeFileSync(path.join(PUBLIC_DATA, "meetings.json"), meetingsJson);
 
-  // 6. Precomputed semantic-search index (compiled by scripts/embed-transcripts.mjs).
   const vectors = path.join(SRC_DATA, "transcript-vectors.json");
   if (existsSync(vectors)) copyFileSync(vectors, path.join(PUBLIC_DATA, "transcript-vectors.json"));
 
-  // 6. Citizen Connect incident-record artifact (produced by
-  //    scripts/sync/citizen-connect.mjs). The site bundles src/data/… at build
-  //    time; the public/ copy exists so the same aggregates are reusable by
-  //    anything else without a rebuild. Never fatal if the sync has not run —
-  //    a committed seed snapshot ships in the repo.
   const citizenConnect = path.join(SRC_DATA, "citizen-connect.json");
   let ccRecords = 0;
   if (existsSync(citizenConnect)) {
@@ -469,11 +795,6 @@ function assemble() {
     console.warn('note: no citizen-connect artifact; run "npm run data:citizen-connect"');
   }
 
-  // 7. Socrata ↔ Broadcastify scanner-archive linkage artifact (produced by
-  //    scripts/sync/scanner-archive-links.mjs). Same contract as citizen-connect:
-  //    the site bundles src/data/… at build time; the public/ copy makes the
-  //    log → archive-block database reusable without a rebuild. Never fatal if
-  //    the sync has not run — a committed seed snapshot ships in the repo.
   const scannerLinks = path.join(SRC_DATA, "scanner-archive-links.json");
   let linkCount = 0;
   if (existsSync(scannerLinks)) {
@@ -484,17 +805,28 @@ function assemble() {
   }
 
   const files = readdirSync(PUBLIC_DATA);
+  const live = meetingIndex.liveCheck
+    ? ` · posted-table check ${meetingIndex.liveCheck.used ? "used" : "not used"} (${meetingIndex.liveCheck.ok ? "ok" : "failed"}, ${meetingIndex.liveCheck.ageHours ?? "?"}h old)`
+    : " · posted-table check absent (snapshot only)";
   console.log(
     `Assembled public/data (${files.length} files) · official-sources manifest (${Object.keys(available).length} documents) · ` +
       `meetings index (${meetingIndex.stats.totalMeetings} meetings: ${meetingIndex.stats.upcomingMeetings} upcoming, ` +
-      `${meetingIndex.stats.pastMeetings} past, ${meetingIndex.stats.totalDocuments} archived documents, ` +
-      `${meetingIndex.stats.totalTranscripts} linked transcripts (${meetingIndex.stats.totalTranscriptFiles} files incl. undated), ` +
-      `earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}) · ` +
+      `${meetingIndex.stats.sameDayUnverifiedMeetings} same-day time-unverified, ` +
+      `${meetingIndex.stats.pastMeetings} non-upcoming, ${meetingIndex.stats.totalDocuments} archived documents, ` +
+      `${meetingIndex.stats.totalTranscriptFiles} transcript files (${meetingIndex.stats.totalTranscripts} linked to dated meetings, ${meetingIndex.stats.excerptIndexedMeetings} excerpt-indexed, ${meetingIndex.stats.audioVerifiedTranscripts} audio-verified), ` +
+      `earliest ${meetingIndex.stats.earliest}, latest ${meetingIndex.stats.latest}, resolved ${meetingIndex.resolvedAt} ${meetingIndex.timeZone}) · ` +
+      `latest transcript ${meetingIndex.latestTranscript?.meetingId ?? "none"} · ` +
       `citizen-connect (${ccRecords.toLocaleString("en-US")} records) · ` +
-      `scanner-archive-links (${linkCount.toLocaleString("en-US")} logs).`,
+      `scanner-archive-links (${linkCount.toLocaleString("en-US")} logs)${live}.`,
   );
+  return meetingIndex;
 }
 
-const refresh = process.argv.includes("--refresh");
-if (refresh) refreshSnapshots();
-assemble();
+export { assemble, refreshSnapshots, SRC_DATA, PUBLIC_DATA };
+
+const isMain = process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (isMain) {
+  const refresh = process.argv.includes("--refresh");
+  if (refresh) refreshSnapshots();
+  assemble({ now: buildInstant() });
+}

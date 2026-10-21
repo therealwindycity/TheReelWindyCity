@@ -129,6 +129,7 @@ const flag = (name) => process.argv.includes(name);
 
 const DRY_RUN = flag("--dry-run");
 const OFFLINE = flag("--offline");
+const REFRESH_HISTORY = flag("--refresh-history");
 const ALLOW_LARGE = flag("--allow-large");
 const THROTTLE_MS = Number(arg("--throttle", "450"));
 const OUT = arg("--out", OUT_PATH);
@@ -391,6 +392,31 @@ async function main() {
     return;
   }
 
+  if (REFRESH_HISTORY) {
+    const existing = JSON.parse(readFileSync(OUT, "utf8"));
+    const ccTrend = loadCitizenConnectTrend();
+    const availability = {
+      ...ARCHIVE_AVAILABILITY,
+      to: ccTrend.at(-1)?.date || ARCHIVE_AVAILABILITY.to,
+    };
+    const updated = {
+      ...existing,
+      historySummary: historySummaryFromTrend(ccTrend, availability),
+    };
+    const problems = validateArtifact(updated);
+    if (problems.length) {
+      for (const problem of problems) process.stderr.write(`✗ ${problem}\n`);
+      process.exit(1);
+    }
+    atomicWrite(OUT, `${JSON.stringify(updated, null, 2)}\n`);
+    if (path.resolve(OUT) === path.resolve(OUT_PATH)) {
+      mkdirSync(path.dirname(PUBLIC_OUT_PATH), { recursive: true });
+      atomicWrite(PUBLIC_OUT_PATH, `${JSON.stringify(updated, null, 2)}\n`);
+    }
+    process.stdout.write(`Refreshed scanner-archive historySummary from committed Citizen Connect trend (${updated.historySummary.perYear.reduce((s, r) => s + r.socrataLogs, 0).toLocaleString()} all-time logs).\n`);
+    return;
+  }
+
   // --- pull (or read cache) -------------------------------------------------
   const dayPayloads = [];
   for (const [i, day] of days.entries()) {
@@ -422,7 +448,11 @@ async function main() {
   }
   const links = linkLogs(logs, feedIndexes, FEEDS);
   const summary = summarizeLinks(links, feedIndexes);
-  const historySummary = historySummaryFromTrend(loadCitizenConnectTrend(), ARCHIVE_AVAILABILITY);
+  const ccTrend = loadCitizenConnectTrend();
+  const historySummary = historySummaryFromTrend(ccTrend, {
+    ...ARCHIVE_AVAILABILITY,
+    to: ccTrend.at(-1)?.date || ARCHIVE_AVAILABILITY.to,
+  });
 
   const archiveBlockCount = [...feedIndexes.values()].reduce((s, idx) => s + idx.blocks.length, 0);
   const artifact = {

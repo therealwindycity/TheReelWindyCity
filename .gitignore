@@ -29,6 +29,8 @@ public/data/scanner-archive-links-full.json
 
 # scratch
 .sync/
+# bounded build-time check of the city's posted-meeting table
+data/source-check.json
 image-search/
 *.log
 .DS_Store

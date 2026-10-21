@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { MEETINGS, MEETING_STATS, MEETINGS_CAPTURED, type Meeting } from "@/lib/civic-data";
+import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
+import { MEETINGS, MEETING_STATS, MEETINGS_CAPTURED, MEETINGS_RESOLVED_AT, MEETINGS_TIME_ZONE, displayMeetingNotes, meetingCalendarLabel, transcriptCountSummary, type Meeting } from "@/lib/civic-data";
 import { SITE_NAME, SITE_URL, siteUrl } from "@/lib/site-config";
 
 const archiveUrl = siteUrl("meetings/");
@@ -87,14 +88,19 @@ export default function MeetingArchivePage() {
             Browse {MEETING_STATS.totalMeetings.toLocaleString()} meeting entries across nine government bodies, from {MEETING_STATS.earliest} through {MEETING_STATS.latest}.
             Each record page lists available official links, archived repository files, and a timestamped transcript where one is indexed.
           </p>
-          <p className="seo-capture-note">Archive and official-link snapshot captured {MEETINGS_CAPTURED}. Upcoming agenda details may change; check the linked city source for updates.</p>
+          <p className="seo-capture-note">
+            Archive and official-link snapshot captured {MEETINGS_CAPTURED}.
+            {MEETINGS_RESOLVED_AT ? ` Calendar status was resolved ${new Date(MEETINGS_RESOLVED_AT).toISOString().slice(0, 16).replace("T", " ")} UTC in ${MEETINGS_TIME_ZONE}.` : ""}
+            {" "}An agenda whose posted date has passed is shown as an agenda, not as an upcoming meeting or a recorded outcome; check the linked city source for newer postings and official minutes.
+          </p>
+          <HubSnapshotFreshness note="an agenda whose scheduled date or start time has passed is never shown as a confirmed upcoming meeting or assumed outcome." />
         </header>
 
         <section className="seo-stats-grid" aria-label="Archive coverage statistics">
           <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong><span>historical meeting entries</span></div>
-          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong><span>posted agenda snapshots</span></div>
+          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong><span>upcoming meetings confirmed as of snapshot</span></div>
           <div><strong>{MEETING_STATS.totalDocuments.toLocaleString()}</strong><span>archived documents indexed</span></div>
-          <div><strong>{MEETING_STATS.totalTranscripts.toLocaleString()}</strong><span>timestamped transcript files</span></div>
+          <div><strong>{(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts).toLocaleString()}</strong><span>{transcriptCountSummary()}</span></div>
         </section>
 
         <nav className="seo-year-nav" aria-label="Jump to a year">
@@ -109,26 +115,29 @@ export default function MeetingArchivePage() {
             <section className="seo-card seo-archive-year" id={sectionId(group.label)} key={group.label} aria-labelledby={`${sectionId(group.label)}-heading`}>
               <div className="seo-archive-year-heading">
                 <div>
-                  <p className="seo-eyebrow">{group.label === "Upcoming agendas" ? "AGENDA POSTED" : "ARCHIVE YEAR"}</p>
+                  <p className="seo-eyebrow">{group.label === "Upcoming agendas" ? "AGENDA POSTED AS OF SNAPSHOT" : "ARCHIVE YEAR"}</p>
                   <h2 id={`${sectionId(group.label)}-heading`}>{group.label}</h2>
                 </div>
                 <span>{group.meetings.length.toLocaleString()} meeting entries</span>
               </div>
               <ol className="seo-archive-links">
-                {group.meetings.map((meeting) => (
-                  <li key={meeting.id}>
-                    <a href={siteUrl(`meetings/${meeting.id}/`)}>
-                      <span className="seo-archive-date">{meeting.dateLabel}</span>
-                      <strong>{meeting.bodyLabel}</strong>
-                      {meeting.notes?.length ? <small>{meeting.notes.join(" · ")}</small> : null}
-                      {!meeting.notes?.length && meeting.upcoming ? <small>Agenda posted · {meeting.items?.length ?? 0} items</small> : null}
-                    </a>
-                    <span className="seo-archive-counts">
-                      {meeting.docs.length ? `${meeting.docs.length} file${meeting.docs.length === 1 ? "" : "s"}` : "Official links"}
-                      {meeting.transcript ? " · transcript" : ""}
-                    </span>
-                  </li>
-                ))}
+                {group.meetings.map((meeting) => {
+                  const cleanNotes = displayMeetingNotes(meeting);
+                  return (
+                    <li key={meeting.id}>
+                      <a href={siteUrl(`meetings/${meeting.id}/`)}>
+                        <span className="seo-archive-date">{meeting.dateLabel}</span>
+                        <strong>{meeting.bodyLabel}</strong>
+                        {cleanNotes.length ? <small>{cleanNotes.join(" · ")}</small> : null}
+                        {(meeting.upcoming || meeting.agendaPosted) ? <small>{meetingCalendarLabel(meeting)}{meeting.items?.length ? ` · ${meeting.items.length} items` : ""}</small> : null}
+                      </a>
+                      <span className="seo-archive-counts">
+                        {meeting.docs.length ? `${meeting.docs.length} file${meeting.docs.length === 1 ? "" : "s"}` : "Official links"}
+                        {meeting.transcript ? " · transcript file" : ""}
+                      </span>
+                    </li>
+                  );
+                })}
               </ol>
             </section>
           ))}

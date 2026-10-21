@@ -33,6 +33,8 @@ jobs:
         run: npm run test:scanner-archive-links
       - name: Local transcript coverage and caption-import tests
         run: npm run test:transcripts
+      - name: Meeting calendar status and freshness tests (injected clock)
+        run: npm run test:calendar
       - name: Build static site
         run: npm run build
         env:

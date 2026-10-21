@@ -44,6 +44,16 @@ jobs:
         # design (see MAX_COMMITTED_LINKS in the sync script).
         continue-on-error: true
         run: node scripts/sync/scanner-archive-links.mjs --start "$(date -u -d '180 days ago' +%F)" --allow-large
+      - name: Check the city's posted-meeting table (bounded; fails open)
+        # Keeps "next meeting" honest: the build can use a real, timestamped
+        # posting instead of a frozen snapshot. This never advances the watcher
+        # baseline, never triggers a sync, and writes an explicit ok:false
+        # record if the publisher is unreachable. The build then falls back to
+        # the committed snapshot and says so.
+        continue-on-error: true
+        timeout-minutes: 2
+        run: node scripts/sync/snapshot-upcoming.mjs --out data/source-check.json --timeout-ms 10000 --attempts 2
+
       - name: Enable GitHub Pages (if not already enabled)
         uses: actions/configure-pages@v5
         continue-on-error: true

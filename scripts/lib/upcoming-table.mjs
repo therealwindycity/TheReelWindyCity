@@ -15,6 +15,7 @@
 
 import { parse } from "node-html-parser";
 import { collapseWhitespace, normalizeDate, normalizeTime, normalizeUrl } from "./canonical.mjs";
+import { zonedIsoDate } from "./civic-calendar.mjs";
 
 /** Display name (Granicus "Name" column) → site body slug (matches build-data.mjs). */
 export const BODY_SLUGS = {
@@ -113,12 +114,15 @@ export function extractUpcomingRecords(html) {
  * (src/data/official-meetings.json) so the watcher can seed its baseline without
  * touching the network. Keeps field normalization identical to the live path.
  */
-export function recordsFromOfficialSnapshot(snapshot) {
-  return (snapshot.upcoming || []).map((meeting) => ({
-    body: meeting.body,
-    bodyLabel: meeting.bodyLabel,
-    date: normalizeDate(meeting.date),
-    time: normalizeTime(meeting.time),
-    agendaUrl: normalizeUrl(meeting.granicusUrl || ""),
-  }));
+export function recordsFromOfficialSnapshot(snapshot, { futureOnly = false, todayISO } = {}) {
+  const today = futureOnly ? todayISO || zonedIsoDate() : null;
+  return (snapshot.upcoming || [])
+    .map((meeting) => ({
+      body: meeting.body,
+      bodyLabel: meeting.bodyLabel,
+      date: normalizeDate(meeting.date),
+      time: normalizeTime(meeting.time),
+      agendaUrl: normalizeUrl(meeting.granicusUrl || ""),
+    }))
+    .filter((record) => (today ? record.date >= today : true));
 }

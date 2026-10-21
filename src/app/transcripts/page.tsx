@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import transcriptTree from "@/data/transcript-tree.json";
-import { ARCHIVE_OWNER, MEETINGS, TRANSCRIPT_REPO, type Meeting } from "@/lib/civic-data";
+import { ARCHIVE_OWNER, MEETINGS, MEETING_STATS, TRANSCRIPT_REPO, transcriptCountSummary, type Meeting } from "@/lib/civic-data";
 import { SITE_NAME, SITE_URL, siteUrl } from "@/lib/site-config";
 
 const LOCAL_TRANSCRIPT_REPO = "TheReelWindyCity";
@@ -78,10 +78,10 @@ export default function TranscriptArchivePage() {
           <p className="seo-eyebrow">TIMESTAMPED PUBLIC-MEETING CAPTIONS</p>
           <h1>Cheyenne public meeting transcripts</h1>
           <p className="seo-lede">
-            Browse {transcriptFiles.length} transcript files in the public archive, including alternate copies and locally hosted captions when available.
-            Each entry links to its meeting record and its repository source where applicable.
+            Browse {transcriptCountSummary()} ({MEETING_STATS.excerptIndexedMeetings ?? 82} with compiled searchable text excerpts in this build; {MEETING_STATS.audioVerifiedTranscripts ?? 0} verified against official audio).
+            Each entry links to its repository file and, where dated, its indexed meeting record.
           </p>
-          <p className="seo-capture-note">Transcripts and captions may be automatically generated and can misidentify people. Verify names and quotations against the official meeting video or minutes.</p>
+          <p className="seo-capture-note">Listing a file in the repository tree, indexing searchable text excerpts, and verifying transcript text against official meeting audio are distinct steps. Captions may be auto-generated or reconstructed and can misidentify speakers — always verify quotations against official video and minutes.</p>
         </header>
 
         <section className="seo-card" aria-labelledby="transcript-list-heading">

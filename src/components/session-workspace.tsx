@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, Check, CheckCircle2, ChevronRight, FileText, Home, Landmark, Layers, LoaderCircle, Map, MapPin, MessageSquareText, Play, ShieldCheck, Trees, Video, AlertCircle, Lightbulb, ArrowLeft } from "lucide-react";
 import ImpactMap from "./impact-map";
 import ClickToLoadYouTube from "./click-to-load-youtube";
 import { SmartCivicSearch } from "./smart-civic-search";
 import { type SourceDocument } from "./source-library";
-import { DEFAULT_MEETING_ID, GUIDED_MEETING_ID, MEETING, MEETINGS, NEXT_MEETING, ORDINANCES, TRANSCRIPT_REPO, UPCOMING_MEETINGS, asset, githubUrl, meetingGroupLabel, officialSourcePath, rawUrl, readableName, type CivicProgress, type Meeting, type Ordinance } from "@/lib/civic-data";
+import { DEFAULT_MEETING_ID, FEATURED_MEETING, GUIDED_MEETING_ID, MEETING, MEETINGS, ORDINANCES, TRANSCRIPT_REPO, UPCOMING_MEETINGS, asset, displayMeetingNotes, evaluateMeetingCalendarAt, formatEvaluationTimestamp, githubUrl, meetingCalendarLabel, meetingGroupLabel, officialSourcePath, rawUrl, readableName, type CivicProgress, type Meeting, type Ordinance } from "@/lib/civic-data";
 import { sourceContentUrl } from "@/lib/source-content";
 
 export function OrdinanceIcon({ ordinance, size = 21 }: { ordinance: Ordinance; size?: number }) {
@@ -142,25 +142,30 @@ export function meetingDocuments(meeting: Meeting): SourceDocument[] {
 /* Meeting switcher: every meeting in the record, most current first.  */
 /* ------------------------------------------------------------------ */
 
-export function MeetingSwitcher({ currentId, onSelect }: { currentId: string; onSelect: (id: string) => void }) {
+export function MeetingSwitcher({ currentId, onSelect, viewerNow = null }: { currentId: string; onSelect: (id: string) => void; viewerNow?: Date | null }) {
+  const activeUpcoming = useMemo(
+    () => UPCOMING_MEETINGS.filter((meeting) => evaluateMeetingCalendarAt(meeting, viewerNow).upcoming),
+    [viewerNow],
+  );
   const groups = useMemo(() => {
-    const result: { label: string; list: Meeting[] }[] = [];
+    const out: { label: string; list: Meeting[] }[] = [];
     for (const meeting of MEETINGS) {
-      const label = meetingGroupLabel(meeting);
-      const last = result[result.length - 1];
+      const label = meetingGroupLabel(meeting, viewerNow);
+      const last = out[out.length - 1];
       if (last && last.label === label) last.list.push(meeting);
-      else result.push({ label, list: [meeting] });
+      else out.push({ label, list: [meeting] });
     }
-    return result;
-  }, []);
+    return out;
+  }, [viewerNow]);
   return (
     <div className="meeting-switcher">
       <div className="meeting-switcher-quick">
-        {UPCOMING_MEETINGS.map((meeting) => (
+        {activeUpcoming.map((meeting) => (
           <button key={meeting.id} className={meeting.id === currentId ? "active" : ""} onClick={() => onSelect(meeting.id)}>
             <CalendarDays size={13}/> {meeting.bodyLabel.replace(" Committee", "")} · {(meeting.dayLabel ?? meeting.dateLabel.split(",")[0]).slice(0, 3)}, {meeting.shortDate.replace(/, \d{4}$/, "")}
           </button>
         ))}
+        {activeUpcoming.length === 0 && <span className="meeting-switcher-quiet">No upcoming meeting confirmed in this snapshot</span>}
         <button className={currentId === GUIDED_MEETING_ID ? "active" : ""} onClick={() => onSelect(GUIDED_MEETING_ID)}>
           <Landmark size={13}/> Guided session · Jan 26
         </button>
@@ -170,11 +175,15 @@ export function MeetingSwitcher({ currentId, onSelect }: { currentId: string; on
         <select value={currentId} onChange={(event) => onSelect(event.target.value)} aria-label="Choose a meeting">
           {groups.map((group) => (
             <optgroup key={group.label} label={group.label}>
-              {group.list.map((meeting) => (
-                <option key={meeting.id} value={meeting.id}>
-                  {meeting.upcoming ? "▶ " : ""}{meeting.shortDate} · {meeting.bodyLabel}{meeting.notes?.length ? ` (${meeting.notes[0]})` : ""}
-                </option>
-              ))}
+              {group.list.map((meeting) => {
+                const notes = displayMeetingNotes(meeting);
+                const isAhead = evaluateMeetingCalendarAt(meeting, viewerNow).upcoming;
+                return (
+                  <option key={meeting.id} value={meeting.id}>
+                    {isAhead ? "▶ " : ""}{meeting.shortDate} · {meeting.bodyLabel}{notes.length ? ` (${notes[0]})` : ""}
+                  </option>
+                );
+              })}
             </optgroup>
           ))}
         </select>
@@ -187,36 +196,42 @@ export function MeetingSwitcher({ currentId, onSelect }: { currentId: string; on
 /* Generic meeting browser (everything except the guided session).     */
 /* ------------------------------------------------------------------ */
 
-function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen: (doc: SourceDocument) => void; onBack: () => void }) {
+function MeetingBrowser({ meeting, onOpen, onBack, viewerNow }: { meeting: Meeting; onOpen: (doc: SourceDocument) => void; onBack: () => void; viewerNow: Date | null }) {
   const [activeItem, setActiveItem] = useState(0);
   const docs = meetingDocuments(meeting);
   const transcript = meetingTranscriptDoc(meeting);
   const videoId = youtubeId(meeting.official.video);
   const officialSourceUrl = meeting.official.granicus || meeting.official.video;
   const items = meeting.items ?? [];
+  const cal = evaluateMeetingCalendarAt(meeting, viewerNow);
+  const isAhead = cal.upcoming;
+  const visibleNotes = displayMeetingNotes(meeting);
+  const validUntilLabel = formatEvaluationTimestamp(meeting.calendarStatusValidUntil);
+  // Posted agenda items stay readable after the date passes, without live Zoom or "ahead of us" wording.
+  const showPostedAgenda = (isAhead || meeting.agendaPosted) && (items.length > 0 || Boolean(meeting.archiveUnavailable));
   return (
     <section className="session-page page-enter">
       <div className="page-intro">
         <div>
-          <div className="eyebrow"><Landmark size={13}/> {meeting.upcoming ? "THE NEXT MEETING ON THE CALENDAR" : "INSIDE THE PUBLIC RECORD"}</div>
-          <h1>{meeting.upcoming ? "The agenda is posted. Take a look before it happens." : "Everything the city kept from this meeting."}</h1>
-          <p>{meeting.upcoming ? "Real agenda items from the City of Cheyenne — read them now, then watch the meeting live or after." : "Original agendas, minutes, supporting documents, video, and transcripts — nothing invented."}</p>
+          <div className="eyebrow"><Landmark size={13}/> {isAhead ? "POSTED ON THE CALENDAR AS OF SNAPSHOT" : showPostedAgenda ? "POSTED AGENDA · OUTCOME NOT VERIFIED" : "INSIDE THE PUBLIC RECORD"}</div>
+          <h1>{isAhead ? (meeting.archiveUnavailable ? "Official posting detected; archive unavailable." : "The agenda is posted in this snapshot.") : showPostedAgenda ? "The posted agenda is on file; outcome is not verified." : "Everything indexed from this meeting."}</h1>
+          <p>{isAhead ? (meeting.archiveUnavailable ? "An official city schedule posting was detected, without an archived agenda file in this build. Use the official city link directly." : `Real agenda items from the City of Cheyenne as captured in this snapshot${validUntilLabel ? ` (status valid until ${validUntilLabel})` : ""}.`) : showPostedAgenda ? `${cal.label} The items below are as filed before the meeting; official minutes and adopted ordinances establish any outcome.` : "Original agendas, minutes, supporting documents, video, and transcripts — nothing invented."}</p>
         </div>
         <button className="button button-outline" onClick={onBack}><ArrowLeft size={15}/> Back to overview</button>
       </div>
       <div className="session-location-banner">
         <div><Landmark size={19}/><strong>{meeting.bodyLabel}</strong><span>{meeting.location ?? "Location is stated in the official record"}</span></div>
-        <span className={`pill ${meeting.upcoming ? "pill-soft-green" : "pill-neutral"}`}>{meeting.upcoming ? `Next meeting · ${meeting.dayLabel}, ${meeting.shortDate}` : `Archived session · ${meeting.shortDate}`}</span>
+        <span className={`pill ${isAhead ? "pill-soft-green" : "pill-neutral"}`}>{isAhead ? `Posted as of snapshot · ${meeting.dayLabel}, ${meeting.shortDate}` : showPostedAgenda ? `Posted agenda (past) · ${meeting.shortDate}` : `Archived session · ${meeting.shortDate}`}</span>
       </div>
       <div className="session-workspace">
         <aside className="session-agenda">
           <div className="session-agenda-heading">
-            <span className="eyebrow">{meeting.upcoming ? "ON THE AGENDA" : "THE RECORD"}</span>
+            <span className="eyebrow">{isAhead ? "ON THE POSTED AGENDA" : showPostedAgenda ? "POSTED AGENDA" : "THE RECORD"}</span>
             <h3>{meeting.shortDate}</h3>
-            <p>{meeting.bodyLabel}{meeting.time ? ` · ${meeting.time}` : meeting.upcoming ? "" : " · Archived meeting"}{meeting.notes?.length ? ` · ${meeting.notes.join(" · ")}` : ""}</p>
+            <p>{meeting.bodyLabel}{meeting.time ? ` · ${meeting.time}` : isAhead ? " · Start time not verified" : " · Archived meeting"}{visibleNotes.length ? ` · ${visibleNotes.join(" · ")}` : ""}</p>
           </div>
           <div className="session-agenda-list">
-            {meeting.upcoming && items.length > 0
+            {showPostedAgenda
               ? items.map((item, index) => (
                   <button key={item.number} className={`agenda-ordinance ${index === activeItem ? "active" : ""}`} onClick={() => setActiveItem(index)}>
                     <span className="agenda-number">{item.number}</span>
@@ -246,17 +261,17 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
           <div className="workspace-heading">
             <div className="ordinance-icon lime"><CalendarDays size={23}/></div>
             <div>
-              <span className="eyebrow">{meeting.upcoming ? "POSTED AGENDA · ITEMS AS FILED" : "ARCHIVED MEETING"}</span>
+              <span className="eyebrow">{isAhead ? "POSTED AGENDA · AS OF SNAPSHOT" : showPostedAgenda ? "AGENDA AS POSTED · OUTCOME NOT VERIFIED" : "ARCHIVED MEETING"}</span>
               <h2>{meeting.bodyLabel} · {meeting.dateLabel}</h2>
             </div>
-            <span className={`pill ${meeting.upcoming ? "pill-soft-green" : "pill-neutral"}`}>{meeting.upcoming ? "Upcoming" : "In the record"}</span>
+            <span className={`pill ${isAhead ? "pill-soft-green" : "pill-neutral"}`}>{isAhead ? "Posted" : showPostedAgenda ? "Agenda only" : "In the record"}</span>
           </div>
           <div className="workspace-stage">
-            {meeting.upcoming ? (
+            {showPostedAgenda ? (
               <div className="read-stage">
                 <div className="evidence-caption"><span className="status-dot"/> Posted by the City of Cheyenne</div>
-                <h3>{meeting.dayLabel}, {meeting.shortDate} · {meeting.time ?? ""} · {meeting.location ?? "Council Chambers"}</h3>
-                <p className="stage-introduction">{items.length} posted agenda items. Read the official agenda language below — the same document the committee will work from.</p>
+                <h3>{meeting.dayLabel}, {meeting.shortDate} · {meeting.time ?? "Start time not verified"} · {meeting.location ?? "Council Chambers"}</h3>
+                <p className="stage-introduction">{meeting.archiveUnavailable ? "Official posting detected; archive unavailable. No agenda items were invented for this posting." : `${items.length} posted agenda items. Read the official agenda language below — the same document the body ${isAhead ? "is scheduled to work from" : "was scheduled to work from"}.`} {isAhead ? "" : cal.label}</p>
                 {items.length > 0 ? (
                   <div className="meeting-item-stack">
                     {items.map((item, index) => (
@@ -267,15 +282,15 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
                     ))}
                   </div>
                 ) : (
-                  <blockquote className="ordinance-text"><span className="eyebrow">AGENDA</span><p>Open the official agenda for the posted item list.</p></blockquote>
+                  <blockquote className="ordinance-text"><span className="eyebrow">AGENDA</span><p>{meeting.archiveUnavailable ? "Official posting detected; archive unavailable. Open the official agenda link directly." : "Open the official agenda for the posted item list."}</p></blockquote>
                 )}
                 <div className="watch-source-actions">
-                  {meeting.official.agenda && <button className="button button-outline" onClick={() => onOpen({ title: `Official agenda · ${meeting.shortDate}`, kind: "document", url: meeting.official.agenda!, originalUrl: meeting.official.agenda!, downloadUrl: meeting.official.agenda!, external: true })}><FileText size={16}/> Official agenda PDF</button>}
-                  {meeting.zoom && <a className="button button-primary" href={meeting.zoom.joinUrl} target="_blank" rel="noreferrer"><Video size={16}/> Join on Zoom <ArrowUpRight size={14}/></a>}
+                  {meeting.official.agenda && <button className="button button-outline" onClick={() => onOpen({ title: `Official agenda · ${meeting.shortDate}`, kind: "document", url: meeting.official.agenda!, originalUrl: meeting.official.agenda!, downloadUrl: meeting.official.agenda!, external: true })}><FileText size={16}/> Official agenda</button>}
+                  {isAhead && meeting.zoom && <a className="button button-primary" href={meeting.zoom.joinUrl} target="_blank" rel="noreferrer"><Video size={16}/> Join on Zoom <ArrowUpRight size={14}/></a>}
                   {meeting.official.granicus && <a className="button button-outline" href={meeting.official.granicus} target="_blank" rel="noreferrer"><ArrowUpRight size={15}/> Granicus agenda page</a>}
                 </div>
-                {meeting.zoom && <div className="stage-source-note"><Video size={16}/><p>Zoom webinar {meeting.zoom.webinarId} · Zoom passcode {meeting.zoom.passcode} · call in {meeting.zoom.callIn} · phone passcode {meeting.zoom.callInPasscode}. See the official agenda for public-comment instructions.</p></div>}
-                <div className="stage-source-note"><ShieldCheck size={16}/><p>Agenda items are proposals. Committee recommendations and final Council action are separate; check the recorded minutes and later readings to confirm what was approved.</p></div>
+                {isAhead && meeting.zoom && <div className="stage-source-note"><Video size={16}/><p>Zoom webinar {meeting.zoom.webinarId} · Zoom passcode {meeting.zoom.passcode} · call in {meeting.zoom.callIn} · phone passcode {meeting.zoom.callInPasscode}. See the official agenda for public-comment instructions.</p></div>}
+                <div className="stage-source-note"><ShieldCheck size={16}/><p>Agenda items are proposals. Passing a scheduled time never establishes that a body met or what it decided; check official minutes and later readings.</p></div>
               </div>
             ) : (
               <div className="watch-stage">
@@ -315,14 +330,19 @@ function MeetingBrowser({ meeting, onOpen, onBack }: { meeting: Meeting; onOpen:
 /* ------------------------------------------------------------------ */
 
 export default function SessionWorkspace({ meetingId = DEFAULT_MEETING_ID, onSelectMeeting, selected, progress, onSelect, onOpen, onSave, onMap, onBack }: { meetingId?: string; onSelectMeeting?: (id: string) => void; selected: Ordinance; progress: CivicProgress[]; onSelect: (id: string) => void; onOpen: (doc: SourceDocument) => void; onSave: (ordinanceId: string, stage: string, position: string | null, reflection: string) => Promise<boolean>; onMap: (id: string) => void; onBack: () => void }) {
-  const meeting = MEETINGS.find((item) => item.id === meetingId) ?? NEXT_MEETING;
+  const [viewerNow, setViewerNow] = useState<Date | null>(null);
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setViewerNow(new Date()));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+  const meeting = MEETINGS.find((item) => item.id === meetingId) ?? FEATURED_MEETING;
   return (
     <>
-      {onSelectMeeting && <MeetingSwitcher currentId={meeting.id} onSelect={onSelectMeeting}/>}
+      {onSelectMeeting && <MeetingSwitcher currentId={meeting.id} onSelect={onSelectMeeting} viewerNow={viewerNow}/>}
       <SmartCivicSearch compact onOpenSource={onOpen} onOpenMeeting={onSelectMeeting} onOpenOrdinance={onSelect} />
       {meeting.id === GUIDED_MEETING_ID
         ? <GuidedSession selected={selected} progress={progress} onSelect={onSelect} onOpen={onOpen} onSave={onSave} onMap={onMap} onBack={onBack}/>
-        : <MeetingBrowser key={meeting.id} meeting={meeting} onOpen={onOpen} onBack={onBack}/>}
+        : <MeetingBrowser key={meeting.id} meeting={meeting} onOpen={onOpen} onBack={onBack} viewerNow={viewerNow}/>}
     </>
   );
 }

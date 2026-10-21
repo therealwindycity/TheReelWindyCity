@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight, BookOpen, CalendarDays, FileStack, Landmark, 
 import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
 import HubSourceDeck from "@/components/hub-source-deck";
 import { getHubSources } from "@/lib/hub-sources";
-import { MEETINGS_CAPTURED, MEETING_STATS, NEXT_MEETING, asset } from "@/lib/civic-data";
+import { GRANICUS_UPCOMING_URL, MEETINGS_CAPTURED, MEETING_STATS, NEXT_MEETING, noUpcomingMeetingNotice, asset } from "@/lib/civic-data";
 import { SITE_NAME, siteUrl } from "@/lib/site-config";
 
 const canonical = siteUrl("hub/");
@@ -26,11 +26,16 @@ export const metadata: Metadata = {
 
 export default function CivicHubHomePage() {
   const sources = getHubSources();
-  const agendaUrl = NEXT_MEETING.official.agenda ?? NEXT_MEETING.official.granicus;
+  const agendaUrl = NEXT_MEETING?.official.agenda ?? NEXT_MEETING?.official.granicus;
+  const noUpcoming = noUpcomingMeetingNotice();
   const stats = [
     { value: MEETING_STATS.totalMeetings.toLocaleString(), label: "indexed public meetings", icon: CalendarDays },
     { value: MEETING_STATS.totalDocuments.toLocaleString(), label: "archived source documents", icon: FileStack },
-    { value: String(MEETING_STATS.totalTranscripts), label: "timestamped transcripts", icon: BookOpen },
+    {
+      value: String(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts),
+      label: `transcript files (${MEETING_STATS.totalTranscripts} linked to dated meetings)`,
+      icon: BookOpen,
+    },
   ];
 
   return (
@@ -66,17 +71,35 @@ export default function CivicHubHomePage() {
 
       <section className="gov-featured-agenda" aria-labelledby="gov-featured-agenda-title">
         <div className="gov-featured-icon"><CalendarDays size={22} aria-hidden="true" /></div>
-        <div className="gov-featured-copy">
-          <p className="gov-kicker">FEATURED POSTED AGENDA · {NEXT_MEETING.dateLabel.toUpperCase()}</p>
-          <h2 id="gov-featured-agenda-title">{NEXT_MEETING.bodyLabel}</h2>
-          <p>{NEXT_MEETING.dayLabel}{NEXT_MEETING.time ? ` · ${NEXT_MEETING.time}` : ""}{NEXT_MEETING.location ? ` · ${NEXT_MEETING.location}` : ""}</p>
-          <small>{NEXT_MEETING.items?.length ?? 0} items in the captured agenda · Snapshot captured {MEETINGS_CAPTURED}</small>
-          <HubSnapshotFreshness note="a later revision may exist on the city’s own calendar." />
-        </div>
-        <div className="gov-featured-actions">
-          {agendaUrl && <a className="gov-button gov-button-outline" href={agendaUrl} target="_blank" rel="noopener noreferrer">Open original agenda <ArrowUpRight size={14} aria-hidden="true" /></a>}
-          <a className="gov-text-link" href={asset(`meetings/${NEXT_MEETING.id}/`)}>View source-linked meeting page <ArrowRight size={14} aria-hidden="true" /></a>
-        </div>
+        {NEXT_MEETING ? (
+          <>
+            <div className="gov-featured-copy">
+              <p className="gov-kicker">FEATURED POSTED AGENDA AS OF SNAPSHOT · {NEXT_MEETING.dateLabel.toUpperCase()}</p>
+              <h2 id="gov-featured-agenda-title">{NEXT_MEETING.bodyLabel}</h2>
+              <p>{NEXT_MEETING.dayLabel}{NEXT_MEETING.time ? ` · ${NEXT_MEETING.time}` : " · Start time not verified"}{NEXT_MEETING.location ? ` · ${NEXT_MEETING.location}` : ""}</p>
+              <small>{NEXT_MEETING.archiveUnavailable ? "Official posting detected; archive unavailable" : `${NEXT_MEETING.items?.length ?? 0} items in the captured agenda`} · Snapshot captured {MEETINGS_CAPTURED}</small>
+              <HubSnapshotFreshness note="a later revision or schedule change may exist on the city’s own calendar." />
+            </div>
+            <div className="gov-featured-actions">
+              {agendaUrl && <a className="gov-button gov-button-outline" href={agendaUrl} target="_blank" rel="noopener noreferrer">Open original agenda <ArrowUpRight size={14} aria-hidden="true" /></a>}
+              <a className="gov-text-link" href={asset(`meetings/${NEXT_MEETING.id}/`)}>View source-linked meeting page <ArrowRight size={14} aria-hidden="true" /></a>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="gov-featured-copy">
+              <p className="gov-kicker">NEXT POSTED MEETING · NOT CONFIRMED IN THIS SNAPSHOT</p>
+              <h2 id="gov-featured-agenda-title">{noUpcoming.headline}</h2>
+              <p>{noUpcoming.detail}</p>
+              {noUpcoming.blockedPostingLine && <small>{noUpcoming.blockedPostingLine}</small>}
+              <HubSnapshotFreshness note="calendar status is evaluated in America/Denver and never infers an outcome." />
+            </div>
+            <div className="gov-featured-actions">
+              <a className="gov-button gov-button-outline" href={noUpcoming.scheduleUrl} target="_blank" rel="noopener noreferrer">Official meeting calendar <ArrowUpRight size={14} aria-hidden="true" /></a>
+              <a className="gov-text-link" href={GRANICUS_UPCOMING_URL} target="_blank" rel="noopener noreferrer">City posted-meeting table <ArrowUpRight size={14} aria-hidden="true" /></a>
+            </div>
+          </>
+        )}
       </section>
 
       <HubSourceDeck sources={sources} initialSourceId="agenda" />

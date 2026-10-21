@@ -111,6 +111,9 @@ jobs:
           if [ -n "$CC_END" ]; then ARGS+=(--end "$CC_END"); fi
           node scripts/sync/citizen-connect.mjs "${ARGS[@]}"
 
+      - name: Reconcile scanner-archive history summary with updated Citizen Connect totals
+        run: node scripts/sync/scanner-archive-links.mjs --refresh-history
+
       - name: Rebuild the bundled public-data copy
         run: node scripts/build-data.mjs
 
@@ -121,7 +124,7 @@ jobs:
           git config user.name "CivicCheyenne-SyncBot"
           git config user.email "sync@civiccheyenne.local"
           # public/data/citizen-connect.json is generated and gitignored; src/data is canonical.
-          git add src/data/citizen-connect.json
+          git add src/data/citizen-connect.json src/data/scanner-archive-links.json
 
           if git diff --cached --quiet; then
             echo "Citizen Connect record unchanged since the last sync. Nothing to commit."
