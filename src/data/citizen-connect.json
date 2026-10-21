@@ -1,7 +1,7 @@
 {
  "schema": 2,
  "generatedBy": "sync",
- "capturedAt": "2026-10-21T11:45:14.368Z",
+ "capturedAt": "2026-10-21T14:48:21.500Z",
  "source": {
   "name": "Cheyenne / Laramie County Citizen Connect",
   "publisher": "Cheyenne Police Department & Laramie County Sheriff's Office",
@@ -61,9 +61,9 @@
   }
  ],
  "totals": {
-  "all": 450157,
+  "all": 450167,
   "incidents": 411092,
-  "cases": 39065
+  "cases": 39075
  },
  "rhythm": {
   "dowOrder": [
@@ -173,9 +173,9 @@
      262
     ],
     [
-     2831,
+     2832,
      2594,
-     237
+     238
     ],
     [
      2674,
@@ -210,9 +210,9 @@
      109
     ],
     [
-     1154,
+     1155,
      1084,
-     70
+     71
     ],
     [
      663,
@@ -225,9 +225,9 @@
      45
     ],
     [
-     809,
+     810,
      728,
-     81
+     82
     ],
     [
      942,
@@ -260,9 +260,9 @@
      364
     ],
     [
-     4162,
+     4163,
      3770,
-     392
+     393
     ],
     [
      4219,
@@ -275,9 +275,9 @@
      393
     ],
     [
-     3753,
+     3754,
      3363,
-     390
+     391
     ],
     [
      3493,
@@ -367,14 +367,14 @@
      279
     ],
     [
-     3996,
+     3997,
      3658,
-     338
+     339
     ],
     [
-     4485,
+     4486,
      4079,
-     406
+     407
     ],
     [
      4340,
@@ -616,9 +616,9 @@
      350
     ],
     [
-     4749,
+     4750,
      4364,
-     385
+     386
     ],
     [
      4725,
@@ -743,9 +743,9 @@
      380
     ],
     [
-     4285,
+     4286,
      3881,
-     404
+     405
     ],
     [
      4151,
@@ -925,31 +925,31 @@
      245
     ],
     [
-     2748,
+     2749,
      2514,
-     234
+     235
     ]
    ]
   },
   "dowTotals": {
    "Su": {
-    "total": 47408,
+    "total": 47409,
     "incidents": 43029,
-    "cases": 4379,
+    "cases": 4380,
     "occurrences": 355,
     "perOccurrence": 133.5
    },
    "Mo": {
-    "total": 67082,
+    "total": 67086,
     "incidents": 61225,
-    "cases": 5857,
+    "cases": 5861,
     "occurrences": 355,
     "perOccurrence": 189
    },
    "Tu": {
-    "total": 69693,
+    "total": 69695,
     "incidents": 63903,
-    "cases": 5790,
+    "cases": 5792,
     "occurrences": 355,
     "perOccurrence": 196.3
    },
@@ -961,23 +961,23 @@
     "perOccurrence": 198.6
    },
    "Th": {
-    "total": 74483,
+    "total": 74484,
     "incidents": 68373,
-    "cases": 6110,
+    "cases": 6111,
     "occurrences": 355,
     "perOccurrence": 209.8
    },
    "Fr": {
-    "total": 69941,
+    "total": 69942,
     "incidents": 63828,
-    "cases": 6113,
+    "cases": 6114,
     "occurrences": 355,
     "perOccurrence": 197
    },
    "Sa": {
-    "total": 51044,
+    "total": 51045,
     "incidents": 46168,
-    "cases": 4876,
+    "cases": 4877,
     "occurrences": 355,
     "perOccurrence": 143.8
    }
@@ -997,9 +997,9 @@
    },
    {
     "hour": 2,
-    "total": 8256,
+    "total": 8257,
     "incidents": 7480,
-    "cases": 776
+    "cases": 777
    },
    {
     "hour": 3,
@@ -1015,9 +1015,9 @@
    },
    {
     "hour": 5,
-    "total": 5433,
+    "total": 5434,
     "incidents": 5004,
-    "cases": 429
+    "cases": 430
    },
    {
     "hour": 6,
@@ -1039,27 +1039,27 @@
    },
    {
     "hour": 9,
-    "total": 24380,
+    "total": 24381,
     "incidents": 22223,
-    "cases": 2157
+    "cases": 2158
    },
    {
     "hour": 10,
-    "total": 26750,
+    "total": 26752,
     "incidents": 24387,
-    "cases": 2363
+    "cases": 2365
    },
    {
     "hour": 11,
-    "total": 26762,
+    "total": 26763,
     "incidents": 24506,
-    "cases": 2256
+    "cases": 2257
    },
    {
     "hour": 12,
-    "total": 26083,
+    "total": 26084,
     "incidents": 23687,
-    "cases": 2396
+    "cases": 2397
    },
    {
     "hour": 13,
@@ -1075,9 +1075,9 @@
    },
    {
     "hour": 15,
-    "total": 24893,
+    "total": 24894,
     "incidents": 22473,
-    "cases": 2420
+    "cases": 2421
    },
    {
     "hour": 16,
@@ -1099,9 +1099,9 @@
    },
    {
     "hour": 19,
-    "total": 21903,
+    "total": 21904,
     "incidents": 20054,
-    "cases": 1849
+    "cases": 1850
    },
    {
     "hour": 20,
@@ -1123,9 +1123,9 @@
    },
    {
     "hour": 23,
-    "total": 18660,
+    "total": 18661,
     "incidents": 17287,
-    "cases": 1373
+    "cases": 1374
    }
   ]
  },
@@ -15864,9 +15864,9 @@
    },
    {
     "date": "2026-09-21",
-    "total": 322,
+    "total": 323,
     "incidents": 299,
-    "cases": 23
+    "cases": 24
    },
    {
     "date": "2026-09-22",
@@ -15948,9 +15948,9 @@
    },
    {
     "date": "2026-10-05",
-    "total": 280,
+    "total": 281,
     "incidents": 258,
-    "cases": 22
+    "cases": 23
    },
    {
     "date": "2026-10-06",
@@ -15972,9 +15972,9 @@
    },
    {
     "date": "2026-10-09",
-    "total": 366,
+    "total": 367,
     "incidents": 342,
-    "cases": 24
+    "cases": 25
    },
    {
     "date": "2026-10-10",
@@ -15996,9 +15996,9 @@
    },
    {
     "date": "2026-10-13",
-    "total": 323,
+    "total": 325,
     "incidents": 295,
-    "cases": 28
+    "cases": 30
    },
    {
     "date": "2026-10-14",
@@ -16008,9 +16008,9 @@
    },
    {
     "date": "2026-10-15",
-    "total": 324,
+    "total": 325,
     "incidents": 305,
-    "cases": 19
+    "cases": 20
    },
    {
     "date": "2026-10-16",
@@ -16020,21 +16020,21 @@
    },
    {
     "date": "2026-10-17",
-    "total": 190,
+    "total": 191,
     "incidents": 179,
-    "cases": 11
-   },
-   {
-    "date": "2026-10-18",
-    "total": 194,
-    "incidents": 182,
     "cases": 12
    },
    {
+    "date": "2026-10-18",
+    "total": 195,
+    "incidents": 182,
+    "cases": 13
+   },
+   {
     "date": "2026-10-19",
-    "total": 267,
+    "total": 269,
     "incidents": 256,
-    "cases": 11
+    "cases": 13
    },
    {
     "date": "2026-10-20",
@@ -16686,19 +16686,19 @@
    },
    {
     "label": "2026-09",
-    "total": 9945,
+    "total": 9946,
     "incidents": 9186,
-    "cases": 759,
+    "cases": 760,
     "days": 30,
     "perDay": 331.5
    },
    {
     "label": "2026-10",
-    "total": 5863,
+    "total": 5872,
     "incidents": 5477,
-    "cases": 386,
+    "cases": 395,
     "days": 20,
-    "perDay": 293.1
+    "perDay": 293.6
    }
   ],
   "yearly": [
@@ -16752,9 +16752,9 @@
    },
    {
     "label": "2026",
-    "total": 94478,
+    "total": 94488,
     "incidents": 87078,
-    "cases": 7400,
+    "cases": 7410,
     "days": 293,
     "perDay": 322.5
    }
@@ -16900,7 +16900,7 @@
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Special Detail",
     "count": 3481,
-    "share": 0.83
+    "share": 0.829
    },
    {
     "layer": "Incidents",
@@ -16941,8 +16941,8 @@
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Warrant",
-    "count": 2560,
-    "share": 0.61
+    "count": 2562,
+    "share": 0.611
    },
    {
     "layer": "Incidents",
@@ -17270,7 +17270,7 @@
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Domestic Disturbance",
-    "count": 864,
+    "count": 865,
     "share": 0.206
    },
    {
@@ -17403,7 +17403,7 @@
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Destruction of Property - Veh",
-    "count": 722,
+    "count": 723,
     "share": 0.172
    },
    {
@@ -17725,7 +17725,7 @@
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Dead Body",
-    "count": 466,
+    "count": 467,
     "share": 0.111
    },
    {
@@ -17760,7 +17760,7 @@
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Harassing Phone Calls",
-    "count": 437,
+    "count": 438,
     "share": 0.104
    },
    {
@@ -17844,8 +17844,8 @@
     "layer": "Cases",
     "agency": "Cheyenne Police Department - WY0110100",
     "type": "Burglary - Residence",
-    "count": 383,
-    "share": 0.091
+    "count": 384,
+    "share": 0.092
    },
    {
     "layer": "Incidents",
@@ -18096,7 +18096,7 @@
     "layer": "Cases",
     "agency": "Laramie County Sheriff's Department - WY0110000",
     "type": "Fraud",
-    "count": 286,
+    "count": 287,
     "share": 0.068
    },
    {
@@ -22311,12 +22311,12 @@
   "agencies": [
    {
     "name": "Cheyenne Police Department - WY0110100",
-    "count": 278038,
+    "count": 278045,
     "share": 66.26
    },
    {
     "name": "Laramie County Sheriff's Department - WY0110000",
-    "count": 141609,
+    "count": 141610,
     "share": 33.74
    }
   ],
@@ -22327,7 +22327,7 @@
    },
    {
     "name": "Cases",
-    "count": 36787
+    "count": 36795
    }
   ],
   "coverage": {
@@ -22355,17 +22355,17 @@
      {
       "id": "3",
       "name": "Dr. Michelle Aldrich",
-      "count": 97639
+      "count": 97642
      },
      {
       "id": "2",
       "name": "Bryan M. Cook",
-      "count": 44766
+      "count": 44768
      },
      {
       "id": "1",
       "name": "Scott Roybal",
-      "count": 161276
+      "count": 161278
      }
     ]
    },
@@ -22415,7 +22415,7 @@
      {
       "id": "10",
       "name": "SO-W",
-      "count": 6983
+      "count": 6984
      },
      {
       "id": "3",
