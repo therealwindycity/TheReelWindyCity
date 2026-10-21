@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "ok": true,
+  "discoveredAt": "2026-10-21T14:57:40.588Z",
+  "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
+  "meetings": [
+    {
+      "body": "currently-there-are-no-upcoming-events",
+      "bodyLabel": "Currently there are no Upcoming Events",
+      "date": "",
+      "time": "",
+      "agendaUrl": ""
+    }
+  ]
+}
