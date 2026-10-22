@@ -1,0 +1,37 @@
+name: Community conversation or correction
+description: Ask a civic question, discuss a source, suggest a correction, or share site feedback.
+title: '[Community] '
+body:
+  - type: markdown
+    attributes:
+      value: 'This is a public discussion. Do not include passwords, private contact details, confidential tips, or unsupported accusations. Link the source whenever possible.'
+  - type: dropdown
+    id: topic_type
+    attributes:
+      label: Type of conversation
+      options:
+        - Questions & help
+        - Local issues & meetings
+        - Sources & corrections
+        - Site ideas & feedback
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Question, contribution, or correction
+      description: Separate the source facts from your interpretation or question.
+    validations:
+      required: true
+  - type: textarea
+    id: sources
+    attributes:
+      label: Relevant pages and sources
+      description: Include source links, meeting dates, or timestamps. Do not include private links with access tokens.
+  - type: checkboxes
+    id: public_notice
+    attributes:
+      label: Public-board agreement
+      options:
+        - label: I understand this is public and will not post credentials, confidential details, threats, harassment, or unsupported accusations.
+          required: true
