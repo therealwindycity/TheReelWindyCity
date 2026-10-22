@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "repository": "therealwindycity/TheReelWindyCity",
+  "integration_branch": "arena/civic-build-center-2026-10-21",
+  "handoff_baseline_sha": "a070cd3c9fe21a56d7604505a839e4d35dcaa1cc",
+  "draft_pr": 25,
+  "coordinator": null,
+  "coordination_enforcement": "Manual acknowledgement; no automated lock or agent execution is implemented",
+  "refresh_state_before_work": true,
+  "colab_required": false,
+  "release_blocked": true,
+  "baseline_checks": {"checks_pr": "failure", "checks_push": "failure", "build": "failure", "deploy": "skipped", "root_cause": null},
+  "tasks": [
+    {"id": "T00", "role": "coordinator-schema", "owner": null, "status": "ready-to-claim", "depends_on": [], "deliverable": "Ratified v1 contract, acknowledged owners and serialized integration plan"},
+    {"id": "T01", "role": "ci-build", "owner": null, "status": "ready-to-claim", "depends_on": [], "deliverable": "Exact failure diagnosis, minimal fixes and recorded green checks on candidate SHA"},
+    {"id": "T02", "role": "inventory", "owner": null, "status": "ready-to-claim", "depends_on": [], "deliverable": "Paginated relevant-source inventory, pinned repo trees and source/version duplicate report"},
+    {"id": "T03", "role": "direct-ingestion", "owner": null, "status": "fixtures-can-start", "depends_on": ["T00", "T02"], "deliverable": "Reviewed real document batches, provenance, rejected/partial queue and no Colab dependency"},
+    {"id": "T04", "role": "retrieval", "owner": null, "status": "fixtures-can-start", "depends_on": ["T00", "T03"], "deliverable": "Reproducible partitioned indexes with coverage/freshness and source-span retrieval tests"},
+    {"id": "T05", "role": "interface", "owner": null, "status": "fixtures-can-start", "depends_on": ["T00", "T03"], "deliverable": "Data-driven source reader, search, relationship and timeline views; verified geography only"},
+    {"id": "T06", "role": "publication-seo", "owner": null, "status": "fixtures-can-start", "depends_on": ["T00", "T03"], "deliverable": "Canonical readable pages, links, sitemap, machine-readable exports and size/privacy checks"},
+    {"id": "T07", "role": "independent-qa", "owner": null, "status": "ready-to-claim", "depends_on": [], "deliverable": "Adversarial fixtures and independent cross-source, date, duplicate, access and claim review"}
+  ]
+}

@@ -4,6 +4,7 @@ import { siteUrl } from '@/lib/site-config';
 import styles from '@/components/public-shell.module.css';
 export const metadata: Metadata = { title: 'Explore records | The Real Windy City', alternates: { canonical: siteUrl('explore/') } };
 const collections = [
+  { title: 'Connected evidence workspace', text: 'Search the first published historical excerpts, inspect source relationships and trace event versus harvest dates. Wider imports remain in progress.', href: '/research/' },
   { title: 'Meetings & decisions', text: 'Find meetings, agendas, and archived source documents.', href: '/meetings/' },
   { title: 'Meeting transcripts & research', text: 'Read available meeting transcripts and follow source-linked evidence.', href: '/transcripts/' },
   { title: 'Maps & local information', text: 'Explore the public-information hub. Availability varies by publisher.', href: '/hub/' },

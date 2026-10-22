@@ -1,0 +1,81 @@
+name: Lint rule locator
+
+on:
+  push:
+    branches: ["arena/civic-build-center-2026-10-21"]
+    paths:
+      - ".github/workflows/lint-locator.yml"
+      - "eslint.config.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "src/**"
+      - "scripts/**"
+      - "tests/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-locator-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: Collect ESLint rule and source location
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      locator: ${{ steps.locate.outputs.locator }}
+      error_count: ${{ steps.locate.outputs.error_count }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Capture structured ESLint output
+        continue-on-error: true
+        env:
+          LINT_REPORT: ${{ runner.temp }}/corpus-eslint.json
+        run: npx --no-install eslint . --format json > "$LINT_REPORT"
+      - id: locate
+        name: Export only sanitized rule, relative path and line
+        env:
+          LINT_REPORT: ${{ runner.temp }}/corpus-eslint.json
+        shell: bash
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const path = require("node:path");
+          function summarize(report) {
+            if (!Array.isArray(report)) throw new Error("ESLint report must be an array");
+            const findings = report.flatMap((file) => (Array.isArray(file.messages) ? file.messages : [])
+              .filter((message) => message.severity === 2)
+              .map((message) => ({ file: path.relative(process.cwd(), String(file.filePath)), line: Number.isInteger(message.line) ? message.line : 0, rule: String(message.ruleId || "parser-or-config") })));
+            const safe = (value) => String(value).replace(/[^A-Za-z0-9_.\/@:-]/g, "_").slice(0, 140);
+            const first = findings[0];
+            return { locator: first ? `${safe(first.file)}:${first.line} ${safe(first.rule)}`.slice(0, 240) : "no-eslint-errors", count: findings.length };
+          }
+          const report = JSON.parse(fs.readFileSync(process.env.LINT_REPORT, "utf8"));
+          const result = summarize(report);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `locator=${result.locator}\nerror_count=${result.count}\n`);
+          NODE
+
+  report:
+    name: "Lint finding: ${{ needs.lint.outputs.locator || 'install-or-report-incomplete' }}"
+    needs: lint
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Require a complete zero-error report
+        env:
+          ERROR_COUNT: ${{ needs.lint.outputs.error_count }}
+          LOCATOR: ${{ needs.lint.outputs.locator }}
+        run: |
+          printf 'Lint location: %s\nError count: %s\n' "${LOCATOR:-unavailable}" "${ERROR_COUNT:-unknown}"
+          test "$ERROR_COUNT" = 0
