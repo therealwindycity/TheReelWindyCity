@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "coverage": "Initial two-excerpt publication batch, not the full corpus",
+  "records": [
+    {
+      "id": "urban-farm-2026-08-21-agenda",
+      "title": "Urban Farm Unified Development Code Updates — agenda",
+      "date": "2026-08-21",
+      "type": "agenda",
+      "sourceUrl": "https://www.cheyennecity.org/files/sharedassets/public/v/1/your-government/city-council/wscow-2026/ws-08-21-26-agenda.pdf",
+      "extractedFrom": "Cheyenne_Municipal_Shard_15.md",
+      "harvestedAt": "2026-10-19T10:24:33.260864Z",
+      "text": "WORK SESSION AGENDA Urban Farm Unified Development Code Updates August 21 , 2026 at 12 :00 p.m. Municipal Building - City Council Chambers 2101 O’Neil Avenue, Cheyenne, WY, 82001\n\n1. Introductions – Charles Bloom, Planning & Development Director\n2. Presentation\n3. Questions/Comments\n4. Adjournment",
+      "contentScope": "Selected excerpt, not complete document",
+      "dateStatus": "Date as stated in extracted document; independent publisher re-fetch failed",
+      "pageStatus": "PDF page number not verified",
+      "outcomeStatus": "Proposal or agenda; adoption not established",
+      "originalSha256": null,
+      "textSha256": "27e577554b7592c78058a817298ef73f12177a67b33d512153f67442c905f1ca"
+    },
+    {
+      "id": "urban-farm-2026-08-21-presentation",
+      "title": "Urban Farm Unified Development Code Updates — presentation",
+      "date": "2026-08-21",
+      "type": "proposal presentation",
+      "sourceUrl": "https://www.cheyennecity.org/files/sharedassets/public/v/1/your-government/city-council/wscow-2026/farm-ws-8-21-2026.pdf",
+      "extractedFrom": "Cheyenne_Municipal_Shard_15.md",
+      "harvestedAt": "2026-10-19T10:24:34.113929Z",
+      "text": "WORK SESSION Urban Farm Unified Development Code Updates 8/21/2026\n\nGardens and Homemade Foods. Any property producing food for sale whose usage meets the definition of a “producer” according to Wyo Stat. § 11-49-102. Gardens and Homemade Foods shall include livestock if permitted in the zone district by operation of municipal code. Examples include small residential gardens, community gardens, and small -scale agricultural operations on larger parcels.",
+      "contentScope": "Selected excerpt, not complete document",
+      "dateStatus": "Date as stated in extracted document; independent publisher re-fetch failed",
+      "pageStatus": "PDF page number not verified",
+      "outcomeStatus": "Proposal or agenda; adoption not established",
+      "originalSha256": null,
+      "textSha256": "8d0ffa859ed94e14d8c4ba9ca3638d3206c08afc51059761bead34da5a971b8c"
+    }
+  ]
+}
