@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-21T15:10:37.265Z",
+  "generatedAt": "2026-10-22T15:13:05.986Z",
   "places": [
     {
       "id": "afton",
@@ -153,9 +153,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-cheyenne",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "chugwater",
