@@ -1,0 +1,193 @@
+{
+  "meetingId": "city-council-2026-10-26",
+  "generatedAt": "2026-10-23T22:53:11.411Z",
+  "generatedBy": [
+    "rules-v1",
+    "llm-v1"
+  ],
+  "summary": {
+    "items": 26,
+    "findings": 5,
+    "bySeverity": {
+      "act": 1,
+      "watch": 4,
+      "info": 0
+    }
+  },
+  "findings": [
+    {
+      "id": "consent-bundling",
+      "severity": "act",
+      "title": "Substantive item bundled on the consent agenda",
+      "detail": "This item is designated for the consent agenda, meaning it is enacted by a single motion with no separate discussion unless a governing-body member pulls it (with two supporting members). Substantive policy can pass with essentially zero deliberation — request removal from consent if you want it discussed.",
+      "itemNumbers": [
+        "16",
+        "18",
+        "19",
+        "20"
+      ],
+      "kind": "Resolution",
+      "evidence": [
+        {
+          "quote": "16. [CA] RESOLUTION – Re-appropriating the Fiscal Year 2027 Budget of the City of Cheyenne according to the provisions of W.S. §§ 16-4-112 & 16-4-113. (FINANCE COMMITTEE) ACTION: Adopt Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "All agenda items listed with the designation of [CA] are considered to be routine items by the governing body and will be enacted by one motion.",
+          "page": 1
+        },
+        {
+          "quote": "18. [CA] RESOLUTION – Adopting the revised City of Cheyenne, Wyoming, Investment Policy Statement. (FINANCE COMMITTEE) ACTION: Adopt Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "19. [CA] RESOLUTION – Authorizing up to an $18,063,014 Interfund Loan from the One Percent Sales Tax Capital Projects fund to the Special Purpose Option Sales Tax Capital Projects Fund to facilitate projects approved by ",
+          "page": 1
+        },
+        {
+          "quote": "20. [CA] RESOLUTION – Granting Special Use approval for a gaming center pursuant to Unified Development Code Section 2.2.7 and granting local approval of a site-specific application for a Simulcasting Permit to be issued",
+          "page": 1
+        }
+      ],
+      "citation": "Posted agenda, item(s) 16, 18, 19, 20",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "second-reading",
+      "severity": "watch",
+      "title": "Ordinance on 2nd reading — text can still be amended",
+      "detail": "Second reading is where amendments are still routine; track the final language here.",
+      "itemNumbers": [
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14"
+      ],
+      "kind": "Ordinance · 2nd reading",
+      "evidence": [
+        {
+          "quote": "6. ORDINANCE – 2nd READING – Annexing to the City of Cheyenne, Wyoming, land south of US-30 and north of Commerce Circle. (PUBLIC SERVICES COMMITTEE) ACTION: Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "7. ORDINANCE – 2nd READING – Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification of BP – Business Park for land annexed to the City of Cheyenne, located south of Tate Road, no",
+          "page": 1
+        },
+        {
+          "quote": "8. ORDINANCE – 2nd READING – Annexing to the City of Cheyenne, Wyoming, land south of East Fox Farm Road, north of East Allison Road and east of and adjacent to south College Drive. (PUBLIC SERVICES COMMITTEE) ACTION: Su",
+          "page": 1
+        },
+        {
+          "quote": "9. ORDINANCE – 2nd READING – Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification of AG - Agricultural for land annexed to the City of Cheyenne, located south of East Fox Farm ",
+          "page": 1
+        },
+        {
+          "quote": "10. ORDINANCE – 2nd READING – Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of East Fox Farm Road, north of East Allison Road and east of and adjacent",
+          "page": 1
+        },
+        {
+          "quote": "11. ORDINANCE – 2nd READING – Amending Sections 1.4.3, 1.4.4, 2.2.3, 5.1.4, and 5.7.2 of the Cheyenne Unified Development Code to add and clarify Specified Use Allowances, clarify processes for Agricultural Uses and prov",
+          "page": 1
+        },
+        {
+          "quote": "12. ORDINANCE – 2nd READING – Amending Section 6.2.8 of the Cheyenne Unified Development Code to allow for unpaved parking in certain site-specific situations. (PUBLIC SERVICES COMMITTEE) ACTION: Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "13. ORDINANCE – 2nd READING – Amending Section 6.08.020 of the Municipal Code of the City of Cheyenne, Wyoming, to revise exceptions to restrictions on keeping livestock within the City. (PUBLIC SERVICES COMMITTEE) ACTIO",
+          "page": 1
+        },
+        {
+          "quote": "14. ORDINANCE – 2nd READING – Amending Section 9.12.080 of the Municipal Code of the City of Cheyenne, Wyoming, to allow electric fencing for certain agricultural and livestock uses. (PUBLIC SERVICES COMMITTEE) ACTION: S",
+          "page": 1
+        }
+      ],
+      "citation": "Posted agenda, item(s) 6, 7, 8, 9, 10, 11, 12, 13, 14",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "annexation",
+      "severity": "watch",
+      "title": "Territorial annexation",
+      "detail": "Annexation moves land into city jurisdiction and usually precedes zoning/service decisions with long-term effects. Verify the associated zoning-map and service-commitment items posted alongside it.",
+      "itemNumbers": [
+        "6",
+        "8",
+        "24"
+      ],
+      "kind": "Ordinance · 2nd reading",
+      "evidence": [
+        {
+          "quote": "6. ORDINANCE – 2nd READING – Annexing to the City of Cheyenne, Wyoming, land south of US-30 and north of Commerce Circle. (PUBLIC SERVICES COMMITTEE) ACTION: Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "8. ORDINANCE – 2nd READING – Annexing to the City of Cheyenne, Wyoming, land south of East Fox Farm Road, north of East Allison Road and east of and adjacent to south College Drive. (PUBLIC SERVICES COMMITTEE) ACTION: Su",
+          "page": 1
+        },
+        {
+          "quote": "24. ANNOUNCEMENTS/REPORTS/MOTIONS: a) VOUCHER REPORT. Supporting Document Supporting Document b) REVENUE REPORT. Supporting Document c) Notice of Emergency Procurement – In accordance with the City of Cheyenne Purchasing",
+          "page": 1
+        }
+      ],
+      "citation": "Posted agenda, item(s) 6, 8, 24",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "zoning-map-amendment",
+      "severity": "watch",
+      "title": "Official Zoning Map amendment",
+      "detail": "Changes the zoning classification of specific land. Check whether notice to affected owners was published and whether the parcel is near you (see the site's impact map for prior examples).",
+      "itemNumbers": [
+        "7",
+        "9",
+        "10",
+        "24"
+      ],
+      "kind": "Ordinance · 2nd reading",
+      "evidence": [
+        {
+          "quote": "7. ORDINANCE – 2nd READING – Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification of BP – Business Park for land annexed to the City of Cheyenne, located south of Tate Road, no",
+          "page": 1
+        },
+        {
+          "quote": "9. ORDINANCE – 2nd READING – Amending the Official Zoning Map of the City of Cheyenne, establishing the zoning classification of AG - Agricultural for land annexed to the City of Cheyenne, located south of East Fox Farm ",
+          "page": 1
+        },
+        {
+          "quote": "10. ORDINANCE – 2nd READING – Amending the Official Zoning Map of the City of Cheyenne, changing the zoning classification for land located south of East Fox Farm Road, north of East Allison Road and east of and adjacent",
+          "page": 1
+        },
+        {
+          "quote": "24. ANNOUNCEMENTS/REPORTS/MOTIONS: a) VOUCHER REPORT. Supporting Document Supporting Document b) REVENUE REPORT. Supporting Document c) Notice of Emergency Procurement – In accordance with the City of Cheyenne Purchasing",
+          "page": 1
+        }
+      ],
+      "citation": "Posted agenda, item(s) 7, 9, 10, 24",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "budget-reappropriation",
+      "severity": "watch",
+      "title": "Budget re-appropriation",
+      "detail": "Moves previously appropriated funds between purposes; check which program loses the money.",
+      "itemNumbers": [
+        "16"
+      ],
+      "kind": "Resolution",
+      "evidence": [
+        {
+          "quote": "16. [CA] RESOLUTION – Re-appropriating the Fiscal Year 2027 Budget of the City of Cheyenne according to the provisions of W.S. §§ 16-4-112 & 16-4-113. (FINANCE COMMITTEE) ACTION: Adopt Supporting Document",
+          "page": 1
+        }
+      ],
+      "citation": "Posted city-council-2026-10-26 agenda, item 16, page 1",
+      "generatedBy": "rules-v1"
+    }
+  ]
+}
