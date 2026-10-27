@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-10-26T20:08:03.684Z",
+  "generatedAt": "2026-10-27T19:37:41.454Z",
   "places": [
     {
       "id": "afton",
@@ -1029,8 +1029,14 @@
           "repo": "civic-wy-county-big-horn"
         },
         {
-          "name": "Request_For_Proposals-Big_Horn_County_WY.PDF",
-          "sourceUrl": "https://www.bighorncountywy.gov/images/Request_For_Proposals-Big_Horn_County_WY.PDF",
+          "name": "Notice_of_Public_Hearing_202610291105.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/Notice_of_Public_Hearing_202610291105.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-big-horn"
+        },
+        {
+          "name": "BHC_2026_Proposed_Amended_Subdivision_Regulations.pdf",
+          "sourceUrl": "https://www.bighorncountywy.gov/images/BHC_2026_Proposed_Amended_Subdivision_Regulations.pdf",
           "volume": 1,
           "repo": "civic-wy-county-big-horn"
         },
@@ -1219,18 +1225,6 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-niobrara",
       "sourceUrl": "https://www.niobraracounty.org/",
       "documents": [
-        {
-          "name": "October%2013,%202026%20Planning%20and%20Zoning%20Agenda.pdf",
-          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/October%2013,%202026%20Planning%20and%20Zoning%20Agenda.pdf",
-          "volume": 1,
-          "repo": "civic-wy-county-niobrara"
-        },
-        {
-          "name": "Resolution%2026-05-%20Partial%20Fire%20Ban-%20Unincorporated%20Areas%20Nio%20Co.pdf",
-          "sourceUrl": "https://www.niobraracounty.org/_departments/_commissioners/_pdfs/2026/Resolution%2026-05-%20Partial%20Fire%20Ban-%20Unincorporated%20Areas%20Nio%20Co.pdf",
-          "volume": 1,
-          "repo": "civic-wy-county-niobrara"
-        },
         {
           "name": "County%20Planning%20and%20Zoning%20Authorities.pdf",
           "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/County%20Planning%20and%20Zoning%20Authorities.pdf",
