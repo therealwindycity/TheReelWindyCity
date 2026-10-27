@@ -1,13 +1,13 @@
 {
   "version": 1,
-  "checkedAt": "2026-10-23T22:53:12.463Z",
-  "contentHash": "fa1ae6072e8358eca0eec213028cf92ba1a5c892a03c57212455700177aa6139",
+  "checkedAt": "2026-10-27T00:38:03.527Z",
+  "contentHash": "e0464c88d249656f0a16960ede0c14f2b877df4e3108ac230c1341587707ee64",
   "meetings": [
     {
       "body": "city-council",
       "bodyLabel": "City Council Meeting",
-      "date": "2026-10-26",
-      "time": "18:00",
+      "date": "in progress open video only in windows media player",
+      "time": "",
       "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1453&view_id=5"
     }
   ]
