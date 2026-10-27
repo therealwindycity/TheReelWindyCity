@@ -1,15 +1,22 @@
 {
   "version": 1,
   "ok": true,
-  "discoveredAt": "2026-10-27T13:24:47.951Z",
+  "discoveredAt": "2026-10-27T19:30:32.220Z",
   "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
   "meetings": [
     {
-      "body": "currently-there-are-no-upcoming-events",
-      "bodyLabel": "Currently there are no Upcoming Events",
-      "date": "",
-      "time": "",
-      "agendaUrl": ""
+      "body": "public-services-committee",
+      "bodyLabel": "Public Services Committee",
+      "date": "2026-11-02",
+      "time": "12:00",
+      "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1455&view_id=5"
+    },
+    {
+      "body": "finance-committee",
+      "bodyLabel": "Finance Committee",
+      "date": "2026-11-03",
+      "time": "12:00",
+      "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1454&view_id=5"
     }
   ]
 }
