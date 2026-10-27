@@ -1,14 +1,14 @@
 {
   "version": 1,
   "ok": true,
-  "discoveredAt": "2026-10-23T22:52:35.124Z",
+  "discoveredAt": "2026-10-27T00:37:37.244Z",
   "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
   "meetings": [
     {
       "body": "city-council",
       "bodyLabel": "City Council Meeting",
-      "date": "2026-10-26",
-      "time": "18:00",
+      "date": "in progress open video only in windows media player",
+      "time": "",
       "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1453&view_id=5"
     }
   ]
