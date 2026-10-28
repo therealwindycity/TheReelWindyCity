@@ -6,13 +6,7 @@ import { ECOSYSTEM_CAPTURED, ecosystemRoutes } from "@/lib/wyoming-ecosystem";
 
 export const dynamic = "force-static";
 
-/**
- * `<lastmod>` must describe a real change to the record, not the moment the
- * site was built. Google discounts a lastmod that is simply "now" on every
- * deploy, so every entry carries the archive snapshot date the index was last
- * assembled from (`captured` in src/data/meetings.json). A future-dated or
- * unparseable snapshot falls back to the newest meeting in the index.
- */
+// Preserve source snapshot dates rather than claiming every deploy changes every record.
 function snapshotDate(): Date {
   const parsed = new Date(`${MEETINGS_CAPTURED}T00:00:00.000Z`);
   if (!Number.isNaN(parsed.getTime()) && parsed.getTime() <= Date.now()) return parsed;
@@ -21,66 +15,21 @@ function snapshotDate(): Date {
   return Number.isNaN(fallback.getTime()) ? new Date(0) : fallback;
 }
 
-/**
- * Every meeting has its own statically rendered, canonical detail page. Keep
- * every indexed meeting in the sitemap, with a lastmod that reflects when the
- * underlying record snapshot changed — historical records are frozen, while
- * posted agendas are still being updated by the city. Statewide ecosystem
- * pages use the catalog capture date instead, so a new government record does
- * not pretend to be a change to a 2008 meeting.
- */
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = snapshotDate();
-
   return [
-    {
-      url: SITE_URL,
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 1,
-    },
-    {
-      url: siteUrl("meetings/"),
-      lastModified,
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: siteUrl("transcripts/"),
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: siteUrl("mynewspace/"),
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.5,
-    },
-    {
-      url: siteUrl("hub/"),
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.9,
-    },
-    {
-      url: siteUrl("hub/meetings/"),
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
-      url: siteUrl("hub/signals/"),
-      lastModified,
-      changeFrequency: "daily",
-      priority: 0.8,
-    },
-    {
-      url: siteUrl("hub/learn/"),
-      lastModified,
-      changeFrequency: "monthly",
-      priority: 0.7,
-    },
+    { url: SITE_URL, lastModified, changeFrequency: "weekly", priority: 1 },
+    // These pages have no independently tracked modification date; do not invent one.
+    ...["explore/", "explore/public-safety/", "community/", "about/", "workspace/"].map((route): MetadataRoute.Sitemap[number] => ({
+      url: siteUrl(route), changeFrequency: "monthly", priority: 0.7,
+    })),
+    { url: siteUrl("meetings/"), lastModified, changeFrequency: "weekly", priority: 0.9 },
+    { url: siteUrl("transcripts/"), lastModified, changeFrequency: "monthly", priority: 0.8 },
+    { url: siteUrl("mynewspace/"), lastModified, changeFrequency: "monthly", priority: 0.5 },
+    { url: siteUrl("hub/"), lastModified, changeFrequency: "daily", priority: 0.9 },
+    { url: siteUrl("hub/meetings/"), lastModified, changeFrequency: "daily", priority: 0.8 },
+    { url: siteUrl("hub/signals/"), lastModified, changeFrequency: "daily", priority: 0.8 },
+    { url: siteUrl("hub/learn/"), lastModified, changeFrequency: "monthly", priority: 0.7 },
     ...ecosystemRoutes().map((route): MetadataRoute.Sitemap[number] => ({
       url: siteUrl(route),
       lastModified: new Date(`${ECOSYSTEM_CAPTURED}T00:00:00.000Z`),
@@ -96,7 +45,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...MEETINGS.map((meeting): MetadataRoute.Sitemap[number] => ({
       url: siteUrl(`meetings/${meeting.id}/`),
       lastModified,
-      // A posted agenda is still changing; a past record is a settled archive entry.
       changeFrequency: meeting.upcoming ? "daily" : "yearly",
       priority: meeting.upcoming ? 0.8 : 0.7,
     })),
