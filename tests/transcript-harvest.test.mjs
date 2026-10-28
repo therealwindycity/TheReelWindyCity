@@ -47,7 +47,7 @@ test("worklist excludes transcripts already attached to meetings", () => {
 test("snapshot gap audit matches the committed meeting and caption coverage", () => {
   const { stats, meetings } = meetingsIndex;
   const gaps = transcriptGapWorklist(meetings);
-  assert.equal(stats.totalMeetings, 1003);
+  assert.equal(stats.totalMeetings, 1006);
   assert.equal(stats.totalDocuments, 5118);
   assert.equal(stats.totalTranscripts, 84);
   assert.equal(stats.totalTranscriptFiles, 85);

@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main, "arena/**"]
+    branches: [main, "arena/**", "repair/**"]
 
 jobs:
   checks:
