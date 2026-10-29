@@ -1,0 +1,115 @@
+name: Integration stage diagnostics
+
+on:
+  push:
+    branches: ["arena/civic-build-center-2026-10-21"]
+    paths:
+      - ".github/workflows/integration-diagnostics.yml"
+      - "package.json"
+      - "package-lock.json"
+      - "src/**"
+      - "scripts/**"
+      - "tests/**"
+      - "next.config.ts"
+      - "tsconfig.json"
+      - "eslint.config.mjs"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: integration-diagnostics-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  probe:
+    name: Probe integration stages (not a deployment)
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      first_failure: ${{ steps.probe.outputs.first_failure }}
+      failure_kind: ${{ steps.probe.outputs.failure_kind }}
+      failed_stages: ${{ steps.probe.outputs.failed_stages }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - id: probe
+        name: Diagnose controlled stages; keep original CI unchanged
+        shell: bash
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+        run: |
+          set +e
+          first=none
+          kind=none
+          failures=""
+          classify_error() {
+            local log="$1"
+            if grep -Eqi 'heap out of memory|heap limit|ENOMEM|Killed|allocation failed' "$log"; then echo memory
+            elif grep -Eqi 'package-lock.*(sync|match)|lock file.*(sync|match)|npm ci.*(lock|usage)|EUSAGE' "$log"; then echo lockfile
+            elif grep -Eqi 'ENOTFOUND|ETIMEDOUT|ECONNRESET|unable to verify.*certificate' "$log"; then echo network
+            elif grep -Eqi 'Type error:|error TS[0-9]+|TypeScript error' "$log"; then echo typescript
+            elif grep -Eqi 'AssertionError|ERR_ASSERTION|test failed|tests failed' "$log"; then echo test_assertion
+            elif grep -Eqi 'Export encountered errors|Error occurred prerendering|missing.*generateStaticParams' "$log"; then echo static_export
+            else echo unclassified
+            fi
+          }
+          run_stage() {
+            local label="$1"
+            shift
+            local log
+            log=$(mktemp)
+            printf '\n=== DIAGNOSTIC STAGE: %s ===\n' "$label"
+            "$@" 2>&1 | tee "$log"
+            local status=${PIPESTATUS[0]}
+            if [ "$status" -ne 0 ]; then
+              failures="${failures:+$failures,}$label"
+              if [ "$first" = none ]; then
+                first="$label"
+                kind=$(classify_error "$log")
+              fi
+            fi
+            rm -f "$log"
+            return "$status"
+          }
+          run_stage install npm ci
+          install_status=$?
+          if [ "$install_status" -eq 0 ]; then
+            run_stage lint npm run lint
+            run_stage typecheck npm run typecheck
+            run_stage ecosystem npm run test:ecosystem
+            run_stage wyoming_watch npm run test:wyoming-watch
+            run_stage place_archives npm run test:places
+            run_stage sync_pipeline npm run test:sync
+            run_stage pulse npm run test:pulse
+            run_stage filenames npm run test:filenames
+            run_stage scanner_links npm run test:scanner-archive-links
+            run_stage transcripts npm run test:transcripts
+            run_stage calendar npm run test:calendar
+            run_stage build npm run build
+            if [ "$?" -eq 0 ]; then run_stage seo npm run test:seo; fi
+          fi
+          printf 'first_failure=%s\nfailure_kind=%s\nfailed_stages=%s\n' "$first" "$kind" "${failures:-none}" >> "$GITHUB_OUTPUT"
+          printf 'First failed stage: %s\nCategory: %s\nFailed stages: %s\nBrowser tests not run. Existing CI remains authoritative.\n' "$first" "$kind" "${failures:-none}" >> "$GITHUB_STEP_SUMMARY"
+
+  report:
+    name: "Integration diagnosis: ${{ needs.probe.outputs.first_failure || 'incomplete' }} / ${{ needs.probe.outputs.failure_kind || 'unknown' }}"
+    needs: probe
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Keep diagnosis visible through check metadata
+        env:
+          FIRST_FAILURE: ${{ needs.probe.outputs.first_failure }}
+          FAILURE_KIND: ${{ needs.probe.outputs.failure_kind }}
+          FAILED_STAGES: ${{ needs.probe.outputs.failed_stages }}
+        run: |
+          printf 'First failed stage: %s\nCategory: %s\nFailed stages: %s\n' "${FIRST_FAILURE:-incomplete}" "${FAILURE_KIND:-unknown}" "${FAILED_STAGES:-unknown}"
+          test "$FIRST_FAILURE" = none
