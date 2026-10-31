@@ -21,7 +21,11 @@ if (process.argv[1]?.endsWith('/wyoming-watch-summary.mjs')) {
   const report = JSON.parse(readFileSync(process.argv[2], 'utf8'));
   console.log(summary(report));
   // Visible via the check-runs annotations API, even when artifact/log download is blocked.
-  for (const r of report.results.filter((r) => r.mode === 'parse' || r.structural || r.reason === 'source-unavailable')) {
+  // Actions caps annotations per step. One per municipality plus one grouped
+  // county notice keeps all eight municipal results accessible through the API.
+  for (const r of report.results.filter((r) => r.mode === 'parse')) {
     console.error(`::notice title=Wyoming watch::${annotation(`${r.id}: ${r.reason}${r.error ? ` — ${r.error}` : ''}`)}`);
   }
+  const others = report.results.filter((r) => r.mode !== 'parse' && (r.structural || r.reason === 'source-unavailable'));
+  if (others.length) console.error(`::notice title=Other Wyoming watch failures::${annotation(others.map((r) => `${r.id}: ${r.reason} — ${r.error}`).join('\n'))}`);
 }

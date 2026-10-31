@@ -127,10 +127,12 @@ async function watchOne(target, previous, source) {
   };
   try {
     const fetched = await source(target);
+    // A changed URL or parser is a new surface, not a change to an old hash.
+    const previousHash = previous?.url === target.url && previous?.architectureId === target.architectureId ? previous.contentHash : null;
     if (target.mode === "host-check") {
       if (fetched.hostDrift) throw fail("ENO_HOST", fetched.error || "host drift");
       const hash = hostHash(fetched.finalUrl || target.url, fetched.status);
-      return { ...base, ...judge(previous?.contentHash, hash), structural: false, contentHash: hash, status: fetched.status };
+      return { ...base, ...judge(previousHash, hash), structural: false, contentHash: hash, status: fetched.status };
     }
     if (/pdf/i.test(fetched.contentType || "") || String(fetched.body || "").startsWith("%PDF")) {
       throw fail("ENO_SURFACE", "Expected an HTML listing and received a PDF");
@@ -139,7 +141,7 @@ async function watchOne(target, previous, source) {
     const hash = contentHash(records);
     return {
       ...base,
-      ...judge(previous?.contentHash, hash),
+      ...judge(previousHash, hash),
       structural: false,
       contentHash: hash,
       records: records.length,
