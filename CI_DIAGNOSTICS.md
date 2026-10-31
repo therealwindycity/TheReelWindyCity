@@ -544,3 +544,549 @@ ok 11 - end-to-end sync chain (build-plan → extract → analyze → draft → 
 # skipped 0
 # todo 0
 # duration_ms 18049.461274
+### Command: `npm run test:ecosystem`
+```text
+
+> test:ecosystem
+> node --test tests/wyoming-ecosystem.test.mjs
+
+TAP version 13
+# Subtest: catalog covers every Wyoming county and incorporated municipality
+ok 1 - catalog covers every Wyoming county and incorporated municipality
+  ---
+  duration_ms: 0.532532
+  type: 'test'
+  ...
+# Subtest: every seat, county, and coordinate is a real reference in Wyoming
+ok 2 - every seat, county, and coordinate is a real reference in Wyoming
+  ---
+  duration_ms: 0.779143
+  type: 'test'
+  ...
+# Subtest: Cheyenne stays the only live Granicus watcher
+ok 3 - Cheyenne stays the only live Granicus watcher
+  ---
+  duration_ms: 0.124478
+  type: 'test'
+  ...
+# Subtest: generated site map matches the catalog
+ok 4 - generated site map matches the catalog
+  ---
+  duration_ms: 28.286912
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 72.835976
+```
+### Command: `npm run test:wyoming-watch`
+```text
+
+> test:wyoming-watch
+> node --test tests/wyoming-watch.test.mjs
+
+TAP version 13
+# Subtest: the roster covers every government and does not invent a URL
+ok 1 - the roster covers every government and does not invent a URL
+  ---
+  duration_ms: 0.925143
+  type: 'test'
+  ...
+# Subtest: Agenda Center hashing ignores viewstate and rejects a Granicus table
+ok 2 - Agenda Center hashing ignores viewstate and rejects a Granicus table
+  ---
+  duration_ms: 5.653199
+  type: 'test'
+  ...
+# Subtest: a packet folder ignores a Granicus invoice and a single PDF
+ok 3 - a packet folder ignores a Granicus invoice and a single PDF
+  ---
+  duration_ms: 0.483208
+  type: 'test'
+  ...
+# Subtest: the runner does not fetch uncalibrated governments or Cheyenne
+ok 4 - the runner does not fetch uncalibrated governments or Cheyenne
+  ---
+  duration_ms: 6.273673
+  type: 'test'
+  ...
+# Subtest: host drift is structural and does not parse the foreign page
+ok 5 - host drift is structural and does not parse the foreign page
+  ---
+  duration_ms: 0.363277
+  type: 'test'
+  ...
+# Subtest: the scheduled workflow does not call the Cheyenne sync
+ok 6 - the scheduled workflow does not call the Cheyenne sync
+  ---
+  duration_ms: 72.073694
+  type: 'test'
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 155.209328
+```
+### Command: `npm run test:places`
+```text
+
+> test:places
+> node --test tests/place-archives.test.mjs
+
+TAP version 13
+# Subtest: every government has its own archive repo name
+ok 1 - every government has its own archive repo name
+  ---
+  duration_ms: 0.991944
+  type: 'test'
+  ...
+# Subtest: document copy stays on the pinned host
+ok 2 - document copy stays on the pinned host
+  ---
+  duration_ms: 4.154433
+  type: 'test'
+  ...
+# Subtest: a directory-only town is not given an invented harvest URL
+ok 3 - a directory-only town is not given an invented harvest URL
+  ---
+  duration_ms: 0.149135
+  type: 'test'
+  ...
+1..3
+# tests 3
+# suites 0
+# pass 3
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 67.302462
+```
+### Command: `npm run test:sync`
+```text
+
+> test:sync
+> node --test tests/sync/sync-pipeline.test.mjs
+
+TAP version 13
+# Subtest: OM1\#2 canonical field normalization
+    # Subtest: normalizeUrl strips tracking params, keeps semantic ones, sorts the rest
+    ok 1 - normalizeUrl strips tracking params, keeps semantic ones, sorts the rest
+      ---
+      duration_ms: 5.630335
+      type: 'test'
+      ...
+    # Subtest: normalizeUrl handles relative garbage without throwing
+    ok 2 - normalizeUrl handles relative garbage without throwing
+      ---
+      duration_ms: 0.154092
+      type: 'test'
+      ...
+    # Subtest: date and time forms collapse to one canonical form each
+    ok 3 - date and time forms collapse to one canonical form each
+      ---
+      duration_ms: 0.355946
+      type: 'test'
+      ...
+    # Subtest: stableStringify ignores key order; contentHash ignores record order
+    ok 4 - stableStringify ignores key order; contentHash ignores record order
+      ---
+      duration_ms: 0.601145
+      type: 'test'
+      ...
+    1..4
+ok 1 - OM1\#2 canonical field normalization
+  ---
+  duration_ms: 7.34155
+  type: 'suite'
+  ...
+# Subtest: OM1\#2 upcoming-table extraction (semantic records, not markup)
+    # Subtest: parses the Granicus upcoming table into normalized records
+    ok 1 - parses the Granicus upcoming table into normalized records
+      ---
+      duration_ms: 5.630735
+      type: 'test'
+      ...
+    # Subtest: markup churn (session ids, nonce attrs, tracking params, class renames) does NOT change the hash
+    ok 2 - markup churn (session ids, nonce attrs, tracking params, class renames) does NOT change the hash
+      ---
+      duration_ms: 1.993491
+      type: 'test'
+      ...
+    # Subtest: a real data change (moved time) DOES change the hash
+    ok 3 - a real data change (moved time) DOES change the hash
+      ---
+      duration_ms: 0.940105
+      type: 'test'
+      ...
+    # Subtest: a page without the expected table fails loudly (ENO_TABLE), never hashes nothing
+    ok 4 - a page without the expected table fails loudly (ENO_TABLE), never hashes nothing
+      ---
+      duration_ms: 0.416838
+      type: 'test'
+      ...
+    # Subtest: bodySlug maps Granicus names onto the site vocabulary
+    ok 5 - bodySlug maps Granicus names onto the site vocabulary
+      ---
+      duration_ms: 0.144828
+      type: 'test'
+      ...
+    1..5
+ok 2 - OM1\#2 upcoming-table extraction (semantic records, not markup)
+  ---
+  duration_ms: 9.396273
+  type: 'suite'
+  ...
+# Subtest: OM1\#2 watcher CLI — seed, detect, fail closed
+    # Subtest: seed builds the baseline from the curated snapshot (no network)
+    ok 1 - seed builds the baseline from the curated snapshot (no network)
+      ---
+      duration_ms: 54.243306
+      type: 'test'
+      ...
+    # Subtest: day one is a zero-false-positive: live fixture matching the snapshot reads as UNCHANGED
+    ok 2 - day one is a zero-false-positive: live fixture matching the snapshot reads as UNCHANGED
+      ---
+      duration_ms: 56.462416
+      type: 'test'
+      ...
+    # Subtest: a semantic change is detected and pinpointed to the changed meeting
+    ok 3 - a semantic change is detected and pinpointed to the changed meeting
+      ---
+      duration_ms: 57.970306
+      type: 'test'
+      ...
+    # Subtest: a brand-new posted meeting is detected as changed
+    ok 4 - a brand-new posted meeting is detected as changed
+      ---
+      duration_ms: 59.887251
+      type: 'test'
+      ...
+    # Subtest: fetch/parse failure exits non-zero — a broken watcher never reads as “no changes”
+    ok 5 - fetch/parse failure exits non-zero — a broken watcher never reads as “no changes”
+      ---
+      duration_ms: 49.299524
+      type: 'test'
+      ...
+    # Subtest: a portal outage is recorded as source-unavailable, never as an unchanged table
+    ok 6 - a portal outage is recorded as source-unavailable, never as an unchanged table
+      ---
+      duration_ms: 8073.194188
+      type: 'test'
+      ...
+    # Subtest: a change that already failed to sync is reported but not re-attempted inside the window
+    ok 7 - a change that already failed to sync is reported but not re-attempted inside the window
+      ---
+      duration_ms: 114.317529
+      type: 'test'
+      ...
+    # Subtest: the retry window expires and the change is attempted again
+    ok 8 - the retry window expires and the change is attempted again
+      ---
+      duration_ms: 61.299022
+      type: 'test'
+      ...
+    # Subtest: a marker for a different hash never suppresses a new change
+    ok 9 - a marker for a different hash never suppresses a new change
+      ---
+      duration_ms: 58.647023
+      type: 'test'
+      ...
+    # Subtest: without the tolerance flag a portal outage still fails closed
+    ok 10 - without the tolerance flag a portal outage still fails closed
+      ---
+      duration_ms: 8070.46617
+      type: 'test'
+      ...
+    1..10
+ok 3 - OM1\#2 watcher CLI — seed, detect, fail closed
+  ---
+  duration_ms: 16656.350403
+  type: 'suite'
+  ...
+# Subtest: OM2\#1 layout-aware engine vs. column interleaving
+    # Subtest: two columns with interleaved content streams are reconstructed as two columns
+    ok 1 - two columns with interleaved content streams are reconstructed as two columns
+      ---
+      duration_ms: 675.239192
+      type: 'test'
+      ...
+    # Subtest: scanned (no text layer) pages fail with NO_TEXT, not empty success
+    ok 2 - scanned (no text layer) pages fail with NO_TEXT, not empty success
+      ---
+      duration_ms: 1.787101
+      type: 'test'
+      ...
+    # Subtest: corrupt bytes fail with CORRUPT
+    ok 3 - corrupt bytes fail with CORRUPT
+      ---
+      duration_ms: 0.827687
+      type: 'test'
+      ...
+    # Subtest: zero-byte input fails with EMPTY_INPUT
+    ok 4 - zero-byte input fails with EMPTY_INPUT
+      ---
+      duration_ms: 0.101573
+      type: 'test'
+      ...
+    # Subtest: real Cheyenne document (Jan 26 minutes) extracts as a single column with intact text
+    not ok 5 - real Cheyenne document (Jan 26 minutes) extracts as a single column with intact text
+      ---
+      duration_ms: 0.153591
+      type: 'test'
+      location: '/home/runner/work/TheReelWindyCity/TheReelWindyCity/tests/sync/sync-pipeline.test.mjs:343:3'
+      failureType: 'testCodeFailure'
+      error: "ENOENT: no such file or directory, open '/home/runner/work/TheReelWindyCity/TheReelWindyCity/public/sources/2026-01-26-minutes.pdf'"
+      code: 'ENOENT'
+      stack: |-
+        Object.openSync (node:fs:560:18)
+        readFileSync (node:fs:444:35)
+        TestContext.<anonymous> (file:///home/runner/work/TheReelWindyCity/TheReelWindyCity/tests/sync/sync-pipeline.test.mjs:344:34)
+        Test.runInAsyncScope (node:async_hooks:214:14)
+        Test.run (node:internal/test_runner/test:1047:25)
+        Suite.processPendingSubtests (node:internal/test_runner/test:744:18)
+        Test.postRun (node:internal/test_runner/test:1173:19)
+        Test.run (node:internal/test_runner/test:1101:12)
+        async Suite.processPendingSubtests (node:internal/test_runner/test:744:7)
+      ...
+    1..5
+not ok 4 - OM2\#1 layout-aware engine vs. column interleaving
+  ---
+  duration_ms: 678.272249
+  type: 'suite'
+  location: '/home/runner/work/TheReelWindyCity/TheReelWindyCity/tests/sync/sync-pipeline.test.mjs:287:1'
+  failureType: 'subtestsFailed'
+  error: '1 subtest failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: OM2\#1 + OM3\#2 extractor CLI end-to-end
+    # Subtest: extracts a faithful synthetic agenda into structured items with verbatim quotes
+    ok 1 - extracts a faithful synthetic agenda into structured items with verbatim quotes
+      ---
+      duration_ms: 154.564714
+      type: 'test'
+      ...
+    # Subtest: a scanned upload exits 1, writes nothing — the error cascade stops here
+    ok 2 - a scanned upload exits 1, writes nothing — the error cascade stops here
+      ---
+      duration_ms: 124.620348
+      type: 'test'
+      ...
+    # Subtest: a corrupt upload exits 1 with CORRUPT
+    ok 3 - a corrupt upload exits 1 with CORRUPT
+      ---
+      duration_ms: 118.118351
+      type: 'test'
+      ...
+    # Subtest: Granicus AgendaViewer chrome resolves to the underlying PDF link
+    ok 4 - Granicus AgendaViewer chrome resolves to the underlying PDF link
+      ---
+      duration_ms: 4.221428
+      type: 'test'
+      ...
+    # Subtest: normalizes protocol-relative Granicus GeneratedAgendaViewer URLs and passes full structural validation
+    ok 5 - normalizes protocol-relative Granicus GeneratedAgendaViewer URLs and passes full structural validation
+      ---
+      duration_ms: 119.241738
+      type: 'test'
+      ...
+    1..5
+ok 5 - OM2\#1 + OM3\#2 extractor CLI end-to-end
+  ---
+  duration_ms: 521.105998
+  type: 'suite'
+  ...
+# Subtest: OM2\#1 analyzer — deterministic, evidence-cited findings
+    # Subtest: rules produce the expected findings, every quote verbatim in the source text
+    ok 1 - rules produce the expected findings, every quote verbatim in the source text
+      ---
+      duration_ms: 30.629177
+      type: 'test'
+      ...
+    # Subtest: analyzer refuses to run against a meeting with no agenda.json (no silent no-ops)
+    ok 2 - analyzer refuses to run against a meeting with no agenda.json (no silent no-ops)
+      ---
+      duration_ms: 26.019746
+      type: 'test'
+      ...
+    1..2
+ok 6 - OM2\#1 analyzer — deterministic, evidence-cited findings
+  ---
+  duration_ms: 56.763965
+  type: 'suite'
+  ...
+# Subtest: OM3\#2 validation gate — nothing unsound reaches git
+    # Subtest: sound artifacts pass
+    ok 1 - sound artifacts pass
+      ---
+      duration_ms: 28.57203
+      type: 'test'
+      ...
+    # Subtest: a fabricated evidence quote in analysis.json is rejected
+    ok 2 - a fabricated evidence quote in analysis.json is rejected
+      ---
+      duration_ms: 26.639158
+      type: 'test'
+      ...
+    # Subtest: a tampered agenda item quote is rejected
+    ok 3 - a tampered agenda item quote is rejected
+      ---
+      duration_ms: 27.633487
+      type: 'test'
+      ...
+    # Subtest: a leftover .tmp write blocks the commit
+    ok 4 - a leftover .tmp write blocks the commit
+      ---
+      duration_ms: 27.787482
+      type: 'test'
+      ...
+    # Subtest: the gate passes again once the artifacts are restored
+    ok 5 - the gate passes again once the artifacts are restored
+      ---
+      duration_ms: 29.229986
+      type: 'test'
+      ...
+    1..5
+ok 7 - OM3\#2 validation gate — nothing unsound reaches git
+  ---
+  duration_ms: 140.130206
+  type: 'suite'
+  ...
+# Subtest: OM2\#2 objection drafter (mailto pivot)
+    # Subtest: generates a pre-filled mailto draft for an action-severity item
+    ok 1 - generates a pre-filled mailto draft for an action-severity item
+      ---
+      duration_ms: 27.424411
+      type: 'test'
+      ...
+    # Subtest: no verified recipient ⇒ drafts skipped with a warning, pipeline survives
+    ok 2 - no verified recipient ⇒ drafts skipped with a warning, pipeline survives
+      ---
+      duration_ms: 25.324198
+      type: 'test'
+      ...
+    1..2
+ok 8 - OM2\#2 objection drafter (mailto pivot)
+  ---
+  duration_ms: 52.86232
+  type: 'suite'
+  ...
+# Subtest: OM3\#1 payload normalization (build-plan)
+    # Subtest: flat client_payload keys build a plan
+    ok 1 - flat client_payload keys build a plan
+      ---
+      duration_ms: 24.58144
+      type: 'test'
+      ...
+    # Subtest: the deprecated nested client_payload.payload shape is tolerated with a warning
+    ok 2 - the deprecated nested client_payload.payload shape is tolerated with a warning
+      ---
+      duration_ms: 22.724623
+      type: 'test'
+      ...
+    # Subtest: an empty payload fails fast with the documented contract
+    ok 3 - an empty payload fails fast with the documented contract
+      ---
+      duration_ms: 24.045011
+      type: 'test'
+      ...
+    # Subtest: meeting id derivation from real Cheyenne document filenames
+    ok 4 - meeting id derivation from real Cheyenne document filenames
+      ---
+      duration_ms: 0.621676
+      type: 'test'
+      ...
+    1..4
+ok 9 - OM3\#1 payload normalization (build-plan)
+  ---
+  duration_ms: 72.135817
+  type: 'suite'
+  ...
+# Subtest: OM1\#1 + OM3\#1 workflow YAML hardening
+    # Subtest: sync workflow: serialized concurrency group, no cancel-in-progress
+    ok 1 - sync workflow: serialized concurrency group, no cancel-in-progress
+      ---
+      duration_ms: 7.678344
+      type: 'test'
+      ...
+    # Subtest: sync workflow: payload paths are FLAT client_payload keys (OM3\#1 fix)
+    ok 2 - sync workflow: payload paths are FLAT client_payload keys (OM3\#1 fix)
+      ---
+      duration_ms: 2.362928
+      type: 'test'
+      ...
+    # Subtest: sync workflow: no workflow expressions are interpolated inside run: blocks (injection guard)
+    ok 3 - sync workflow: no workflow expressions are interpolated inside run: blocks (injection guard)
+      ---
+      duration_ms: 1.881724
+      type: 'test'
+      ...
+    # Subtest: sync workflow: validation gates the commit; extraction/analysis are separate fail-fast steps
+    ok 4 - sync workflow: validation gates the commit; extraction/analysis are separate fail-fast steps
+      ---
+      duration_ms: 2.405383
+      type: 'test'
+      ...
+    # Subtest: watch workflow: read-only detection lane, fails closed on structure, invokes the reusable sync
+    ok 5 - watch workflow: read-only detection lane, fails closed on structure, invokes the reusable sync
+      ---
+      duration_ms: 2.9412
+      type: 'test'
+      ...
+    # Subtest: the sync clears the blocked marker once it completes
+    ok 6 - the sync clears the blocked marker once it completes
+      ---
+      duration_ms: 2.380014
+      type: 'test'
+      ...
+    # Subtest: write lane stays serialized in the sync workflow it belongs to (OM1\#1)
+    ok 7 - write lane stays serialized in the sync workflow it belongs to (OM1\#1)
+      ---
+      duration_ms: 2.553615
+      type: 'test'
+      ...
+    1..7
+ok 10 - OM1\#1 + OM3\#1 workflow YAML hardening
+  ---
+  duration_ms: 22.412644
+  type: 'suite'
+  ...
+# Subtest: end-to-end sync chain (build-plan → extract → analyze → draft → validate)
+    # Subtest: fetchDocument: HTTP fetch, PDF magic sniff, size guard
+    ok 1 - fetchDocument: HTTP fetch, PDF magic sniff, size guard
+      ---
+      duration_ms: 52.989787
+      type: 'test'
+      ...
+    # Subtest: the workflow's step sequence produces validated, committable artifacts
+    ok 2 - the workflow's step sequence produces validated, committable artifacts
+      ---
+      duration_ms: 270.686117
+      type: 'test'
+      ...
+    1..2
+ok 11 - end-to-end sync chain (build-plan → extract → analyze → draft → validate)
+  ---
+  duration_ms: 323.787601
+  type: 'suite'
+  ...
+1..11
+# tests 51
+# suites 11
+# pass 50
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 18629.856332
