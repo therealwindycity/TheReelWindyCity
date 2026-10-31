@@ -123,7 +123,7 @@ export const ARCHITECTURES: readonly ArchitectureProfile[] = [
   {
     id: "clerk-html-page",
     name: "Clerk HTML page",
-    summary: "A clerk-maintained agendas page whose vendor was not identified. The daily job reads dated document links and does not guess CivicPlus or Granicus from the URL.",
+    summary: "Clerk-maintained agenda pages. The watch checks Cody’s page and Sheridan’s linked AgendaQuick publisher; a failed parse is not a successful live update.",
     watcher: "specified",
   },
   {
@@ -231,7 +231,7 @@ const DELTAS: Record<ArchitectureId, Record<TacticId, string>> = {
     outcome: "Minutes copied into a later packet are still minutes of that earlier meeting, not a new vote.",
   },
   "clerk-html-page": {
-    watch: "The daily job reads dated document links on the clerk page. A numeric path is not treated as CivicPlus, and a Granicus table fails closed.",
+    watch: "The daily job checks Cody’s clerk page for dated document links and Sheridan’s linked AgendaQuick listing. A missing or unparseable source fails closed.",
     hash: "Once calibrated, hash visible meeting titles and dates, not the theme markup. That calibration has not been done.",
     extract: "Only a linked PDF. The HTML page itself is not a Cheyenne agenda.",
     evidence: "Same gate.",
