@@ -71,13 +71,20 @@ export default function WyomingEcosystemMap({ points }: { points: EcosystemMapPo
     return point.architectureId === filter;
   }), [points, filter]);
 
-  const selected = points.find((point) => point.id === selectedId) ?? visible[0] ?? points[0];
+  // The card must describe a government that is still on the map. If a filter
+  // hides the current selection, fall back to the first visible government
+  // instead of parking the map on a point the visitor can no longer see.
+  const selected = visible.find((point) => point.id === selectedId) ?? visible[0] ?? points[0];
 
   useEffect(() => {
     let cancelled = false;
+    let watchdog: number | undefined;
     import("maplibre-gl").then((ML) => {
       if (cancelled || !container.current || mapRef.current) return;
-      ML.setWorkerUrl(new URL("maplibre-gl/dist/maplibre-gl-worker.mjs", import.meta.url).toString());
+      // Ship the worker as a static file (public/maps) instead of relying on a
+      // bundler-emitted asset URL: the exported site is served from a project
+      // subpath, and a worker that 404s leaves the canvas blank forever.
+      ML.setWorkerUrl(asset("maps/maplibre-gl-worker.mjs"));
       const map = new ML.Map({
         container: container.current,
         style: process.env.NEXT_PUBLIC_MAP_STYLE_URL || "https://tiles.openfreemap.org/styles/positron",
@@ -91,6 +98,10 @@ export default function WyomingEcosystemMap({ points }: { points: EcosystemMapPo
         attributionControl: { compact: true },
       });
       mapRef.current = map;
+      // Never let a stalled style or tile request sit on "Loading" forever.
+      watchdog = window.setTimeout(() => {
+        if (!cancelled && !map.loaded()) setFailed(true);
+      }, 15000);
       map.touchZoomRotate.disableRotation();
       let errors = 0;
       map.on("error", (event) => {
@@ -98,6 +109,9 @@ export default function WyomingEcosystemMap({ points }: { points: EcosystemMapPo
       });
       map.on("load", () => {
         if (cancelled) return;
+        window.clearTimeout(watchdog);
+        // A slow style that eventually arrives clears a premature timeout.
+        setFailed(false);
         map.addSource("sites", { type: "geojson", data: collection(pointsRef.current) });
         map.addLayer({
           id: "county-rings",
@@ -138,7 +152,7 @@ export default function WyomingEcosystemMap({ points }: { points: EcosystemMapPo
       observer.observe(container.current);
       map.on("remove", () => observer.disconnect());
     }).catch(() => { if (!cancelled) setFailed(true); });
-    return () => { cancelled = true; mapRef.current?.remove(); mapRef.current = null; };
+    return () => { cancelled = true; window.clearTimeout(watchdog); mapRef.current?.remove(); mapRef.current = null; };
   }, []);
 
   useEffect(() => {
@@ -163,7 +177,7 @@ export default function WyomingEcosystemMap({ points }: { points: EcosystemMapPo
           <button type="button" aria-label="Reset map to Wyoming" onClick={() => mapRef.current?.flyTo({ center: CENTER, zoom: 5.45 })}><LocateFixed size={17} /></button>
         </div>
         {!ready && !failed && <div className="map-loading">Loading Wyoming’s map…</div>}
-        {failed && <div className="map-unavailable"><MapPin size={22} /><strong>Map tiles are unavailable</strong><span>The directory beside the map still lists every site.</span></div>}
+        {failed && <div className="map-unavailable"><MapPin size={22} /><strong>Map tiles are unavailable</strong><span>The list beside the map still names every government, and the <a href={asset("hub/wyoming/entities/")}>full directory</a> carries the same sites.</span></div>}
       </div>
       <div className="eco-map-side">
         <div className="eco-filters" role="group" aria-label="Filter mapped governments">

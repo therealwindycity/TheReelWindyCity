@@ -116,6 +116,13 @@ test("the scheduled workflow does not call the Cheyenne sync", async () => {
   for (const step of steps) {
     if (step.run) assert.doesNotMatch(step.run, /\$\{\{/);
   }
-  const built = spawnSync(process.execPath, ["scripts/monitor/wyoming-watch.mjs", "--seed", "--state", path.join(root, "data/wyoming-sync-state.json")], { cwd: root, encoding: "utf8" });
+  // Seed into a scratch file. Writing to data/wyoming-sync-state.json here
+  // would wipe the committed baselines every time the suite ran, which is how
+  // the daily watcher loses its history and re-learns every surface.
+  const scratch = path.join(mkdtempSync(path.join(tmpdir(), "wy-watch-seed-")), "state.json");
+  const built = spawnSync(process.execPath, ["scripts/monitor/wyoming-watch.mjs", "--seed", "--state", scratch], { cwd: root, encoding: "utf8" });
   assert.equal(built.status, 0, built.stderr);
+  const seeded = JSON.parse(readFileSync(scratch, "utf8"));
+  assert.equal(seeded.version, 1);
+  assert.equal(Object.keys(seeded.targets).length, watchTargets(COUNTIES, MUNICIPALITIES).length);
 });

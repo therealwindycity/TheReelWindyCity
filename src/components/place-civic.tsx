@@ -28,7 +28,9 @@ export function PlaceCivic({ place }: { place: CivicIdentity }) {
               <div>
                 <div className="eyebrow"><span className="eyebrow-dot" /> {place.kind.toUpperCase()} · {place.countyName.toUpperCase()}</div>
                 <h1>{place.title} civic record.</h1>
-                <p>This is the {place.title} civic, not Cheyenne’s. The shell, the archive, and the documents follow this government. Cheyenne’s ordinances are not relabeled as {place.title}’s.</p>
+                {place.cheyenne
+                  ? <p>This is the {place.title} civic: the live watcher, the archive, and the documents all follow this government. No other municipality is relabeled as Cheyenne.</p>
+                  : <p>This is the {place.title} civic, not Cheyenne’s. The shell, the archive, and the documents follow this government. Cheyenne’s ordinances are not relabeled as {place.title}’s.</p>}
               </div>
               <div className="overview-intro-actions">
                 {place.cheyenne && <a className="button button-primary" href={asset("")}>Enter the full Cheyenne council record <ArrowUpRight size={14} /></a>}
@@ -51,7 +53,7 @@ export function PlaceCivic({ place }: { place: CivicIdentity }) {
             <section className="eco-scope">
               <h2>What changes with this click</h2>
               <ul>
-                <li>The wordmark, the meetings, and the document library are {place.title}’s. Cheyenne’s January 26 ordinances stay on the Cheyenne civic.</li>
+                <li>The wordmark, the meetings, and the document library are {place.title}’s. {place.cheyenne ? "This is where the January 26 ordinances already live." : "Cheyenne’s January 26 ordinances stay on the Cheyenne civic."}</li>
                 <li>The archive repo is {place.repo}. Overflow repos are created by the scraper, not by hand, when more files are copied.</li>
                 <li>{county ? `${county.name} County’s clerk site is a different government from any city in it.` : "County and city remain different publishers."}</li>
                 <li>Scanner audio, where a public Broadcastify feed is already in the desk, is linked. Premium audio is not downloaded without a session.</li>

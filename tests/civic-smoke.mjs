@@ -128,10 +128,13 @@ try {
   const meetingIndex = JSON.parse(await readFile('public/data/meetings.json', 'utf8'));
   const ecosystem = JSON.parse(await readFile('src/data/wyoming-ecosystem.json', 'utf8'));
   const statewidePages = 3 + ecosystem.counties.length * 2 + ecosystem.municipalities.length * 2;
+  // Homepage, meetings, transcripts, MyNewSpace, four hub pages, and the five
+  // public-shell pages (explore, public safety, workspace, community, about).
+  const shellPages = 5;
   const sitemapLocations = [...sitemapText.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
-  const expectedSitemap = meetingIndex.meetings.length + 8 + statewidePages;
+  const expectedSitemap = meetingIndex.meetings.length + 8 + shellPages + statewidePages;
   if (sitemapResponse.status() !== 200 || sitemapLocations.length !== expectedSitemap) {
-    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, the MyNewSpace profile, ${statewidePages} statewide pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
+    throw new Error(`Expected homepage, meeting/transcript indexes, four civic hub pages, the MyNewSpace profile, ${shellPages} site pages, ${statewidePages} statewide pages, and all ${meetingIndex.meetings.length} meeting URLs in sitemap; found ${sitemapLocations.length}`);
   }
   const newspaceResponse = await context.request.get(new URL('mynewspace/', publicBase).toString());
   const newspaceHtml = await newspaceResponse.text();
@@ -171,6 +174,32 @@ try {
       throw new Error(`Expected dedicated ${hub.path} civic hub page with source-backed content`);
     }
   }
+  // The statewide ecosystem hub is the one page whose value is entirely its
+  // 122 records plus the downloadable map. Assert the exported markup and the
+  // GeoJSON itself instead of trusting the browser-only map to prove it.
+  const wyomingResponse = await context.request.get(new URL('hub/wyoming/', publicBase).toString());
+  const wyomingHtml = await wyomingResponse.text();
+  if (wyomingResponse.status() !== 200) throw new Error(`Expected the Wyoming ecosystem hub (status ${wyomingResponse.status()})`);
+  for (const marker of ['DISPARATE SITES', 'eco-map-canvas', 'eco-map-list', 'Download the site map', 'maps/wyoming-government-sites.geojson', 'Loading Wyoming’s map']) {
+    if (!wyomingHtml.includes(marker)) throw new Error(`Wyoming ecosystem hub is missing "${marker}"`);
+  }
+  const listEntries = (wyomingHtml.match(/<ul class="eco-map-list"[^>]*>(?<list>[\s\S]*?)<\/ul>/)?.[1].match(/<li>/g) || []).length;
+  const expectedEntries = ecosystem.counties.length + ecosystem.municipalities.length;
+  if (listEntries !== expectedEntries) {
+    throw new Error(`Wyoming hub lists ${listEntries} governments in the map directory, expected ${expectedEntries}`);
+  }
+  const geojsonResponse = await context.request.get(new URL('maps/wyoming-government-sites.geojson', publicBase).toString());
+  const geojson = JSON.parse(await geojsonResponse.text());
+  if (geojsonResponse.status() !== 200 || geojson.features?.length !== expectedEntries) {
+    throw new Error(`Downloadable Wyoming site map holds ${geojson.features?.length} features, expected ${expectedEntries}`);
+  }
+  for (const feature of geojson.features) {
+    if (!/^https:\/\//.test(String(feature.properties?.website || 'https://unrecorded.example'))) {
+      throw new Error(`Unexpected website value on ${feature.id}`);
+    }
+  }
+  console.log(`PASS: Wyoming ecosystem hub exports ${listEntries} mapped governments and a matching ${geojson.features.length}-feature site map`);
+
   const historicalMeetings = meetingIndex.meetings.filter((meeting) => !meeting.upcoming);
   const oldestMeeting = historicalMeetings.reduce((oldest, meeting) => meeting.date < oldest.date ? meeting : oldest);
   const latestMeeting = historicalMeetings.reduce((latest, meeting) => meeting.date > latest.date ? meeting : latest);
