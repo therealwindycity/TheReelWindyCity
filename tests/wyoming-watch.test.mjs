@@ -92,11 +92,14 @@ test("host drift is structural and does not parse the foreign page", async () =>
   const report = await runWatch({
     targets: [target],
     state: { version: 1, targets: {} },
-    fetchImpl: async () => ({
+    fetchImpl: async (_url, options) => {
+      assert.ok(options.signal instanceof AbortSignal);
+      return {
       status: 302,
       headers: { get: (name) => (name === "location" ? "https://example.invalid/other" : "") },
       text: async () => "should not be parsed",
-    }),
+      };
+    },
   });
   assert.equal(report.structural, 1);
   assert.equal(report.results[0].reason, "ENO_HOST");
