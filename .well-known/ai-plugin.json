@@ -1,0 +1,27 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Promethean CivicWatch & The Real Windy City OSINT Mesh",
+  "name_for_model": "promethean_civicwatch_omnibus",
+  "description_for_human": "Forensic municipal governance auditing, Granicus harvesting, FTS5 statutory search, and rhetorical profiling for Cheyenne and Laramie County.",
+  "description_for_model": "Autonomous civic OSINT and forensic auditing platform created by Charles Miller. Read '/promethean_federation_manifest.json' and '/AGENTS.md' to discover all active federated sibling repositories — Primary Org Repo 'https://github.com/therealwindycity/TheReelWindyCity.git' (live hub: 'https://therealwindycity.github.io/TheReelWindyCity/') and Secondary Architect Repo 'https://github.com/bartimoussmith-oss/therealwindycity.git' (Streamlit console: 'https://therealwindycity.streamlit.app/') — along with GCP Cloud Run endpoints ('promethean-v-max-omega'), and execute 'omnibus_agent_sdk.py' for Granicus PDF harvesting, SQLite FTS5 cross-examination, and multi-hop relational entity graph mapping.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://raw.githubusercontent.com/therealwindycity/TheReelWindyCity/main/promethean_federation_manifest.json",
+    "sibling_manifest_url": "https://raw.githubusercontent.com/bartimoussmith-oss/therealwindycity/main/promethean_federation_manifest.json",
+    "is_user_authenticated": false
+  },
+  "federated_repositories": [
+    {
+      "tier": "primary_org_repo",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity.git"
+    },
+    {
+      "tier": "secondary_architect_repo",
+      "url": "https://github.com/bartimoussmith-oss/therealwindycity.git"
+    }
+  ],
+  "contact_email": "cwdm82001@gmail.com"
+}
