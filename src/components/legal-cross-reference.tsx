@@ -1,4 +1,4 @@
-import { citedWyomingStatutes, findLegalReview, matchedMinutes, minutesDiscovery, potentialShortReadingInterval } from "@/lib/legal-cross-reference";
+import { citedWyomingStatutes, findLegalReview, matchedMinutes, matchedSupportingRecords, minutesDiscovery, potentialShortReadingInterval } from "@/lib/legal-cross-reference";
 import styles from "./legal-cross-reference.module.css";
 
 const statusLabels = {
@@ -10,6 +10,7 @@ export default function LegalCrossReference({ meetingId, itemNumber, text, kind,
   const review = findLegalReview(meetingId, itemNumber, text);
   const citations = citedWyomingStatutes(text);
   const minutes = matchedMinutes(meetingId, itemNumber, text);
+  const supporting = matchedSupportingRecords(meetingId, itemNumber, text);
   const timingFlag = potentialShortReadingInterval(minutes);
   const discovery = minutesDiscovery(meetingId);
   const readingEvidence = minutes.some(e => e.reading !== null);
@@ -17,6 +18,8 @@ export default function LegalCrossReference({ meetingId, itemNumber, text, kind,
   const city = meetingId.startsWith("city-council-");
   const annexation = city && /\bannex(?:ation|ing|ed)?\b/i.test(text);
   const zoning = city && /\bzoning|unified development code\b/i.test(text);
+  const budgetTransfer = citations.some(c => c === "16-4-112");
+  const budgetIncrease = citations.some(c => c === "16-4-113");
   const councilOrdinance = city && (/^ordinance\b/i.test((kind ?? "").trim()) || /^ordinance\b/i.test(text.replace(/^\[CA\]\s*/i, "")));
   return (
     <details className={styles.panel}>
@@ -39,9 +42,23 @@ export default function LegalCrossReference({ meetingId, itemNumber, text, kind,
         {sourceUrl && <p><a href={sourceUrl} target="_blank" rel="noreferrer">Source agenda ↗</a></p>}
         {citations.length ? <><h4>Statutes cited in this agenda item</h4><ul>{citations.map((citation) => <li key={citation}><a href={`https://wyoleg.gov/statutes/compress/title${citation.split("-")[0]}.pdf`} target="_blank" rel="noreferrer">Wyo. Stat. § {citation} ↗</a> — cited in the agenda; authority and applicability not independently verified.</li>)}</ul></> : <p>No Wyoming statute citation was detected in the indexed agenda text. This does not mean none applies.</p>}
         {(annexation || zoning) && <><h4>Potential subject-specific authorities</h4><ul>{annexation && <li><a href="https://wyoleg.gov/statutes/compress/title15.pdf" target="_blank" rel="noreferrer">Wyo. Stat. §§ 15-1-401–410 ↗</a> — annexation authority, notices, hearing and conditions may be relevant; land ownership and statutory exceptions matter.</li>}{zoning && <li><a href="https://wyoleg.gov/statutes/compress/title15.pdf" target="_blank" rel="noreferrer">Wyo. Stat. §§ 15-1-601–611 ↗</a> — zoning powers and procedures may be relevant, together with the local UDC and law effective at the time.</li>}</ul><p>Notice, hearing, jurisdiction and applicable exceptions remain unverified.</p></>}
+        {(budgetTransfer || budgetIncrease) && <><h4>Candidate fiscal procedure checks</h4><p>The item cites the following sections; check whether each actually applies, statutory amendments, and local requirements.</p><ul>{budgetTransfer && <li><a href="https://law.justia.com/codes/wyoming/2025/title-16/chapter-4/article-1/section-16-4-112/" target="_blank" rel="noreferrer">Wyo. Stat. § 16-4-112 (2025) ↗</a>: transfer by resolution, at the budget officer’s request or upon the governing body’s own motion after publication of notice; verify unencumbered or unexpended balances and which branch applies. <strong>Not verified.</strong></li>}{budgetIncrease && <li><a href="https://law.justia.com/codes/wyoming/2025/title-16/chapter-4/article-1/section-16-4-113/" target="_blank" rel="noreferrer">Wyo. Stat. § 16-4-113 (2025) ↗</a>: a general-fund budget increase may be made by resolution and the source of revenue must be shown. <strong>Not verified.</strong></li>}</ul><p>These unofficial 2025 versions are starting points; verify official law in force on the relevant date.</p></>}
         {councilOrdinance && <><h4>Candidate ordinance passage checks</h4><p>For city ordinances, <a href="https://wyoleg.gov/statutes/compress/title15.pdf" target="_blank" rel="noreferrer">Wyo. Stat. §§ 15-1-115–117 ↗</a> address readings, vote, publication and amendment; confirm applicability, the law as of the action date, and any exceptions.</p><ul><li><strong>Three readings and elapsed time:</strong> {readingEvidence ? "Partial candidate evidence below; complete procedure not verified." : "Not verified; no matching reading records were found."}</li><li><strong>Passage vote:</strong> {finalEvidence ? "A final approval motion may be recorded below; the vote threshold is not verified." : "Not verified; no matching final approval was identified."}</li><li><strong>Publication and effective date:</strong> Not verified; locate the signed text and publication record.</li></ul></>}
         <p>For other requirements and governing authority, records have not yet been established. Not every agenda entry is an ordinance; no generic passage rule is assumed for non-ordinance items.</p>
         <p><a href="https://wyoleg.gov/statutes/compress/title15.pdf" target="_blank" rel="noreferrer">Browse Wyoming Title 15 ↗</a> · <a href="https://www.cheyennecity.org/Your-Government/Departments/City-Clerk/City-CodeUDC" target="_blank" rel="noreferrer">Cheyenne code and UDC ↗</a></p>
+      </div>}
+      {supporting.length > 0 && <div className={styles.content}>
+        <h4>Supporting records and candidate evidence</h4>
+        <p>These documents were linked to this agenda entry. They may be drafts or staff assertions, not signed enactments or proof of service, publication, hearing, or legality. Keyword excerpts are leads only; wording is whitespace-normalized.</p>
+        {supporting.map((doc) => <section key={doc.url} className={styles.requirement}>
+          <h5><a href={doc.url} target="_blank" rel="noreferrer">{doc.label} ↗</a></h5>
+          {doc.origin && <p>{doc.origin}</p>}
+          {doc.fetchedAt && <p>Indexed {doc.fetchedAt}{doc.sha256 ? ` · SHA-256 ${doc.sha256}` : ""}.</p>}
+          {doc.lastError && <p>Latest scan failed ({doc.lastAttempt}): {doc.lastError}{doc.fetchedAt || doc.origin ? "; prior extraction shown." : "."}</p>}
+          {!doc.fetchedAt && !doc.origin && !doc.lastError && <p>Document linked; automated text indexing is queued.</p>}
+          {doc.citations.length > 0 && <p>Wyoming citations appearing in this document (applicability and version not verified): {doc.citations.map((citation,index) => <span key={citation}>{index > 0 && " · "}<a href={`https://wyoleg.gov/statutes/compress/title${citation.split("-")[0]}.pdf`} target="_blank" rel="noreferrer">§ {citation} ↗</a></span>)}</p>}
+          {doc.snippets.length > 0 && <ul>{doc.snippets.map((snippet,index) => <li key={`${snippet.topic}-${index}`}><strong>{snippet.label} mention:</strong> <q>{snippet.excerpt}</q></li>)}</ul>}
+        </section>)}
       </div>}
       {minutes.length === 0 && <div className={styles.content}><h4>Automated minutes search</h4><p>{discovery?.available ? "Minutes were indexed, but no sufficiently distinct item match was found; this is not evidence of a procedural failure." : discovery?.lastError ? `Minutes could not be extracted on ${discovery.lastAttempt}: ${discovery.lastError}.` : discovery?.sourceUrl ? "Minutes have not yet been indexed; automated attempts continue." : "No minutes source is indexed for this meeting."}</p>{discovery?.sourceUrl && <p><a href={discovery.sourceUrl} target="_blank" rel="noreferrer">Available minutes source ↗</a></p>}</div>}
       {minutes.length > 0 && <div className={styles.content}>

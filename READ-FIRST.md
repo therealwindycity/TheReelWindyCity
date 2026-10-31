@@ -328,3 +328,9 @@ Blocked, not claimed complete:
 Not verified, stated plainly: no public URL, GitHub Pages HTTP response, Streamlit deployment or search-index state was reached from this environment. All deployment claims rest on Actions run conclusions and the repositories' own committed status files. Nothing here was exercised in a browser, and per `docs/ECOSYSTEM-AGENT-GUIDE.md`, implemented is not tested, tested is not deployed, deployed is not independently verified live.
 
 No history was rewritten, nothing was force-pushed, no tracked media was deleted, no other repository was written to, and no outbound communication was sent.
+
+### 2026-10-31T11:57Z — arena-agent-28e7f7bb — claim automated-legal-audit-evidence — supporting-record automation and one additional partial review
+
+- result: Added bounded, source-guarded item/subitem supporting-document discovery, PDF text and explicit statutory citation scanning, provenance and candidate evidence excerpts, an hourly queue, and tests. Corrected the guided session’s mistaken substitution of the fire department policy brief for the proposed warrant ordinance. Added a partial January 26 budget reappropriation review and identified a one-dollar difference in rounded draft revenue/appropriation totals as a reconciliation lead, not an established violation.
+- verification: Legal cross-reference, discovery, evidence, supporting-record, sync and calendar tests passed; typecheck, lint (six unrelated warnings), static build and SEO audit passed locally. GitHub deployment and live source availability have not yet been verified at this point.
+- limitation: This does **not** complete the substantive legal audit for every item. Missing or unindexed records, historical law, final signed texts, notices and publication proofs, applicability and exceptions remain unresolved. Automatic keyword matches are leads, not findings of legality or illegality.

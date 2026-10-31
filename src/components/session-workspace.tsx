@@ -20,7 +20,8 @@ export function OrdinanceIcon({ ordinance, size = 21 }: { ordinance: Ordinance; 
   return <Layers size={size}/>;
 }
 export function officialDocument(id: string, title: string, originalUrl: string): SourceDocument {
-  const local = officialSourcePath(id);
+  // The bundled warrant PDF is a fire-department policy brief, not the linked ordinance draft.
+  const local = id === "2026-01-26-warrants" ? null : officialSourcePath(id);
   return { title, kind: "document", url: local ? asset(local) : originalUrl, originalUrl, downloadUrl: originalUrl, external: !local };
 }
 export const transcriptDocument: SourceDocument = { title: "City Council transcript · January 26, 2026", kind: "text", url: sourceContentUrl(TRANSCRIPT_REPO, MEETING.transcriptPath), originalUrl: githubUrl(TRANSCRIPT_REPO, MEETING.transcriptPath), downloadUrl: rawUrl(TRANSCRIPT_REPO, MEETING.transcriptPath), repo: TRANSCRIPT_REPO, path: MEETING.transcriptPath, warning: "Auto-generated captions can contain errors, particularly names. Verify quotations against the official meeting video." };

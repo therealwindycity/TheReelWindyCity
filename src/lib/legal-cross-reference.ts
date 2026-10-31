@@ -1,6 +1,7 @@
 import crossReferences from "@/data/legal-cross-references.json";
 import autoData from "@/data/legal-audit-generated.json";
 import evidenceData from "@/data/legal-evidence-generated.json";
+import supportData from "@/data/legal-support-generated.json";
 
 export type LegalEvidence = { label: string; url: string };
 export type LegalRequirement = {
@@ -58,4 +59,11 @@ export function potentialShortReadingInterval(evidence: AutomatedEvidence[]): { 
 export type MinutesDiscovery = { sourceUrl: string | null; fetchedAt: string | null; lastAttempt: string | null; lastError: string | null; available: boolean };
 export function minutesDiscovery(meetingId: string): MinutesDiscovery | undefined {
   return (evidenceData.sources as Record<string, MinutesDiscovery>)[meetingId];
+}
+
+export type SupportingRecord = { label: string; url: string; origin: string | null; fetchedAt: string | null; lastAttempt: string | null; lastError: string | null; sha256: string | null; citations: string[]; snippets: { topic: string; label: string; excerpt: string }[] };
+export function matchedSupportingRecords(meetingId: string, itemNumber: string | number, text: string): SupportingRecord[] {
+  const records = supportData.meetings as Record<string, Record<string, {itemText: string; documents: SupportingRecord[]}>>;
+  const record = records[meetingId]?.[String(itemNumber)];
+  return record?.itemText === text ? record.documents : [];
 }

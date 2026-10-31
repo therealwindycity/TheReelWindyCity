@@ -26,6 +26,7 @@ jobs:
           npm run test:legal-cross-reference
           npm run test:legal-audit
           npm run test:legal-evidence
+          npm run test:legal-support
       - name: Wyoming ecosystem catalog invariants
         run: |
           set -o pipefail

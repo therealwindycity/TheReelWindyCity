@@ -14,7 +14,7 @@ function loadTs(path, overrides = {}) {
   new Function("require", "module", "exports", code)(localRequire, mod, mod.exports);
   return mod.exports;
 }
-const lib = loadTs("../src/lib/legal-cross-reference.ts", { "@/data/legal-cross-references.json": data, "@/data/legal-audit-generated.json": { meetings: {} }, "@/data/legal-evidence-generated.json": { meetings: {}, sources: {} } });
+const lib = loadTs("../src/lib/legal-cross-reference.ts", { "@/data/legal-cross-references.json": data, "@/data/legal-audit-generated.json": { meetings: {} }, "@/data/legal-evidence-generated.json": { meetings: {}, sources: {} }, "@/data/legal-support-generated.json": { meetings: {} } });
 const component = loadTs("../src/components/legal-cross-reference.tsx", {
   "@/lib/legal-cross-reference": lib, "./legal-cross-reference.module.css": { panel: "panel", content: "content", caution: "caution", requirement: "requirement" },
 });
@@ -25,7 +25,7 @@ function render(props) { return renderToStaticMarkup(React.createElement(compone
 
 test("curated reviews use unique exact keys and evidence-backed statuses", () => {
   const keys = new Set();
-  assert.equal(data.items.length, 6);
+  assert.equal(data.items.length, 7);
   for (const review of data.items) {
     const key = `${review.meetingId}:${review.itemNumber}`;
     assert(!keys.has(key), `duplicate ${key}`); keys.add(key);
@@ -60,14 +60,14 @@ test("review renders sources, evidence, status and caution; unmatched items rema
   assert(!unknown.includes("Planning hearing date discrepancy"));
 });
 
-test("January 26 captured agenda and subitems have unique numbers and all six reviews attach", () => {
+test("January 26 captured agenda and subitems have unique numbers and all seven reviews attach", () => {
   const agenda = JSON.parse(readFileSync(new URL("../src/data/jan-26-agenda-items.json", import.meta.url), "utf8"));
   assert.equal(agenda.length, 38);
   assert.equal(new Set(agenda.map((item) => item.number)).size, agenda.length);
   assert(agenda.some((item) => item.number === "18(a)"));
   assert(agenda.some((item) => item.number === "22(d)"));
   const matched = agenda.filter((item) => lib.findLegalReview("city-council-2026-01-26", item.number, item.text));
-  assert.deepEqual(matched.map((item) => item.number), ["6", "7", "8", "9", "10", "14"]);
+  assert.deepEqual(matched.map((item) => item.number), ["6", "7", "8", "9", "10", "11", "14"]);
 });
 
 test("automatic citation extraction is limited to explicit Wyoming citations", () => {
@@ -93,7 +93,7 @@ test("timing conflicts are flagged for review, never treated as proven illegalit
 test("matched evidence is guarded by exact agenda text and renders the source and caution", () => {
   const entry = {date:"2026-02-09",reading:3,outcome:"approval motion recorded as carried",excerpt:"Motion carried.",url:"https://cheyenne.granicus.com/minutes",transcription:null};
   const stub = { meetings:{"city-council-2026-01-26": {"99": {itemText:"ORDINANCE – text", evidence:[entry]}}},sources:{} };
-  const withEvidence = loadTs("../src/lib/legal-cross-reference.ts", {"@/data/legal-cross-references.json":data,"@/data/legal-audit-generated.json":{meetings:{}},"@/data/legal-evidence-generated.json":stub});
+  const withEvidence = loadTs("../src/lib/legal-cross-reference.ts", {"@/data/legal-cross-references.json":data,"@/data/legal-audit-generated.json":{meetings:{}},"@/data/legal-evidence-generated.json":stub,"@/data/legal-support-generated.json":{meetings:{}}});
   assert.equal(withEvidence.matchedMinutes("city-council-2026-01-26", 99, "different text").length,0);
   const view = loadTs("../src/components/legal-cross-reference.tsx", {"@/lib/legal-cross-reference":withEvidence,"./legal-cross-reference.module.css":{panel:"panel",content:"content",caution:"caution",requirement:"requirement"}});
   const html=renderToStaticMarkup(React.createElement(view.default,{meetingId:"city-council-2026-01-26",itemNumber:99,text:"ORDINANCE – text",kind:"Ordinance"}));
@@ -101,4 +101,22 @@ test("matched evidence is guarded by exact agenda text and renders the source an
   assert(html.includes("Possible text matches"));
   assert(html.includes("Motion carried"));
   assert(html.includes("vote threshold is not verified"));
+});
+
+test("supporting records require the original agenda text and display limitations and sources", () => {
+  const doc={label:"Supporting Document",url:"https://cheyenne.granicus.com/MetaViewer.php?meta_id=123",origin:null,fetchedAt:"2026-01-26T00:00:00Z",lastAttempt:null,lastError:null,sha256:"abc",citations:["16-4-112"],snippets:[{topic:"notice",label:"Notice or service",excerpt:"Notice was not mailed."}]};
+  const support={meetings:{"city-council-2026-10-26":{"99":{itemText:"Exact item",documents:[doc]}}}};
+  const helper=loadTs("../src/lib/legal-cross-reference.ts",{"@/data/legal-cross-references.json":data,"@/data/legal-audit-generated.json":{meetings:{}},"@/data/legal-evidence-generated.json":{meetings:{},sources:{}},"@/data/legal-support-generated.json":support});
+  assert.equal(helper.matchedSupportingRecords("city-council-2026-10-26",99,"different item").length,0);
+  const view=loadTs("../src/components/legal-cross-reference.tsx",{"@/lib/legal-cross-reference":helper,"./legal-cross-reference.module.css":{panel:"panel",content:"content",caution:"caution",requirement:"requirement"}});
+  const html=renderToStaticMarkup(React.createElement(view.default,{meetingId:"city-council-2026-10-26",itemNumber:99,text:"Exact item"}));
+  assert(html.includes("Notice was not mailed."));
+  assert(html.includes("not signed enactments or proof"));
+  assert(html.includes("title16.pdf"));
+});
+test("budget review identifies an apparent rounded difference without asserting a violation", () => {
+  const html=render({meetingId:"city-council-2026-01-26",itemNumber:11,text:"Re-appropriating the Fiscal Year 2026 Budget"});
+  assert(html.includes("322,965,585") && html.includes("322,965,584"));
+  assert(html.includes("does not establish an unlawful"));
+  assert(html.includes("budget-officer-request branch"));
 });
