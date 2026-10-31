@@ -10,7 +10,7 @@ on:
     - cron: "17 * * * *"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -72,6 +72,25 @@ jobs:
         with:
           path: out
 
+      - name: Upload Build Diagnostics Artifact (Runs Even On Failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pages-build-diagnostics
+          path: CI_DIAGNOSTICS.md
+          if-no-files-found: ignore
+      - name: Publish Build Diagnostics to Repo (Runs Even On Failure)
+        if: always()
+        run: |
+          if [ -f "CI_DIAGNOSTICS.md" ]; then
+            git config user.name "Promethean-DiagnosticBot"
+            git config user.email "cwdm82001@gmail.com"
+            git pull --rebase origin main || true
+            git add CI_DIAGNOSTICS.md
+            git commit -m "Pages Build Telemetry: Captured build logs [skip ci]" || true
+            git push origin HEAD:main || true
+          fi
+
   deploy:
     needs: build
     # The github-pages environment is protected to the default branch; feature
@@ -92,15 +111,3 @@ jobs:
         run: node scripts/check-live-seo.mjs --retries 6 --delay 10000
         env:
           LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
-
-      - name: Publish CI Diagnostics (Runs Even On Failure)
-        if: always()
-        run: |
-          if [ -f "CI_DIAGNOSTICS.md" ]; then
-            git config user.name "Promethean-DiagnosticBot"
-            git config user.email "cwdm82001@gmail.com"
-            git pull --rebase origin main || true
-            git add CI_DIAGNOSTICS.md
-            git commit -m "CI Telemetry: Captured test and build logs [skip ci]" || true
-            git push origin HEAD:main || true
-          fi
