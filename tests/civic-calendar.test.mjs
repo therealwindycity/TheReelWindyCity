@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -153,8 +153,8 @@ test("cancelled, rescheduled, and minutes-linked records keep calendar status an
 
 test("preserves raw notes verbatim while keeping snapshot, watcher, schedule-check, and blocked-sync timestamps distinct", () => {
   const built = collectMeetings({ now: new Date(DENVER_AFTERNOON) });
-  assert.equal(built.stats.totalMeetings, 1003);
-  assert.equal(built.stats.upcomingMeetings, 0);
+  assert.equal(built.stats.totalMeetings, 1006);
+  assert.equal(built.stats.upcomingMeetings, 3);
   assert.equal(built.stats.sameDayUnverifiedMeetings, 0);
   assert.equal(built.stats.totalDocuments, 5118);
   assert.equal(built.stats.totalTranscriptFiles, 85);
@@ -165,7 +165,7 @@ test("preserves raw notes verbatim while keeping snapshot, watcher, schedule-che
 
   // Distinct timestamps: never substitute watcher/schedule check for snapshot capture date.
   assert.equal(built.captured, "2026-10-03");
-  assert.equal(built.watcherBaselineCheckedAt, "2026-10-04T01:51:19.660Z");
+  assert.equal(built.watcherBaselineCheckedAt, "2026-10-27T00:38:03.527Z");
   assert.equal(built.liveCheck, null);
   assert.equal(built.resolvedAt, "2026-10-21T18:00:00.000Z");
 
@@ -184,9 +184,13 @@ test("preserves raw notes verbatim while keeping snapshot, watcher, schedule-che
   assert.equal(oct5?.upcoming, false);
 
   // Blocked download from `data/sync-blocked.json` is recorded as unarchived discovery without fake items.
-  assert.equal(built.pipeline?.blockedSync?.attemptedAt, "2026-10-19T20:56:47Z");
-  assert.deepEqual(built.pipeline?.blockedSync?.meetingIds, ["finance-committee-2026-10-20"]);
-  const blockedEntry = built.pipeline?.discoveredPostings?.find((entry) => entry.meetingId === "finance-committee-2026-10-20");
+  assert.equal(built.pipeline?.blockedSync?.attemptedAt, "2026-10-30T02:03:04Z");
+  assert.deepEqual(built.pipeline?.blockedSync?.meetingIds, ["public-services-committee-2026-11-02", "finance-committee-2026-11-03"]);
+  // A meeting can be discovered twice (once from the posted table, once from a
+  // blocked download). The blocked-sync record itself must stay a failure.
+  const blockedEntry = built.pipeline?.discoveredPostings?.find(
+    (entry) => entry.meetingId === "finance-committee-2026-11-03" && entry.source === "sync-blocked",
+  );
   assert.ok(blockedEntry);
   assert.equal(blockedEntry.archiveStatus, "download-failed");
   assert.equal(blockedEntry.promotedWithValidatedItems, false);
@@ -195,10 +199,15 @@ test("preserves raw notes verbatim while keeping snapshot, watcher, schedule-che
 
 test("rejects corrupt extracted directories under data/meetings without mutating last-known-good records", () => {
   const corruptDir = path.join(ROOT, "data", "meetings", "2026", "city-council-2026-10-26");
+  const agendaPath = path.join(corruptDir, "agenda.json");
+  const originalAgenda = existsSync(agendaPath) ? readFileSync(agendaPath, "utf8") : null;
+  const createdTree = !existsSync(path.join(ROOT, "data", "meetings"));
+  // Collect the clean, last-known-good snapshot before injecting the corrupt file.
+  const baseline = collectMeetings({ now: new Date(DENVER_AFTERNOON) });
   try {
     mkdirSync(corruptDir, { recursive: true });
     writeFileSync(
-      path.join(corruptDir, "agenda.json"),
+      agendaPath,
       JSON.stringify({ schemaVersion: 1, meetingId: "city-council-2026-10-26", items: [{ number: "1", quote: "fabricated" }] }),
     );
     const built = collectMeetings({ now: new Date(DENVER_AFTERNOON) });
@@ -207,15 +216,21 @@ test("rejects corrupt extracted directories under data/meetings without mutating
       "corrupt extraction directory must be flagged in pipeline.rejectedExtractions",
     );
     assert.equal(
-      built.meetings.find((m) => m.id === "city-council-2026-10-26"),
-      undefined,
+      built.meetings.find((m) => m.id === "city-council-2026-10-26")?.items?.length ?? 0,
+      0,
       "unvalidated extraction must never be promoted into published meeting records",
     );
-    // Last-known-good snapshot records remain completely intact.
-    assert.equal(built.stats.totalMeetings, 1003);
+    // Last-known-good snapshot records remain completely intact: only the
+    // rejected record can leave the published index, never any other meeting.
+    const rejectedCounts = baseline.meetings.some((m) => m.id === "city-council-2026-10-26") ? 1 : 0;
+    assert.equal(built.stats.totalMeetings, baseline.stats.totalMeetings - rejectedCounts);
     assert.equal(built.meetings.find((m) => m.id === "public-services-committee-2026-10-05")?.items?.length, 11);
   } finally {
-    rmSync(path.join(ROOT, "data", "meetings"), { recursive: true, force: true });
+    // Restore exactly what this test touched. Deleting the whole data/meetings
+    // tree used to erase the committed extraction snapshots on every local run.
+    if (originalAgenda !== null) writeFileSync(agendaPath, originalAgenda);
+    else rmSync(corruptDir, { recursive: true, force: true });
+    if (createdTree) rmSync(path.join(ROOT, "data", "meetings"), { recursive: true, force: true });
   }
 });
 

@@ -57,6 +57,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.5,
     },
+    // The public shell's own pages. They are linked from every header and
+    // footer, so leaving them out of the sitemap made them reachable but
+    // unlisted; the export audit treats that as a regression.
+    {
+      url: siteUrl("explore/"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: siteUrl("explore/public-safety/"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: siteUrl("workspace/"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: siteUrl("community/"),
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.5,
+    },
+    {
+      url: siteUrl("about/"),
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
     {
       url: siteUrl("hub/"),
       lastModified,

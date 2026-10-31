@@ -312,7 +312,10 @@ if (!sitemap) {
     ...ecosystem.counties.map((county) => `civic/counties/${county.id}/`),
   ];
   const civicUrls = civicRoutes.map((route) => `${SITE_URL}${route}`);
-  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, `${SITE_URL}mynewspace/`, ...hubUrls, ...ecosystemUrls, ...civicUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
+  // Pages of the public shell itself. They are linked from every header and
+  // footer, so they belong in the sitemap next to the record pages.
+  const shellUrls = ["explore/", "explore/public-safety/", "workspace/", "community/", "about/"].map((route) => `${SITE_URL}${route}`);
+  const expected = [SITE_URL, `${SITE_URL}meetings/`, `${SITE_URL}transcripts/`, `${SITE_URL}mynewspace/`, ...shellUrls, ...hubUrls, ...ecosystemUrls, ...civicUrls, ...MEETINGS.map((meeting) => `${SITE_URL}meetings/${meeting.id}/`)];
 
   check(locations.length === expected.length, `Sitemap lists ${locations.length} URLs, expected ${expected.length}`);
   check(new Set(locations).size === locations.length, "Sitemap contains duplicate <loc> entries");
