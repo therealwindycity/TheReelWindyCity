@@ -184,8 +184,9 @@ test("preserves raw notes verbatim while keeping snapshot, watcher, schedule-che
   assert.equal(oct5?.upcoming, false);
 
   // Blocked download from `data/sync-blocked.json` is recorded as unarchived discovery without fake items.
-  assert.equal(built.pipeline?.blockedSync?.attemptedAt, "2026-10-30T02:03:04Z");
-  assert.deepEqual(built.pipeline?.blockedSync?.meetingIds, ["public-services-committee-2026-11-02", "finance-committee-2026-11-03"]);
+  const blocked = JSON.parse(readFileSync(path.join(ROOT, "data", "sync-blocked.json"), "utf8"));
+  assert.equal(built.pipeline?.blockedSync?.attemptedAt, blocked.attemptedAt);
+  assert.deepEqual(built.pipeline?.blockedSync?.meetingIds, blocked.meetingIds.split(","));
   // A meeting can be discovered twice (once from the posted table, once from a
   // blocked download). The blocked-sync record itself must stay a failure.
   const blockedEntry = built.pipeline?.discoveredPostings?.find(

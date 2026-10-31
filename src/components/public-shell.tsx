@@ -11,7 +11,7 @@ export default function PublicShell({ children }: { children: ReactNode }) {
     <header className={styles.header}>
       <Link className={styles.brand} href="/">The Real Windy City<small>Civic Cheyenne · Independent public-records guide</small></Link>
       <nav className={styles.nav} aria-label="Main navigation">
-        {links.map(([href, label]) => <Link key={href} href={href} aria-current={(href === '/' ? pathname === '/' : pathname.startsWith(href.replace(/\/$/, ''))) ? 'page' : undefined}>{label}</Link>)}
+        {links.map(([href, label]) => <Link key={href} href={href} aria-current={(href === '/' ? pathname === '/' : pathname?.startsWith(href.replace(/\/$/, ''))) ? 'page' : undefined}>{label}</Link>)}
       </nav>
     </header>
     <div id="public-content" tabIndex={-1}>{children}</div>

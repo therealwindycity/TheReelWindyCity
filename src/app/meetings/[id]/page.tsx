@@ -194,7 +194,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
   const nearbyMeetings = siblings
     .slice(Math.max(0, siblingPosition - 2), siblingPosition + 3)
     .filter((item) => item.id !== meeting.id);
-  const interactiveUrl = new URL(SITE_URL);
+  const interactiveUrl = new URL("workspace/", SITE_URL);
   interactiveUrl.searchParams.set("meeting", meeting.id);
   interactiveUrl.hash = "sessions";
 
