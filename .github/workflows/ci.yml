@@ -21,6 +21,11 @@ jobs:
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
+      - name: Legal cross-reference tests
+        run: |
+          npm run test:legal-cross-reference
+          npm run test:legal-audit
+          npm run test:legal-evidence
       - name: Wyoming ecosystem catalog invariants
         run: |
           set -o pipefail

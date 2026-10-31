@@ -133,7 +133,7 @@ function updatePlan(planPath, results) {
   atomicWrite(planPath, `${JSON.stringify(plan, null, 2)}\n`);
 }
 
-async function extractMeeting({ url, file, meetingId, out }) {
+async function extractMeeting({ url, file, meetingId, out, retainHtml }) {
   let bytes;
   let sourceUrl;
   let html = null;
@@ -178,6 +178,7 @@ async function extractMeeting({ url, file, meetingId, out }) {
 
   atomicWrite(path.join(targetDir, "agenda.json"), `${JSON.stringify(document, null, 2)}\n`);
   atomicWrite(path.join(targetDir, "agenda.txt"), `${layout.text}\n`);
+  if (retainHtml && html) atomicWrite(path.join(targetDir, "agenda-source.html"), html);
 
   const consent = document.items.filter((item) => item.consent).length;
   console.log(
@@ -210,7 +211,7 @@ async function main() {
       console.error("usage: parse_agenda_pdf.mjs (--url <u> | --file <f> | --plan <p>) [--meeting-id <id>] [--out <dir>]");
       process.exit(2);
     }
-    tasks = [{ url, file, meetingId: flag("--meeting-id") || undefined, out: flag("--out") }];
+    tasks = [{ url, file, meetingId: flag("--meeting-id") || undefined, out: flag("--out"), retainHtml: args.includes("--retain-html") }];
   }
 
   const results = [];

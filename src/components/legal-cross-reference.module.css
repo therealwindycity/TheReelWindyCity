@@ -1,0 +1,13 @@
+.panel { margin: 1rem 0; border: 1px solid #c8d8ca; border-radius: 10px; background: #f7faf7; color: #1c3325; text-align: left; }
+.panel summary { padding: .9rem 1rem; cursor: pointer; font-weight: 700; line-height: 1.4; }
+.panel summary span { display: inline-block; margin-left: .5rem; font-size: .75rem; font-weight: 600; color: #685322; }
+.content { padding: 0 1rem 1rem; font-size: .9rem; line-height: 1.55; overflow-wrap: anywhere; }
+.content p { margin: .5rem 0; }
+.content h4 { margin: 1rem 0 .4rem; font-size: 1rem; }
+.content ul { padding-left: 1.25rem; margin: .5rem 0; }
+.content li { margin: .4rem 0; }
+.content a { color: #175d3c; text-decoration: underline; }
+.caution { padding: .7rem; background: #fff6df; border-left: 3px solid #ad7a13; }
+.requirement { padding: .65rem 0; border-top: 1px solid #dce6de; }
+.requirement h5 { margin: 0; font-size: .95rem; }
+.requirement h5 span { display: inline-block; margin-left: .3rem; font-size: .75rem; color: #685322; }

@@ -1,0 +1,599 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "meetingId": "city-council-2026-01-26",
+      "itemNumber": "6",
+      "match": "administrative inspection warrants",
+      "title": "Administrative inspection warrants",
+      "reviewedAt": "2026-10-31",
+      "note": "Passage review is separate from whether any particular search was lawful; no warrant execution has been audited.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 15-1-114",
+          "name": "Municipal legislation by ordinance",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-115",
+          "name": "Ordinance form, readings and vote",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-116",
+          "name": "Publication and attestation",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-117",
+          "name": "Amendment and repeal",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Cheyenne City Code Chapter 1.28 / Ordinance 4656",
+          "name": "Local administrative inspection warrants",
+          "url": "https://www.cheyennecity.org/Your-Government/Departments/City-Clerk/City-CodeUDC",
+          "note": "Obtain the signed February 5 substitute as amended on February 9; prior drafts are not final."
+        },
+        {
+          "citation": "U.S. Constitution, Fourth Amendment; Camara v. Municipal Court",
+          "name": "Constitutional limits on administrative searches",
+          "url": "https://supreme.justia.com/cases/federal/us/387/523/",
+          "note": ""
+        }
+      ],
+      "requirements": [
+        {
+          "id": "three-readings",
+          "title": "Three readings and elapsed time",
+          "law": "Wyo. Stat. § 15-1-115(c)",
+          "requirement": "Public reading on three different days and at least ten days between introduction and final passage; see the statute for the emergency-ordinance exception.",
+          "status": "partial",
+          "finding": "The January 26 agenda records this item at a reading; this does not establish the complete sequence or elapsed time.",
+          "next": "Obtain minutes and recordings for each reading, including any emergency vote.",
+          "evidence": [
+            {
+              "label": "January 26 agenda",
+              "url": "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382"
+            }
+          ]
+        },
+        {
+          "id": "vote",
+          "title": "Final passage vote",
+          "law": "Wyo. Stat. §§ 15-1-115(d), 15-1-106",
+          "requirement": "Ordinary passage requires an affirmative vote of a majority of qualified members; the journal records each member’s vote. Emergency ordinances have a different threshold.",
+          "status": "partial",
+          "finding": "The February 9 minutes record final approval; the signed final text and full passage record have not been checked.",
+          "next": "Compare the final vote and qualified membership with the minutes and signed ordinance.",
+          "evidence": [
+            {
+              "label": "February 9 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1060"
+            }
+          ]
+        },
+        {
+          "id": "publication",
+          "title": "Publication before effectiveness",
+          "law": "Wyo. Stat. § 15-1-116",
+          "requirement": "Publication and attestation requirements apply; review statutory exceptions and the exact form of publication.",
+          "status": "unverified",
+          "finding": "No publication proof or effective date has been examined.",
+          "next": "Obtain the signed ordinance, newspaper affidavit and publication date.",
+          "evidence": []
+        },
+        {
+          "id": "final-text",
+          "title": "Final amendments and text",
+          "law": "Wyo. Stat. § 15-1-117; Ordinance 4656",
+          "requirement": "Verify the actual final adopted wording before comparing a warrant or application to the law.",
+          "status": "partial",
+          "finding": "The February 9 minutes record a substitute and an amendment; the signed amended text has not been reviewed.",
+          "next": "Obtain the signed and published final ordinance and amendment.",
+          "evidence": [
+            {
+              "label": "February 9 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1060"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "meetingId": "city-council-2026-01-26",
+      "itemNumber": "7",
+      "match": "annexing to the city of cheyenne",
+      "title": "East Cheyenne annexation",
+      "reviewedAt": "2026-10-31",
+      "note": "The February 9 minutes identify the final action as Ordinance 4657. This is distinct from the western/southern WY Fresh hearing.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 15-1-114",
+          "name": "Municipal legislation by ordinance",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-115",
+          "name": "Ordinance form, readings and vote",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-116",
+          "name": "Publication and attestation",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-117",
+          "name": "Amendment and repeal",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. §§ 15-1-401–410",
+          "name": "Annexation procedures, notice, objections and review",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        }
+      ],
+      "requirements": [
+        {
+          "id": "three-readings",
+          "title": "Three readings and elapsed time",
+          "law": "Wyo. Stat. § 15-1-115(c)",
+          "requirement": "Public reading on three different days and at least ten days between introduction and final passage; see the statute for the emergency-ordinance exception.",
+          "status": "partial",
+          "finding": "The January 26 agenda records this item at a reading; this does not establish the complete sequence or elapsed time.",
+          "next": "Obtain minutes and recordings for each reading, including any emergency vote.",
+          "evidence": [
+            {
+              "label": "January 26 agenda",
+              "url": "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382"
+            }
+          ]
+        },
+        {
+          "id": "vote",
+          "title": "Final passage vote",
+          "law": "Wyo. Stat. §§ 15-1-115(d), 15-1-106",
+          "requirement": "Ordinary passage requires an affirmative vote of a majority of qualified members; the journal records each member’s vote. Emergency ordinances have a different threshold.",
+          "status": "partial",
+          "finding": "The February 9 minutes record final approval; the signed final text and full passage record have not been checked.",
+          "next": "Compare the final vote and qualified membership with the minutes and signed ordinance.",
+          "evidence": [
+            {
+              "label": "February 9 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1060"
+            }
+          ]
+        },
+        {
+          "id": "publication",
+          "title": "Publication before effectiveness",
+          "law": "Wyo. Stat. § 15-1-116",
+          "requirement": "Publication and attestation requirements apply; review statutory exceptions and the exact form of publication.",
+          "status": "unverified",
+          "finding": "No publication proof or effective date has been examined.",
+          "next": "Obtain the signed ordinance, newspaper affidavit and publication date.",
+          "evidence": []
+        },
+        {
+          "id": "annex-notice",
+          "title": "Mailing and hearing publication",
+          "law": "Wyo. Stat. §§ 15-1-402(a)(vi), 15-1-405",
+          "requirement": "Subject to the applicable annexation procedure, provide the required certified and first-class mailings at least 20 business days before the hearing, and publish hearing notice as the statute specifies.",
+          "status": "unverified",
+          "finding": "Mailing lists, dispatch and publication proofs have not been checked for this item.",
+          "next": "Compare parcel and 300-foot owner lists, utilities, postal records, notice contents and publication affidavits.",
+          "evidence": []
+        },
+        {
+          "id": "annex-findings",
+          "title": "Eligibility and report",
+          "law": "Wyo. Stat. § 15-1-402(a), (c), (e); § 15-1-404",
+          "requirement": "Review required findings, report contents, city-initiated procedure and timely written requests for estimates.",
+          "status": "partial",
+          "finding": "The supporting report is available, but underlying ownership, map and request records were not audited.",
+          "next": "Obtain final legal descriptions, maps, report, hearing record and dated estimate requests and responses.",
+          "evidence": [
+            {
+              "label": "East annexation supporting packet",
+              "url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=5&event_id=1382&meta_id=145674"
+            }
+          ]
+        },
+        {
+          "id": "annex-objections",
+          "title": "Objection period",
+          "law": "Wyo. Stat. § 15-1-406(b)",
+          "requirement": "For city-initiated annexations, evaluate timely objections under the statute’s owner and acreage thresholds.",
+          "status": "unverified",
+          "finding": "No complete objection register or ownership calculation has been reviewed.",
+          "next": "Request dated objections and the ownership and acreage calculations.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "meetingId": "city-council-2026-01-26",
+      "itemNumber": "8",
+      "match": "amending the official zoning map",
+      "title": "East Cheyenne zoning",
+      "reviewedAt": "2026-10-31",
+      "note": "The February 9 minutes identify final action as Ordinance 4658; verify the final zoning exhibit and adopted text.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 15-1-114",
+          "name": "Municipal legislation by ordinance",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-115",
+          "name": "Ordinance form, readings and vote",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-116",
+          "name": "Publication and attestation",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-117",
+          "name": "Amendment and repeal",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. §§ 15-1-601–603",
+          "name": "Municipal zoning authority and hearing procedures",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Cheyenne UDC §§ 2.4.1, 2.4.2 and 5.7.3",
+          "name": "Local procedures and zoning standards",
+          "url": "https://www.cheyennecity.org/files/sharedassets/public/v/36/departments/planningdevelopment/udc/udc-2026-07-09.pdf",
+          "note": "PDF states last amended July 9, 2026; verify the version effective for the relevant action."
+        }
+      ],
+      "requirements": [
+        {
+          "id": "three-readings",
+          "title": "Three readings and elapsed time",
+          "law": "Wyo. Stat. § 15-1-115(c)",
+          "requirement": "Public reading on three different days and at least ten days between introduction and final passage; see the statute for the emergency-ordinance exception.",
+          "status": "partial",
+          "finding": "The January 26 agenda records this item at a reading; this does not establish the complete sequence or elapsed time.",
+          "next": "Obtain minutes and recordings for each reading, including any emergency vote.",
+          "evidence": [
+            {
+              "label": "January 26 agenda",
+              "url": "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382"
+            }
+          ]
+        },
+        {
+          "id": "vote",
+          "title": "Final passage vote",
+          "law": "Wyo. Stat. §§ 15-1-115(d), 15-1-106",
+          "requirement": "Ordinary passage requires an affirmative vote of a majority of qualified members; the journal records each member’s vote. Emergency ordinances have a different threshold.",
+          "status": "partial",
+          "finding": "The February 9 minutes record final approval; the signed final text and full passage record have not been checked.",
+          "next": "Compare the final vote and qualified membership with the minutes and signed ordinance.",
+          "evidence": [
+            {
+              "label": "February 9 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1060"
+            }
+          ]
+        },
+        {
+          "id": "publication",
+          "title": "Publication before effectiveness",
+          "law": "Wyo. Stat. § 15-1-116",
+          "requirement": "Publication and attestation requirements apply; review statutory exceptions and the exact form of publication.",
+          "status": "unverified",
+          "finding": "No publication proof or effective date has been examined.",
+          "next": "Obtain the signed ordinance, newspaper affidavit and publication date.",
+          "evidence": []
+        },
+        {
+          "id": "zoning-hearing",
+          "title": "Zoning hearing and notice",
+          "law": "Wyo. Stat. §§ 15-1-602, 15-1-603; Cheyenne UDC § 2.4.1",
+          "requirement": "Check applicable zoning hearing, notice and local review requirements against the law effective at the time.",
+          "status": "unverified",
+          "finding": "Hearing and publication records have not been fully audited.",
+          "next": "Obtain commission and council notices, publication affidavits, hearing minutes and operative UDC version.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "meetingId": "city-council-2026-01-26",
+      "itemNumber": "9",
+      "match": "accessory dwelling units",
+      "title": "Accessory dwelling units",
+      "reviewedAt": "2026-10-31",
+      "note": "The February 9 minutes identify final action as Ordinance 4659. No legal defect has been established by the date inconsistency.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 15-1-114",
+          "name": "Municipal legislation by ordinance",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-115",
+          "name": "Ordinance form, readings and vote",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-116",
+          "name": "Publication and attestation",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-117",
+          "name": "Amendment and repeal",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. §§ 15-1-601–603",
+          "name": "Municipal zoning authority and hearing procedures",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Cheyenne UDC §§ 2.4.1, 2.4.2 and 5.7.3",
+          "name": "Local procedures and zoning standards",
+          "url": "https://www.cheyennecity.org/files/sharedassets/public/v/36/departments/planningdevelopment/udc/udc-2026-07-09.pdf",
+          "note": "PDF states last amended July 9, 2026; verify the version effective for the relevant action."
+        }
+      ],
+      "requirements": [
+        {
+          "id": "three-readings",
+          "title": "Three readings and elapsed time",
+          "law": "Wyo. Stat. § 15-1-115(c)",
+          "requirement": "Public reading on three different days and at least ten days between introduction and final passage; see the statute for the emergency-ordinance exception.",
+          "status": "partial",
+          "finding": "The January 26 agenda records this item at a reading; this does not establish the complete sequence or elapsed time.",
+          "next": "Obtain minutes and recordings for each reading, including any emergency vote.",
+          "evidence": [
+            {
+              "label": "January 26 agenda",
+              "url": "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382"
+            }
+          ]
+        },
+        {
+          "id": "vote",
+          "title": "Final passage vote",
+          "law": "Wyo. Stat. §§ 15-1-115(d), 15-1-106",
+          "requirement": "Ordinary passage requires an affirmative vote of a majority of qualified members; the journal records each member’s vote. Emergency ordinances have a different threshold.",
+          "status": "partial",
+          "finding": "The February 9 minutes record final approval; the signed final text and full passage record have not been checked.",
+          "next": "Compare the final vote and qualified membership with the minutes and signed ordinance.",
+          "evidence": [
+            {
+              "label": "February 9 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1060"
+            }
+          ]
+        },
+        {
+          "id": "publication",
+          "title": "Publication before effectiveness",
+          "law": "Wyo. Stat. § 15-1-116",
+          "requirement": "Publication and attestation requirements apply; review statutory exceptions and the exact form of publication.",
+          "status": "unverified",
+          "finding": "No publication proof or effective date has been examined.",
+          "next": "Obtain the signed ordinance, newspaper affidavit and publication date.",
+          "evidence": []
+        },
+        {
+          "id": "zoning-hearing",
+          "title": "Zoning hearing and notice",
+          "law": "Wyo. Stat. §§ 15-1-602, 15-1-603; Cheyenne UDC § 2.4.1",
+          "requirement": "Check applicable zoning hearing, notice and local review requirements against the law effective at the time.",
+          "status": "unverified",
+          "finding": "Hearing and publication records have not been fully audited.",
+          "next": "Obtain commission and council notices, publication affidavits, hearing minutes and operative UDC version.",
+          "evidence": []
+        },
+        {
+          "id": "adu-date",
+          "title": "Planning hearing date discrepancy",
+          "law": "Cheyenne UDC § 2.4.1",
+          "requirement": "Compare required hearing and review records with the adopted ordinance and notices.",
+          "status": "partial",
+          "finding": "The third-reading draft says January 5, 2025; the staff memo in the same packet says January 5, 2026. This may be a clerical error, not proof of a missing hearing.",
+          "next": "Obtain the signed final text, commission notice and minutes, and determine whether the discrepancy is material.",
+          "evidence": [
+            {
+              "label": "ADU third-reading packet",
+              "url": "https://capcity.news/wp-content/uploads/2026/02/3rd-Reading-Accessory-Dwelling-Units.pdf"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "meetingId": "city-council-2026-01-26",
+      "itemNumber": "10",
+      "match": "private displays on public property",
+      "title": "Private displays on public property",
+      "reviewedAt": "2026-10-31",
+      "note": "January 26 first reading and referral are not proof of passage; later outcome and subject-specific authority require review.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 15-1-114",
+          "name": "Municipal legislation by ordinance",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-115",
+          "name": "Ordinance form, readings and vote",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-116",
+          "name": "Publication and attestation",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-117",
+          "name": "Amendment and repeal",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-103(a)(xi), (xii), (xxii)",
+          "name": "Relevant municipal property and park powers",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": "Potentially relevant powers, not a determination of the scope of this particular proposal."
+        }
+      ],
+      "requirements": [
+        {
+          "id": "three-readings",
+          "title": "Three readings and elapsed time",
+          "law": "Wyo. Stat. § 15-1-115(c)",
+          "requirement": "Public reading on three different days and at least ten days between introduction and final passage; see the statute for the emergency-ordinance exception.",
+          "status": "partial",
+          "finding": "The January 26 agenda records this item at a reading; this does not establish the complete sequence or elapsed time.",
+          "next": "Obtain minutes and recordings for each reading, including any emergency vote.",
+          "evidence": [
+            {
+              "label": "January 26 agenda",
+              "url": "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382"
+            }
+          ]
+        },
+        {
+          "id": "vote",
+          "title": "Final passage vote",
+          "law": "Wyo. Stat. §§ 15-1-115(d), 15-1-106",
+          "requirement": "Ordinary passage requires an affirmative vote of a majority of qualified members; the journal records each member’s vote. Emergency ordinances have a different threshold.",
+          "status": "unverified",
+          "finding": "The January 26 agenda alone is not proof of final passage.",
+          "next": "Obtain later minutes, voting journal and signed ordinance before evaluating passage.",
+          "evidence": []
+        },
+        {
+          "id": "publication",
+          "title": "Publication before effectiveness",
+          "law": "Wyo. Stat. § 15-1-116",
+          "requirement": "Publication and attestation requirements apply; review statutory exceptions and the exact form of publication.",
+          "status": "unverified",
+          "finding": "No publication proof or effective date has been examined.",
+          "next": "Obtain the signed ordinance, newspaper affidavit and publication date.",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "meetingId": "city-council-2026-01-26",
+      "itemNumber": "14",
+      "match": "certifying compliance with wyoming statute",
+      "title": "Western and southern Cheyenne city-initiated annexation resolution",
+      "reviewedAt": "2026-10-31",
+      "note": "The February 9 hearing concerns this western/southern annexation, not the eastern Ordinance 4657. This resolution is not itself the final annexation ordinance; no annexation notice violation has been established.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 15-1-404",
+          "name": "City-initiated annexation procedure and resolution",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-402",
+          "name": "Annexation findings, report, mailed notices and infrastructure estimates",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. §§ 15-1-405, 15-1-406",
+          "name": "Public hearing, publication and objections",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": ""
+        },
+        {
+          "citation": "Wyo. Stat. § 15-1-410(a)",
+          "name": "Continuous lawful existing use for qualifying city-initiated annexations",
+          "url": "https://wyoleg.gov/statutes/compress/title15.pdf",
+          "note": "Applies subject to the statute’s conditions and limitations."
+        }
+      ],
+      "requirements": [
+        {
+          "id": "resolution",
+          "title": "Resolution and eligibility",
+          "law": "Wyo. Stat. §§ 15-1-402, 15-1-404",
+          "requirement": "Review city-initiated eligibility, the required annexation report and resolution certifying compliance against the actual area and records.",
+          "status": "partial",
+          "finding": "The January 26 agenda identifies the proposed certification; the supporting records and final boundaries have not been independently audited.",
+          "next": "Obtain the signed resolution, annexation report, ownership and boundary records and any later changes.",
+          "evidence": [
+            {
+              "label": "January 26 resolution packet",
+              "url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1053&meta_id=145754"
+            }
+          ]
+        },
+        {
+          "id": "hearing-notice",
+          "title": "Mailed and published hearing notice",
+          "law": "Wyo. Stat. §§ 15-1-402(a)(vi), 15-1-405",
+          "requirement": "For the applicable procedure, check the 20-business-day certified and first-class mailings and the separately required newspaper notices and content.",
+          "status": "partial",
+          "finding": "The official minutes record a February 9 hearing for 16 parcels. They do not establish mailing dates or the completeness of recipient lists.",
+          "next": "Obtain the actual dispatch records, notice and report summary, utility and owner lists, 300-foot map and newspaper affidavits.",
+          "evidence": [
+            {
+              "label": "February 9 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1060"
+            }
+          ]
+        },
+        {
+          "id": "requests",
+          "title": "Requests for estimates and foreseeable changes",
+          "law": "Wyo. Stat. §§ 15-1-402(e), 15-1-404(a)(ii)(D)",
+          "requirement": "Check the requirements for qualifying written requests made at least ten days before the hearing and for responses before it.",
+          "status": "unverified",
+          "finding": "No dated individual requests or responses have been examined.",
+          "next": "Obtain dated landowner and utility requests and the responses, including any infrastructure estimates.",
+          "evidence": []
+        },
+        {
+          "id": "objections",
+          "title": "Written objections",
+          "law": "Wyo. Stat. § 15-1-406(b)",
+          "requirement": "Review timely written objections under the applicable owner and acreage thresholds for city-initiated annexation.",
+          "status": "unverified",
+          "finding": "No complete objection register or ownership calculation has been examined.",
+          "next": "Obtain all dated objections, ownership records and acreage calculations.",
+          "evidence": []
+        }
+      ]
+    }
+  ]
+}

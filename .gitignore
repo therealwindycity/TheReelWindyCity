@@ -29,3 +29,5 @@ __pycache__/
 /public/data/wyoming-pulse.json
 /public/maps/wyoming-government-sites.geojson
 /.cache/
+/src/data/legal-audit-generated.json
+/src/data/legal-evidence-generated.json
