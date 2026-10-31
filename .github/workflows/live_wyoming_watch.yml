@@ -12,6 +12,14 @@ on:
     # municipal watcher's :23 runs have had the night.
     - cron: "17 13 * * *"
   workflow_dispatch: {}
+  # Exercise changed adapters and reporting against publishers without committing
+  # baseline updates from a pull-request branch.
+  pull_request:
+    paths:
+      - '.github/workflows/live_wyoming_watch.yml'
+      - 'scripts/monitor/wyoming-watch*.mjs'
+      - 'scripts/lib/wyoming-adapters.mjs'
+      - 'scripts/data/wyoming-ecosystem-catalog.mjs'
 
 permissions:
   contents: write
