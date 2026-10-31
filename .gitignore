@@ -5,3 +5,8 @@ __pycache__/
 *.pdf
 *.mp3
 *.mp4
+./.git/objects/pack/pack-3c9230bea974ecf4ad564cba97e89fe90cfd6201.pack
+./.git/objects/pack/pack-9f9a35ed987d3cfec9714cccf8367900fcd89ef7.pack
+./public/place-docs/place/gillette/docs/11.04.2025-council-packet.pdf
+./2026-09-14-council/civicwatch/data/civic.db
+./2026-09-14-council/civicwatch/models/minilm-l6-onnx/model.onnx
