@@ -60,7 +60,12 @@ jobs:
         with:
           enablement: true
       - name: Build static site
-        run: npm run build
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run build`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run build 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
       - uses: actions/upload-pages-artifact@v3
@@ -87,3 +92,15 @@ jobs:
         run: node scripts/check-live-seo.mjs --retries 6 --delay 10000
         env:
           LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
+
+      - name: Publish CI Diagnostics (Runs Even On Failure)
+        if: always()
+        run: |
+          if [ -f "CI_DIAGNOSTICS.md" ]; then
+            git config user.name "Promethean-DiagnosticBot"
+            git config user.email "cwdm82001@gmail.com"
+            git pull --rebase origin main || true
+            git add CI_DIAGNOSTICS.md
+            git commit -m "CI Telemetry: Captured test and build logs [skip ci]" || true
+            git push origin HEAD:main || true
+          fi
