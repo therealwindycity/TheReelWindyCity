@@ -54,6 +54,30 @@ jobs:
         timeout-minutes: 2
         run: node scripts/sync/snapshot-upcoming.mjs --out data/source-check.json --timeout-ms 10000 --attempts 2
 
+      - name: Restore legal audit discovery cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            .sync/legal-audit-cache.json
+            .sync/legal-evidence-cache.json
+          key: legal-audit-v2-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: legal-audit-v2-
+      - name: Discover and screen official meeting agendas
+        if: github.ref == 'refs/heads/main'
+        timeout-minutes: 10
+        run: |
+          npm run data:assemble
+          node scripts/analysis/legal-audit.mjs --refresh --limit 12
+          node scripts/analysis/legal-evidence.mjs --refresh
+      - name: Save legal audit discovery cache
+        if: github.ref == 'refs/heads/main'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            .sync/legal-audit-cache.json
+            .sync/legal-evidence-cache.json
+          key: legal-audit-v2-${{ github.run_id }}-${{ github.run_attempt }}
+
       - name: Enable GitHub Pages (if not already enabled)
         uses: actions/configure-pages@v5
         continue-on-error: true

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import transcriptVectorIndex from "@/data/transcript-vectors.json";
 import ClickToLoadYouTube from "@/components/click-to-load-youtube";
 import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
+import LegalCrossReference from "@/components/legal-cross-reference";
+import { automatedAgenda } from "@/lib/legal-cross-reference";
 import { ARCHIVE_OWNER, MEETINGS, MEETINGS_CAPTURED, MEETINGS_TIME_ZONE, displayMeetingNotes, formatEvaluationTimestamp, meetingCalendarLabel, meetingOutcomeLabel, readableName, type Meeting } from "@/lib/civic-data";
 import { SITE_NAME, SITE_URL, siteUrl } from "@/lib/site-config";
 
@@ -166,6 +168,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
   const title = meetingTitle(meeting);
   const canonical = siteUrl(`meetings/${meeting.id}/`);
   const sources = officialLinks(meeting);
+  const autoAgenda = automatedAgenda(meeting.id);
+  const agendaItems = autoAgenda?.items ?? meeting.items ?? [];
   const transcripts = meeting.transcripts?.length
     ? [...meeting.transcripts].sort((a, b) => Number(b.path === meeting.transcript?.path) - Number(a.path === meeting.transcript?.path))
     : meeting.transcript ? [meeting.transcript] : [];
@@ -295,20 +299,22 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
           )}
         </section>
 
-        {meeting.items?.length ? (
+        {agendaItems.length ? (
           <section className="seo-card" aria-labelledby="agenda-items-heading">
-            <h2 id="agenda-items-heading">Agenda items as posted</h2>
-            <p className="seo-section-intro">These are agenda descriptions from the captured posting. An agenda entry is not a recorded vote or an adopted law.</p>
+            <h2 id="agenda-items-heading">Agenda items and legal cross-references</h2>
+            <p className="seo-section-intro">Agenda text is not a recorded vote or an adopted law. Automated screening cannot establish compliance; verify the official records and the law effective at the time.</p>
+            {autoAgenda && <p className="seo-record-notice">Source: {autoAgenda.extraction ?? "indexed agenda"}{autoAgenda.fetchedAt ? ` · captured ${autoAgenda.fetchedAt}` : ""}. {autoAgenda.limitation}{autoAgenda.lastError ? ` Latest refresh failed (${autoAgenda.lastAttempt}): ${autoAgenda.lastError}. Showing the last available record.` : ""}</p>}
             <ol className="seo-agenda-items">
-              {meeting.items.map((item) => (
+              {agendaItems.map((item) => (
                 <li key={item.number}>
                   <span>Item {item.number} · {item.kind}</span>
                   <p>{item.text}</p>
+                  <LegalCrossReference meetingId={meeting.id} itemNumber={item.number} text={item.text} kind={item.kind} sourceUrl={autoAgenda?.sourceUrl ?? meeting.official.agenda}/>
                 </li>
               ))}
             </ol>
           </section>
-        ) : null}
+        ) : <section className="seo-card"><h2>Legal authority and passage review</h2><p>Individual agenda items are not indexed for this meeting; automated discovery cannot audit an absent record. No item-level compliance conclusion is available.</p>{autoAgenda?.lastError && <p>Latest automated attempt ({autoAgenda.lastAttempt}): {autoAgenda.lastError}.</p>}</section>}
 
         <section className="seo-card" aria-labelledby="official-sources-heading">
           <h2 id="official-sources-heading">Official source links</h2>
