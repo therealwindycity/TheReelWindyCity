@@ -31,3 +31,4 @@ __pycache__/
 /.cache/
 /src/data/legal-audit-generated.json
 /src/data/legal-evidence-generated.json
+/src/data/legal-support-generated.json

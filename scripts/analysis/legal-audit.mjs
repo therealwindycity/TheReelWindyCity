@@ -21,7 +21,7 @@ const ARCHIVES = new Set(['cheyenne-archives-2025-2026', 'cheyenne-archives-2023
 export function safeSource(url) {
   try {
     const u = new URL(url);
-    if (u.protocol !== 'https:') return false;
+    if (u.protocol !== 'https:' || u.port || u.username || u.password) return false;
     if (['cheyenne.granicus.com', 'www.cheyennecity.org', 'cheyennecity.org'].includes(u.hostname)) return true;
     const segments = u.pathname.split('/');
     return u.hostname === 'raw.githubusercontent.com' && segments[1] === 'therealwindycity' && ARCHIVES.has(segments[2]) && segments[3] === 'main';
@@ -49,9 +49,19 @@ export function validItems(items) {
 }
 /** Granicus HTML tables preserve parent/subitem association that plain PDF extraction can lose. */
 export function parseHtmlItems(html) {
-  const document = parse(html); const result = []; let parent = '';
-  for (const table of document.querySelectorAll('table')) {
-    const cells = table.querySelector('tr')?.querySelectorAll('td') ?? [];
+  const document = parse(html); const result = []; let parent = ''; let current = null;
+  for (const node of document.querySelectorAll('table, a.Document')) {
+    if (node.tagName === 'A') {
+      if (!current) continue;
+      const href = node.getAttribute('href');
+      let u; try { u = new URL(href, 'https://cheyenne.granicus.com/'); } catch { continue; }
+      if (u.protocol !== 'https:' || u.port || u.username || u.password || u.hostname !== 'cheyenne.granicus.com' || u.pathname !== '/MetaViewer.php' || !/^\d+$/.test(u.searchParams.get('meta_id') ?? '')) continue;
+      const label = node.text.replace(/\s+/g, ' ').trim().slice(0, 120) || 'Supporting document';
+      if (!current.supporting.some(item => item.url === u.href) && current.supporting.length < 25) current.supporting.push({label, url: u.href});
+      continue;
+    }
+    current = null;
+    const cells = node.querySelector('tr')?.querySelectorAll('td') ?? [];
     if (cells.length !== 2) continue;
     const n = cells[0].text.trim(); let number;
     if (/^\d{1,3}\.$/.test(n)) { parent = n.slice(0, -1); number = parent; }
@@ -60,10 +70,12 @@ export function parseHtmlItems(html) {
     const text = cells[1].text.replace(/\s*ACTION\s*:.*/s, '').replace(/\s+/g, ' ').trim();
     if (!text) continue;
     const kind = /^(?:\[CA\]\s*)?(ORDINANCE|RESOLUTION)/i.exec(text)?.[1] || 'Agenda item';
-    result.push({ number, kind, text });
+    current = { number, kind, text, supporting: [] };
+    result.push(current);
   }
   return validItems(result) ? result : [];
 }
+
 export function dateMatches(text, iso) {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return false;
   const [year, month, day] = iso.split('-').map(Number);
@@ -133,10 +145,12 @@ export async function refresh(meetings, cache, { limit = 12, concurrency = 3, no
 }
 export function assemble(meetings, cache) {
   const records = {};
+  const seedHtml = path.join(ROOT, 'public/sources/2026-01-26-agenda.html');
+  const seedItems = existsSync(seedHtml) ? parseHtmlItems(readFileSync(seedHtml, 'utf8')) : [];
   for (const m of meetings) {
     const saved = cache[m.id];
     if (m.id === 'city-council-2026-01-26') {
-      records[m.id] = { sourceUrl: 'https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382', fetchedAt: null, extraction: 'bundled official agenda', items: seed, limitation: 'Captured agenda; verify subsequent amendments and final records.' };
+      records[m.id] = { sourceUrl: 'https://cheyenne.granicus.com/GeneratedAgendaViewer.php?view_id=5&event_id=1382', fetchedAt: null, extraction: 'bundled official agenda', items: seed.map(item => { const match = seedItems.find(source => source.number === item.number && source.text === item.text); return {...item, supporting: match?.supporting || []}; }), limitation: 'Captured agenda; verify subsequent amendments and final records.' };
     } else if (saved?.requestedUrl === agendaSource(m) && saved?.items?.length && validItems(saved.items)) {
       records[m.id] = saved;
     } else if (m.items?.length && validItems(m.items)) {

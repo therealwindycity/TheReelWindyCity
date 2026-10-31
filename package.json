@@ -2,13 +2,13 @@
   "name": "civic-cheyenne",
   "private": true,
   "scripts": {
-    "predev": "node scripts/build-ecosystem-data.mjs && node scripts/build-data.mjs && node scripts/build-pulse-data.mjs && node scripts/analysis/legal-audit.mjs && node scripts/analysis/legal-evidence.mjs",
+    "predev": "node scripts/build-ecosystem-data.mjs && node scripts/build-data.mjs && node scripts/build-pulse-data.mjs && node scripts/analysis/legal-audit.mjs && node scripts/analysis/legal-evidence.mjs && node scripts/analysis/legal-support.mjs",
     "dev": "next dev",
-    "prebuild": "node scripts/build-ecosystem-data.mjs && node scripts/build-data.mjs && node scripts/build-pulse-data.mjs && node scripts/analysis/legal-audit.mjs && node scripts/analysis/legal-evidence.mjs",
+    "prebuild": "node scripts/build-ecosystem-data.mjs && node scripts/build-data.mjs && node scripts/build-pulse-data.mjs && node scripts/analysis/legal-audit.mjs && node scripts/analysis/legal-evidence.mjs && node scripts/analysis/legal-support.mjs",
     "build": "next build",
     "preview": "node scripts/serve.mjs out",
     "lint": "eslint .",
-    "pretypecheck": "node scripts/build-ecosystem-data.mjs && node scripts/build-data.mjs && node scripts/analysis/legal-audit.mjs && node scripts/analysis/legal-evidence.mjs",
+    "pretypecheck": "node scripts/build-ecosystem-data.mjs && node scripts/build-data.mjs && node scripts/analysis/legal-audit.mjs && node scripts/analysis/legal-evidence.mjs && node scripts/analysis/legal-support.mjs",
     "typecheck": "tsc --noEmit",
     "data:ecosystem": "node scripts/build-ecosystem-data.mjs",
     "data:assemble": "node scripts/build-data.mjs",
@@ -50,7 +50,9 @@
     "data:legal-audit": "node scripts/analysis/legal-audit.mjs --refresh",
     "test:legal-audit": "node --test tests/legal-audit.test.mjs",
     "test:legal-evidence": "node --test tests/legal-evidence.test.mjs",
-    "data:legal-evidence": "node scripts/analysis/legal-evidence.mjs --refresh"
+    "data:legal-evidence": "node scripts/analysis/legal-evidence.mjs --refresh",
+    "test:legal-support": "node --test tests/legal-support.test.mjs",
+    "data:legal-support": "node scripts/analysis/legal-support.mjs --refresh"
   },
   "dependencies": {
     "@playwright/test": "^1.63.0",

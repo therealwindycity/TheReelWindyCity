@@ -21,7 +21,7 @@ export function minutesSource(meeting) {
 }
 
 /** Bounded downloads, HTTPS allowlist at every redirect, and no implicit proxy. */
-async function download(url) {
+export async function download(url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 25000);
   try {

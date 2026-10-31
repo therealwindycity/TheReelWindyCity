@@ -511,6 +511,89 @@
     },
     {
       "meetingId": "city-council-2026-01-26",
+      "itemNumber": "11",
+      "match": "re-appropriating the fiscal year 2026 budget",
+      "title": "Fiscal year 2026 budget reappropriation",
+      "reviewedAt": "2026-10-31",
+      "note": "The official minutes record adoption of Resolution 6508, but the signed adopted resolution, ledger balances and publication record have not been verified. The apparent $1 difference below concerns rounded figures in a proposed packet, not a proven legal violation.",
+      "authorities": [
+        {
+          "citation": "Wyo. Stat. § 16-4-112",
+          "name": "Transfer of unencumbered or unexpended appropriations",
+          "url": "https://law.justia.com/codes/wyoming/2025/title-16/chapter-4/article-1/section-16-4-112/",
+          "note": "2025 unofficial compilation; verify the official law and any amendments effective January 26, 2026."
+        },
+        {
+          "citation": "Wyo. Stat. § 16-4-113",
+          "name": "General fund budget increase and revenue source",
+          "url": "https://law.justia.com/codes/wyoming/2025/title-16/chapter-4/article-1/section-16-4-113/",
+          "note": "2025 unofficial compilation; verify the official law and any amendments effective January 26, 2026."
+        },
+        {
+          "citation": "Wyoming Legislature, Title 16",
+          "name": "Official current Wyoming statutes",
+          "url": "https://wyoleg.gov/statutes/compress/title16.pdf",
+          "note": "Check whether the current official text differs from the version effective in January 2026."
+        }
+      ],
+      "requirements": [
+        {
+          "id": "request-or-notice",
+          "title": "Transfer authority, source balances and notice branch",
+          "law": "Wyo. Stat. § 16-4-112",
+          "requirement": "The governing body may by resolution transfer unencumbered or unexpended appropriation balances at the budget officer’s request or upon its own motion after publication of notice. Determine which branch and which transfers apply; do not assume publication is required under the budget-officer-request branch.",
+          "status": "partial",
+          "finding": "The January 5 treasurer’s memo requests reappropriation; the January 26 minutes record unanimous adoption of Resolution 6508. These records do not establish whether each transfer involved an eligible balance, the treasurer’s budget-officer authority, or whether notice was needed and published for any body-initiated transfer.",
+          "next": "Obtain the signed resolution, budget-officer designation, fund-level ledgers and transfer authorizations, and any applicable publication notice.",
+          "evidence": [
+            {
+              "label": "Treasurer memorandum and proposed resolution",
+              "url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1053&meta_id=145748"
+            },
+            {
+              "label": "January 26 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1053"
+            }
+          ]
+        },
+        {
+          "id": "general-fund-revenue",
+          "title": "General fund increase and revenue source",
+          "law": "Wyo. Stat. § 16-4-113",
+          "requirement": "A general fund budget increase may be made by governing-body resolution, with the source of revenue shown.",
+          "status": "partial",
+          "finding": "The proposed resolution lists a $641,172 general-fund increase sourced from reserves, and the minutes record adoption. The final signed text and actual reserve balances have not been checked.",
+          "next": "Compare the signed adopted resolution and underlying general-fund reserve ledger with the proposed packet.",
+          "evidence": [
+            {
+              "label": "Proposed resolution and revenue summary",
+              "url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1053&meta_id=145748"
+            },
+            {
+              "label": "January 26 official minutes",
+              "url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1053"
+            }
+          ]
+        },
+        {
+          "id": "budget-total-comparison",
+          "title": "Proposed revenue and appropriation totals",
+          "law": "Wyo. Stat. §§ 16-4-112–114; review applicable budget balancing requirements",
+          "requirement": "Compare proposed and adopted appropriations with available revenues and the applicable statutory restrictions, using unrounded amounts and fund-level records.",
+          "status": "conflicting",
+          "finding": "The packet’s rounded proposed TOTAL APPROPRIATIONS shows $322,965,585, whereas its rounded TOTAL REVENUES shows $322,965,584, an apparent $1 difference. The tables include unrounded figures and rounding may explain it; neither the signed final text nor the ledger has been checked. This discrepancy alone does not establish an unlawful or unbalanced budget.",
+          "next": "Reconcile unrounded underlying amounts and the signed Resolution 6508 with the accounting ledger and determine whether any actual imbalance exists.",
+          "evidence": [
+            {
+              "label": "Proposed resolution appropriation and revenue tables",
+              "url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1053&meta_id=145748"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "meetingId": "city-council-2026-01-26",
       "itemNumber": "14",
       "match": "certifying compliance with wyoming statute",
       "title": "Western and southern Cheyenne city-initiated annexation resolution",
