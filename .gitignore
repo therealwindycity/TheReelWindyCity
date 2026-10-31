@@ -12,3 +12,20 @@ __pycache__/
 ./2026-09-14-council/civicwatch/models/minilm-l6-onnx/model.onnx
 
 # Allow required test & build PDF fixtures
+
+# Local Next.js builds, generated public data, and browser test output
+/node_modules/
+/.next/
+/out/
+/next-env.d.ts
+/tsconfig.tsbuildinfo
+/test-output/
+/.sync/
+/src/data/meetings.json
+/src/data/wyoming-ecosystem.json
+/public/data/meetings.json
+/public/data/citizen-connect.json
+/public/data/scanner-archive-links.json
+/public/data/wyoming-pulse.json
+/public/maps/wyoming-government-sites.geojson
+/.cache/

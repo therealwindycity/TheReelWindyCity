@@ -59,6 +59,8 @@ test("the runner does not fetch uncalibrated governments or Cheyenne", async () 
   for (const target of targets.filter((item) => item.mode === "parse" || item.mode === "host-check")) {
     if (target.mode === "host-check") {
       writeFileSync(path.join(dir, `${target.id}.json`), JSON.stringify({ status: 200, finalUrl: target.url }));
+    } else if (target.architectureId === "agendaquick") {
+      writeFileSync(path.join(dir, `${target.id}.html`), `<table><tr><td><a href="agenda_publish.cfm?id=74374&dsp=ag&seq=673">October 5, 2026</a></td><td>City Council</td></tr></table>`);
     } else if (target.architectureId === "pdf-packet-folder") {
       writeFileSync(path.join(dir, `${target.id}.html`), `<a href="11.04.2025-council-packet.pdf">packet</a>`);
     } else if (target.architectureId === "civicplus-agenda-center") {
@@ -92,11 +94,14 @@ test("host drift is structural and does not parse the foreign page", async () =>
   const report = await runWatch({
     targets: [target],
     state: { version: 1, targets: {} },
-    fetchImpl: async () => ({
+    fetchImpl: async (_url, options) => {
+      assert.ok(options.signal instanceof AbortSignal);
+      return {
       status: 302,
       headers: { get: (name) => (name === "location" ? "https://example.invalid/other" : "") },
       text: async () => "should not be parsed",
-    }),
+      };
+    },
   });
   assert.equal(report.structural, 1);
   assert.equal(report.results[0].reason, "ENO_HOST");
@@ -125,4 +130,25 @@ test("the scheduled workflow does not call the Cheyenne sync", async () => {
   const seeded = JSON.parse(readFileSync(scratch, "utf8"));
   assert.equal(seeded.version, 1);
   assert.equal(Object.keys(seeded.targets).length, watchTargets(COUNTIES, MUNICIPALITIES).length);
+});
+
+test("Sheridan AgendaQuick accepts only dated rows for the pinned account", () => {
+  const target = watchTargets(COUNTIES, MUNICIPALITIES).find((item) => item.id === "place-sheridan");
+  const html = `<table><tr><th>Agendas</th><th>Meeting</th><th>Minutes</th></tr>
+    <tr><td><a href="agenda_publish.cfm?id=74374&mt=ALL&dsp=ag&seq=673">October 5, 2026</a></td><td>City Council - Regular</td><td></td></tr>
+    <tr><td><a href="agenda_publish.cfm?id=99999&dsp=ag&seq=1">October 6, 2026</a></td><td>Other City</td><td></td></tr></table>`;
+  const records = parseSurface(target.architectureId, html, target.url);
+  assert.equal(records.length, 1);
+  assert.equal(records[0].date, '2026-10-05');
+  assert.equal(records[0].bodyLabel, 'City Council - Regular');
+  assert.match(records[0].agendaUrl, /seq=673/);
+  assert.throws(() => parseSurface(target.architectureId, '<h1>Agenda</h1>', target.url), /no dated agenda/);
+});
+
+test("a re-pinned URL establishes a new baseline rather than comparing the old hash", async () => {
+  const target = watchTargets(COUNTIES, MUNICIPALITIES).find((item) => item.id === "county-goshen");
+  const state = { version: 1, targets: { [target.id]: { contentHash: 'old', url: 'https://goshencounty.org/', architectureId: target.architectureId } } };
+  const report = await runWatch({ targets: [target], state, fetchImpl: async () => ({ status: 200, headers: { get: () => 'text/html' }, text: async () => '' }) });
+  assert.equal(report.results[0].reason, 'baseline-established');
+  assert.equal(report.results[0].changed, false);
 });

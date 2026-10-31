@@ -102,6 +102,8 @@ try {
   if (!structuredData?.includes('"@type":"WebSite"') || !structuredData.includes(canonicalUrl)) {
     throw new Error('Expected truthful WebSite JSON-LD with the canonical URL');
   }
+  await expect(page.getByRole('heading', { name: 'Your community. The information to draw your own conclusions.' })).toBeVisible();
+  await page.goto(new URL('workspace/', BASE_URL.replace(/\/+$/, '') + '/').toString(), { waitUntil: 'domcontentloaded' });
   const appearanceButton = page.getByRole('button', { name: 'Choose site appearance' });
   await appearanceButton.click();
   await expect(appearanceButton).toHaveAttribute('aria-expanded', 'true');
@@ -389,19 +391,21 @@ try {
   await expect(page.locator('main')).toContainText('85 transcript files; 84 linked to dated meeting records');
   console.log('PASS: every meeting indexed, hydrated /hub, /hub/meetings, /meetings/[id], and /transcripts verified');
 
-  // The "Open this meeting in Civic Cheyenne" links on the static record pages point at
-  // /?meeting=<id>. That deep link must open the named meeting, survive a reload, and move
+  // Meeting record links open the interactive workspace with the selected meeting.
+  // /workspace/?meeting=<id> That deep link must open the named meeting, survive a reload, and move
   // the canonical URL onto the meeting's own record page so the two do not compete.
   const newestHistorical = historicalMeetings.reduce((latest, meeting) => meeting.date > latest.date ? meeting : latest);
+  await page.goto(`${publicBase}meetings/${newestHistorical.id}/`, { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('link', { name: 'Open this meeting in Civic Cheyenne' })).toHaveAttribute('href', new RegExp(`/workspace/\\?meeting=${newestHistorical.id}`));
   const deepLinkCanonical = `https://therealwindycity.github.io/TheReelWindyCity/meetings/${newestHistorical.id}/`;
-  await page.goto(`${publicBase}?meeting=${newestHistorical.id}`, { waitUntil: 'domcontentloaded' });
+  await page.goto(`${publicBase}workspace/?meeting=${newestHistorical.id}`, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('.session-location-banner')).toContainText(newestHistorical.bodyLabel);
   await expectCanonical(page, deepLinkCanonical);
   await page.reload({ waitUntil: 'domcontentloaded' });
   await expect(page.locator('.session-location-banner')).toContainText(newestHistorical.bodyLabel);
   await expectCanonical(page, deepLinkCanonical);
   await page.getByRole('button', { name: 'Overview', exact: true }).click();
-  await expectCanonical(page, canonicalUrl);
+  await expectCanonical(page, `${canonicalUrl}workspace/`);
   console.log('PASS: meeting deep links open the record and consolidate the canonical URL');
 
   await page.getByRole('button', { name: 'Wyoming Pulse', exact: true }).click();
@@ -481,6 +485,8 @@ try {
   const mp = await mobile.newPage();
   mp.on('pageerror', capturePageError);
   await mp.goto(BASE_URL, { waitUntil: 'domcontentloaded' });
+  await expect(mp.getByRole('heading', { name: 'Your community. The information to draw your own conclusions.' })).toBeVisible();
+  await mp.goto(`${publicBase}workspace/`, { waitUntil: 'domcontentloaded' });
   await expect(mp.getByRole('heading', { name: 'Big decisions. Local impact.' })).toBeVisible();
   await mp.screenshot({ path: 'test-output/mobile.png', animations: 'disabled' });
   let overflow = await mp.evaluate(() => document.documentElement.scrollWidth > window.innerWidth);

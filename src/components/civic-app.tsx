@@ -11,13 +11,13 @@ import PulseBroadcast from "./pulse-broadcast";
 import { SmartCivicSearch } from "./smart-civic-search";
 import { ARCHIVE_OWNER, ARCHIVE_REPO, DEFAULT_MEETING_ID, FEATURED_MEETING, GUIDED_MEETING_ID, LATEST_MEETING, LATEST_TRANSCRIPT_MEETING, MEETING, MEETINGS, MEETING_STATS, NEXT_MEETING, OFFICIAL_SCHEDULE_URL, ORDINANCES, UPCOMING_MEETINGS, asset, displayMeetingNotes, evaluateMeetingCalendarAt, formatEvaluationTimestamp, meetingGroupLabel, noUpcomingMeetingNotice, readableName, transcriptCountSummary, type SourceFile, type CivicProgress, type Bookmark as SavedBookmark, type Meeting, type Ordinance } from "@/lib/civic-data";
 import { loadNotebook, saveProgress as persistProgress, toggleBookmark as persistBookmark } from "@/lib/notebook";
-import { SITE_URL, siteUrl } from "@/lib/site-config";
+import { siteUrl } from "@/lib/site-config";
 import { PlacePicker } from "@/components/place-picker";
 
 type View = "overview" | "alerts" | "sessions" | "impacts" | "ordinances" | "sources" | "notebook" | "search";
 
 /** Canonical URL this view declares; kept in sync across every canonical tag. */
-let desiredCanonical = SITE_URL;
+let desiredCanonical = siteUrl("workspace/");
 
 /**
  * Write the desired canonical URL onto every `link[rel=canonical]` in the head.
@@ -36,13 +36,13 @@ function applyCanonical() {
 /**
  * Point the canonical URL at the meeting's own statically rendered record page
  * while the app is showing that meeting, so the parameterized deep link
- * (`/?meeting=<id>`) consolidates onto `/meetings/<id>/` instead of competing
- * with the homepage for the same records. Falls back to the site root when no
+ * (`/workspace/?meeting=<id>`) consolidates onto `/meetings/<id>/` instead of competing
+ * with the homepage for the same records. Falls back to the workspace when no
  * meeting is selected, so every other view keeps its existing canonical.
  */
 function syncCanonical(meetingId: string | null) {
   const known = meetingId !== null && MEETINGS.some((meeting) => meeting.id === meetingId);
-  desiredCanonical = known ? siteUrl(`meetings/${meetingId}/`) : SITE_URL;
+  desiredCanonical = known ? siteUrl(`meetings/${meetingId}/`) : siteUrl("workspace/");
   applyCanonical();
 }
 type SiteStyleId = "prairie" | "newsroom" | "field-notes" | "terminal" | "glacier" | "sunset" | "high-contrast" | "blueprint" | "garden" | "monochrome";

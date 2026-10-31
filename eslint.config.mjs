@@ -5,6 +5,7 @@ export default defineConfig([
   // Keep the starter on the flat config export that actually runs under the pinned ESLint/Next toolchain.
   ...nextCoreWebVitals,
   {
+    files: ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
     rules: {
       // The app intentionally loads external data in effects (repository indexes, source
       // documents) and renders plain <img> tags for archived photos on a static export.

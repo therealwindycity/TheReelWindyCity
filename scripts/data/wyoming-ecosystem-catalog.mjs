@@ -149,9 +149,10 @@ export const COUNTIES = [
     clerk: {
       address: "2125 East A St., Suite 120, P.O. Box 160, Torrington, WY 82240",
       phone: "307.532.4051",
-      website: site("https://www.goshencounty.org/", "state-publication", WYDOT),
-      alternates: [],
+      website: site("https://goshencountywy.gov/", "opened", "https://goshencountywy.gov/"),
+      alternates: [site("https://www.goshencounty.org/", "state-publication", WYDOT)],
     },
+    archiveNote: "The published goshencounty.org host redirected to goshencountywy.gov when checked on 2026-10-31; no commission agenda surface is implied.",
   }),
   county({
     id: "hot-springs",

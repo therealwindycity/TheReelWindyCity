@@ -182,6 +182,36 @@ function parseDocumentList(html, pageUrl, { rejectAgendaCenter }) {
   return dedupe(records);
 }
 
+// Sheridan's official clerk page embeds this AgendaQuick publisher. Restrict
+// records to the pinned publisher and account; never follow arbitrary links.
+function parseAgendaQuick(html, pageUrl) {
+  const root = parse(html);
+  const pinned = new URL(pageUrl);
+  const account = pinned.searchParams.get("id");
+  const records = [];
+  for (const row of root.querySelectorAll("tr")) {
+    const cells = row.querySelectorAll("td");
+    if (cells.length < 2) continue;
+    for (const link of row.querySelectorAll("a")) {
+      const raw = absoluteUrl(link.getAttribute("href") || "", pageUrl);
+      if (!raw) continue;
+      const url = new URL(raw);
+      if (siteHost(raw) !== siteHost(pageUrl) || !/\/agenda_publish\.cfm$/i.test(url.pathname) || url.searchParams.get("id") !== account) continue;
+      const type = url.searchParams.get("dsp");
+      if (type !== "ag" && type !== "mi") continue;
+      const date = dateFromText(link.textContent);
+      const sequence = url.searchParams.get("seq");
+      if (!date || !account || !/^\d+$/.test(sequence || "")) continue;
+      // Generic URL normalization strips unknown query parameters. Here id,
+      // dsp and seq identify the meeting, so preserve just those stable fields.
+      const stableUrl = `${url.origin}${url.pathname}?id=${encodeURIComponent(account)}&dsp=${type}&seq=${sequence}`;
+      records.push({ ...record(cells[1].textContent, date, stableUrl, type === "mi" ? "minutes" : "agenda"), agendaUrl: stableUrl });
+    }
+  }
+  if (!records.length) throw fail("ENO_ROWS", "AgendaQuick had no dated agenda or minutes rows for the pinned account");
+  return dedupe(records);
+}
+
 function parsePacketFolder(html, pageUrl) {
   if (html.startsWith("%PDF") || /^%PDF-/.test(html.slice(0, 8))) {
     throw fail("ENO_SURFACE", "Response is a single PDF, not a packet folder");
@@ -220,6 +250,8 @@ export function parseSurface(architectureId, html, pageUrl) {
       return parseDocumentList(html, pageUrl, { rejectAgendaCenter: false });
     case "pdf-packet-folder":
       return parsePacketFolder(html, pageUrl);
+    case "agendaquick":
+      return parseAgendaQuick(html, pageUrl);
     default:
       throw fail("ENO_KIND", `No parser is calibrated for ${architectureId}`);
   }
@@ -251,6 +283,13 @@ export function watchTargets(counties, municipalities) {
         url: view === "5" ? place.posting.url : null,
         reason: view === "5" ? "owned-by-municipal-watch" : "uncalibrated-view",
       });
+      continue;
+    }
+    if (place.id === "sheridan") {
+      // This account is linked from the city's clerk agendas page. The embedded
+      // third-party listing is the watch target, not a guessed county URL.
+      targets.push({ id: "place-sheridan", governmentId: place.id, layer: "municipality", name: place.name,
+        architectureId: "agendaquick", mode: "parse", url: "https://public.destinyhosted.com/agenda_publish.cfm?id=74374&mt=ALL" });
       continue;
     }
     if (place.posting?.url && PARSERS.has(place.architectureId)) {

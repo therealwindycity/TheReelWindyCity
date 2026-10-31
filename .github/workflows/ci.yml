@@ -111,14 +111,10 @@ jobs:
           for i in $(seq 1 30); do curl -sf "http://127.0.0.1:3000/${{ github.event.repository.name }}/" >/dev/null && break; sleep 1; done
           BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:e2e
 
-      - name: Publish CI Diagnostics (Runs Even On Failure)
+      - name: Upload CI diagnostics
         if: always()
-        run: |
-          if [ -f "CI_DIAGNOSTICS.md" ]; then
-            git config user.name "Promethean-DiagnosticBot"
-            git config user.email "cwdm82001@gmail.com"
-            git pull --rebase origin main || true
-            git add CI_DIAGNOSTICS.md
-            git commit -m "CI Telemetry: Captured test and build logs [skip ci]" || true
-            git push origin HEAD:main || true
-          fi
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-diagnostics
+          path: CI_DIAGNOSTICS.md
+          if-no-files-found: ignore

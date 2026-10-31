@@ -58,6 +58,9 @@ async function fetchPinned(url, fetchImpl, hops = 0) {
   if (hops > 3) throw fail("ENO_HOST", `Too many redirects from ${url}`);
   const response = await fetchImpl(url, {
     redirect: "manual",
+    // Bound both the response and body read so one stalled publisher cannot
+    // suppress the entire report until the workflow itself times out.
+    signal: AbortSignal.timeout(10000),
     headers: { "user-agent": UA, accept: "text/html,application/xhtml+xml,application/pdf" },
   });
   const status = response.status;
@@ -124,10 +127,12 @@ async function watchOne(target, previous, source) {
   };
   try {
     const fetched = await source(target);
+    // A changed URL or parser is a new surface, not a change to an old hash.
+    const previousHash = previous?.url === target.url && previous?.architectureId === target.architectureId ? previous.contentHash : null;
     if (target.mode === "host-check") {
       if (fetched.hostDrift) throw fail("ENO_HOST", fetched.error || "host drift");
       const hash = hostHash(fetched.finalUrl || target.url, fetched.status);
-      return { ...base, ...judge(previous?.contentHash, hash), structural: false, contentHash: hash, status: fetched.status };
+      return { ...base, ...judge(previousHash, hash), structural: false, contentHash: hash, status: fetched.status };
     }
     if (/pdf/i.test(fetched.contentType || "") || String(fetched.body || "").startsWith("%PDF")) {
       throw fail("ENO_SURFACE", "Expected an HTML listing and received a PDF");
@@ -136,7 +141,7 @@ async function watchOne(target, previous, source) {
     const hash = contentHash(records);
     return {
       ...base,
-      ...judge(previous?.contentHash, hash),
+      ...judge(previousHash, hash),
       structural: false,
       contentHash: hash,
       records: records.length,
