@@ -1,101 +1,10 @@
 {
-  "@context": "https://schema.org",
-  "@type": "SoftwareSourceCode",
-  "system_name": "Promethean CivicWatch & The Real Windy City Federated Mesh",
-  "version": "3.0.0-omnibus",
-  "architect": {
-    "name": "Charles Walter Diaz Miller",
-    "primary_org": "https://github.com/therealwindycity",
-    "github_org": "https://github.com/bartimoussmith-oss",
-    "github_orgs": [
-      "https://github.com/therealwindycity",
-      "https://github.com/bartimoussmith-oss"
-    ],
-    "contact_emails": ["cwdm82001@gmail.com", "bartimoussmith@gmail.com"]
-  },
+  "system_name": "Promethean CivicWatch Federated Mesh",
+  "architect": {"name": "Charles Walter Diaz Miller"},
   "federated_nodes": {
     "repositories": [
-      {
-        "id": "TheReelWindyCity",
-        "node_tier": "primary_org_repo",
-        "org": "therealwindycity",
-        "url": "https://github.com/therealwindycity/TheReelWindyCity.git",
-        "sibling_repo": "https://github.com/bartimoussmith-oss/therealwindycity.git",
-        "pages_url": "https://therealwindycity.github.io/TheReelWindyCity/",
-        "role": "Primary Org Repo — Civic Cheyenne Public Hub, Next.js Static Archive, Granicus Harvester, Rhetorical Profiler & Omnibus Agent SDK",
-        "default_branch": "main",
-        "entrypoint_sdk": "omnibus_agent_sdk.py"
-      },
-      {
-        "id": "therealwindycity",
-        "node_tier": "secondary_architect_repo",
-        "org": "bartimoussmith-oss",
-        "url": "https://github.com/bartimoussmith-oss/therealwindycity.git",
-        "sibling_repo": "https://github.com/therealwindycity/TheReelWindyCity.git",
-        "role": "Secondary Architect Repo — Primary Civic Media Platform, Forensic Monolith Archive, Granicus Harvester, Rhetorical Profiler & Streamlit Dashboard",
-        "default_branch": "main",
-        "entrypoint_sdk": "omnibus_agent_sdk.py"
-      }
-    ],
-    "web_deployments": [
-      {
-        "id": "civic_cheyenne_pages_hub",
-        "url": "https://therealwindycity.github.io/TheReelWindyCity/",
-        "source_repo": "https://github.com/therealwindycity/TheReelWindyCity.git",
-        "role": "Public Static Civic Learning Hub, Live Government Desk, Meeting Archive & AI Discovery Beacon"
-      },
-      {
-        "id": "streamlit_transparency_index",
-        "url": "https://therealwindycity.streamlit.app/",
-        "source_repo": "https://github.com/bartimoussmith-oss/therealwindycity.git",
-        "app_entry": "Transparency_Index_App.py",
-        "role": "Interactive Public FTS5 Search, Veracity Ledger & Official Rhetorical Profiles"
-      },
-      {
-        "id": "facebook_civic_media",
-        "name": "The Real Windy City",
-        "role": "Public Commentary, Governance Analysis & Citizen Audit Distribution"
-      }
-    ],
-    "cloud_and_storage_mesh": [
-      {
-        "id": "gcp_cloud_run_api",
-        "project_id": "gen-lang-client-0520200480",
-        "service_name": "promethean-v-max-omega",
-        "role": "Remote API Inference & Heavy Ingestion Offload"
-      },
-      {
-        "id": "rclone_drive_bridge",
-        "service_account": "promethean-drive-sync@gen-lang-client-0520200480.iam.gserviceaccount.com",
-        "daemon_script": "tools/symbiotic_mesh_daemon.py",
-        "role": "Continuous 60-second Telemetry, Arena History & Evidence Vault Sync"
-      }
-    ],
-    "databases": [
-      {
-        "id": "promethean_evidence_db",
-        "path": "database/promethean_evidence.db",
-        "engine": "SQLite3 + FTS5",
-        "schema_path": "database/schema_rhetorical_profiling.sql",
-        "tables": ["officials", "governance_items", "voting_record", "veracity_audit", "fts_forensic_archive", "entity_edges"]
-      },
-      {
-        "id": "promethean_vault_db",
-        "path": "database/promethean_vault.db",
-        "engine": "SQLite3 + FTS5",
-        "role": "SpiderFoot OSINT Surface Cartography, GIS Parcels & YouTube Meeting Transcripts"
-      }
-    ]
-  },
-  "target_jurisdiction_endpoints": {
-    "granicus_portal": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=1",
-    "municipal_domains": ["cheyennecity.org", "laramiecounty.com"],
-    "capabilities": [
-      "GRANICUS_PDF_HARVESTING",
-      "FTS5_STATUTORY_CROSS_EXAMINATION",
-      "RHETORICAL_PROFILING",
-      "RELATIONAL_ENTITY_GRAPH_MAPPING",
-      "VERACITY_CONTRADICTION_INDEXING"
+      {"id": "primary", "url": "https://github.com/bartimoussmith-oss/therealwindycity.git"},
+      {"id": "secondary", "url": "https://github.com/therealwindycity/TheReelWindyCity.git"}
     ]
   }
 }

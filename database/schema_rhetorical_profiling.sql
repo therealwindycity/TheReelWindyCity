@@ -2,7 +2,6 @@ PRAGMA foreign_keys = ON;
 PRAGMA journal_mode = WAL;
 PRAGMA synchronous = NORMAL;
 
--- 1. Authority Figures & Decision Makers
 CREATE TABLE IF NOT EXISTS officials (
     official_id INTEGER PRIMARY KEY AUTOINCREMENT,
     full_name TEXT NOT NULL UNIQUE,
@@ -14,7 +13,6 @@ CREATE TABLE IF NOT EXISTS officials (
     updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- 2. Structured Agenda & Statutory Items
 CREATE TABLE IF NOT EXISTS governance_items (
     item_id INTEGER PRIMARY KEY AUTOINCREMENT,
     granicus_clip_id TEXT,
@@ -30,7 +28,6 @@ CREATE TABLE IF NOT EXISTS governance_items (
     created_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
 
--- 3. Recorded Votes & Procedural Actions
 CREATE TABLE IF NOT EXISTS voting_record (
     vote_id INTEGER PRIMARY KEY AUTOINCREMENT,
     item_id INTEGER NOT NULL,
@@ -43,7 +40,6 @@ CREATE TABLE IF NOT EXISTS voting_record (
     FOREIGN KEY (official_id) REFERENCES officials(official_id) ON DELETE CASCADE
 );
 
--- 4. Veracity Indexing (Contradiction & Systemic Arbitrage Tracker)
 CREATE TABLE IF NOT EXISTS veracity_audit (
     audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
     official_id INTEGER NOT NULL,
@@ -66,7 +62,6 @@ CREATE TABLE IF NOT EXISTS veracity_audit (
     FOREIGN KEY (item_id) REFERENCES governance_items(item_id) ON DELETE SET NULL
 );
 
--- 5. FTS5 Virtual Table for Full-Text Forensic Cross-Examination
 CREATE VIRTUAL TABLE IF NOT EXISTS fts_forensic_archive USING fts5(
     record_type,
     reference_id UNINDEXED,
@@ -77,7 +72,6 @@ CREATE VIRTUAL TABLE IF NOT EXISTS fts_forensic_archive USING fts5(
     tokenize='porter unicode61'
 );
 
--- Triggers to keep FTS5 automatically synchronized with Governance Items & Veracity Audits
 CREATE TRIGGER IF NOT EXISTS trg_sync_governance_fts
 AFTER INSERT ON governance_items
 BEGIN
