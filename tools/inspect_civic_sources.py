@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT / 'arena_workspace'
 TERMS = ['stormwater', '1,000,0000', 'Fremont', '3-2', '4669', '6544', '5,650,000', 'Aldrich']
 MAX_PAGES = 300
-MAX_TEXT = 20 * 1024 * 1024
+MAX_TEXT_CHARS = 20 * 1024 * 1024
 
 
 def notice(title, data):
@@ -114,7 +114,7 @@ def inspect_one(row, workspace):
         for page in reader.pages:
             text = page.extract_text() or ''
             chars += len(text)
-            if chars > MAX_TEXT:
+            if chars > MAX_TEXT_CHARS:
                 raise ValueError('Extracted text exceeds inspection bound')
             texts.append(text)
         if not any(t.strip() for t in texts):

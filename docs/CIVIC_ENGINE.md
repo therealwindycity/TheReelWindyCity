@@ -137,7 +137,7 @@ The following supersedes the initial workflow's artifact-only success semantics.
 | Concurrent CLI writers | Exclusive owner-token workspace lock; crash leftovers require inspection | Second writer refused; exception cleanup; owner replacement preserved |
 | Target input | Unique safe IDs, ISO dates, integer 1–300 second clips, approved HTTPS hosts | Traversal, duplicate IDs, credentials, ports, invalid types, Unicode timestamps |
 | Response persistence | Bounded reads, SHA-256 and atomic file replacement; failed retrieval clears current bytes/digest | Successful/empty/failed retrieval, stale file cleanup |
-| Source inspection | PDF signature, digest match, source-directory boundary, 300-page and 20 MiB text bounds | Corrupt, encrypted, blank, wrong-date, mislabeled and tampered sources |
+| Source inspection | PDF signature, digest match, source-directory boundary, 300-page and 20,971,520-character text bound | Corrupt, encrypted, blank, wrong-date, mislabeled and tampered sources |
 | Partial failure | Every source gets an inspection result; a malformed PDF does not skip later records | Corrupt source alongside successful named-vote extraction |
 | Named votes | Narrow, explicit October 26 stormwater rule; no aggregate tally or inferred NO names | Wrong date/context/action rejected; repeated extraction remains idempotent |
 | Media | Explicit opt-in in Actions; approved official HTTPS host only; no access-control bypass | Untrusted links, missing discovery, stale run IDs, missing audio, short clips |
@@ -157,7 +157,7 @@ COVERAGE_FILE=arena_workspace/civic-coverage.sqlite3 .venv/bin/python -m coverag
 COVERAGE_FILE=arena_workspace/civic-coverage.sqlite3 .venv/bin/python -m coverage report
 ```
 
-The measured offline suite is **56 tests**, passing; measured combined
+The measured offline suite is **57 tests**, passing; measured combined
 statement/branch coverage is **90%** across the four audited modules. This is not
 100% path coverage, production certification, source authentication or proof of
 working remote video access. Network/media unit tests use explicit fixtures and
@@ -194,3 +194,31 @@ A leftover `.civic-engine.lock` after termination is not automatically broken.
 Inspect its PID/token, verify no writer is active, and only then remove that
 specific stale lock. Use separate workspaces for independent local pipelines;
 the CLI lock does not span manually launched downstream inspection commands.
+
+### Hosted verification of the hardened contract
+
+Run [41438889283](https://github.com/therealwindycity/TheReelWindyCity/actions/runs/41438889283)
+executed the new document-only path. Its completion annotation reports:
+
+```json
+{
+  "documents_complete": true,
+  "source_count": 8,
+  "source_associations_valid": false,
+  "named_votes_imported": 2,
+  "media_complete": false,
+  "media_required": false,
+  "publication_ready": false,
+  "objective_complete": false,
+  "execution_gate_passed": false,
+  "failures": ["3 source role/date association issues require review"]
+}
+```
+
+Tests, retrieval, per-source inspection and artifact upload succeeded. The final
+quality gate deliberately failed on the three known supplied-link problems:
+May 6 purchasing memo labeled as minutes, July 14, 2025 proceedings linked to
+the July 2026 case, and March 23 proceedings linked to the October case. Neither
+YouTube nor official streaming access was retried. The artifact is
+`civic-evidence-41438889283` (2,169,265 bytes). This red run is a source-quality
+finding, not a claim that the sources could not be retrieved.

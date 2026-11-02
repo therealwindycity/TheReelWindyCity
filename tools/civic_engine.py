@@ -163,7 +163,7 @@ def render_posts(items, statuses):
             if status['case_id'] == item['id']:
                 lines.append(f"- {status['kind']}: {status['status']}")
         lines += ['**Before publication:** authenticate the document and meeting date, locate the quotation/page, check the final action and roll call, review surrounding footage, and distinguish fact from interpretation.', '']
-    lines += ['## Vote coverage', 'No verified roll-call rows have been imported. The votes table is intentionally empty rather than inferring votes from supplied prose.', '']
+    lines += ['## Vote coverage', 'This draft generator does not import a full roll call. Subsequent source inspection may record explicitly named votes in SQLite, with a PDF hash and page locator. Do not infer unnamed votes or a numerical tally from aggregate prose.', '']
     return '\n'.join(lines)
 
 

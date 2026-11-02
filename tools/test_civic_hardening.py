@@ -490,5 +490,11 @@ class HardeningTests(unittest.TestCase):
         self.assertFalse((self.root / 'exports/cheyenne_corruption_montage.mp4').exists())
 
 
+    def test_draft_does_not_claim_votes_table_stays_empty_after_inspection(self):
+        text = engine.render_posts(self.targets, [])
+        self.assertNotIn('votes table is intentionally empty', text)
+        self.assertIn('Subsequent source inspection may record explicitly named votes', text)
+
+
 if __name__ == '__main__':
     unittest.main()
