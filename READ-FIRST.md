@@ -68,11 +68,11 @@ Coordination is not optional here.
 
 ### claim: other-target-cases — debt, Highlands and Reed/stormwater written-record investigations
 - worker: arena-civic-engine
-- status: active
-- stage: identified original proposal/adoption and staff sources; preparing bounded three-case hosted capture with per-case complete evidence transport
+- status: done
+- stage: all four capture jobs in run 41445522261 passed; 11 PDF captures / 10 distinct contents and complete compressed packets verified; three case reports, six Reed voucher identifiers and Resolution 6573 follow-up documented; 76 local tests passed
 - scope: NEW tools/remaining_target_evidence.py, tools/test_remaining_target_evidence.py, .github/workflows/remaining-target-evidence.yml, docs/REMAINING_TARGET_CASES.md; tools/fleet_case_evidence.py (optional bounded fetcher only); READ-FIRST.md (claim/log only); ignored arena_workspace/other-targets/ and exports
 - started: 2026-11-02T12:26Z
-- updated: 2026-11-02T12:26Z
+- updated: 2026-11-02T12:38Z
 - notes: Reuse existing fixed-host PDF capture; preserve default fleet bounds, add explicit 12 MiB ceiling for Highlands maps. Compressed ASCII evidence transport avoids Unicode escape mutation observed in initial API notices. Verify document dates, motion scope and conditions; no invented timestamps, numeric repair, legal/engineering conclusions or payment claims. Requests remain unsent drafts.
 
 
@@ -448,3 +448,8 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 ### 2026-11-02 — E-19-26 narrow transaction investigation
 
 - claim: fleet-transaction-case; result: reconstructed recommendation (May 6), referral (May 11) and actual award (May 26). Final hosted run 41443951478 at 1b27eff captured three original public PDFs with archived SHA-1 matches and new SHA-256 digests; six of six selected-page packets reassembled and verified. Approved Fremont/Lander supplier, $78,819 cap, account 020-26-2617-42-43503 and 2019–2022 Optional 1% Sales Tax label established. Extracted table comparison is $3,407 / 4.517849% above Duval and $363.60 below displayed 105% benchmark; this is not legal eligibility verification or proof of actual payment. Searched 61 archived voucher documents / 721 pages; no exact bid/amount match; coverage incomplete through September, so delivery/payment remain unresolved, not disproven. Report includes direct PDF/page links, extraction caveats and exact draft records request (not sent). Fixed ten-notice transport truncation and malformed-PDF isolation; 11 local/hosted focused tests and 57 local civic regressions passed. No DB/app/source-registry edits, fabricated timestamps, authentic clips, fee authorization or main merge.
+
+
+### 2026-11-02 — remaining targets investigated against original written records
+
+- claim: other-target-cases; result: successful run 41445522261 at 614f863, four jobs, 11 PDF captures / 10 distinct byte contents. Ten known-baseline matches; October source explicitly has no pinned-database baseline. Verified complete gzip/base64 payloads (3 debt, 4 Highlands, 5 Reed/stormwater, 3 voucher packets). Initial run 41445001940 was not accepted as complete: Highlands map packet exceeded default 5 MiB and Unicode escape mutation failed integrity verification; explicit 12 MiB source-only bound and compressed ASCII transport fixed those problems. Default fleet limit remains 5 MiB. Debt: $20M application authorization and malformed unsigned repayment estimate, no proof of closed loan. Highlands: 3,459.99 acres, July 13 main actions approved, staff serviceability with further engineering needed; PC tally/majority and report boundary descriptions need primary-record reconciliation. Reed: draft $5M conditional commitment, April 27 Ordinance 4669 approval with Rinne technical no-record note; six unique DHM/PSA7782 voucher entries dated July 23 total $53,615.51, fund and bank clearing unknown. October 26: failed $10M potential-transfer policy, not immediate transfer; separate Resolution 6573 approves up to $18,063,014 interfund loan, actual movements/terms unverified. Report supplies direct sources/pages and three draft unsent records requests. Tests: targets 8 + shared capture 11 + civic 57 = 76 unique local passes; hosted jobs pass 19 focused tests each. No original DB, source registry or app edits; no legal/engineering/misconduct conclusion, request sending, fees, fabricated timestamp or main merge.
