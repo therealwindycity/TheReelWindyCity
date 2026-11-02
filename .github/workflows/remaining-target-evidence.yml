@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        case: [debt, highlands, stormwater]
+        case: [debt, highlands, stormwater, reed_vouchers]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

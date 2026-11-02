@@ -56,29 +56,32 @@ class PDFLinks(HTMLParser):
                 self.links.add(url)
 
 
-def fetch(url):
+def fetch(url, max_bytes=MAX_BYTES):
+    if not isinstance(max_bytes, int) or not 0 < max_bytes <= 12 * 1024 * 1024:
+        raise ValueError('Unsupported source byte bound')
     safe_url(url)
     with build_opener(SafeRedirect()).open(
             Request(url, headers={'User-Agent': 'CivicEvidenceResearch/1.0'}), timeout=25) as response:
         safe_url(response.geturl())
-        data = response.read(MAX_BYTES + 1)
-        if len(data) > MAX_BYTES:
-            raise ValueError('Source exceeds 5 MiB bound')
+        data = response.read(max_bytes + 1)
+        if len(data) > max_bytes:
+            raise ValueError(f'Source exceeds {max_bytes} byte bound')
         return data, response.geturl()
 
 
-def capture(source, out):
+def capture(source, out, fetcher=None):
     from pypdf import PdfReader
     from pypdf.errors import PyPdfError
     row = {**source, 'status': 'failed'}
+    fetch_source = fetcher or fetch
     try:
-        data, final_url = fetch(source['url'])
+        data, final_url = fetch_source(source['url'])
         if not data.startswith(b'%PDF-'):
             viewer = PDFLinks(final_url)
             viewer.feed(data.decode('utf-8'))
             if len(viewer.links) != 1:
                 raise ValueError('Viewer does not identify exactly one public PDF')
-            data, final_url = fetch(next(iter(viewer.links)))
+            data, final_url = fetch_source(next(iter(viewer.links)))
         if not data.startswith(b'%PDF-'):
             raise ValueError('Response is not a PDF')
         row.update(final_url=final_url, bytes=len(data), sha1=hashlib.sha1(data).hexdigest(),
