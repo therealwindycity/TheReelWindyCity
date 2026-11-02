@@ -66,6 +66,16 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: other-target-cases — debt, Highlands and Reed/stormwater written-record investigations
+- worker: arena-civic-engine
+- status: active
+- stage: identified original proposal/adoption and staff sources; preparing bounded three-case hosted capture with per-case complete evidence transport
+- scope: NEW tools/remaining_target_evidence.py, tools/test_remaining_target_evidence.py, .github/workflows/remaining-target-evidence.yml, docs/REMAINING_TARGET_CASES.md; READ-FIRST.md (claim/log only); ignored arena_workspace/other-targets/ and exports
+- started: 2026-11-02T12:26Z
+- updated: 2026-11-02T12:26Z
+- notes: Reuse existing fixed-host PDF capture without changing fleet scope. Verify document dates, motion scope and conditions; no invented timestamps, numeric repair, legal/engineering conclusions or payment claims. Requests remain unsent drafts.
+
+
 ### claim: fleet-transaction-case — E-19-26 source-backed award/payment investigation
 - worker: arena-civic-engine
 - status: done
