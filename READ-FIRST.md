@@ -66,6 +66,16 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: fleet-transaction-case — E-19-26 source-backed award/payment investigation
+- worker: arena-civic-engine
+- status: active
+- stage: located May 11 referral and May 26 final award in immutable archived text; capturing original public PDFs and bid-table layout
+- scope: NEW tools/fleet_case_evidence.py, tools/test_fleet_case_evidence.py, .github/workflows/fleet-case-evidence.yml, docs/FLEET_E19_CASE.md; READ-FIRST.md (claim/log only); ignored arena_workspace/fleet-case/ and exports
+- started: 2026-11-02T12:10Z
+- updated: 2026-11-02T12:10Z
+- notes: One procurement only. Distinguish recommendation, referral, award, delivery and payment. No original database edits or unsupported legal conclusions; no video/authentication retries.
+
+
 ### claim: repository-claims-audit — verify alleged divergence architecture, SPET schemas and history
 - worker: arena-civic-engine
 - status: done
