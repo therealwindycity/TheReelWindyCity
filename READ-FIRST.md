@@ -68,11 +68,11 @@ Coordination is not optional here.
 
 ### claim: fleet-transaction-case — E-19-26 source-backed award/payment investigation
 - worker: arena-civic-engine
-- status: active
-- stage: three original PDFs captured with matching archived digests; complete six-packet review verified; May 26 award/fund established; 61 archived voucher reports searched; delivery/payment unresolved
+- status: done
+- stage: final hosted run 41443951478 passed; three native PDFs and six-packet payload verified; award/fund reconstructed, price comparison explained, payment gap and records request documented; 11 focused + 57 civic tests passed
 - scope: NEW tools/fleet_case_evidence.py, tools/test_fleet_case_evidence.py, .github/workflows/fleet-case-evidence.yml, docs/FLEET_E19_CASE.md; READ-FIRST.md (claim/log only); ignored arena_workspace/fleet-case/ and exports
 - started: 2026-11-02T12:10Z
-- updated: 2026-11-02T12:20Z
+- updated: 2026-11-02T12:22Z
 - notes: One procurement only. Distinguish recommendation, referral, award, delivery and payment. No original database edits or unsupported legal conclusions; no video/authentication retries.
 
 
@@ -433,3 +433,8 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 ### 2026-11-02 — alleged repository architecture verified against pinned sources
 
 - claim: repository-claims-audit; result: added read-only Git-blob-verifying auditor, 21 regression tests and source-linked report. Pinned bartimoussmith-oss/therealwindycity at 74edf0adbc9f4539f8af5fc5aaf51b33878c8955; all 1,368 selected files inspected, 1,183 JSON profiles and four verified SQLite schema/count snapshots. No named divergence matrix, Ghost Quorum, consultant ratio, voiceprint or supplied fiscal/link keys found in selected content. Actual rhetorical DB has zero officials/votes/veracity rows; authored watchdog seeds are not verified findings. Existing estoppel execution produced 479 unreviewed candidates, not contradictions. Fresh six-repository archive inventory: 5,140 blobs, 4,935 .pdf paths, 5,116 date-parsed records; oldest archive's 1,006 blobs are not .json files. Four bounded current-path histories inspected; reviewed diffs do not establish removal of alleged tracking features. Tests passed: auditor 21 + estoppel 7 + archive 53 + civic 57 = 138. Original data/app/schema files untouched; empty inactive SDK-created SQLite sidecars preserved only in ignored workspace. Audit bundle excludes source databases and Git blob cache; no misconduct conclusions, access-control bypass, or main merge.
+
+
+### 2026-11-02 — E-19-26 narrow transaction investigation
+
+- claim: fleet-transaction-case; result: reconstructed recommendation (May 6), referral (May 11) and actual award (May 26). Final hosted run 41443951478 at 1b27eff captured three original public PDFs with archived SHA-1 matches and new SHA-256 digests; six of six selected-page packets reassembled and verified. Approved Fremont/Lander supplier, $78,819 cap, account 020-26-2617-42-43503 and 2019–2022 Optional 1% Sales Tax label established. Extracted table comparison is $3,407 / 4.517849% above Duval and $363.60 below displayed 105% benchmark; this is not legal eligibility verification or proof of actual payment. Searched 61 archived voucher documents / 721 pages; no exact bid/amount match; coverage incomplete through September, so delivery/payment remain unresolved, not disproven. Report includes direct PDF/page links, extraction caveats and exact draft records request (not sent). Fixed ten-notice transport truncation and malformed-PDF isolation; 11 local/hosted focused tests and 57 local civic regressions passed. No DB/app/source-registry edits, fabricated timestamps, authentic clips, fee authorization or main merge.

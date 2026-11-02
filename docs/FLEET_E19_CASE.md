@@ -160,8 +160,8 @@ response deadline is claimed to have started.
 ## 6. Capture, integrity and reproduction
 
 Successful original-source capture:
-[GitHub Actions run 41443218886](https://github.com/therealwindycity/TheReelWindyCity/actions/runs/41443218886),
-commit `3597858d9d23fd6db73424287c20ea4aaa851c36`.
+[GitHub Actions run 41443951478](https://github.com/therealwindycity/TheReelWindyCity/actions/runs/41443951478),
+commit `1b27eff82756a7a5443e72758acc6814b33405dc`.
 All three freshly captured PDF SHA-1 digests matched the pre-existing archive's
 recorded raw-file digests. This is a byte comparison, not independent corroboration
 of the documents' assertions. SHA-256 digests are also retained.
@@ -172,7 +172,7 @@ of the documents' assertions. SHA-256 digests are also retained.
 | May 11 minutes | 130,499 | `cce46f6d4e70397302df9ca194a2d51fa0bc15ba0e50398f05a2106f3040c923` |
 | May 26 minutes | 139,502 | `3f19d35fce881704342f6f73ddcf6e26e687c3975de316370aa0bfa3f820a86a` |
 
-Hosted artifact: `fleet-case-41443218886`, ID **13140533978**, containing the
+Hosted artifact: `fleet-case-41443951478`, ID **13142045049**, containing the
 three originals and full extracted source report. It expires November 16, 2026.
 The local bundle contains verified selected-page text and API metadata, **not
 copies of the original PDFs**; hosted artifact upload was confirmed, but the
