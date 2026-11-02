@@ -66,6 +66,16 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: follow-money-terms — Resolution 6573 terms and Reed funding-history joins
+- worker: arena-civic-engine
+- status: active
+- stage: located FY2026 Reed PO encumbrance funding schedule and approval; discovering actual October interfund attachment from published agenda
+- scope: NEW tools/follow_money_evidence.py, tools/test_follow_money_evidence.py, .github/workflows/follow-money-evidence.yml, docs/FOLLOW_MONEY_TERMS.md; READ-FIRST.md (claim/log only); ignored arena_workspace/follow-money/ and exports
+- started: 2026-11-02T12:42Z
+- updated: 2026-11-02T12:42Z
+- notes: Do not infer actual cash movement from an authorization or encumbrance. Capture only uniquely associated same-host agenda attachments. No emails, fees, video retries or original DB edits.
+
+
 ### claim: other-target-cases — debt, Highlands and Reed/stormwater written-record investigations
 - worker: arena-civic-engine
 - status: done
