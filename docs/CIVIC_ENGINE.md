@@ -117,3 +117,12 @@ Some document-association arrays include unrelated years; those arrays cannot
 be treated as verified source links. Earlier statements that the large corpus
 was unsearched applied to the Drive download, not this subsequently discovered
 compressed repository copy.
+
+### Hosted run outcome
+
+See [CIVIC_HOSTED_RESULTS.md](CIVIC_HOSTED_RESULTS.md) for the executed result,
+source-date corrections and October 26 stormwater policy text. Public document
+retrieval worked on GitHub Actions; YouTube returned a bot/sign-in challenge,
+and all four official Granicus HLS attempts returned HTTP 403. No authentic
+meeting montage was rendered. Do not treat green workflow/artifact-upload status
+as successful video generation.

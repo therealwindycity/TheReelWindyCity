@@ -66,15 +66,6 @@ Coordination is not optional here.
 
 ## Active claims
 
-### claim: civic-github-execution — hosted retrieval and full local linked-corpus search
-- worker: arena-civic-engine
-- status: active
-- stage: local 720-record corpus searched (25 matches); workflow and runbook tested; pushing current branch for hosted public-source retrieval
-- scope: NEW .github/workflows/civic-evidence.yml; NEW tools/search_linked_civic.py, tools/inspect_civic_sources.py, tools/official_civic_montage.py; tools/civic_engine.py (bounded download subprocess); docs/CIVIC_ENGINE.md; READ-FIRST.md (claim/log only); all earlier uncommitted civic tools included in authorized branch push
-- started: 2026-11-02T11:22Z
-- updated: 2026-11-02T11:22Z
-- notes: No private Drive downloads or generated artifacts committed. Hosted retrieval remains distinct from content verification.
-
 
 ### claim: miller-estoppel-white-paper-expansion — source expansion and Wyoming-law analysis for the Miller estoppel-effect white paper
 - worker: arena-agent
@@ -388,3 +379,18 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 
 
 - result: Added reproducible package script and runbook. Rendered actual 720x1280/30fps H.264 silent text-card MP4 (not meeting montage), four corrected social posts and seven-file ZIP. Complete decode and duration checks passed; five source hashes unchanged; seven civic engine tests passed. Large linked corpus extraction explicitly refused at 25 MB; no exposed download-URL option or supported override. No claim of full corpus/source/video verification.
+
+
+### 2026-11-02 — GitHub-hosted civic retrieval executed
+
+### claim: civic-github-execution — hosted retrieval and full local linked-corpus search
+- worker: arena-civic-engine
+- status: done
+- stage: pushed current branch and opened PR #34; hosted retrieval confirmed eight PDFs; 720-record search complete; YouTube sign-in and official HLS 403 failures verified; findings exported
+- scope: NEW .github/workflows/civic-evidence.yml; NEW tools/search_linked_civic.py, tools/inspect_civic_sources.py, tools/official_civic_montage.py; tools/civic_engine.py (bounded download subprocess); docs/CIVIC_ENGINE.md and NEW docs/CIVIC_HOSTED_RESULTS.md; READ-FIRST.md (claim/log only); all earlier uncommitted civic tools included in authorized branch push
+- started: 2026-11-02T11:22Z
+- updated: 2026-11-02T11:22Z
+- notes: No private Drive downloads or generated artifacts committed. Hosted retrieval remains distinct from content verification.
+
+
+- result: Run 41437221070 completed and retained official document captures, extracted text, reports and full corpus search artifacts. Retrieved content identified wrong-year Highlands minutes and March/October source mismatch; October page 3 supports a failed year-end stormwater-transfer policy amendment and explicitly named Aldrich/White YES votes, not necessarily the supplied immediate-transfer wording or tally. Derived local SQLite augmented with eight response checks and two named votes. Four YouTube requests required sign-in; four advertised official HLS streams returned 403; no authentic montage claimed. PR #34 remains open, no main merge. Private Drive files and media remain ignored.
