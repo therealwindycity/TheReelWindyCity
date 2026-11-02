@@ -66,6 +66,16 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: civic-github-execution — hosted retrieval and full local linked-corpus search
+- worker: arena-civic-engine
+- status: active
+- stage: local 720-record corpus searched (25 matches); workflow and runbook tested; pushing current branch for hosted public-source retrieval
+- scope: NEW .github/workflows/civic-evidence.yml; NEW tools/search_linked_civic.py; tools/civic_engine.py (bounded download subprocess); docs/CIVIC_ENGINE.md; READ-FIRST.md (claim/log only); all earlier uncommitted civic tools included in authorized branch push
+- started: 2026-11-02T11:22Z
+- updated: 2026-11-02T11:22Z
+- notes: No private Drive downloads or generated artifacts committed. Hosted retrieval remains distinct from content verification.
+
+
 ### claim: miller-estoppel-white-paper-expansion — source expansion and Wyoming-law analysis for the Miller estoppel-effect white paper
 - worker: arena-agent
 - status: done
@@ -334,3 +344,47 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 - result: Added bounded, source-guarded item/subitem supporting-document discovery, PDF text and explicit statutory citation scanning, provenance and candidate evidence excerpts, an hourly queue, and tests. Corrected the guided session’s mistaken substitution of the fire department policy brief for the proposed warrant ordinance. Added a partial January 26 budget reappropriation review and identified a one-dollar difference in rounded draft revenue/appropriation totals as a reconciliation lead, not an established violation.
 - verification: Legal cross-reference, discovery, evidence, supporting-record, sync and calendar tests passed; typecheck, lint (six unrelated warnings), static build and SEO audit passed locally. GitHub deployment and live source availability have not yet been verified at this point.
 - limitation: This does **not** complete the substantive legal audit for every item. Missing or unindexed records, historical law, final signed texts, notices and publication proofs, applicability and exceptions remain unresolved. Automatic keyword matches are leads, not findings of legality or illegality.
+
+
+### 2026-11-02 — civic evidence engine implementation and bounded execution
+
+### claim: civic-evidence-engine — source-aware SQLite and montage pipeline
+- worker: arena-civic-engine
+- status: done
+- stage: CLI executed in restricted-network mode; 4 cases and 8 blocked source rows indexed; no verified votes or MP4; 7 unit tests and diff check passed
+- scope: NEW tools/civic_engine.py, tools/civic_engine_targets.json, tools/test_civic_engine.py, docs/CIVIC_ENGINE.md; .gitignore (workspace exclusion); READ-FIRST.md (claim/log only); generated arena_workspace/
+- started: 2026-11-02T11:15Z
+- updated: 2026-11-02T11:15Z
+- notes: Supplied allegations remain unverified; external municipal/video hosts are outside sandbox network allowlist. No publishing or external messages.
+
+- result: Added source-aware draft generator, SQLite schema and retrieval ledger, corrected section syntax, normalized lower-third video pipeline, run report and runbook. Network and missing media tools prevent source verification and real rendering; no publication-ready findings claimed. Generated workspace excluded from Git.
+
+
+### 2026-11-02 — Drive database municipal evidence review
+
+### claim: drive-civic-review — read-only review of existing Drive databases
+- worker: arena-civic-engine
+- status: done
+- stage: five Drive databases downloaded read-only, integrity checked and inventoried; 56 topic query hits and eight selected pages exported; repeat run and key-passage assertions passed
+- scope: NEW tools/review_drive_civic.py; .gitignore (Drive download exclusion); READ-FIRST.md (claim/log only); generated google_drive/ and arena_workspace/exports/drive_*
+- started: 2026-11-02T11:17Z
+- updated: 2026-11-02T11:17Z
+- notes: Read-only database access; no Drive changes; no verified voting assumptions.
+
+
+- result: Corrected debt quotation context, fleet memo recommendation interpretation, Highlands land-use vote scope and Reed appropriation instrument using archived extracted pages. Created source-linked Markdown/JSON and derived searchable SQLite exports under ignored arena_workspace. Five quick_check results were ok; all seven civic engine tests and diff check passed. Source PDFs/live links/video not authenticated; 143.6 MB linked corpus and 416.8 MB vault not downloaded due connector size limits. No Drive originals changed and no inferred individual votes imported.
+
+
+### 2026-11-02 — final bounded civic evidence package
+
+### claim: civic-final-package — corrected posts and archive-based evidence-card reel
+- worker: arena-civic-engine
+- status: done
+- stage: corrected posts, derived evidence and 50-second silent archive-card reel packaged; full MP4 decode, ZIP integrity, hashes and unchanged originals verified
+- scope: NEW tools/package_civic_review.py; docs/CIVIC_ENGINE.md (additive runbook); READ-FIRST.md (claim/log only); generated arena_workspace/
+- started: 2026-11-02T11:20Z
+- updated: 2026-11-02T11:20Z
+- notes: No policy/size-limit override; no unrelated meeting footage; reel explicitly labels archived-text basis and unavailable original audio/video.
+
+
+- result: Added reproducible package script and runbook. Rendered actual 720x1280/30fps H.264 silent text-card MP4 (not meeting montage), four corrected social posts and seven-file ZIP. Complete decode and duration checks passed; five source hashes unchanged; seven civic engine tests passed. Large linked corpus extraction explicitly refused at 25 MB; no exposed download-URL option or supported override. No claim of full corpus/source/video verification.

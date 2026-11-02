@@ -1,0 +1,72 @@
+name: Civic evidence retrieval
+
+on:
+  push:
+    branches: [arena/a243c6bf-thereelwindycity]
+    paths:
+      - '.github/workflows/civic-evidence.yml'
+      - 'tools/civic_engine.py'
+      - 'tools/civic_engine_targets.json'
+      - 'tools/search_linked_civic.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: civic-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  retrieve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install media tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install yt-dlp
+      - name: Test local logic
+        run: python -m unittest discover -s tools -p test_civic_engine.py -v
+      - name: Search committed linked corpus
+        run: python tools/search_linked_civic.py
+      - name: Retrieve public documents and attempt target video clips
+        id: retrieve
+        continue-on-error: true
+        run: python tools/civic_engine.py
+      - name: Report actual completion status
+        if: always()
+        env:
+          RETRIEVE_OUTCOME: ${{ steps.retrieve.outcome }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path('arena_workspace/exports/run_report.json')
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('# Civic evidence execution\n\n')
+              summary.write('Retrieval step: ' + os.environ['RETRIEVE_OUTCOME'] + '\n\n')
+              if p.exists():
+                  report = json.loads(p.read_text())
+                  summary.write('Video status: **' + report['video']['status'] + '**\n\n')
+                  for source in report['sources']:
+                      summary.write('- ' + source['case_id'] + ' / ' + source['kind'] + ': ' + source['status'] + '\n')
+              else:
+                  summary.write('No run report produced; inspect job logs.\n')
+              summary.write('\nArtifact creation is not claim verification. No automatic publication or database mutation.\n')
+          PY
+      - name: Save reports and source captures (not public posts)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: civic-evidence-${{ github.run_id }}
+          path: |
+            arena_workspace/exports/
+            arena_workspace/sources/
+          if-no-files-found: warn
+          retention-days: 14
