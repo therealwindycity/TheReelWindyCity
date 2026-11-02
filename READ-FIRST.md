@@ -68,11 +68,11 @@ Coordination is not optional here.
 
 ### claim: follow-money-terms — Resolution 6573 terms and Reed funding-history joins
 - worker: arena-civic-engine
-- status: active
-- stage: located FY2026 Reed PO encumbrance funding schedule and approval; discovering actual October interfund attachment from published agenda
+- status: done
+- stage: final three-job run succeeded; four captures hash-verified; loan terms and two-year Reed encumbrance report completed
 - scope: NEW tools/follow_money_evidence.py, tools/test_follow_money_evidence.py, .github/workflows/follow-money-evidence.yml, docs/FOLLOW_MONEY_TERMS.md; READ-FIRST.md (claim/log only); ignored arena_workspace/follow-money/ and exports
 - started: 2026-11-02T12:42Z
-- updated: 2026-11-02T12:42Z
+- updated: 2026-11-02T12:55Z
 - notes: Do not infer actual cash movement from an authorization or encumbrance. Capture only uniquely associated same-host agenda attachments. No emails, fees, video retries or original DB edits.
 
 
@@ -463,3 +463,8 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 ### 2026-11-02 — remaining targets investigated against original written records
 
 - claim: other-target-cases; result: successful run 41445522261 at 614f863, four jobs, 11 PDF captures / 10 distinct byte contents. Ten known-baseline matches; October source explicitly has no pinned-database baseline. Verified complete gzip/base64 payloads (3 debt, 4 Highlands, 5 Reed/stormwater, 3 voucher packets). Initial run 41445001940 was not accepted as complete: Highlands map packet exceeded default 5 MiB and Unicode escape mutation failed integrity verification; explicit 12 MiB source-only bound and compressed ASCII transport fixed those problems. Default fleet limit remains 5 MiB. Debt: $20M application authorization and malformed unsigned repayment estimate, no proof of closed loan. Highlands: 3,459.99 acres, July 13 main actions approved, staff serviceability with further engineering needed; PC tally/majority and report boundary descriptions need primary-record reconciliation. Reed: draft $5M conditional commitment, April 27 Ordinance 4669 approval with Rinne technical no-record note; six unique DHM/PSA7782 voucher entries dated July 23 total $53,615.51, fund and bank clearing unknown. October 26: failed $10M potential-transfer policy, not immediate transfer; separate Resolution 6573 approves up to $18,063,014 interfund loan, actual movements/terms unverified. Report supplies direct sources/pages and three draft unsent records requests. Tests: targets 8 + shared capture 11 + civic 57 = 76 unique local passes; hosted jobs pass 19 focused tests each. No original DB, source registry or app edits; no legal/engineering/misconduct conclusion, request sending, fees, fabricated timestamp or main merge.
+
+
+### 2026-11-02 — loan terms and Reed fund-history follow-up completed
+
+- claim: follow-money-terms; result: diagnosed initial run 41447067892 (interfund parser expected body tag, although agenda is an HTML fragment; earlier Reed job succeeded). Fragment-aware parser and regression fixed it. Final 41447350598 at 418d729: three successful jobs; four original PDF captures; two archival SHA-1 matches, two newly discovered attachments without invented baselines; complete verified compressed transport 3/4/3 packets. Actual loan packet prescribes conditional per-project transfers, separately certified fixed interest, four-year actual-transfer-based repayment and nine prospective financing lines totaling $18,063,014 (2027–2029). Numeric rate, signed final text, draws and balances remain unverified. Reed #7782 listed as SPOT 2012 & 2017 Ballots in both FY2026/FY2027 encumbrance schedules: $676,021 and $596,130. $79,891 difference is not established as payments; July voucher funds and bank clearing still not established. Wrote source/page-linked docs/FOLLOW_MONEY_TERMS.md and refined unsent records request; local tests 10 discovery + 8 transport + 11 capture + 57 civic = 86 unique passes. No original DB/app/registry edits, requests sent, fees, media retries, fabricated timestamps, legal/misconduct conclusions or main merge.
