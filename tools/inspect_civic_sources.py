@@ -12,7 +12,7 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 WORK = ROOT/'arena_workspace'
-TERMS = ['1,000,0000', 'Fremont', '3-2', '4669', 'stormwater', '5,650,000', 'Aldrich']
+TERMS = ['stormwater', '1,000,0000', 'Fremont', '3-2', '4669', '6544', '5,650,000', 'Aldrich']
 
 
 def notice(title, data):
@@ -50,7 +50,7 @@ def main():
                 record['page_title'] = re.findall(r'<title[^>]*>(.*?)</title>',text,re.I|re.S)[:1]
         results.append(record)
         brief = {k:v for k,v in record.items() if k!='excerpts'}
-        brief['excerpt_matches'] = record.get('excerpts',[])[:2]
+        brief['excerpt_matches'] = sorted(record.get('excerpts',[]),key=lambda r: TERMS.index(r['term']))[:2]
         notice(f'Source inspection {case} {kind}',brief)
     media = []
     for clip in ('1099','1095','1120','1144'):

@@ -9,6 +9,7 @@ on:
       - 'tools/civic_engine_targets.json'
       - 'tools/search_linked_civic.py'
       - 'tools/inspect_civic_sources.py'
+      - 'tools/official_civic_montage.py'
   workflow_dispatch:
 
 permissions:
@@ -44,6 +45,10 @@ jobs:
         if: always()
         continue-on-error: true
         run: python tools/inspect_civic_sources.py
+      - name: Attempt publicly advertised official archive streams
+        if: always()
+        continue-on-error: true
+        run: python tools/official_civic_montage.py
       - name: Report actual completion status
         if: always()
         env:
@@ -60,7 +65,8 @@ jobs:
                   report = json.loads(p.read_text())
                   # Check annotations stay readable via api.github.com even when
                   # Arena cannot reach the artifact storage host.
-                  message = json.dumps(report).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
+                  brief = {'source_statuses': [r['status'] for r in report['sources']], 'video_status': report['video']['status']}
+                  message = json.dumps(brief).replace('%', '%25').replace('\r', '%0D').replace('\n', '%0A')
                   print('::notice title=Civic retrieval result::' + message)
                   summary.write('Video status: **' + report['video']['status'] + '**\n\n')
                   for source in report['sources']:

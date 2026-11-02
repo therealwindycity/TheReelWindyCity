@@ -70,7 +70,7 @@ Coordination is not optional here.
 - worker: arena-civic-engine
 - status: active
 - stage: local 720-record corpus searched (25 matches); workflow and runbook tested; pushing current branch for hosted public-source retrieval
-- scope: NEW .github/workflows/civic-evidence.yml; NEW tools/search_linked_civic.py; tools/civic_engine.py (bounded download subprocess); docs/CIVIC_ENGINE.md; READ-FIRST.md (claim/log only); all earlier uncommitted civic tools included in authorized branch push
+- scope: NEW .github/workflows/civic-evidence.yml; NEW tools/search_linked_civic.py, tools/inspect_civic_sources.py, tools/official_civic_montage.py; tools/civic_engine.py (bounded download subprocess); docs/CIVIC_ENGINE.md; READ-FIRST.md (claim/log only); all earlier uncommitted civic tools included in authorized branch push
 - started: 2026-11-02T11:22Z
 - updated: 2026-11-02T11:22Z
 - notes: No private Drive downloads or generated artifacts committed. Hosted retrieval remains distinct from content verification.
