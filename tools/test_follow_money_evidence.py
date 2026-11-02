@@ -29,6 +29,16 @@ class FollowMoneyTests(unittest.TestCase):
     def test_unrelated_loan_is_not_selected(self):
         with self.assertRaises(ValueError):money.choose_interfund(money.parse_agenda(html(title='Interfund Loan $1,000,000')))
 
+    def test_actual_html_fragment_does_not_require_synthetic_body(self):
+        fragment=html().replace('<html><body>','').replace('</body></html>','')
+        self.assertEqual(len(money.choose_interfund(money.parse_agenda(fragment))['attachment_urls']),1)
+
+    def test_current_budget_selected_by_year_and_purpose(self):
+        items=money.parse_agenda(html(title='Re-appropriating the Fiscal Year 2027 Budget'))
+        self.assertEqual(money.choose_budget(items)['item_no'],'18')
+        old=money.parse_agenda(html(title='Re-appropriating the Fiscal Year 2026 Budget'))
+        with self.assertRaises(ValueError):money.choose_budget(old)
+
     def test_missing_body_is_failure(self):
         with self.assertRaises(ValueError):money.parse_agenda('not an agenda')
 

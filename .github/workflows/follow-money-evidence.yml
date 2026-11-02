@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        case: [interfund, reed_budget]
+        case: [interfund, reed_budget, current_budget]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

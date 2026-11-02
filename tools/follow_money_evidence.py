@@ -48,10 +48,11 @@ def fetch_agenda():
 
 def parse_agenda(html):
     soup=BeautifulSoup(html,'html.parser')
-    if soup.body is None:
-        raise ValueError('Agenda has no HTML body')
+    root=soup.body or soup
+    if root.find('table') is None:
+        raise ValueError('Agenda has no item tables')
     items=[]; current=None; parent=''
-    for element in soup.body.descendants:
+    for element in root.descendants:
         if getattr(element,'name',None)=='table':
             rows=element.get_text('\n',strip=True).splitlines()
             if not rows:continue
@@ -83,19 +84,27 @@ def choose_interfund(items):
     return candidates[0]
 
 
+def choose_budget(items):
+    candidates=[i for i in items if re.search(r're[‐‑–—-]?appropriat',i['title'],re.I) and '2027' in i['title']]
+    if len(candidates)!=1 or not 1 <= len(candidates[0]['attachment_urls']) <= 4:
+        raise ValueError('Need exactly one FY2027 reappropriation item with attachments')
+    return candidates[0]
+
+
 def collect(case,out):
     out.mkdir(parents=True,exist_ok=True)
     for name in ('source_captures.json','agenda.html'):
         (out/name).unlink(missing_ok=True)
-    for path in out.glob('interfund_attachment_*.pdf'):path.unlink()
+    for pattern in ('interfund_attachment_*.pdf','current_budget_attachment_*.pdf'):
+        for path in out.glob(pattern):path.unlink()
     report={'schema_version':1,'case':case,'sources':[],
             'interpretation':'Proposal/approval/encumbrance evidence, not actual disbursement or legal finding.'}
     try:
-        if case=='interfund':
+        if case in ('interfund','current_budget'):
             html=fetch_agenda();(out/'agenda.html').write_text(html)
-            item=choose_interfund(parse_agenda(html))
+            item=(choose_interfund if case=='interfund' else choose_budget)(parse_agenda(html))
             report['discovery']={'url':AGENDA,'html_sha256':hashlib.sha256(html.encode()).hexdigest(),'item':item}
-            specifications=[{'id':f'interfund_attachment_{n}','url':url,'archived_sha1':None,'review_pages':[1]}
+            specifications=[{'id':f'{case}_attachment_{n}','url':url,'archived_sha1':None,'review_pages':[1]}
                             for n,url in enumerate(item['attachment_urls'],1)]
         else:specifications=BUDGET
         for spec in specifications:
@@ -104,6 +113,11 @@ def collect(case,out):
             available=spec['archived_sha1'] is not None
             row['archive_baseline_available']=available
             if not available:row['matches_archived_sha1']=None
+            if case=='current_budget' and row['status']=='captured-needs-review':
+                hits=[p['page'] for p in row['pages'] if re.search(r'\b7782\b',p['text'])]
+                row['contract_7782_page_hits']=hits
+                row['review_pages']=sorted(set([1]+hits))
+                row['omitted_review_pages']=[p['page'] for p in row['pages'] if p['page'] not in row['review_pages']]
             if case=='interfund' and row['status']=='captured-needs-review':
                 row['review_pages']=[p['page'] for p in row['pages'][:8]]
                 row['omitted_review_pages']=[p['page'] for p in row['pages'][8:]]
@@ -122,7 +136,7 @@ def complete(report):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--case',choices=('interfund','reed_budget'),required=True)
+    parser.add_argument('--case',choices=('interfund','reed_budget','current_budget'),required=True)
     parser.add_argument('--out',type=Path)
     args=parser.parse_args();out=args.out or Path('arena_workspace/follow-money')/args.case
     report=collect(args.case,out)
