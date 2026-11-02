@@ -126,3 +126,71 @@ retrieval worked on GitHub Actions; YouTube returned a bot/sign-in challenge,
 and all four official Granicus HLS attempts returned HTTP 403. No authentic
 meeting montage was rendered. Do not treat green workflow/artifact-upload status
 as successful video generation.
+
+## Hardening audit: current execution contract
+
+The following supersedes the initial workflow's artifact-only success semantics.
+
+| Boundary | Current behavior | Regression coverage |
+|---|---|---|
+| Parent/child SQLite reruns | UPSERT preserves case/source identity and dependent source-inspection/vote rows | Existing children, inspection reruns and retrieval retries |
+| Concurrent CLI writers | Exclusive owner-token workspace lock; crash leftovers require inspection | Second writer refused; exception cleanup; owner replacement preserved |
+| Target input | Unique safe IDs, ISO dates, integer 1–300 second clips, approved HTTPS hosts | Traversal, duplicate IDs, credentials, ports, invalid types, Unicode timestamps |
+| Response persistence | Bounded reads, SHA-256 and atomic file replacement; failed retrieval clears current bytes/digest | Successful/empty/failed retrieval, stale file cleanup |
+| Source inspection | PDF signature, digest match, source-directory boundary, 300-page and 20 MiB text bounds | Corrupt, encrypted, blank, wrong-date, mislabeled and tampered sources |
+| Partial failure | Every source gets an inspection result; a malformed PDF does not skip later records | Corrupt source alongside successful named-vote extraction |
+| Named votes | Narrow, explicit October 26 stormwater rule; no aggregate tally or inferred NO names | Wrong date/context/action rejected; repeated extraction remains idempotent |
+| Media | Explicit opt-in in Actions; approved official HTTPS host only; no access-control bypass | Untrusted links, missing discovery, stale run IDs, missing audio, short clips |
+| Render completion | Every clip checked, concat failures remove final output, final duration and complete decode checked | Positive mocked pipeline; normalization/concat/partial-output failures |
+| Cross-stage provenance | Matching run IDs, source DB/report/file digests and extracted-text digests | Missing/duplicate records, mixed runs, changed bytes/text, ledger disagreement |
+| Completion | Association issues fail the final gate AFTER evidence artifact upload | Wrong-role/date issues, required missing media, missing reports |
+| Publication | Always separate from retrieval/render completeness; never automatic | Successful document-stage tests remain publication_ready=false |
+
+### Commands
+
+```sh
+.venv/bin/python -m pip install pypdf coverage
+.venv/bin/python -m unittest discover -s tools -p 'test_civic*.py' -v
+COVERAGE_FILE=arena_workspace/civic-coverage.sqlite3 .venv/bin/python -m coverage run \
+  --branch --source=civic_engine,inspect_civic_sources,official_civic_montage,civic_run_status \
+  -m unittest discover -s tools -p 'test_civic*.py'
+COVERAGE_FILE=arena_workspace/civic-coverage.sqlite3 .venv/bin/python -m coverage report
+```
+
+The measured offline suite is **56 tests**, passing; measured combined
+statement/branch coverage is **90%** across the four audited modules. This is not
+100% path coverage, production certification, source authentication or proof of
+working remote video access. Network/media unit tests use explicit fixtures and
+mocks, not purported meeting footage.
+
+### Hosted execution
+
+Push-triggered runs now retrieve and inspect documents **without** repeating
+YouTube or official-video requests. A manual retry requires explicit consent:
+
+```sh
+gh workflow run civic-evidence.yml \
+  --ref arena/a243c6bf-thereelwindycity -f attempt_media=true
+```
+
+Default mode is `attempt_media=false`. It records video as `not-attempted`, not
+as a fabricated success or a newly observed 403. Earlier observed sign-in/403
+results remain historical evidence, not measurements of the new run.
+
+The pipeline uploads `cheyenne_records.sqlite3`, response captures, extracted
+text, `completion_report.json` and `completion_manifest.json`. The manifest hashes
+the current evidence outputs; the completion gate compares the source ledger,
+run report, raw source bytes and extracted text. A matching file hash establishes
+byte identity, not truth or originality of the document's statements.
+
+Known supplied-link errors deliberately remain in the original target registry
+so their provenance is not silently rewritten. A wrong-date proceedings PDF or
+a memo labeled as minutes causes an explicit association failure and a red
+workflow result even when all eight downloads succeeded. Correcting/replacing
+references requires a separately documented evidentiary decision, not hiding
+the failing check.
+
+A leftover `.civic-engine.lock` after termination is not automatically broken.
+Inspect its PID/token, verify no writer is active, and only then remove that
+specific stale lock. Use separate workspaces for independent local pipelines;
+the CLI lock does not span manually launched downstream inspection commands.

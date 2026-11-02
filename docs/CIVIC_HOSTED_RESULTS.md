@@ -78,3 +78,12 @@ The existing silent archive-card MP4 is an alternative explainer, not meeting
 footage. Its unresolved October statement predates the hosted checks above and
 must not be represented as the latest findings. Artifacts do not establish legal
 violations or corrupt intent.
+
+## Subsequent reliability audit
+
+The pipeline now has a separate completion gate, source/date-role checks,
+source-hashed named-vote extraction, safe parent-row UPSERTs, and a 56-test
+regression suite. Routine workflow runs do not retry the known media barriers.
+Source capture, inspection, render completion and editorial verification are
+separate outcomes. A red source-association gate preserves artifacts and exposes
+incorrect supplied links rather than treating artifact upload as full success.

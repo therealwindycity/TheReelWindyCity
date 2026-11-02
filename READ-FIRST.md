@@ -66,6 +66,15 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: civic-hardening — failure semantics, provenance and regression audit
+- worker: arena-civic-engine
+- status: active
+- stage: 56 regression tests passing, 90% measured combined coverage; pushing fail-closed document workflow for hosted verification
+- scope: tools/civic_engine.py, tools/civic_engine_targets.json, tools/inspect_civic_sources.py, tools/official_civic_montage.py, tools/test_civic_engine.py; NEW tools/civic_run_status.py, tools/test_civic_hardening.py; .github/workflows/civic-evidence.yml; docs/CIVIC_ENGINE.md, docs/CIVIC_HOSTED_RESULTS.md; READ-FIRST.md (claim/log only); ignored arena_workspace outputs
+- started: 2026-11-02T11:40Z
+- updated: 2026-11-02T11:40Z
+- notes: Routine retries must not hammer known sign-in/403 barriers. No original records overwritten. Failures remain visible after artifact upload.
+
 
 ### claim: miller-estoppel-white-paper-expansion — source expansion and Wyoming-law analysis for the Miller estoppel-effect white paper
 - worker: arena-agent
