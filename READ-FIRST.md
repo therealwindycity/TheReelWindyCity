@@ -66,15 +66,6 @@ Coordination is not optional here.
 
 ## Active claims
 
-### claim: civic-hardening — failure semantics, provenance and regression audit
-- worker: arena-civic-engine
-- status: active
-- stage: hosted run verified eight PDFs and two named votes; expected gate failure caught all three source association errors; final regression/report pass
-- scope: tools/civic_engine.py, tools/civic_engine_targets.json, tools/inspect_civic_sources.py, tools/official_civic_montage.py, tools/test_civic_engine.py; NEW tools/civic_run_status.py, tools/test_civic_hardening.py; .github/workflows/civic-evidence.yml; docs/CIVIC_ENGINE.md, docs/CIVIC_HOSTED_RESULTS.md; NEW docs/CIVIC_HARDENING_AUDIT.md; READ-FIRST.md (claim/log only); ignored arena_workspace outputs
-- started: 2026-11-02T11:40Z
-- updated: 2026-11-02T11:40Z
-- notes: Routine retries must not hammer known sign-in/403 barriers. No original records overwritten. Failures remain visible after artifact upload.
-
 
 ### claim: miller-estoppel-white-paper-expansion — source expansion and Wyoming-law analysis for the Miller estoppel-effect white paper
 - worker: arena-agent
@@ -403,3 +394,18 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 
 
 - result: Run 41437221070 completed and retained official document captures, extracted text, reports and full corpus search artifacts. Retrieved content identified wrong-year Highlands minutes and March/October source mismatch; October page 3 supports a failed year-end stormwater-transfer policy amendment and explicitly named Aldrich/White YES votes, not necessarily the supplied immediate-transfer wording or tally. Derived local SQLite augmented with eight response checks and two named votes. Four YouTube requests required sign-in; four advertised official HLS streams returned 403; no authentic montage claimed. PR #34 remains open, no main merge. Private Drive files and media remain ignored.
+
+
+### 2026-11-02 — civic pipeline adversarial hardening completed
+
+### claim: civic-hardening — failure semantics, provenance and regression audit
+- worker: arena-civic-engine
+- status: done
+- stage: 57 tests pass; 90% measured combined coverage; hosted run 41439252231 validates eight PDFs and two named votes and fails final gate on three supplied-link issues; artifacts preserved
+- scope: tools/civic_engine.py, tools/civic_engine_targets.json, tools/inspect_civic_sources.py, tools/official_civic_montage.py, tools/test_civic_engine.py; NEW tools/civic_run_status.py, tools/test_civic_hardening.py; .github/workflows/civic-evidence.yml; docs/CIVIC_ENGINE.md, docs/CIVIC_HOSTED_RESULTS.md; NEW docs/CIVIC_HARDENING_AUDIT.md; READ-FIRST.md (claim/log only); .gitignore (venv/coverage exclusions); ignored arena_workspace outputs
+- started: 2026-11-02T11:40Z
+- updated: 2026-11-02T11:40Z
+- notes: Routine retries must not hammer known sign-in/403 barriers. No original records overwritten. Failures remain visible after artifact upload.
+
+
+- result: Fixed case/source REPLACE foreign-key rerun defects, stale file/report exposure, source path/digest checks, per-PDF error isolation, source role/date checks, idempotent named-vote extraction, media host and duration constraints, concat/decode validation, annotation bounds and workflow false-success semantics. Added opt-in-only hosted media retries and separate completion/evidence manifests. Hosted regression, eight-source retrieval/inspection and artifact upload succeeded; two named votes imported; final gate correctly failed three known associations. No media barriers retried, no main merge, no private source data committed. Measured suite: 57 tests; 549/593 statements and 162/196 branches covered (90.114% combined). Full audit documents residual limitations.

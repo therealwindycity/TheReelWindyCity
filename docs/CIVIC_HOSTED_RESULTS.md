@@ -87,3 +87,9 @@ regression suite. Routine workflow runs do not retry the known media barriers.
 Source capture, inspection, render completion and editorial verification are
 separate outcomes. A red source-association gate preserves artifacts and exposes
 incorrect supplied links rather than treating artifact upload as full success.
+
+Final hardening verification: [run 41439252231](https://github.com/therealwindycity/TheReelWindyCity/actions/runs/41439252231)
+ran the 57-test revision. Document retrieval/inspection and artifact upload
+succeeded; two explicitly named votes were imported; three known source
+associations caused the expected final gate failure. Optional media access was
+not retried. See [the full hardening audit](CIVIC_HARDENING_AUDIT.md).

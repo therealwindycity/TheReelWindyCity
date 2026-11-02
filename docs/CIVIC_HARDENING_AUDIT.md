@@ -172,3 +172,23 @@ silently relabel those sources to manufacture a passing gate.
   independently checked roll call remain outside the automatic extraction rule.
 - PR #34 remains open on the fixed session branch. No merge to main, automatic
   posting, private Drive upload or media publication was performed.
+
+## 8. Final verification at the 57-test revision
+
+The subsequent [run 41439252231](https://github.com/therealwindycity/TheReelWindyCity/actions/runs/41439252231)
+executed commit `63ab7672c0cb36a70c05d5fe0b9103fd2480edc4`, including the
+additional draft-text regression. GitHub's jobs API confirms the regression,
+retrieval, inspection and artifact steps succeeded; the final quality gate
+failed; optional official-media requests were skipped.
+
+The final structured gate again records eight complete documents, two named
+votes and three source-association issues. Its run ID is
+`3237f3eec84e4ba4b497de8e325c8ac0`. The artifact is
+`civic-evidence-41439252231`, ID `13137244505`, 2,169,310 bytes, retained for
+14 days. The failure is the expected quality-gate result, not an undisclosed
+runtime or download error.
+
+The local audit bundle includes the complete test-name log, structured test
+results, coverage report, final GitHub step outcomes, artifact metadata,
+annotation excerpts and reconstructed final completion result. Original private
+Drive databases are not included in that bundle or committed to GitHub.

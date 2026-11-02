@@ -37,3 +37,8 @@ __pycache__/
 /arena_workspace/
 # Private/regenerable connector downloads
 /google_drive/
+
+# Local civic test/tool environment and coverage state
+/.venv/
+/.coverage
+/.coverage.*
