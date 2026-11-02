@@ -13,9 +13,9 @@ SOURCES = (
     {'id': 'bid', 'url': 'https://cheyenne.granicus.com/MetaViewer.php?view_id=5&clip_id=1095&meta_id=147788',
      'archived_sha1': '7b7c33140c0ddacadd7b17a031c1a340cd634fbd', 'review_pages': [1, 2]},
     {'id': 'referral', 'url': 'https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1095&doc_id=73b94d0f-52f1-11f1-9b4d-005056a89546',
-     'archived_sha1': '0cae55ff9603a9e026cd9b8aeb660cf45c047258', 'review_pages': [1, 2, 5]},
+     'archived_sha1': '0cae55ff9603a9e026cd9b8aeb660cf45c047258', 'review_pages': [1, 5]},
     {'id': 'award', 'url': 'https://cheyenne.granicus.com/MinutesViewer.php?view_id=5&clip_id=1097&doc_id=f3faa5e3-5ebe-11f1-9b4d-005056a89546',
-     'archived_sha1': 'da921c2168d796d151a34058ab46ccdfa4a6f113', 'review_pages': [1, 2, 6]},
+     'archived_sha1': 'da921c2168d796d151a34058ab46ccdfa4a6f113', 'review_pages': [1, 6]},
 )
 MAX_BYTES = 5 * 1024 * 1024
 
@@ -109,7 +109,24 @@ def packets(report):
                 if p['page'] in s['review_pages']]} for s in report['sources']]}
     raw = json.dumps(focused, ensure_ascii=True)
     digest = hashlib.sha256(raw.encode()).hexdigest()
-    parts = [raw[i:i+1100] for i in range(0, len(raw), 1100)]
+    parts = []
+    remaining = raw
+    while remaining:
+        low, high = 1, min(len(remaining), 3200)
+        while low < high:
+            middle = (low + high + 1) // 2
+            envelope = {'part': 999999, 'parts': 999999, 'payload_sha256': digest,
+                        'data': remaining[:middle]}
+            if len(json.dumps(envelope).encode()) <= 3300:
+                low = middle
+            else:
+                high = middle - 1
+        parts.append(remaining[:low])
+        remaining = remaining[low:]
+    # GitHub only retains ten notice annotations per step. Fail before emitting
+    # an incomplete sequence rather than publishing a misleading green capture.
+    if len(parts) > 10:
+        raise ValueError('Focused review exceeds ten-notice budget; use full artifact')
     return [{'part': i, 'parts': len(parts), 'payload_sha256': digest, 'data': data}
             for i, data in enumerate(parts)]
 

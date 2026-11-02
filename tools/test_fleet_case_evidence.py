@@ -46,6 +46,12 @@ class FleetEvidenceTests(unittest.TestCase):
         for parts in ([], packets[:-1], packets + packets[:1], tampered):
             with self.assertRaises(ValueError):fleet.assemble(parts)
 
+    def test_notice_budget_fails_before_emitting_partial_transport(self):
+        report = self.report()
+        report['sources'][0]['pages'][1]['text'] = 'x' * 100000
+        with self.assertRaisesRegex(ValueError, 'ten-notice'):
+            fleet.packets(report)
+
     def test_network_failure_is_a_source_failure(self):
         with tempfile.TemporaryDirectory() as root:
             with patch.object(fleet, 'fetch', side_effect=OSError('unavailable')):
