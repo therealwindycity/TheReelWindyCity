@@ -66,6 +66,15 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: repository-claims-audit — verify alleged divergence architecture, SPET schemas and history
+- worker: arena-civic-engine
+- status: done
+- stage: pinned upstream content/schema/history audit complete; 1,368 files and four public DB snapshots inspected; alleged architecture not substantiated; 138 relevant tests passed
+- scope: NEW tools/audit_repository_claims.py, tools/test_repository_claims.py, docs/REPOSITORY_CLAIMS_AUDIT.md; READ-FIRST.md (claim/log only); ignored arena_workspace/repository-audit/ outputs
+- started: 2026-11-02T11:50Z
+- updated: 2026-11-02T12:03Z
+- notes: Treat proposed metrics as unverified until code/data support them; no misconduct inferred from missing transcript links or metadata discrepancies. No remote repository writes beyond current session branch.
+
 
 ### claim: miller-estoppel-white-paper-expansion — source expansion and Wyoming-law analysis for the Miller estoppel-effect white paper
 - worker: arena-agent
@@ -409,3 +418,8 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 
 
 - result: Fixed case/source REPLACE foreign-key rerun defects, stale file/report exposure, source path/digest checks, per-PDF error isolation, source role/date checks, idempotent named-vote extraction, media host and duration constraints, concat/decode validation, annotation bounds and workflow false-success semantics. Added opt-in-only hosted media retries and separate completion/evidence manifests. Hosted regression, eight-source retrieval/inspection and artifact upload succeeded; two named votes imported; final gate correctly failed three known associations. No media barriers retried, no main merge, no private source data committed. Measured suite: 57 tests; 549/593 statements and 162/196 branches covered (90.114% combined). Full audit documents residual limitations.
+
+
+### 2026-11-02 — alleged repository architecture verified against pinned sources
+
+- claim: repository-claims-audit; result: added read-only Git-blob-verifying auditor, 21 regression tests and source-linked report. Pinned bartimoussmith-oss/therealwindycity at 74edf0adbc9f4539f8af5fc5aaf51b33878c8955; all 1,368 selected files inspected, 1,183 JSON profiles and four verified SQLite schema/count snapshots. No named divergence matrix, Ghost Quorum, consultant ratio, voiceprint or supplied fiscal/link keys found in selected content. Actual rhetorical DB has zero officials/votes/veracity rows; authored watchdog seeds are not verified findings. Existing estoppel execution produced 479 unreviewed candidates, not contradictions. Fresh six-repository archive inventory: 5,140 blobs, 4,935 .pdf paths, 5,116 date-parsed records; oldest archive's 1,006 blobs are not .json files. Four bounded current-path histories inspected; reviewed diffs do not establish removal of alleged tracking features. Tests passed: auditor 21 + estoppel 7 + archive 53 + civic 57 = 138. Original data/app/schema files untouched; empty inactive SDK-created SQLite sidecars preserved only in ignored workspace. Audit bundle excludes source databases and Git blob cache; no misconduct conclusions, access-control bypass, or main merge.
