@@ -67,6 +67,37 @@ class FleetEvidenceTests(unittest.TestCase):
             self.assertEqual(result['status'], 'failed')
             self.assertIn('exactly one', result['error'])
 
+    def test_malformed_pdf_is_isolated(self):
+        with tempfile.TemporaryDirectory() as root:
+            with patch.object(fleet, 'fetch', return_value=(b'%PDF-1.7\nbroken', fleet.SOURCES[0]['url'])):
+                result = fleet.capture(fleet.SOURCES[0], Path(root))
+            self.assertEqual(result['status'], 'failed')
+            self.assertIn('error', result)
+
+    def test_valid_text_pdf_is_preserved_byte_for_byte(self):
+        from pypdf.generic import DictionaryObject, NameObject, DecodedStreamObject
+        writer = PdfWriter()
+        page = writer.add_blank_page(width=300, height=300)
+        font = DictionaryObject({NameObject('/Type'): NameObject('/Font'),
+                                 NameObject('/Subtype'): NameObject('/Type1'),
+                                 NameObject('/BaseFont'): NameObject('/Helvetica')})
+        page[NameObject('/Resources')] = DictionaryObject({NameObject('/Font'):
+            DictionaryObject({NameObject('/F1'): writer._add_object(font)})})
+        stream = DecodedStreamObject()
+        stream.set_data(b'BT /F1 12 Tf 20 100 Td (Award 78819) Tj ET')
+        page[NameObject('/Contents')] = writer._add_object(stream)
+        output = io.BytesIO();writer.write(output)
+        data = output.getvalue()
+        source = {'id': 'valid', 'url': fleet.SOURCES[0]['url'], 'review_pages': [1],
+                  'archived_sha1': hashlib.sha1(data).hexdigest()}
+        with tempfile.TemporaryDirectory() as root:
+            with patch.object(fleet, 'fetch', return_value=(data, source['url'])):
+                result = fleet.capture(source, Path(root))
+            self.assertEqual(result['status'], 'captured-needs-review')
+            self.assertTrue(result['matches_archived_sha1'])
+            self.assertIn('Award 78819', result['pages'][0]['text'])
+            self.assertEqual((Path(root) / 'valid.pdf').read_bytes(), data)
+
     def test_blank_pdf_fails_instead_of_claiming_text_verification(self):
         writer = PdfWriter();writer.add_blank_page(width=300, height=300)
         output = io.BytesIO();writer.write(output)

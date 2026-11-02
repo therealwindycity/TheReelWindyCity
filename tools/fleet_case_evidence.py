@@ -69,6 +69,7 @@ def fetch(url):
 
 def capture(source, out):
     from pypdf import PdfReader
+    from pypdf.errors import PyPdfError
     row = {**source, 'status': 'failed'}
     try:
         data, final_url = fetch(source['url'])
@@ -99,7 +100,7 @@ def capture(source, out):
             raise ValueError('Review pages require OCR/manual inspection')
         (out / (source['id'] + '.pdf')).write_bytes(data)
         row.update(pages=pages, status='captured-needs-review')
-    except (OSError, ValueError, RuntimeError) as exc:
+    except (OSError, ValueError, RuntimeError, PyPdfError) as exc:
         row['error'] = str(exc)
     return row
 
