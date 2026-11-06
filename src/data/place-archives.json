@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-11-05T21:13:36.749Z",
+  "generatedAt": "2026-11-06T20:33:23.974Z",
   "places": [
     {
       "id": "afton",
@@ -183,9 +183,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-cody",
       "sourceUrl": "https://www.codywy.gov/99/Agendas-and-Minutes",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "cokeville",
@@ -402,9 +400,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-green-river",
       "sourceUrl": "https://www.grwyo.org/AgendaCenter",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "greybull",
@@ -474,9 +470,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-jackson",
       "sourceUrl": "https://www.jacksonwy.gov/491/Agendas-Minutes",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "kaycee",
@@ -546,9 +540,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-place-laramie",
       "sourceUrl": "https://cityoflaramie.org/AgendaCenter",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "lingle",
@@ -1123,9 +1115,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-carbon",
       "sourceUrl": "https://www.carboncountywy.gov/",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "converse",
@@ -1135,9 +1125,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-converse",
       "sourceUrl": "https://www.conversecountywy.gov/",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "crook",
@@ -1169,9 +1157,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-goshen",
       "sourceUrl": "https://goshencountywy.gov/",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "hot-springs",
@@ -1339,9 +1325,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-sublette",
       "sourceUrl": "https://www.sublettecountywy.gov/",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "sweetwater",
@@ -1373,9 +1357,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-uinta",
       "sourceUrl": "https://www.uintacountywy.gov/",
       "documents": [],
-      "errors": [
-        "fetch failed"
-      ]
+      "errors": []
     },
     {
       "id": "washakie",
