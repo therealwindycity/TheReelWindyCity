@@ -32,3 +32,13 @@ __pycache__/
 /src/data/legal-audit-generated.json
 /src/data/legal-evidence-generated.json
 /src/data/legal-support-generated.json
+
+# Regenerable civic-engine records, source captures and media
+/arena_workspace/
+# Private/regenerable connector downloads
+/google_drive/
+
+# Local civic test/tool environment and coverage state
+/.venv/
+/.coverage
+/.coverage.*

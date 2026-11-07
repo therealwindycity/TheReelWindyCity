@@ -1,0 +1,54 @@
+[
+  {
+    "id": "CASE-01-MALFORMED-DEBT",
+    "instrument": "Resolution 6544",
+    "date": "2026-06-22",
+    "primary_url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1099&meta_id=148538",
+    "minutes_url": "https://cheyenne.granicus.com/DocumentViewer.php?file=cheyenne_964bdd5707a3db4918c35f6e987ac155.pdf&view=1",
+    "video_url": "https://www.youtube.com/watch?v=RjSGlhh4q9s",
+    "start": "04:14:50",
+    "duration": 45,
+    "claim": "Review the alleged malformed annual debt limit in a proposed $20M loan application. The supplied $10 billion headline is not supported by the numeric string alone.",
+    "quote": "Applicant debt service shall not exceed $1,000,0000.00 annually.",
+    "granicus_clip_id": "1099"
+  },
+  {
+    "id": "CASE-02-OUT-OF-STATE-FLEET",
+    "instrument": "Bids E-19-26, E-20-26, E-24-26",
+    "date": "2026-05-11",
+    "primary_url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1095&meta_id=147788",
+    "minutes_url": "https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1095&meta_id=147790",
+    "video_url": "https://www.youtube.com/watch?v=vBJi7WeZ4C0",
+    "start": "00:42:10",
+    "duration": 40,
+    "claim": "Review fleet bid awards and whether Wyoming resident-preference rules apply; participation by an out-of-state bidder alone does not establish a violation.",
+    "quote": "Bids received from: 1. Fremont Motor Company (Lander, WY) 2. Duval Ford (Jacksonville, FL).",
+    "granicus_clip_id": "1095"
+  },
+  {
+    "id": "CASE-03-HIGHLANDS-BLANK-SHEET",
+    "instrument": "Ordinances 4687\u20134689 / Resolutions 6551\u20136552",
+    "date": "2026-07-13",
+    "primary_url": "https://cheyenne.granicus.com/MinutesViewer.php?view_id=2&clip_id=1120",
+    "minutes_url": "https://cheyenne.granicus.com/DocumentViewer.php?file=cheyenne_6b34331c7eb6627291c3cdcfdee0ac7c.pdf&view=1",
+    "video_url": "https://www.youtube.com/watch?v=69FQxIr9sJA",
+    "start": "05:22:15",
+    "duration": 50,
+    "claim": "Review the alleged 3,459-acre Highlands annexation, Planning Commission recommendation, and availability of water-load/design information.",
+    "quote": "Given the early stage of this effort, Microsoft has not yet advanced detailed design for the campus\u2026 I do not have any of that information at my disposal.",
+    "granicus_clip_id": "1120"
+  },
+  {
+    "id": "CASE-04-REED-AVE-VS-STORMWATER",
+    "instrument": "Ordinance 4662 / October 26 resolution",
+    "date": "2026-10-26",
+    "primary_url": "https://cheyenne.granicus.com/DocumentViewer.php?file=cheyenne_740ab3049f2e7e143ca88004317ff695.pdf&view=1",
+    "minutes_url": "https://cheyenne.granicus.com/DocumentViewer.php?file=cheyenne_2a5c2428a6390c52750d45788dfeb157.pdf&view=1",
+    "video_url": "https://www.youtube.com/watch?v=9pXvzw-Aut4",
+    "start": "00:18:30",
+    "duration": 45,
+    "claim": "Review the alleged $5.65M Reed Avenue reserve allocation and separate 7\u20132 rejection of a stormwater transfer; chronology, purpose and individual votes require verification.",
+    "quote": "Motion to approve the stormwater reserve transfer failed with Aldrich and White voting yes, all others voting no.",
+    "granicus_clip_id": "1144"
+  }
+]
