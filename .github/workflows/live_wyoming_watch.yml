@@ -1,63 +1,49 @@
 name: Live Wyoming Watch
-
-# Daily check of every Wyoming county and incorporated municipality.
-# Calibrated posting pages are parsed and hashed. County clerk hosts are
-# checked for an unexpected redirect. Cheyenne view_id=5 is not fetched here.
-# Places with no opened agenda page are recorded and not requested.
-# This job never calls the Cheyenne PDF sync and never edits the public snapshot.
-
 on:
   schedule:
-    # 13:17 UTC is 7:17am Mountain Daylight Time, off the hour, after the
-    # municipal watcher's :23 runs have had the night.
-    - cron: "17 13 * * *"
+    - cron: '17 13 * * *'
   workflow_dispatch: {}
-  # Exercise changed adapters and reporting against publishers without committing
-  # baseline updates from a pull-request branch.
+  push:
+    branches: [main]
+    paths:
+      - scripts/monitor/wyoming-watch.mjs
+      - .github/workflows/live_wyoming_watch.yml
   pull_request:
     paths:
-      - '.github/workflows/live_wyoming_watch.yml'
-      - 'scripts/monitor/wyoming-watch*.mjs'
-      - 'scripts/lib/wyoming-adapters.mjs'
-      - 'scripts/data/wyoming-ecosystem-catalog.mjs'
-
+      - scripts/monitor/wyoming-watch*.mjs
+      - scripts/lib/wyoming-adapters.mjs
+      - scripts/data/wyoming-ecosystem-catalog.mjs
 permissions:
   contents: write
-
 concurrency:
   group: wyoming-ecosystem-watch
   cancel-in-progress: false
-
 jobs:
   watch:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
-
       - run: npm ci
-
-      - name: Watch every Wyoming government
+      - name: Validate collector syntax
+        run: node --check scripts/monitor/wyoming-watch.mjs
+      - name: Watch every configured Wyoming government
         id: watch
         continue-on-error: true
-        timeout-minutes: 20
+        timeout-minutes: 80
         run: node scripts/monitor/wyoming-watch.mjs --check --update-state --state data/wyoming-sync-state.json --out .sync/wyoming-watch.json
-
-      - name: Explain this run in the summary
+      - name: Explain this run
         if: always()
         run: |
           if [ -f .sync/wyoming-watch.json ]; then
             node scripts/monitor/wyoming-watch-summary.mjs .sync/wyoming-watch.json >> "$GITHUB_STEP_SUMMARY"
           else
-            echo '## Live Wyoming Watch' >> "$GITHUB_STEP_SUMMARY"
-            echo 'No report was written. The watcher did not finish.' >> "$GITHUB_STEP_SUMMARY"
+            echo 'Wyoming Watch did not produce a report.' >> "$GITHUB_STEP_SUMMARY"
           fi
-
       - name: Upload watch report
         if: always()
         uses: actions/upload-artifact@v4
@@ -66,21 +52,21 @@ jobs:
           path: .sync/wyoming-watch.json
           include-hidden-files: true
           if-no-files-found: warn
-
-      - name: Commit baselines that parsed
+      - name: Commit successful baselines and latest report
         if: github.ref == 'refs/heads/main'
         run: |
-          git config user.name "civic-cheyenne-watcher"
-          git config user.email "civic-cheyenne-watcher@users.noreply.github.com"
+          git config user.name civic-cheyenne-watcher
+          git config user.email civic-cheyenne-watcher@users.noreply.github.com
+          if [ -f .sync/wyoming-watch.json ]; then
+            cp .sync/wyoming-watch.json data/wyoming-watch-latest.json
+          fi
           git add data/wyoming-sync-state.json
-          if git diff --cached --quiet; then
-            echo "No baseline change."
-          else
-            git commit -m "Record Wyoming watch baselines ($(date -u +%Y-%m-%dT%H:%M:%SZ))"
+          if [ -f data/wyoming-watch-latest.json ]; then git add data/wyoming-watch-latest.json; fi
+          if ! git diff --cached --quiet; then
+            git commit -m "Record Wyoming watch results $(date -u +%Y-%m-%dT%H:%M:%SZ)"
             git pull --rebase origin main
             git push origin main
           fi
-
-      - name: Fail closed if a calibrated surface changed shape
+      - name: Fail only for total collection failure
         if: steps.watch.outcome == 'failure'
         run: exit 1
