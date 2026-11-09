@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-11-08T19:06:22.300Z",
+  "generatedAt": "2026-11-09T23:34:07.764Z",
   "places": [
     {
       "id": "afton",
@@ -1043,18 +1043,6 @@
         {
           "name": "PUBLIC_NOTICE.pdf",
           "sourceUrl": "https://www.bighorncountywy.gov/images/downloads/PUBLIC_NOTICE.pdf",
-          "volume": 1,
-          "repo": "civic-wy-county-big-horn"
-        },
-        {
-          "name": "Grounds_Kepper_Job_Description.pdf",
-          "sourceUrl": "https://www.bighorncountywy.gov/images/Grounds_Kepper_Job_Description.pdf",
-          "volume": 1,
-          "repo": "civic-wy-county-big-horn"
-        },
-        {
-          "name": "BIG_Horn_County_Facilitie_Job_Description.docx",
-          "sourceUrl": "https://www.bighorncountywy.gov/images/BIG_Horn_County_Facilitie_Job_Description.docx",
           "volume": 1,
           "repo": "civic-wy-county-big-horn"
         },
