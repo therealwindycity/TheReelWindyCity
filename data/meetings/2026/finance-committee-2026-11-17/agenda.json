@@ -1,0 +1,97 @@
+{
+  "meetingId": "finance-committee-2026-11-17",
+  "sourceUrl": "https://cheyenne.granicus.com/GeneratedAgendaViewer.php?event_id=1458&view_id=5",
+  "sourceSha256": "baf2ee25ec7dcb480ac95686b2fe85bf1d062167a290839d6f3042183cb51e69",
+  "fetchedAt": "2026-11-10T20:57:38.635Z",
+  "extraction": {
+    "engine": "granicus-html-agenda-v1",
+    "pageCount": 1
+  },
+  "pages": 1,
+  "pageTexts": [
+    {
+      "pageNumber": 1,
+      "width": 612,
+      "height": 792,
+      "text": "Finance Committee\nMUNICIPAL BUILDING\n2101 O'Neil Avenue\nCheyenne, WY 82001\nwww.cheyennecity.org\nAny Supporting Document affiliated with an agenda item is the document as initially submitted for the agenda and may not include any proposed amendments or revisions.\nCOUNCIL CHAMBERS\n08:00 a.m.\nAGENDA\nNOVEMBER 17, 2026\nwww.ch\neyennecity.org\nWeb Access:\nhttps://us02web.zoom.us/j/82415885945?pwd=XOtevCP0mJlijxeipCzVtSHO6b0GZH.1\nPasscode: FC11172026\nCall in Access:\n253-215-8782\nWebinar ID: 824 1588 5945\nPasscode: 5419850155\n6. APPLICATIONS/LICENSES/PERMITS:\nb)\nApplication for a bar & grill liquor license filed with the City Clerk’s Office for Bally’s Wyoming, LLC d/b/a Bally’s Cheyenne, 1734 Meadowland Dr., Cheyenne, WY.\nACTION:\nSupporting Document\nc)\nApplication for a restaurant liquor license filed with the City Clerk’s Office for Shack & Co LLC d/b/a Wing Shack, 5719 Yellowstone Rd., Cheyenne, WY.\nACTION:\nSupporting Document\n23. RESOLUTION – Authorizing the City Treasurer to discharge uncollectible debts pursuant to Wyoming Statute §16-4-502. (SPONSOR – MR. ESQUIBEL)\nACTION:\nSupporting Document\n24. RESOLUTION – Authorizing salary adjustments for certain non-uniformed City employees based on the 2026 compensation study. (SPONSOR – MR. ESQUIBEL)\nACTION:\nSupporting Document\n27. LEASES/CONTRACTS/LEGAL:\na)\nCooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Campstool Way project. (2023-2026 Optional 1% Sales Tax Fund)\nACTION:\nSupporting Document\nb)\nCooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Epoxy Striping. (2019-2022 and 2023-2026 Optional 1% Sales Tax Fund)\nACTION:\nSupporting Document\n28. CONTRACT MODIFICATIONS:\nc)\nContract Modification #3 to Contract #8036 between the City of Cheyenne and Lotus Engineering to reflect an increase in funding for the Comprehensive Climate Action Plan (CCAP) preparation. (EPA Climate Pollution Reduction Planning Grant)\nACTION:\nSupporting Document\n29. CONSIDERATION OF BIDS/PURCHASES/REQUESTS FOR PROPOSALS:\nb)\nConsideration of Bid #S-3-27 for a Contract between the City of Cheyenne and Reiman Corp for the Van Buren Ave - Street Curb and Gutter Improvements project. (2023-2026 Optional 1% Sales Tax Fund)\nACTION:\nSupporting Document"
+    }
+  ],
+  "text": "Finance Committee\nMUNICIPAL BUILDING\n2101 O'Neil Avenue\nCheyenne, WY 82001\nwww.cheyennecity.org\nAny Supporting Document affiliated with an agenda item is the document as initially submitted for the agenda and may not include any proposed amendments or revisions.\nCOUNCIL CHAMBERS\n08:00 a.m.\nAGENDA\nNOVEMBER 17, 2026\nwww.ch\neyennecity.org\nWeb Access:\nhttps://us02web.zoom.us/j/82415885945?pwd=XOtevCP0mJlijxeipCzVtSHO6b0GZH.1\nPasscode: FC11172026\nCall in Access:\n253-215-8782\nWebinar ID: 824 1588 5945\nPasscode: 5419850155\n6. APPLICATIONS/LICENSES/PERMITS:\nb)\nApplication for a bar & grill liquor license filed with the City Clerk’s Office for Bally’s Wyoming, LLC d/b/a Bally’s Cheyenne, 1734 Meadowland Dr., Cheyenne, WY.\nACTION:\nSupporting Document\nc)\nApplication for a restaurant liquor license filed with the City Clerk’s Office for Shack & Co LLC d/b/a Wing Shack, 5719 Yellowstone Rd., Cheyenne, WY.\nACTION:\nSupporting Document\n23. RESOLUTION – Authorizing the City Treasurer to discharge uncollectible debts pursuant to Wyoming Statute §16-4-502. (SPONSOR – MR. ESQUIBEL)\nACTION:\nSupporting Document\n24. RESOLUTION – Authorizing salary adjustments for certain non-uniformed City employees based on the 2026 compensation study. (SPONSOR – MR. ESQUIBEL)\nACTION:\nSupporting Document\n27. LEASES/CONTRACTS/LEGAL:\na)\nCooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Campstool Way project. (2023-2026 Optional 1% Sales Tax Fund)\nACTION:\nSupporting Document\nb)\nCooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Epoxy Striping. (2019-2022 and 2023-2026 Optional 1% Sales Tax Fund)\nACTION:\nSupporting Document\n28. CONTRACT MODIFICATIONS:\nc)\nContract Modification #3 to Contract #8036 between the City of Cheyenne and Lotus Engineering to reflect an increase in funding for the Comprehensive Climate Action Plan (CCAP) preparation. (EPA Climate Pollution Reduction Planning Grant)\nACTION:\nSupporting Document\n29. CONSIDERATION OF BIDS/PURCHASES/REQUESTS FOR PROPOSALS:\nb)\nConsideration of Bid #S-3-27 for a Contract between the City of Cheyenne and Reiman Corp for the Van Buren Ave - Street Curb and Gutter Improvements project. (2023-2026 Optional 1% Sales Tax Fund)\nACTION:\nSupporting Document",
+  "items": [
+    {
+      "number": "6",
+      "kind": "Other",
+      "consent": false,
+      "section": "Agenda",
+      "page": 1,
+      "text": "APPLICATIONS/LICENSES/PERMITS: b) Application for a bar & grill liquor license filed with the City Clerk’s Office for Bally’s Wyoming, LLC d/b/a Bally’s Cheyenne, 1734 Meadowland Dr., Cheyenne, WY. c) Application for a restaurant liquor license filed with the City Clerk’s Office for Shack & Co LLC d/b/a Wing Shack, 5719 Yellowstone Rd., Cheyenne, WY.",
+      "quote": "6. APPLICATIONS/LICENSES/PERMITS: b) Application for a bar & grill liquor license filed with the City Clerk’s Office for Bally’s Wyoming, LLC d/b/a Bally’s Cheyenne, 1734 Meadowland Dr., Cheyenne, WY. ACTION: Supporting Document c) Application for a restaurant liquor license filed with the City Clerk’s Office for Shack & Co LLC d/b/a Wing Shack, 5719 Yellowstone Rd., Cheyenne, WY. ACTION: Supporting Document",
+      "action": ""
+    },
+    {
+      "number": "23",
+      "kind": "Resolution",
+      "consent": false,
+      "section": "Agenda",
+      "page": 1,
+      "text": "Authorizing the City Treasurer to discharge uncollectible debts pursuant to Wyoming Statute §16-4-502. (SPONSOR – MR. ESQUIBEL)",
+      "quote": "23. RESOLUTION – Authorizing the City Treasurer to discharge uncollectible debts pursuant to Wyoming Statute §16-4-502. (SPONSOR – MR. ESQUIBEL) ACTION: Supporting Document",
+      "action": "",
+      "sponsor": "SPONSOR – MR. ESQUIBEL"
+    },
+    {
+      "number": "24",
+      "kind": "Resolution",
+      "consent": false,
+      "section": "Agenda",
+      "page": 1,
+      "text": "Authorizing salary adjustments for certain non-uniformed City employees based on the 2026 compensation study. (SPONSOR – MR. ESQUIBEL)",
+      "quote": "24. RESOLUTION – Authorizing salary adjustments for certain non-uniformed City employees based on the 2026 compensation study. (SPONSOR – MR. ESQUIBEL) ACTION: Supporting Document",
+      "action": "",
+      "sponsor": "SPONSOR – MR. ESQUIBEL"
+    },
+    {
+      "number": "27",
+      "kind": "Other",
+      "consent": false,
+      "section": "Agenda",
+      "page": 1,
+      "text": "LEASES/CONTRACTS/LEGAL: a) Cooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Campstool Way project. (2023-2026 Optional 1% Sales Tax Fund) b) Cooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Epoxy Striping. (2019-2022 and 2023-2026 Optional 1% Sales Tax Fund)",
+      "quote": "27. LEASES/CONTRACTS/LEGAL: a) Cooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Campstool Way project. (2023-2026 Optional 1% Sales Tax Fund) ACTION: Supporting Document b) Cooperative Agreement between the City of Cheyenne and the Wyoming Department of Transportation for the 2027 Epoxy Striping. (2019-2022 and 2023-2026 Optional 1% Sales Tax Fund) ACTION: Supporting Document",
+      "action": ""
+    },
+    {
+      "number": "28",
+      "kind": "Other",
+      "consent": false,
+      "section": "Agenda",
+      "page": 1,
+      "text": "CONTRACT MODIFICATIONS: c) Contract Modification #3 to Contract #8036 between the City of Cheyenne and Lotus Engineering to reflect an increase in funding for the Comprehensive Climate Action Plan (CCAP) preparation. (EPA Climate Pollution Reduction Planning Grant)",
+      "quote": "28. CONTRACT MODIFICATIONS: c) Contract Modification #3 to Contract #8036 between the City of Cheyenne and Lotus Engineering to reflect an increase in funding for the Comprehensive Climate Action Plan (CCAP) preparation. (EPA Climate Pollution Reduction Planning Grant) ACTION: Supporting Document",
+      "action": ""
+    },
+    {
+      "number": "29",
+      "kind": "Other",
+      "consent": false,
+      "section": "Agenda",
+      "page": 1,
+      "text": "CONSIDERATION OF BIDS/PURCHASES/REQUESTS FOR PROPOSALS: b) Consideration of Bid #S-3-27 for a Contract between the City of Cheyenne and Reiman Corp for the Van Buren Ave - Street Curb and Gutter Improvements project. (2023-2026 Optional 1% Sales Tax Fund)",
+      "quote": "29. CONSIDERATION OF BIDS/PURCHASES/REQUESTS FOR PROPOSALS: b) Consideration of Bid #S-3-27 for a Contract between the City of Cheyenne and Reiman Corp for the Van Buren Ave - Street Curb and Gutter Improvements project. (2023-2026 Optional 1% Sales Tax Fund) ACTION: Supporting Document",
+      "action": ""
+    }
+  ],
+  "sections": [
+    {
+      "heading": "Agenda",
+      "items": [
+        "6",
+        "23",
+        "24",
+        "27",
+        "28",
+        "29"
+      ]
+    }
+  ]
+}

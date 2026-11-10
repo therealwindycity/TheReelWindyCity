@@ -1,0 +1,18 @@
+{
+  "meetingId": "finance-committee-2026-11-17",
+  "generatedAt": "2026-11-10T20:57:38.746Z",
+  "generatedBy": [
+    "rules-v1",
+    "llm-v1"
+  ],
+  "summary": {
+    "items": 6,
+    "findings": 0,
+    "bySeverity": {
+      "act": 0,
+      "watch": 0,
+      "info": 0
+    }
+  },
+  "findings": []
+}
