@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-12T20:49:50.170Z",
+  "checkedAt": "2026-11-13T20:30:41.986Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -7,7 +7,7 @@
   "warnings": 6,
   "recorded": 91,
   "delegated": 1,
-  "changed": false,
+  "changed": true,
   "structural": 2,
   "results": [
     {
@@ -607,11 +607,11 @@
       "status": 200,
       "finalUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "4ccacf267df413f6880ac3cd24f81749e10e51bc020543ddba0b56de77dd8132",
-      "records": 583
+      "contentHash": "adccdbe7454981174112fc5ef59015c5dc071767e0be02140ea4db8297094a90",
+      "records": 587
     },
     {
       "id": "place-cheyenne",
@@ -1170,11 +1170,11 @@
       "status": 200,
       "finalUrl": "https://cityoflaramie.org/AgendaCenter",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "640b112547c858bf22b8d8ffc4abb8361097431280382b84e7a1dcedfc5556c8",
-      "records": 503
+      "contentHash": "c385d8e5e905bcd57693385e6f05fab1bd1efa736227ef9b639ce0b74598d7ec",
+      "records": 507
     },
     {
       "id": "place-lingle",
@@ -1594,11 +1594,11 @@
       "status": 200,
       "finalUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=74374&mt=ALL",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "02431a9fce568d3b4952956dd7e4524b865edda168d104c9c69188b218e88682",
-      "records": 4
+      "contentHash": "d806bcc6ef281ff929a491976416ef04fd17c0c72b7c2ab0cc3af7c818db17ee",
+      "records": 6
     },
     {
       "id": "place-shoshoni",
