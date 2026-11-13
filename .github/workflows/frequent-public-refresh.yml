@@ -1,0 +1,50 @@
+name: Frequent public refresh
+
+on:
+  schedule:
+    - cron: '8,38,53 * * * *'
+  workflow_dispatch: {}
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: frequent-public-refresh
+  cancel-in-progress: false
+
+jobs:
+  coordinate:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Request bounded checks and publication using existing workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo '## Public refresh requests' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Requests are not proof of successful collection or publication. Inspect the invoked workflow results.' >> "$GITHUB_STEP_SUMMARY"
+          failed=0
+          for workflow in live_city_watch.yml deploy-pages.yml; do
+            if ! runs=$(gh api "repos/$GH_REPO/actions/workflows/$workflow/runs?branch=main&per_page=100"); then
+              echo "Could not inspect $workflow; no duplicate request sent." >> "$GITHUB_STEP_SUMMARY"
+              failed=1
+              continue
+            fi
+            active=$(jq '[.workflow_runs[] | select(.status != "completed")] | length' <<< "$runs")
+            if [ "$active" -gt 0 ]; then
+              echo "Skipped $workflow: $active active run(s)." >> "$GITHUB_STEP_SUMMARY"
+              continue
+            fi
+            if gh workflow run "$workflow" --ref main; then
+              echo "Requested $workflow on main." >> "$GITHUB_STEP_SUMMARY"
+            else
+              echo "Request failed: $workflow." >> "$GITHUB_STEP_SUMMARY"
+              failed=1
+            fi
+          done
+          exit "$failed"
