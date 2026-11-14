@@ -1,0 +1,100 @@
+name: CM stage recovered remediation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-stage-recovered-remediation.yml']
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: cm-stage-recovered-remediation
+  cancel-in-progress: false
+jobs:
+  stage:
+    if: github.repository == 'therealwindycity/TheReelWindyCity' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install verification dependencies
+        run: python -m pip install requests beautifulsoup4 pypdf pdfplumber curl_cffi
+      - name: Restore pinned application changes without modifying workflows
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin cm-frontend-recovery
+          test "$(git rev-parse FETCH_HEAD)" = b7931e2e1454a03f78f99f3103860ee04124e88f
+          git switch -c cm/remediation-v2-reviewed
+          python3 - <<'PY'
+          import hashlib,json,subprocess
+          from pathlib import Path
+          pin='b7931e2e1454a03f78f99f3103860ee04124e88f'
+          base='f07fda96a9e3567e27f99a44f29226cfd0df2c53'
+          def show(ref,name):
+              result=subprocess.run(['git','show',ref+':'+name],capture_output=True)
+              if result.returncode and subprocess.run(['git','cat-file','-e',ref],capture_output=True).returncode: raise RuntimeError('Missing revision')
+              return result.stdout if result.returncode==0 else None
+          manifest=json.loads(show(pin,'status/frontend-recovery.json'))
+          if manifest['source_revision']!=base or manifest['patch_sha256']!='2713a33513960844035805603b52c7f34188ff46af8d8cadfbdd025b0de95944' or len(manifest['files'])!=22: raise RuntimeError('Unexpected recovery manifest')
+          restored=[]
+          for entry in manifest['files']:
+              name=entry['path']
+              if name.startswith('.github/workflows/'): continue
+              p=Path(name)
+              if p.is_absolute() or '..' in p.parts or entry['change'] not in ('A','M'): raise RuntimeError('Unsupported change')
+              if show('HEAD',name)!=show(base,name): raise RuntimeError('Source drift; refusing overwrite: '+name)
+              data=show(pin,entry['review_path'])
+              if data is None or hashlib.sha256(data).hexdigest()!=entry['sha256']: raise RuntimeError('Digest mismatch: '+name)
+              if entry['mode'] not in ('100644','100755'): raise RuntimeError('Unsupported file mode')
+              p.parent.mkdir(parents=True,exist_ok=True)
+              p.write_bytes(data)
+              p.chmod(0o755 if entry['mode']=='100755' else 0o644)
+              restored.append(name)
+          if len(restored)!=19: raise RuntimeError('Unexpected application file count')
+          subprocess.run(['git','add','--',*restored],check=True)
+          PY
+          git diff --cached --exit-code -- .github/workflows
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'CM: restore recovered remediation application changes for review'
+      - name: Verify and publish repair branch only
+        shell: bash
+        env:
+          NEXT_PUBLIC_BASE_PATH: /TheReelWindyCity
+        run: |
+          set -euo pipefail
+          {
+            npm ci
+            npm run lint
+            npm run typecheck
+            npm run test:wyoming-watch
+            npm run build
+            npm run test:seo
+            npm run test:text-separation
+            python3 -m unittest discover -s tests -p test_granicus_harvester.py -v
+          } 2>&1 | tee /tmp/cm-recovered-branch-tests.log
+          git diff --exit-code
+          git diff --exit-code origin/main...HEAD -- .github/workflows
+          git rev-parse HEAD | tee /tmp/cm-recovered-branch-revision.txt
+          git push origin HEAD:refs/heads/cm/remediation-v2-reviewed 2>&1 | tee /tmp/cm-recovered-branch-push.log
+          echo "Verified application repairs published on cm/remediation-v2-reviewed at $(git rev-parse HEAD). Three recovered workflow changes remain separate. No merge or deployment." >> "$GITHUB_STEP_SUMMARY"
+      - name: Preserve verification and push evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cm-recovered-branch-${{ github.run_id }}
+          path: |
+            /tmp/cm-recovered-branch-tests.log
+            /tmp/cm-recovered-branch-revision.txt
+            /tmp/cm-recovered-branch-push.log
+          if-no-files-found: warn
