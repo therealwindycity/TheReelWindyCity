@@ -1,42 +1,58 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-14T18:27:46.617Z",
+  "observed_at": "2026-11-14T18:47:42.759Z",
   "scope": "Bounded workflow metadata and check annotations; no raw logs or source-freshness certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 43626699213,
-      "sha": "f07fda96a9e3567e27f99a44f29226cfd0df2c53",
-      "status": "completed",
-      "conclusion": "skipped",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626699213",
-      "created_at": "2026-11-14T18:27:29Z",
+      "id": 43628564759,
+      "sha": "7ca869162f2fdeffc7b1e02f93486df4d632e943",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43628564759",
+      "created_at": "2026-11-14T18:47:37Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
-          "conclusion": "skipped",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626699213/job/132544076969",
-          "steps": []
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43628564759/job/132549844734",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify public HTML features for CM",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
         }
       ],
       "annotations": []
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 43626313218,
-      "sha": "f07fda96a9e3567e27f99a44f29226cfd0df2c53",
+      "id": 43628227260,
+      "sha": "0888d2204acca0b40ab6b3d71a620c3013653239",
       "status": "completed",
-      "conclusion": "failure",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313218",
-      "created_at": "2026-11-14T18:23:14Z",
+      "conclusion": "success",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43628227260",
+      "created_at": "2026-11-14T18:43:55Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313218/job/132542796291",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43628227260/job/132548809195",
           "steps": [
             {
               "name": "Set up job",
@@ -143,8 +159,8 @@
         {
           "name": "deploy",
           "status": "completed",
-          "conclusion": "failure",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313218/job/132543831135",
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43628227260/job/132549664903",
           "steps": [
             {
               "name": "Set up job",
@@ -169,7 +185,7 @@
             {
               "name": "Verify published sitemap and robots.txt",
               "status": "completed",
-              "conclusion": "failure"
+              "conclusion": "success"
             },
             {
               "name": "Post Run actions/checkout@v4",
@@ -184,32 +200,7 @@
           ]
         }
       ],
-      "annotations": [
-        {
-          "job": "deploy",
-          "path": ".github",
-          "line": 4,
-          "level": "warning",
-          "title": "",
-          "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/deploy-pages@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/"
-        },
-        {
-          "job": "deploy",
-          "path": ".github",
-          "line": 17,
-          "level": "failure",
-          "title": "",
-          "message": "Process completed with exit code 1."
-        },
-        {
-          "job": "deploy",
-          "path": ".github",
-          "line": 1,
-          "level": "notice",
-          "title": "",
-          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\""
-        }
-      ]
+      "annotations": []
     },
     {
       "name": "Frequent public refresh",
