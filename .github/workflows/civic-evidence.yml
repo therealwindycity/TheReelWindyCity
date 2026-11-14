@@ -1,0 +1,116 @@
+name: Civic evidence retrieval
+
+on:
+  push:
+    branches: [arena/a243c6bf-thereelwindycity]
+    paths:
+      - '.github/workflows/civic-evidence.yml'
+      - 'tools/civic_engine.py'
+      - 'tools/civic_engine_targets.json'
+      - 'tools/search_linked_civic.py'
+      - 'tools/inspect_civic_sources.py'
+      - 'tools/official_civic_montage.py'
+      - 'tools/civic_run_status.py'
+      - 'tools/test_civic*.py'
+  workflow_dispatch:
+    inputs:
+      attempt_media:
+        description: 'Explicitly retry known YouTube sign-in and official-stream 403 barriers'
+        type: boolean
+        required: false
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: civic-evidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  retrieve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      ATTEMPT_MEDIA: ${{ github.event_name == 'workflow_dispatch' && inputs.attempt_media || false }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install document inspection dependencies
+        run: python -m pip install pypdf
+      - name: Install optional media tools
+        if: env.ATTEMPT_MEDIA == 'true'
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y ffmpeg
+          python -m pip install yt-dlp
+      - name: Run civic regression tests
+        run: python -m unittest discover -s tools -p 'test_civic*.py' -v
+      - name: Search committed linked corpus
+        run: python tools/search_linked_civic.py
+      - name: Retrieve sources without implicit media retries
+        id: retrieve
+        continue-on-error: true
+        run: |
+          flags=(--skip-video)
+          if [ "$ATTEMPT_MEDIA" = true ]; then flags=(); fi
+          python tools/civic_engine.py "${flags[@]}"
+      - name: Independently inspect every response
+        id: inspect
+        if: always()
+        continue-on-error: true
+        run: |
+          flags=(--skip-discovery)
+          if [ "$ATTEMPT_MEDIA" = true ]; then flags=(); fi
+          python tools/inspect_civic_sources.py "${flags[@]}"
+      - name: Attempt publicly advertised official streams only on request
+        if: env.ATTEMPT_MEDIA == 'true'
+        continue-on-error: true
+        run: python tools/official_civic_montage.py
+      - name: Compute completion and provenance gate
+        id: completion
+        if: always()
+        continue-on-error: true
+        run: |
+          flags=()
+          if [ "$ATTEMPT_MEDIA" = true ]; then flags=(--require-media); fi
+          python tools/civic_run_status.py "${flags[@]}"
+      - name: Publish full stage outcomes
+        if: always()
+        env:
+          RETRIEVAL_OUTCOME: ${{ steps.retrieve.outcome }}
+          INSPECTION_OUTCOME: ${{ steps.inspect.outcome }}
+          COMPLETION_OUTCOME: ${{ steps.completion.outcome }}
+        run: |
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('# Civic evidence execution\n\n')
+              for field in ('RETRIEVAL_OUTCOME', 'INSPECTION_OUTCOME', 'COMPLETION_OUTCOME'):
+                  summary.write(f'- {field}: {os.environ[field]}\n')
+              report = Path('arena_workspace/exports/completion_report.json')
+              if report.exists():
+                  summary.write('\n```json\n' + report.read_text() + '\n```\n')
+              else:
+                  summary.write('\nCompletion report absent: job is incomplete.\n')
+              summary.write('\nRetrieval is not factual verification. Nothing is automatically published.\n')
+          PY
+      - name: Retain reports, evidence index and public source captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: civic-evidence-${{ github.run_id }}
+          path: |
+            arena_workspace/exports/
+            arena_workspace/sources/
+            arena_workspace/cheyenne_records.sqlite3
+          if-no-files-found: error
+          retention-days: 14
+      - name: Fail visibly when completion or source-association checks fail
+        if: always()
+        env:
+          COMPLETION_OUTCOME: ${{ steps.completion.outcome }}
+        run: test "$COMPLETION_OUTCOME" = success

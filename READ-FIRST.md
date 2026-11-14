@@ -66,6 +66,46 @@ Coordination is not optional here.
 
 ## Active claims
 
+### claim: follow-money-terms — Resolution 6573 terms and Reed funding-history joins
+- worker: arena-civic-engine
+- status: done
+- stage: final three-job run succeeded; four captures hash-verified; loan terms and two-year Reed encumbrance report completed
+- scope: NEW tools/follow_money_evidence.py, tools/test_follow_money_evidence.py, .github/workflows/follow-money-evidence.yml, docs/FOLLOW_MONEY_TERMS.md; READ-FIRST.md (claim/log only); ignored arena_workspace/follow-money/ and exports
+- started: 2026-11-02T12:42Z
+- updated: 2026-11-02T12:55Z
+- notes: Do not infer actual cash movement from an authorization or encumbrance. Capture only uniquely associated same-host agenda attachments. No emails, fees, video retries or original DB edits.
+
+
+### claim: other-target-cases — debt, Highlands and Reed/stormwater written-record investigations
+- worker: arena-civic-engine
+- status: done
+- stage: all four capture jobs in run 41445522261 passed; 11 PDF captures / 10 distinct contents and complete compressed packets verified; three case reports, six Reed voucher identifiers and Resolution 6573 follow-up documented; 76 local tests passed
+- scope: NEW tools/remaining_target_evidence.py, tools/test_remaining_target_evidence.py, .github/workflows/remaining-target-evidence.yml, docs/REMAINING_TARGET_CASES.md; tools/fleet_case_evidence.py (optional bounded fetcher only); READ-FIRST.md (claim/log only); ignored arena_workspace/other-targets/ and exports
+- started: 2026-11-02T12:26Z
+- updated: 2026-11-02T12:38Z
+- notes: Reuse existing fixed-host PDF capture; preserve default fleet bounds, add explicit 12 MiB ceiling for Highlands maps. Compressed ASCII evidence transport avoids Unicode escape mutation observed in initial API notices. Verify document dates, motion scope and conditions; no invented timestamps, numeric repair, legal/engineering conclusions or payment claims. Requests remain unsent drafts.
+
+
+### claim: fleet-transaction-case — E-19-26 source-backed award/payment investigation
+- worker: arena-civic-engine
+- status: done
+- stage: final hosted run 41443951478 passed; three native PDFs and six-packet payload verified; award/fund reconstructed, price comparison explained, payment gap and records request documented; 11 focused + 57 civic tests passed
+- scope: NEW tools/fleet_case_evidence.py, tools/test_fleet_case_evidence.py, .github/workflows/fleet-case-evidence.yml, docs/FLEET_E19_CASE.md; READ-FIRST.md (claim/log only); ignored arena_workspace/fleet-case/ and exports
+- started: 2026-11-02T12:10Z
+- updated: 2026-11-02T12:22Z
+- notes: One procurement only. Distinguish recommendation, referral, award, delivery and payment. No original database edits or unsupported legal conclusions; no video/authentication retries.
+
+
+### claim: repository-claims-audit — verify alleged divergence architecture, SPET schemas and history
+- worker: arena-civic-engine
+- status: done
+- stage: pinned upstream content/schema/history audit complete; 1,368 files and four public DB snapshots inspected; alleged architecture not substantiated; 138 relevant tests passed
+- scope: NEW tools/audit_repository_claims.py, tools/test_repository_claims.py, docs/REPOSITORY_CLAIMS_AUDIT.md; READ-FIRST.md (claim/log only); ignored arena_workspace/repository-audit/ outputs
+- started: 2026-11-02T11:50Z
+- updated: 2026-11-02T12:03Z
+- notes: Treat proposed metrics as unverified until code/data support them; no misconduct inferred from missing transcript links or metadata discrepancies. No remote repository writes beyond current session branch.
+
+
 ### claim: miller-estoppel-white-paper-expansion — source expansion and Wyoming-law analysis for the Miller estoppel-effect white paper
 - worker: arena-agent
 - status: done
@@ -334,3 +374,97 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
 - result: Added bounded, source-guarded item/subitem supporting-document discovery, PDF text and explicit statutory citation scanning, provenance and candidate evidence excerpts, an hourly queue, and tests. Corrected the guided session’s mistaken substitution of the fire department policy brief for the proposed warrant ordinance. Added a partial January 26 budget reappropriation review and identified a one-dollar difference in rounded draft revenue/appropriation totals as a reconciliation lead, not an established violation.
 - verification: Legal cross-reference, discovery, evidence, supporting-record, sync and calendar tests passed; typecheck, lint (six unrelated warnings), static build and SEO audit passed locally. GitHub deployment and live source availability have not yet been verified at this point.
 - limitation: This does **not** complete the substantive legal audit for every item. Missing or unindexed records, historical law, final signed texts, notices and publication proofs, applicability and exceptions remain unresolved. Automatic keyword matches are leads, not findings of legality or illegality.
+
+
+### 2026-11-02 — civic evidence engine implementation and bounded execution
+
+### claim: civic-evidence-engine — source-aware SQLite and montage pipeline
+- worker: arena-civic-engine
+- status: done
+- stage: CLI executed in restricted-network mode; 4 cases and 8 blocked source rows indexed; no verified votes or MP4; 7 unit tests and diff check passed
+- scope: NEW tools/civic_engine.py, tools/civic_engine_targets.json, tools/test_civic_engine.py, docs/CIVIC_ENGINE.md; .gitignore (workspace exclusion); READ-FIRST.md (claim/log only); generated arena_workspace/
+- started: 2026-11-02T11:15Z
+- updated: 2026-11-02T11:15Z
+- notes: Supplied allegations remain unverified; external municipal/video hosts are outside sandbox network allowlist. No publishing or external messages.
+
+- result: Added source-aware draft generator, SQLite schema and retrieval ledger, corrected section syntax, normalized lower-third video pipeline, run report and runbook. Network and missing media tools prevent source verification and real rendering; no publication-ready findings claimed. Generated workspace excluded from Git.
+
+
+### 2026-11-02 — Drive database municipal evidence review
+
+### claim: drive-civic-review — read-only review of existing Drive databases
+- worker: arena-civic-engine
+- status: done
+- stage: five Drive databases downloaded read-only, integrity checked and inventoried; 56 topic query hits and eight selected pages exported; repeat run and key-passage assertions passed
+- scope: NEW tools/review_drive_civic.py; .gitignore (Drive download exclusion); READ-FIRST.md (claim/log only); generated google_drive/ and arena_workspace/exports/drive_*
+- started: 2026-11-02T11:17Z
+- updated: 2026-11-02T11:17Z
+- notes: Read-only database access; no Drive changes; no verified voting assumptions.
+
+
+- result: Corrected debt quotation context, fleet memo recommendation interpretation, Highlands land-use vote scope and Reed appropriation instrument using archived extracted pages. Created source-linked Markdown/JSON and derived searchable SQLite exports under ignored arena_workspace. Five quick_check results were ok; all seven civic engine tests and diff check passed. Source PDFs/live links/video not authenticated; 143.6 MB linked corpus and 416.8 MB vault not downloaded due connector size limits. No Drive originals changed and no inferred individual votes imported.
+
+
+### 2026-11-02 — final bounded civic evidence package
+
+### claim: civic-final-package — corrected posts and archive-based evidence-card reel
+- worker: arena-civic-engine
+- status: done
+- stage: corrected posts, derived evidence and 50-second silent archive-card reel packaged; full MP4 decode, ZIP integrity, hashes and unchanged originals verified
+- scope: NEW tools/package_civic_review.py; docs/CIVIC_ENGINE.md (additive runbook); READ-FIRST.md (claim/log only); generated arena_workspace/
+- started: 2026-11-02T11:20Z
+- updated: 2026-11-02T11:20Z
+- notes: No policy/size-limit override; no unrelated meeting footage; reel explicitly labels archived-text basis and unavailable original audio/video.
+
+
+- result: Added reproducible package script and runbook. Rendered actual 720x1280/30fps H.264 silent text-card MP4 (not meeting montage), four corrected social posts and seven-file ZIP. Complete decode and duration checks passed; five source hashes unchanged; seven civic engine tests passed. Large linked corpus extraction explicitly refused at 25 MB; no exposed download-URL option or supported override. No claim of full corpus/source/video verification.
+
+
+### 2026-11-02 — GitHub-hosted civic retrieval executed
+
+### claim: civic-github-execution — hosted retrieval and full local linked-corpus search
+- worker: arena-civic-engine
+- status: done
+- stage: pushed current branch and opened PR #34; hosted retrieval confirmed eight PDFs; 720-record search complete; YouTube sign-in and official HLS 403 failures verified; findings exported
+- scope: NEW .github/workflows/civic-evidence.yml; NEW tools/search_linked_civic.py, tools/inspect_civic_sources.py, tools/official_civic_montage.py; tools/civic_engine.py (bounded download subprocess); docs/CIVIC_ENGINE.md and NEW docs/CIVIC_HOSTED_RESULTS.md; READ-FIRST.md (claim/log only); all earlier uncommitted civic tools included in authorized branch push
+- started: 2026-11-02T11:22Z
+- updated: 2026-11-02T11:22Z
+- notes: No private Drive downloads or generated artifacts committed. Hosted retrieval remains distinct from content verification.
+
+
+- result: Run 41437221070 completed and retained official document captures, extracted text, reports and full corpus search artifacts. Retrieved content identified wrong-year Highlands minutes and March/October source mismatch; October page 3 supports a failed year-end stormwater-transfer policy amendment and explicitly named Aldrich/White YES votes, not necessarily the supplied immediate-transfer wording or tally. Derived local SQLite augmented with eight response checks and two named votes. Four YouTube requests required sign-in; four advertised official HLS streams returned 403; no authentic montage claimed. PR #34 remains open, no main merge. Private Drive files and media remain ignored.
+
+
+### 2026-11-02 — civic pipeline adversarial hardening completed
+
+### claim: civic-hardening — failure semantics, provenance and regression audit
+- worker: arena-civic-engine
+- status: done
+- stage: 57 tests pass; 90% measured combined coverage; hosted run 41439252231 validates eight PDFs and two named votes and fails final gate on three supplied-link issues; artifacts preserved
+- scope: tools/civic_engine.py, tools/civic_engine_targets.json, tools/inspect_civic_sources.py, tools/official_civic_montage.py, tools/test_civic_engine.py; NEW tools/civic_run_status.py, tools/test_civic_hardening.py; .github/workflows/civic-evidence.yml; docs/CIVIC_ENGINE.md, docs/CIVIC_HOSTED_RESULTS.md; NEW docs/CIVIC_HARDENING_AUDIT.md; READ-FIRST.md (claim/log only); .gitignore (venv/coverage exclusions); ignored arena_workspace outputs
+- started: 2026-11-02T11:40Z
+- updated: 2026-11-02T11:40Z
+- notes: Routine retries must not hammer known sign-in/403 barriers. No original records overwritten. Failures remain visible after artifact upload.
+
+
+- result: Fixed case/source REPLACE foreign-key rerun defects, stale file/report exposure, source path/digest checks, per-PDF error isolation, source role/date checks, idempotent named-vote extraction, media host and duration constraints, concat/decode validation, annotation bounds and workflow false-success semantics. Added opt-in-only hosted media retries and separate completion/evidence manifests. Hosted regression, eight-source retrieval/inspection and artifact upload succeeded; two named votes imported; final gate correctly failed three known associations. No media barriers retried, no main merge, no private source data committed. Measured suite: 57 tests; 549/593 statements and 162/196 branches covered (90.114% combined). Full audit documents residual limitations.
+
+
+### 2026-11-02 — alleged repository architecture verified against pinned sources
+
+- claim: repository-claims-audit; result: added read-only Git-blob-verifying auditor, 21 regression tests and source-linked report. Pinned bartimoussmith-oss/therealwindycity at 74edf0adbc9f4539f8af5fc5aaf51b33878c8955; all 1,368 selected files inspected, 1,183 JSON profiles and four verified SQLite schema/count snapshots. No named divergence matrix, Ghost Quorum, consultant ratio, voiceprint or supplied fiscal/link keys found in selected content. Actual rhetorical DB has zero officials/votes/veracity rows; authored watchdog seeds are not verified findings. Existing estoppel execution produced 479 unreviewed candidates, not contradictions. Fresh six-repository archive inventory: 5,140 blobs, 4,935 .pdf paths, 5,116 date-parsed records; oldest archive's 1,006 blobs are not .json files. Four bounded current-path histories inspected; reviewed diffs do not establish removal of alleged tracking features. Tests passed: auditor 21 + estoppel 7 + archive 53 + civic 57 = 138. Original data/app/schema files untouched; empty inactive SDK-created SQLite sidecars preserved only in ignored workspace. Audit bundle excludes source databases and Git blob cache; no misconduct conclusions, access-control bypass, or main merge.
+
+
+### 2026-11-02 — E-19-26 narrow transaction investigation
+
+- claim: fleet-transaction-case; result: reconstructed recommendation (May 6), referral (May 11) and actual award (May 26). Final hosted run 41443951478 at 1b27eff captured three original public PDFs with archived SHA-1 matches and new SHA-256 digests; six of six selected-page packets reassembled and verified. Approved Fremont/Lander supplier, $78,819 cap, account 020-26-2617-42-43503 and 2019–2022 Optional 1% Sales Tax label established. Extracted table comparison is $3,407 / 4.517849% above Duval and $363.60 below displayed 105% benchmark; this is not legal eligibility verification or proof of actual payment. Searched 61 archived voucher documents / 721 pages; no exact bid/amount match; coverage incomplete through September, so delivery/payment remain unresolved, not disproven. Report includes direct PDF/page links, extraction caveats and exact draft records request (not sent). Fixed ten-notice transport truncation and malformed-PDF isolation; 11 local/hosted focused tests and 57 local civic regressions passed. No DB/app/source-registry edits, fabricated timestamps, authentic clips, fee authorization or main merge.
+
+
+### 2026-11-02 — remaining targets investigated against original written records
+
+- claim: other-target-cases; result: successful run 41445522261 at 614f863, four jobs, 11 PDF captures / 10 distinct byte contents. Ten known-baseline matches; October source explicitly has no pinned-database baseline. Verified complete gzip/base64 payloads (3 debt, 4 Highlands, 5 Reed/stormwater, 3 voucher packets). Initial run 41445001940 was not accepted as complete: Highlands map packet exceeded default 5 MiB and Unicode escape mutation failed integrity verification; explicit 12 MiB source-only bound and compressed ASCII transport fixed those problems. Default fleet limit remains 5 MiB. Debt: $20M application authorization and malformed unsigned repayment estimate, no proof of closed loan. Highlands: 3,459.99 acres, July 13 main actions approved, staff serviceability with further engineering needed; PC tally/majority and report boundary descriptions need primary-record reconciliation. Reed: draft $5M conditional commitment, April 27 Ordinance 4669 approval with Rinne technical no-record note; six unique DHM/PSA7782 voucher entries dated July 23 total $53,615.51, fund and bank clearing unknown. October 26: failed $10M potential-transfer policy, not immediate transfer; separate Resolution 6573 approves up to $18,063,014 interfund loan, actual movements/terms unverified. Report supplies direct sources/pages and three draft unsent records requests. Tests: targets 8 + shared capture 11 + civic 57 = 76 unique local passes; hosted jobs pass 19 focused tests each. No original DB, source registry or app edits; no legal/engineering/misconduct conclusion, request sending, fees, fabricated timestamp or main merge.
+
+
+### 2026-11-02 — loan terms and Reed fund-history follow-up completed
+
+- claim: follow-money-terms; result: diagnosed initial run 41447067892 (interfund parser expected body tag, although agenda is an HTML fragment; earlier Reed job succeeded). Fragment-aware parser and regression fixed it. Final 41447350598 at 418d729: three successful jobs; four original PDF captures; two archival SHA-1 matches, two newly discovered attachments without invented baselines; complete verified compressed transport 3/4/3 packets. Actual loan packet prescribes conditional per-project transfers, separately certified fixed interest, four-year actual-transfer-based repayment and nine prospective financing lines totaling $18,063,014 (2027–2029). Numeric rate, signed final text, draws and balances remain unverified. Reed #7782 listed as SPOT 2012 & 2017 Ballots in both FY2026/FY2027 encumbrance schedules: $676,021 and $596,130. $79,891 difference is not established as payments; July voucher funds and bank clearing still not established. Wrote source/page-linked docs/FOLLOW_MONEY_TERMS.md and refined unsent records request; local tests 10 discovery + 8 transport + 11 capture + 57 civic = 86 unique passes. No original DB/app/registry edits, requests sent, fees, media retries, fabricated timestamps, legal/misconduct conclusions or main merge.
