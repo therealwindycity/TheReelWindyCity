@@ -1173,8 +1173,7 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
                   aria-label="Previous story"
                 >
                   <ChevronLeft size={16} />
-                </button>
-                <button
+                </button>{" "}<button
                   type="button"
                   onClick={() => setRotationPaused((paused) => !paused)}
                   disabled={featuredStoryCount < 2 || reducedMotion}
@@ -1188,8 +1187,7 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
                   aria-pressed={rotationPaused}
                 >
                   {rotationPaused || reducedMotion ? <Play size={13} /> : <Pause size={13} />}
-                </button>
-                <button
+                </button>{" "}<button
                   type="button"
                   onClick={() => showStory(1)}
                   disabled={featuredStoryCount < 2}
@@ -1287,8 +1285,7 @@ export function PulseBroadcast({ embedded = false }: { embedded?: boolean }) {
                   onClick={() => setScannerScope("statewide")}
                 >
                   All Wyoming ({ALL_WYOMING_SCANNER_FEEDS.length})
-                </button>
-                <button
+                </button>{" "}<button
                   type="button"
                   className={scannerScope === "talkgroups" ? "active" : ""}
                   onClick={() => setScannerScope("talkgroups")}

@@ -115,7 +115,12 @@ test("the scheduled workflow does not call the Cheyenne sync", async () => {
   assert.equal(workflow.concurrency["cancel-in-progress"], false);
   assert.ok(workflow.on.schedule[0].cron);
   const steps = workflow.jobs.watch.steps;
-  const watch = steps.find((step) => step.name === "Watch every Wyoming government");
+  // Locate the collector step by what it runs, not by its display name. The step was
+  // renamed on 2026-11-07 ("Watch every configured Wyoming government") and a lookup
+  // by the old label kept CI red for a week without any behavior having changed.
+  const watch = steps.find((step) => step.id === "watch")
+    ?? steps.find((step) => typeof step.run === "string" && /wyoming-watch\.mjs\b.*--check/.test(step.run));
+  assert.ok(watch, "the workflow must keep a step that runs wyoming-watch.mjs --check");
   assert.match(watch.run, /wyoming-watch\.mjs --check/);
   assert.doesNotMatch(JSON.stringify(workflow), /live_city_sync/);
   for (const step of steps) {

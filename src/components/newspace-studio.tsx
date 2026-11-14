@@ -163,7 +163,7 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
           <h2 id="nsp-studio-title">Customize mynewspace</h2>
           <p>
             Back in 2006 you pasted HTML into a box and your profile stopped looking like everyone else&apos;s. Here
-            the box is an <strong>Arena</strong> window: ask for what you want, paste what comes back, and your
+            the box is an <strong>Arena</strong>{" "}window: ask for what you want, paste what comes back, and your
             profile changes &mdash; in this browser, for you, saved locally. The address bar tracks which tool is
             open, so a saved view can be linked.
           </p>
@@ -298,7 +298,7 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
               <p className="nsp-field-note">
                 Default: <code>{DEFAULT_ARENA_URL}</code>. Arena does not publish an embed-widget endpoint, so this is
                 just the address your browser is asked to frame. If Arena sends{" "}
-                <code>X-Frame-Options</code> or a CSP <code>frame-ancestors</code> that refuses embedding, the window
+                <code>X-Frame-Options</code> or a CSP <code>frame-ancestors</code>{" "}that refuses embedding, the window
                 stays blank and only the direct link works &mdash; that is their policy, not a bug on this page.
               </p>
 
@@ -461,8 +461,7 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
                         aria-label={`Move ${SECTION_LABELS[id]} up`}
                       >
                         <ArrowUp size={13} aria-hidden="true" />
-                      </button>
-                      <button
+                      </button>{" "}<button
                         type="button"
                         className={ICON_BUTTON}
                         onClick={() => moveSection(id, 1)}
@@ -470,12 +469,10 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
                         aria-label={`Move ${SECTION_LABELS[id]} down`}
                       >
                         <ArrowDown size={13} aria-hidden="true" />
-                      </button>
-                      <button type="button" className={ICON_BUTTON} onClick={() => toggleSection(id)}>
+                      </button>{" "}<button type="button" className={ICON_BUTTON} onClick={() => toggleSection(id)}>
                         {hidden ? <Eye size={13} aria-hidden="true" /> : <EyeOff size={13} aria-hidden="true" />}
                         {hidden ? "Show" : "Hide"}
-                      </button>
-                      <button
+                      </button>{" "}<button
                         type="button"
                         className={ICON_BUTTON}
                         onClick={() => document.getElementById(`nsp-sec-${id}`)?.scrollIntoView({ block: "start" })}
@@ -519,8 +516,7 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
                   }}
                 >
                   <Check size={13} aria-hidden="true" /> Apply stylesheet
-                </button>
-                <button
+                </button>{" "}<button
                   type="button"
                   className={ICON_BUTTON}
                   onClick={() => {

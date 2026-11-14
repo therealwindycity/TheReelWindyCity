@@ -32,6 +32,7 @@
     "test:calendar": "node --test tests/civic-calendar.test.mjs",
     "test:e2e": "node tests/civic-smoke.mjs",
     "test:seo": "node tests/seo-audit.mjs",
+    "test:text-separation": "node tests/text-separation.mjs",
     "seo:live": "node scripts/check-live-seo.mjs",
     "sync:places": "node scripts/sync/place-archives.mjs --provision --harvest",
     "sync:wyoming": "node scripts/monitor/wyoming-watch.mjs --check",
