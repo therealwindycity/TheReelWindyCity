@@ -116,6 +116,8 @@ jobs:
           PORT=3000 node scripts/serve.mjs /tmp/pages &
           for i in $(seq 1 30); do curl -sf "http://127.0.0.1:3000/${{ github.event.repository.name }}/" >/dev/null && break; sleep 1; done
           BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:e2e
+          # Labels must stay separated for tag-stripping extractors and for assistive technology.
+          BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:text-separation
 
       - name: Upload CI diagnostics
         if: always()
