@@ -1,0 +1,45 @@
+name: CM clean candidate validation
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main]
+    paths: ['clean-web/**', 'config/release_manifest.json', '.github/workflows/cm-clean-candidate.yml']
+permissions:
+  contents: read
+concurrency:
+  group: cm-clean-candidate
+  cancel-in-progress: false
+jobs:
+  stage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node clean-web/build.mjs --stage
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cm-accepted-public-snapshot
+          path: |
+            public/data/verified_catalog.json
+            public/data/system_status.json
+  build:
+    needs: stage
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/download-artifact@v4
+        with:
+          name: cm-accepted-public-snapshot
+          path: public/data
+      - run: node clean-web/build.mjs --build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: cm-clean-public-site-candidate
+          path: clean-web/out

@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "project_credit": "CM",
+  "features": {
+    "upcoming_meetings": true,
+    "meeting_archive": true,
+    "documents_and_transcripts": true,
+    "client_search": true,
+    "jurisdiction_directory": true,
+    "status_and_corrections": true,
+    "attribution_footer": true
+  }
+}
