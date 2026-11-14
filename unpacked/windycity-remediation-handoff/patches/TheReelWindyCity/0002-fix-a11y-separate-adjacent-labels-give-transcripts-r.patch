@@ -1,0 +1,705 @@
+From 99972e6b5ad9e3dddd2b85b401fe0a758cc16a70 Mon Sep 17 00:00:00 2001
+From: bartimoussmith-oss <bartimoussmith-oss@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 04:19:09 +0000
+Subject: [PATCH 2/4] fix(a11y): separate adjacent labels; give /transcripts/
+ rows a layout
+
+/transcripts/ rendered every row as one run-on line (date, title, file
+name and back-link with no separator, visually and in each link's
+accessible name) because the row link moved inside
+.seo-transcript-link-group and the '.seo-archive-links>li>a' column rule
+stopped matching. Adds the missing layout rules.
+
+Elsewhere the markup was already semantic (dl/dt/dd, lists, labelled
+navs) and browsers separated it by layout, but tag-stripping extractors
+merged neighbours into strings like 'Official agendacheyennecity.org',
+'Archive documents0' and '2026City Council5 files'. Adds explicit
+whitespace between sibling elements on the archive, meeting, transcript
+and shell templates. Whitespace-only nodes are not rendered in flex/grid
+containers, so those layouts are unchanged (verified box-for-box).
+
+MyNewSpace: headings, definition cells and friend links joined inline
+runs ('About Meread-only', 'Caspercity'); two sentences lost the space
+after an inline tag in the exported HTML ('Arenawindow',
+'frame-ancestorsthat').
+
+Adds tests/text-separation.mjs (static tag-strip audit plus a browser
+pass over accessible names) and runs it in CI after the smoke tests. It
+fails with 59 findings on 2a741e6 and passes here.
+---
+ .github/workflows/ci.yml           |   2 +
+ package.json                       |   1 +
+ src/app/globals.css                |   7 ++
+ src/app/meetings/[id]/page.tsx     |  54 ++++++-------
+ src/app/meetings/page.tsx          |  34 ++++-----
+ src/app/mynewspace/page.tsx        |  28 +++----
+ src/app/transcripts/page.tsx       |  28 +++----
+ src/components/newspace-live.tsx   |   4 +-
+ src/components/newspace-studio.tsx |   4 +-
+ src/components/newspace-wall.tsx   |   8 +-
+ src/components/public-shell.tsx    |   6 +-
+ tests/text-separation.mjs          | 118 +++++++++++++++++++++++++++++
+ 12 files changed, 211 insertions(+), 83 deletions(-)
+ create mode 100644 tests/text-separation.mjs
+
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 8e661d5..a460cc4 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -116,6 +116,8 @@ jobs:
+           PORT=3000 node scripts/serve.mjs /tmp/pages &
+           for i in $(seq 1 30); do curl -sf "http://127.0.0.1:3000/${{ github.event.repository.name }}/" >/dev/null && break; sleep 1; done
+           BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:e2e
++          # Labels must stay separated for tag-stripping extractors and for assistive technology.
++          BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:text-separation
+ 
+       - name: Upload CI diagnostics
+         if: always()
+diff --git a/package.json b/package.json
+index 9e3c52e..17d4428 100644
+--- a/package.json
++++ b/package.json
+@@ -32,6 +32,7 @@
+     "test:calendar": "node --test tests/civic-calendar.test.mjs",
+     "test:e2e": "node tests/civic-smoke.mjs",
+     "test:seo": "node tests/seo-audit.mjs",
++    "test:text-separation": "node tests/text-separation.mjs",
+     "seo:live": "node scripts/check-live-seo.mjs",
+     "sync:places": "node scripts/sync/place-archives.mjs --provision --harvest",
+     "sync:wyoming": "node scripts/monitor/wyoming-watch.mjs --check",
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 2b29413..fcacb6d 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -137,6 +137,13 @@
+ .seo-archive-links strong{font-size:12px;line-height:1.45}
+ .seo-archive-links small{color:#85907f;font-size:9px;line-height:1.5}
+ .seo-archive-counts{flex-shrink:0;padding-top:2px;color:#8b9585;font-size:9px;text-align:right}
++/* /transcripts/: the row link sits inside .seo-transcript-link-group, so the `.seo-archive-links>li>a`
++   column layout above never applied and date, title, file name and back-link ran together as one line. */
++.seo-transcript-link-group{display:flex;flex-direction:column;align-items:flex-start;gap:5px;min-width:0}
++.seo-transcript-link-group>a:first-child{display:flex;flex-direction:column;gap:3px;min-width:0;color:#3a4d3a;text-decoration:none}
++.seo-transcript-link-group>a:first-child:hover strong{text-decoration:underline;text-underline-offset:2px}
++.seo-transcript-link-group small{overflow-wrap:anywhere}
++.seo-meeting-backlink{color:#536c43;font-size:10px;line-height:1.5;text-decoration:underline;text-underline-offset:2px}
+ @media(max-width:720px){
+   .seo-site-header{align-items:flex-start;flex-direction:column;padding:17px 20px;gap:14px}
+   .seo-site-header>nav{gap:15px}
+diff --git a/src/app/meetings/[id]/page.tsx b/src/app/meetings/[id]/page.tsx
+index f405482..048261c 100644
+--- a/src/app/meetings/[id]/page.tsx
++++ b/src/app/meetings/[id]/page.tsx
+@@ -234,13 +234,13 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+       />
+       <header className="seo-site-header">
+         <a className="seo-brand" href={SITE_URL}>
+-          <span>{SITE_NAME}</span>
++          <span>{SITE_NAME}</span>{" "}
+           <small>Independent index of Cheyenne public records</small>
+         </a>
+         <nav aria-label="Site navigation">
+-          <a href={siteUrl("meetings/")}>All meetings</a>
+-          <a href={siteUrl("hub/")}>Live Government Hub</a>
+-          <a href={siteUrl("transcripts/")}>Transcript archive</a>
++          <a href={siteUrl("meetings/")}>All meetings</a>{" "}
++          <a href={siteUrl("hub/")}>Live Government Hub</a>{" "}
++          <a href={siteUrl("transcripts/")}>Transcript archive</a>{" "}
+           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">
+             Official city records
+           </a>
+@@ -249,8 +249,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+ 
+       <main className="seo-container seo-meeting-page">
+         <nav className="seo-breadcrumbs" aria-label="Breadcrumb">
+-          <a href={SITE_URL}>Home</a><span aria-hidden="true">/</span>
+-          <a href={siteUrl("meetings/")}>Meeting archive</a><span aria-hidden="true">/</span>
++          <a href={SITE_URL}>Home</a>{" "}<span aria-hidden="true">/</span>{" "}
++          <a href={siteUrl("meetings/")}>Meeting archive</a>{" "}<span aria-hidden="true">/</span>{" "}
+           <span>{meetingName(meeting)} · {meeting.shortDate}</span>
+         </nav>
+ 
+@@ -262,7 +262,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+             It links to source documents and does not replace the official city record.
+           </p>
+           <div className="seo-page-actions">
+-            <a className="seo-primary-link" href={interactiveUrl.toString()}>Open this meeting in Civic Cheyenne</a>
++            <a className="seo-primary-link" href={interactiveUrl.toString()}>Open this meeting in Civic Cheyenne</a>{" "}
+             <a className="seo-secondary-link" href={siteUrl("meetings/")}>Browse all {MEETINGS.length.toLocaleString()} meetings</a>
+           </div>
+         </header>
+@@ -270,21 +270,21 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+         <section className="seo-card" aria-labelledby="meeting-facts-heading">
+           <h2 id="meeting-facts-heading">Meeting record</h2>
+           <dl className="seo-facts">
+-            <div><dt>Government body</dt><dd>{meeting.bodyLabel}</dd></div>
+-            <div><dt>Scheduled date</dt><dd><time dateTime={meeting.date}>{meeting.dateLabel}</time></dd></div>
+-            {meeting.time && <div><dt>Scheduled time</dt><dd>{meeting.time}</dd></div>}
+-            {meeting.location && <div><dt>Posted location</dt><dd>{meeting.location}</dd></div>}
+-            <div><dt>Calendar status</dt><dd>{meetingCalendarLabel(meeting)}</dd></div>
++            <div><dt>Government body</dt>{" "}<dd>{meeting.bodyLabel}</dd>{" "}</div>
++            <div><dt>Scheduled date</dt>{" "}<dd><time dateTime={meeting.date}>{meeting.dateLabel}</time></dd>{" "}</div>
++            {meeting.time && <div><dt>Scheduled time</dt>{" "}<dd>{meeting.time}</dd>{" "}</div>}
++            {meeting.location && <div><dt>Posted location</dt>{" "}<dd>{meeting.location}</dd>{" "}</div>}
++            <div><dt>Calendar status</dt>{" "}<dd>{meetingCalendarLabel(meeting)}</dd>{" "}</div>
+             {meeting.calendarStatusEvaluatedAt && (
+-              <div><dt>Calendar status evaluated</dt><dd>{formatEvaluationTimestamp(meeting.calendarStatusEvaluatedAt)} ({MEETINGS_TIME_ZONE})</dd></div>
++              <div><dt>Calendar status evaluated</dt>{" "}<dd>{formatEvaluationTimestamp(meeting.calendarStatusEvaluatedAt)} ({MEETINGS_TIME_ZONE})</dd>{" "}</div>
+             )}
+-            <div><dt>Outcome verification</dt><dd>{meetingOutcomeLabel(meeting)}</dd></div>
+-            <div><dt>Archive documents</dt><dd>{meeting.docs.length}</dd></div>
+-            <div><dt>Transcript file</dt><dd>{meeting.transcript ? "Listed in repository tree (auto-generated captions; not verified against audio)" : "Not linked in this index"}</dd></div>
++            <div><dt>Outcome verification</dt>{" "}<dd>{meetingOutcomeLabel(meeting)}</dd>{" "}</div>
++            <div><dt>Archive documents</dt>{" "}<dd>{meeting.docs.length}</dd>{" "}</div>
++            <div><dt>Transcript file</dt>{" "}<dd>{meeting.transcript ? "Listed in repository tree (auto-generated captions; not verified against audio)" : "Not linked in this index"}</dd>{" "}</div>
+             {meeting.publisherStatusAtCapture && (
+-              <div><dt>{`Publisher status at capture (${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED})`}</dt><dd>{meeting.publisherStatusAtCapture}</dd></div>
++              <div><dt>{`Publisher status at capture (${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED})`}</dt>{" "}<dd>{meeting.publisherStatusAtCapture}</dd>{" "}</div>
+             )}
+-            {displayMeetingNotes(meeting).map((note) => <div key={note}><dt>Archive note</dt><dd>{note}</dd></div>)}
++            {displayMeetingNotes(meeting).map((note) => <div key={note}><dt>Archive note</dt>{" "}<dd>{note}</dd>{" "}</div>)}
+           </dl>
+           <HubSnapshotFreshness note="calendar evaluation and official outcome verification are tracked separately." />
+           {(meeting.upcoming || meeting.agendaPosted) && (
+@@ -307,7 +307,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+             <ol className="seo-agenda-items">
+               {agendaItems.map((item) => (
+                 <li key={item.number}>
+-                  <span>Item {item.number} · {item.kind}</span>
++                  <span>Item {item.number} · {item.kind}</span>{" "}
+                   <p>{item.text}</p>
+                   <LegalCrossReference meetingId={meeting.id} itemNumber={item.number} text={item.text} kind={item.kind} sourceUrl={autoAgenda?.sourceUrl ?? meeting.official.agenda}/>
+                 </li>
+@@ -322,8 +322,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+             <ul className="seo-source-list">
+               {sources.map((source) => (
+                 <li key={`${source.label}-${source.url}`}>
+-                  <a href={source.url} target="_blank" rel="noreferrer">{source.label}</a>
+-                  <span>{hostLabel(source.url)}</span>
++                  <a href={source.url} target="_blank" rel="noreferrer">{source.label}</a>{" "}
++                  <span>{hostLabel(source.url)}{" "}</span>
+                 </li>
+               ))}
+             </ul>
+@@ -385,8 +385,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+             <ul className="seo-document-list">
+               {transcripts.map((transcript) => (
+                 <li key={`${transcript.repo}/${transcript.path}`}>
+-                  <a href={transcript.local && transcript.publicPath ? siteUrl(transcript.publicPath) : githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">{readableName(transcript.path)}</a>
+-                  <span>{transcript.path === meeting.transcript?.path ? "Preferred transcript · " : "Transcript source · "}{transcript.local ? "locally hosted copy" : transcript.repo}</span>
++                  <a href={transcript.local && transcript.publicPath ? siteUrl(transcript.publicPath) : githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">{readableName(transcript.path)}</a>{" "}
++                  <span>{transcript.path === meeting.transcript?.path ? "Preferred transcript · " : "Transcript source · "}{transcript.local ? "locally hosted copy" : transcript.repo}</span>{" "}
+                   {transcript.local && <a href={githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">Open the copy in GitHub</a>}
+                 </li>
+               ))}
+@@ -400,8 +400,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+             <ul className="seo-document-list">
+               {meeting.docs.map((document) => (
+                 <li key={`${document.repo}/${document.path}`}>
+-                  <a href={githubBlobUrl(document.repo, document.path)} target="_blank" rel="noreferrer">{readableName(document.path)}</a>
+-                  <span>{document.repo}</span>
++                  <a href={githubBlobUrl(document.repo, document.path)} target="_blank" rel="noreferrer">{readableName(document.path)}</a>{" "}
++                  <span>{document.repo}{" "}</span>
+                 </li>
+               ))}
+             </ul>
+@@ -416,14 +416,14 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
+             <h2 id="nearby-meetings-heading">More {meeting.bodyLabel} records</h2>
+             <ul>
+               {nearbyMeetings.map((neighbor) => (
+-                <li key={neighbor.id}><a href={siteUrl(`meetings/${neighbor.id}/`)}>{meetingName(neighbor)} · {neighbor.dateLabel}</a></li>
++                <li key={neighbor.id}><a href={siteUrl(`meetings/${neighbor.id}/`)}>{meetingName(neighbor)} · {neighbor.dateLabel}</a>{" "}</li>
+               ))}
+             </ul>
+           </nav>
+         ) : null}
+ 
+         <footer className="seo-footer">
+-          <p>Civic Cheyenne is an independent civic-learning project, not an official City of Cheyenne service.</p>
++          <p>Civic Cheyenne is an independent civic-learning project, not an official City of Cheyenne service.</p>{" "}
+           <a href={SITE_URL}>Civic Cheyenne home</a>
+         </footer>
+       </main>
+diff --git a/src/app/meetings/page.tsx b/src/app/meetings/page.tsx
+index b350185..05d7f50 100644
+--- a/src/app/meetings/page.tsx
++++ b/src/app/meetings/page.tsx
+@@ -63,13 +63,13 @@ export default function MeetingArchivePage() {
+       />
+       <header className="seo-site-header">
+         <a className="seo-brand" href={SITE_URL}>
+-          <span>{SITE_NAME}</span>
++          <span>{SITE_NAME}</span>{" "}
+           <small>Independent index of Cheyenne public records</small>
+         </a>
+         <nav aria-label="Site navigation">
+-          <a href={SITE_URL}>Civic Cheyenne home</a>
+-          <a href={siteUrl("hub/")}>Live Government Hub</a>
+-          <a href={siteUrl("transcripts/")}>Transcript archive</a>
++          <a href={SITE_URL}>Civic Cheyenne home</a>{" "}
++          <a href={siteUrl("hub/")}>Live Government Hub</a>{" "}
++          <a href={siteUrl("transcripts/")}>Transcript archive</a>{" "}
+           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">
+             Official city records
+           </a>
+@@ -78,7 +78,7 @@ export default function MeetingArchivePage() {
+ 
+       <main className="seo-container seo-archive-page">
+         <nav className="seo-breadcrumbs" aria-label="Breadcrumb">
+-          <a href={SITE_URL}>Home</a><span aria-hidden="true">/</span><span>Meeting archive</span>
++          <a href={SITE_URL}>Home</a>{" "}<span aria-hidden="true">/</span>{" "}<span>Meeting archive</span>
+         </nav>
+ 
+         <header className="seo-page-heading">
+@@ -97,16 +97,16 @@ export default function MeetingArchivePage() {
+         </header>
+ 
+         <section className="seo-stats-grid" aria-label="Archive coverage statistics">
+-          <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong><span>historical meeting entries</span></div>
+-          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong><span>upcoming meetings confirmed as of snapshot</span></div>
+-          <div><strong>{MEETING_STATS.totalDocuments.toLocaleString()}</strong><span>archived documents indexed</span></div>
+-          <div><strong>{(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts).toLocaleString()}</strong><span>{transcriptCountSummary()}</span></div>
++          <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong>{" "}<span>historical meeting entries</span>{" "}</div>
++          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong>{" "}<span>upcoming meetings confirmed as of snapshot</span>{" "}</div>
++          <div><strong>{MEETING_STATS.totalDocuments.toLocaleString()}</strong>{" "}<span>archived documents indexed</span>{" "}</div>
++          <div><strong>{(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts).toLocaleString()}</strong>{" "}<span>{transcriptCountSummary()}</span>{" "}</div>
+         </section>
+ 
+         <nav className="seo-year-nav" aria-label="Jump to a year">
+-          <span>Jump to:</span>
++          <span>Jump to:</span>{" "}
+           {groups.map((group) => (
+-            <a key={group.label} href={`#${sectionId(group.label)}`}>{group.label}</a>
++            <a key={group.label} href={`#${sectionId(group.label)}`}>{group.label}{" "}</a>
+           ))}
+         </nav>
+ 
+@@ -126,14 +126,14 @@ export default function MeetingArchivePage() {
+                   return (
+                     <li key={meeting.id}>
+                       <a href={siteUrl(`meetings/${meeting.id}/`)}>
+-                        <span className="seo-archive-date">{meeting.dateLabel}</span>
+-                        <strong>{meeting.bodyLabel}</strong>
+-                        {cleanNotes.length ? <small>{cleanNotes.join(" · ")}</small> : null}
++                        <span className="seo-archive-date">{meeting.dateLabel}</span>{" "}
++                        <strong>{meeting.bodyLabel}</strong>{" "}
++                        {cleanNotes.length ? <small>{cleanNotes.join(" · ")}</small> : null}{" "}
+                         {(meeting.upcoming || meeting.agendaPosted) ? <small>{meetingCalendarLabel(meeting)}{meeting.items?.length ? ` · ${meeting.items.length} items` : ""}</small> : null}
+-                      </a>
++                      </a>{" "}
+                       <span className="seo-archive-counts">
+                         {meeting.docs.length ? `${meeting.docs.length} file${meeting.docs.length === 1 ? "" : "s"}` : "Official links"}
+-                        {meeting.transcript ? " · transcript file" : ""}
++                        {meeting.transcript ? " · transcript file" : ""}{" "}
+                       </span>
+                     </li>
+                   );
+@@ -144,7 +144,7 @@ export default function MeetingArchivePage() {
+         </div>
+ 
+         <footer className="seo-footer">
+-          <p>This is an independent civic-learning index, not an official City of Cheyenne service. Agenda entries are proposals, not recorded decisions.</p>
++          <p>This is an independent civic-learning index, not an official City of Cheyenne service. Agenda entries are proposals, not recorded decisions.</p>{" "}
+           <a href={SITE_URL}>Civic Cheyenne home</a>
+         </footer>
+       </main>
+diff --git a/src/app/mynewspace/page.tsx b/src/app/mynewspace/page.tsx
+index f73b272..6dddcc1 100644
+--- a/src/app/mynewspace/page.tsx
++++ b/src/app/mynewspace/page.tsx
+@@ -186,7 +186,7 @@ export default function MyNewSpaceProfile() {
+           <a href={asset("")}>Report a Problem</a>
+         </div>
+         <p className="nsp-ticker">
+-          <b>STATUS</b>
++          <b>STATUS</b>{" "}
+           <span className="nsp-ticker-track">
+             <NewspaceText field="status" module={MODULE} /> · record snapshot {MEETINGS_CAPTURED} · nothing on this
+             page posts anywhere · your customization stays in this browser
+@@ -280,7 +280,7 @@ export default function MyNewSpaceProfile() {
+             <h2 className="nsp-card-head" id="nsp-online-title">
+               <span>
+                 <Star size={11} aria-hidden="true" /> On the docket
+-              </span>
++              </span>{" "}
+               <span>{UPCOMING_MEETINGS.length} posted</span>
+             </h2>
+             <div className="nsp-online">
+@@ -347,7 +347,7 @@ export default function MyNewSpaceProfile() {
+         <div id="nsp-modules">
+           <section className="nsp-card nsp-module" id="nsp-sec-about" aria-labelledby="nsp-about-title">
+             <h2 className="nsp-card-head" id="nsp-about-title">
+-              <span>About Me</span>
++              <span>About Me</span>{" "}
+               <span>read-only</span>
+             </h2>
+             <div className="nsp-module-body">
+@@ -384,7 +384,7 @@ export default function MyNewSpaceProfile() {
+ 
+           <section className="nsp-card nsp-module" id="nsp-sec-agenda" aria-labelledby="nsp-agenda-title">
+             <h2 className="nsp-card-head" id="nsp-agenda-title">
+-              <span>{NEXT_MEETING ? "Next public meeting" : "Latest in the record"}</span>
++              <span>{NEXT_MEETING ? "Next public meeting" : "Latest in the record"}</span>{" "}
+               <span>{NEXT_MEETING ? `${NEXT_MEETING.items?.length ?? 0} posted items` : `${FEATURED_MEETING.docs.length} archived files`}</span>
+             </h2>
+             <div className="nsp-module-body">
+@@ -392,21 +392,21 @@ export default function MyNewSpaceProfile() {
+                 <div>
+                   <dt>Body</dt>
+                   <dd>
+-                    {FEATURED_MEETING.bodyLabel}
++                    {FEATURED_MEETING.bodyLabel}{" "}
+                     <small>{NEXT_MEETING ? "agenda posted" : meetingCalendarLabel(FEATURED_MEETING)}</small>
+                   </dd>
+                 </div>
+                 <div>
+                   <dt>When</dt>
+                   <dd>
+-                    {FEATURED_MEETING.shortDate}
++                    {FEATURED_MEETING.shortDate}{" "}
+                     <small>{FEATURED_MEETING.time ?? "time not in this snapshot"}</small>
+                   </dd>
+                 </div>
+                 <div>
+                   <dt>Where</dt>
+                   <dd>
+-                    {FEATURED_MEETING.location ?? "Council Chambers"}
++                    {FEATURED_MEETING.location ?? "Council Chambers"}{" "}
+                     <small>2101 O’Neil Avenue, Cheyenne</small>
+                   </dd>
+                 </div>
+@@ -502,7 +502,7 @@ export default function MyNewSpaceProfile() {
+ 
+           <section className="nsp-card nsp-module" id="nsp-sec-meet" aria-labelledby="nsp-meet-title">
+             <h2 className="nsp-card-head" id="nsp-meet-title">
+-              <span>Who I’d like to meet</span>
++              <span>Who I’d like to meet</span>{" "}
+               <span>{UNREACHED.length} of {MUNICIPALITIES.length}</span>
+             </h2>
+             <div className="nsp-module-body">
+@@ -530,7 +530,7 @@ export default function MyNewSpaceProfile() {
+ 
+           <section className="nsp-card nsp-module" id="nsp-sec-friends" aria-labelledby="nsp-friends-title">
+             <h2 className="nsp-card-head" id="nsp-friends-title">
+-              <span>My Top 8 Friends</span>
++              <span>My Top 8 Friends</span>{" "}
+               <span>
+                 <a href={asset("hub/wyoming/")} style={{ color: "#fff", textDecoration: "underline" }}>
+                   see all {MUNICIPALITIES.length}
+@@ -543,10 +543,10 @@ export default function MyNewSpaceProfile() {
+                   <a className="nsp-friend" key={friend.id} href={friend.href}>
+                     <span className="nsp-friend-avatar" aria-hidden="true">
+                       {friend.name.slice(0, 1)}
+-                    </span>
++                    </span>{" "}
+                     <strong>
+                       {index + 1}. {friend.name}
+-                    </strong>
++                    </strong>{" "}
+                     <small>
+                       {friend.kind} · {friend.population.toLocaleString()} people
+                       <br />
+@@ -566,7 +566,7 @@ export default function MyNewSpaceProfile() {
+ 
+           <section className="nsp-card nsp-module" id="nsp-sec-wall" aria-labelledby="nsp-wall-title">
+             <h2 className="nsp-card-head" id="nsp-wall-title">
+-              <span>Friend Space</span>
++              <span>Friend Space</span>{" "}
+               <span>{WALL_ENTRIES.length} comments · {GUIDED?.shortDate ?? "guided session"}</span>
+             </h2>
+             <div className="nsp-module-body">
+@@ -576,7 +576,7 @@ export default function MyNewSpaceProfile() {
+ 
+           <section className="nsp-card nsp-module" id="nsp-sec-custom" aria-labelledby="nsp-custom-title">
+             <h2 className="nsp-card-head" id="nsp-custom-title">
+-              <span>My Profile HTML</span>
++              <span>My Profile HTML</span>{" "}
+               <span>sandboxed</span>
+             </h2>
+             <div className="nsp-module-body">
+@@ -592,7 +592,7 @@ export default function MyNewSpaceProfile() {
+         <h2 className="nsp-card-head">
+           <span>
+             <FolderLock size={11} aria-hidden="true" /> Recently on the boards
+-          </span>
++          </span>{" "}
+           <span>City Council</span>
+         </h2>
+         <div className="nsp-module-body">
+diff --git a/src/app/transcripts/page.tsx b/src/app/transcripts/page.tsx
+index 2c96026..309891c 100644
+--- a/src/app/transcripts/page.tsx
++++ b/src/app/transcripts/page.tsx
+@@ -57,21 +57,21 @@ export default function TranscriptArchivePage() {
+     <div className="seo-page">
+       <header className="seo-site-header">
+         <a className="seo-brand" href={SITE_URL}>
+-          <span>{SITE_NAME}</span>
++          <span>{SITE_NAME}</span>{" "}
+           <small>Independent index of Cheyenne public records</small>
+         </a>
+         <nav aria-label="Site navigation">
+-          <a href={siteUrl("meetings/")}>All meetings</a>
+-          <a href={siteUrl("hub/")}>Live Government Hub</a>
+-          <a href={SITE_URL}>Civic Cheyenne home</a>
++          <a href={siteUrl("meetings/")}>All meetings</a>{" "}
++          <a href={siteUrl("hub/")}>Live Government Hub</a>{" "}
++          <a href={SITE_URL}>Civic Cheyenne home</a>{" "}
+           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">Official city records</a>
+         </nav>
+       </header>
+ 
+       <main className="seo-container seo-transcript-page">
+         <nav className="seo-breadcrumbs" aria-label="Breadcrumb">
+-          <a href={SITE_URL}>Home</a><span aria-hidden="true">/</span>
+-          <a href={siteUrl("meetings/")}>Meeting archive</a><span aria-hidden="true">/</span>
++          <a href={SITE_URL}>Home</a>{" "}<span aria-hidden="true">/</span>{" "}
++          <a href={siteUrl("meetings/")}>Meeting archive</a>{" "}<span aria-hidden="true">/</span>{" "}
+           <span>Transcript archive</span>
+         </nav>
+         <header className="seo-page-heading">
+@@ -91,7 +91,7 @@ export default function TranscriptArchivePage() {
+               <h2 id="transcript-list-heading">Transcript files ({transcriptFiles.length})</h2>
+             </div>
+             <div className="seo-page-actions">
+-              <a className="seo-secondary-link" href={`https://github.com/${ARCHIVE_OWNER}/${TRANSCRIPT_REPO}`} target="_blank" rel="noreferrer">Open 2026 transcript repository</a>
++              <a className="seo-secondary-link" href={`https://github.com/${ARCHIVE_OWNER}/${TRANSCRIPT_REPO}`} target="_blank" rel="noreferrer">Open 2026 transcript repository</a>{" "}
+               <a className="seo-secondary-link" href={`https://github.com/${ARCHIVE_OWNER}/${LOCAL_TRANSCRIPT_REPO}/tree/main/src/data/transcripts`} target="_blank" rel="noreferrer">Open locally archived captions</a>
+             </div>
+           </div>
+@@ -100,20 +100,20 @@ export default function TranscriptArchivePage() {
+               <li key={`${repo}/${path}`}>
+                 <div className="seo-transcript-link-group">
+                   <a href={local && publicPath ? siteUrl(publicPath) : githubSourceUrl(repo, path)} target="_blank" rel="noreferrer">
+-                    <span className="seo-archive-date">{relatedMeeting?.dateLabel ?? (date || "Undated transcript")}</span>
+-                    <strong>{labelFor(path, relatedMeeting)}</strong>
++                    <span className="seo-archive-date">{relatedMeeting?.dateLabel ?? (date || "Undated transcript")}</span>{" "}
++                    <strong>{labelFor(path, relatedMeeting)}</strong>{" "}
+                     <small>{path.split("/").pop()}</small>
+-                  </a>
+-                  {relatedMeeting && <a className="seo-meeting-backlink" href={siteUrl(`meetings/${relatedMeeting.id}/`)}>Meeting record: {relatedMeeting.shortDate}</a>}
++                  </a>{" "}
++                  {relatedMeeting && <a className="seo-meeting-backlink" href={siteUrl(`meetings/${relatedMeeting.id}/`)}>Meeting record: {relatedMeeting.shortDate}</a>}{" "}
+                   {local && <a className="seo-meeting-backlink" href={githubSourceUrl(repo, path)} target="_blank" rel="noreferrer">Repository copy · {repo}</a>}
+-                </div>
+-                <span className="seo-archive-counts">{Math.ceil(size / 1024)} KB</span>
++                </div>{" "}
++                <span className="seo-archive-counts">{Math.ceil(size / 1024)} KB{" "}</span>
+               </li>
+             ))}
+           </ol>
+         </section>
+         <footer className="seo-footer">
+-          <p>Independent public-record index, not an official City of Cheyenne service.</p>
++          <p>Independent public-record index, not an official City of Cheyenne service.</p>{" "}
+           <a href={siteUrl("meetings/")}>Browse all meeting records</a>
+         </footer>
+       </main>
+diff --git a/src/components/newspace-live.tsx b/src/components/newspace-live.tsx
+index af8c584..725f51f 100644
+--- a/src/components/newspace-live.tsx
++++ b/src/components/newspace-live.tsx
+@@ -121,8 +121,8 @@ export function NewspaceSong({ fallback }: { fallback: string }) {
+   const song = custom.song || fallback;
+   return (
+     <p className="nsp-song">
+-      <span className="nsp-song-note">PROFILE SONG</span>
+-      <strong>{song}</strong>
++      <span className="nsp-song-note">PROFILE SONG</span>{" "}
++      <strong>{song}</strong>{" "}
+       <small>No file, no autoplay — this site publishes a document, not a sound.</small>
+     </p>
+   );
+diff --git a/src/components/newspace-studio.tsx b/src/components/newspace-studio.tsx
+index 53d0825..ecef736 100644
+--- a/src/components/newspace-studio.tsx
++++ b/src/components/newspace-studio.tsx
+@@ -163,7 +163,7 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
+           <h2 id="nsp-studio-title">Customize mynewspace</h2>
+           <p>
+             Back in 2006 you pasted HTML into a box and your profile stopped looking like everyone else&apos;s. Here
+-            the box is an <strong>Arena</strong> window: ask for what you want, paste what comes back, and your
++            the box is an <strong>Arena</strong>{" "}window: ask for what you want, paste what comes back, and your
+             profile changes &mdash; in this browser, for you, saved locally. The address bar tracks which tool is
+             open, so a saved view can be linked.
+           </p>
+@@ -298,7 +298,7 @@ export default function NewspaceStudio({ facts }: { facts: Record<string, string
+               <p className="nsp-field-note">
+                 Default: <code>{DEFAULT_ARENA_URL}</code>. Arena does not publish an embed-widget endpoint, so this is
+                 just the address your browser is asked to frame. If Arena sends{" "}
+-                <code>X-Frame-Options</code> or a CSP <code>frame-ancestors</code> that refuses embedding, the window
++                <code>X-Frame-Options</code> or a CSP <code>frame-ancestors</code>{" "}that refuses embedding, the window
+                 stays blank and only the direct link works &mdash; that is their policy, not a bug on this page.
+               </p>
+ 
+diff --git a/src/components/newspace-wall.tsx b/src/components/newspace-wall.tsx
+index 6db4a0a..abaf09e 100644
+--- a/src/components/newspace-wall.tsx
++++ b/src/components/newspace-wall.tsx
+@@ -95,8 +95,8 @@ export default function NewspaceWall({ entries }: { entries: WallEntry[] }) {
+             </div>
+             <div className="nsp-wall-body">
+               <p className="nsp-wall-byline">
+-                <strong>{entry.author}</strong>
+-                <span>{entry.role}</span>
++                <strong>{entry.author}</strong>{" "}
++                <span>{entry.role}</span>{" "}
+                 <em>{entry.at}</em>
+               </p>
+               <blockquote>{entry.body}</blockquote>
+@@ -153,8 +153,8 @@ export default function NewspaceWall({ entries }: { entries: WallEntry[] }) {
+             {notes.map((note) => (
+               <li key={note.id}>
+                 <p className="nsp-wall-byline">
+-                  <strong>{note.name}</strong>
+-                  <span>your note · local</span>
++                  <strong>{note.name}</strong>{" "}
++                  <span>your note · local</span>{" "}
+                   <em>{note.at}</em>
+                 </p>
+                 <p>{note.body}</p>
+diff --git a/src/components/public-shell.tsx b/src/components/public-shell.tsx
+index e64e1ec..d7b0404 100644
+--- a/src/components/public-shell.tsx
++++ b/src/components/public-shell.tsx
+@@ -7,11 +7,11 @@ const links = [['/', 'Home'], ['/explore/', 'Explore'], ['/community/', 'Communi
+ export default function PublicShell({ children }: { children: ReactNode }) {
+   const pathname = usePathname();
+   return <div className={styles.shell}>
+-    <a className={styles.skip} href="#public-content">Skip to content</a>
++    <a className={styles.skip} href="#public-content">Skip to content</a>{" "}
+     <header className={styles.header}>
+-      <Link className={styles.brand} href="/">The Real Windy City<small>Civic Cheyenne · Independent public-records guide</small></Link>
++      <Link className={styles.brand} href="/">The Real Windy City{" "}<small>Civic Cheyenne · Independent public-records guide</small></Link>
+       <nav className={styles.nav} aria-label="Main navigation">
+-        {links.map(([href, label]) => <Link key={href} href={href} aria-current={(href === '/' ? pathname === '/' : pathname?.startsWith(href.replace(/\/$/, ''))) ? 'page' : undefined}>{label}</Link>)}
++        {links.flatMap(([href, label]) => [<Link key={href} href={href} aria-current={(href === '/' ? pathname === '/' : pathname?.startsWith(href.replace(/\/$/, ''))) ? 'page' : undefined}>{label}</Link>, " "])}
+       </nav>
+     </header>
+     <div id="public-content" tabIndex={-1}>{children}</div>
+diff --git a/tests/text-separation.mjs b/tests/text-separation.mjs
+new file mode 100644
+index 0000000..7c0d9ca
+--- /dev/null
++++ b/tests/text-separation.mjs
+@@ -0,0 +1,118 @@
++#!/usr/bin/env node
++/**
++ * Text-separation regression audit for the exported site.
++ *
++ * Two different failure modes are covered, and they are deliberately kept apart:
++ *
++ *  1. STATIC (always runs, needs only `out/`): text extractors that strip tags
++ *     without inserting whitespace (search snippets, fetch tools, some
++ *     crawlers) must not merge neighbouring labels into strings such as
++ *     "Official agendacheyennecity.org" or "2026City Council5 files". Block
++ *     layout hid this from browsers, so it is asserted on the raw HTML.
++ *
++ *  2. BROWSER (runs when BASE_URL is set, as in CI): the rendered text and the
++ *     accessible names of links, buttons and headings must not contain two
++ *     inline runs joined without a separator. This is the case a screen
++ *     reader actually announces; /transcripts/ shipped it for every row.
++ *
++ * Usage: node tests/text-separation.mjs            (static only)
++ *        BASE_URL=http://127.0.0.1:3000/TheReelWindyCity node tests/text-separation.mjs
++ */
++import { existsSync, readFileSync, readdirSync } from "node:fs";
++import path from "node:path";
++import { fileURLToPath } from "node:url";
++
++const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
++const out = path.join(root, "out");
++const failures = [];
++const fail = (message) => failures.push(message);
++
++function naiveText(file) {
++  const html = readFileSync(file, "utf8");
++  const body = html.slice(html.indexOf("<body"));
++  return body
++    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<template[\s\S]*?<\/template>/g, "")
++    .replace(/<[^>]+>/g, "") // intentionally NO whitespace inserted
++    .replace(/&amp;/g, "&").replace(/&#x27;|&#39;/g, "'").replace(/&nbsp;/g, " ");
++}
++
++// ---------------------------------------------------------------- static --
++if (!existsSync(path.join(out, "meetings", "index.html"))) {
++  console.error("text-separation: out/ is missing — run `npm run build` first.");
++  process.exit(2);
++}
++const meetingDirs = readdirSync(path.join(out, "meetings"), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name).sort();
++const sampleMeetings = [meetingDirs[0], meetingDirs[Math.floor(meetingDirs.length / 2)], meetingDirs.at(-1), "city-council-2026-01-26"]
++  .filter((id, i, all) => id && all.indexOf(id) === i && existsSync(path.join(out, "meetings", id, "index.html")));
++const staticPages = [
++  ["meetings/", path.join(out, "meetings", "index.html")],
++  ["transcripts/", path.join(out, "transcripts", "index.html")],
++  ...sampleMeetings.map((id) => [`meetings/${id}/`, path.join(out, "meetings", id, "index.html")]),
++];
++const GLUED = [
++  [/Civic CheyenneIndependent index/, "brand name and tagline"],
++  [/(All meetings|Civic Cheyenne home)Live Government Hub/, "site navigation links"],
++  [/Live Government Hub(Transcript archive|Civic Cheyenne home)/, "site navigation links"],
++  [/Home\/(Meeting archive|Transcript archive)/, "breadcrumb"],
++  [/\b(19|20)\d\d(City Council|Finance Committee|Public Services Committee|Work Sessions?|Planning Commission|Board of)/, "row date and government body"],
++  [/[a-z]\d+ files?\b/, "row label and file count"],
++  [/(Official agenda|Official minutes|Granicus meeting page|Meeting video)[a-z0-9-]+\.(org|com|gov)/, "source label and host badge"],
++  [/(Government body|Scheduled date|Calendar status|Outcome verification)[A-Z]/, "fact label and value"],
++  [/Archive documents\d/, "fact label and value"],
++  [/\d(historical meeting entries|archived documents indexed|upcoming meetings confirmed)/, "statistic and its label"],
++  [/\.md(Meeting record|Repository copy)/, "transcript file name and back-link"],
++];
++for (const [label, file] of staticPages) {
++  const text = naiveText(file);
++  for (const [pattern, what] of GLUED) {
++    const hit = text.match(new RegExp(`.{0,24}${pattern.source}.{0,24}`));
++    if (hit) fail(`[static] ${label}: ${what} merge without a separator → "${hit[0].replace(/\s+/g, " ")}"`);
++  }
++}
++
++// --------------------------------------------------------------- browser --
++const BASE_URL = process.env.BASE_URL?.replace(/\/$/, "");
++let browserChecked = 0;
++if (BASE_URL) {
++  const { chromium } = await import("@playwright/test");
++  const browser = await chromium.launch();
++  const context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
++  const routes = ["/", "/meetings/", "/transcripts/", "/mynewspace/", ...sampleMeetings.slice(0, 2).map((id) => `/meetings/${id}/`)];
++  for (const route of routes) {
++    const page = await context.newPage();
++    await page.goto(BASE_URL + route, { waitUntil: "networkidle", timeout: 60_000 });
++    const hits = await page.evaluate(() => {
++      const visible = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== "hidden" && s.display !== "none"; };
++      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
++        acceptNode: (n) => (n.nodeValue.trim() && n.parentElement && !n.parentElement.closest("script,style,noscript,svg,[aria-hidden=true],[aria-label]") && visible(n.parentElement) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT),
++      });
++      const nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
++      const squash = (s) => s.replace(/\s+/g, " ");
++      const found = [];
++      for (let i = 0; i < nodes.length - 1; i += 1) {
++        const a = nodes[i], b = nodes[i + 1];
++        if (a.parentElement === b.parentElement) continue;
++        if (/\s$/.test(a.nodeValue) || /^\s/.test(b.nodeValue)) continue;
++        if (!/[A-Za-z0-9]$/.test(a.nodeValue) || !/^[A-Za-z0-9]/.test(b.nodeValue)) continue;
++        // Only one accessible object is affected: a shared link, button, heading, or text cell.
++        const scope = a.parentElement.closest("a,button,summary,h1,h2,h3,h4,h5,h6,dd,dt,p,li>span");
++        if (!scope || !scope.contains(b)) continue;
++        const glued = squash(a.nodeValue).slice(-14) + squash(b.nodeValue).slice(0, 14);
++        if (squash(scope.innerText || "").includes(glued)) found.push(`<${scope.tagName.toLowerCase()}> "${glued}"`);
++      }
++      return found;
++    });
++    browserChecked += 1;
++    for (const hit of [...new Set(hits)].slice(0, 8)) fail(`[browser] ${route}: adjacent inline text announced as one run → ${hit}`);
++    if (hits.length > 8) fail(`[browser] ${route}: … and ${hits.length - 8} more`);
++    await page.close();
++  }
++  await browser.close();
++}
++
++if (failures.length) {
++  console.error(`text-separation: ${failures.length} problem(s)`);
++  for (const f of failures) console.error("  - " + f);
++  process.exit(1);
++}
++console.log(`Text-separation audit passed: ${staticPages.length} exported pages have no merged labels under tag stripping` + (BASE_URL ? `; ${browserChecked} rendered pages have no glued inline runs inside links, headings or cells.` : " (browser pass skipped: BASE_URL not set)."));
+-- 
+2.47.3
+

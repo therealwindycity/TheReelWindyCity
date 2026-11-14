@@ -1,0 +1,29 @@
+From 7f6dbcf241fbe88a6754595fed4b17ff4ebf084a Mon Sep 17 00:00:00 2001
+From: bartimoussmith-oss <bartimoussmith-oss@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 04:28:47 +0000
+Subject: [PATCH 4/4] docs(read-first): log the 2026-11-13 CI, accessibility
+ and harvester repair
+
+---
+ READ-FIRST.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/READ-FIRST.md b/READ-FIRST.md
+index cba073f..260a30a 100644
+--- a/READ-FIRST.md
++++ b/READ-FIRST.md
+@@ -334,3 +334,11 @@ No history was rewritten, nothing was force-pushed, no tracked media was deleted
+ - result: Added bounded, source-guarded item/subitem supporting-document discovery, PDF text and explicit statutory citation scanning, provenance and candidate evidence excerpts, an hourly queue, and tests. Corrected the guided session’s mistaken substitution of the fire department policy brief for the proposed warrant ordinance. Added a partial January 26 budget reappropriation review and identified a one-dollar difference in rounded draft revenue/appropriation totals as a reconciliation lead, not an established violation.
+ - verification: Legal cross-reference, discovery, evidence, supporting-record, sync and calendar tests passed; typecheck, lint (six unrelated warnings), static build and SEO audit passed locally. GitHub deployment and live source availability have not yet been verified at this point.
+ - limitation: This does **not** complete the substantive legal audit for every item. Missing or unindexed records, historical law, final signed texts, notices and publication proofs, applicability and exceptions remain unresolved. Automatic keyword matches are leads, not findings of legality or illegality.
++
++### 2026-11-14T04:30Z — arena-agent-ci-a11y-harvest — claim ci-a11y-harvest-2026-11-13 — unblock CI, fix /transcripts/ layout and label separation, repair the Granicus harvester
++
++- scope: `tests/wyoming-watch.test.mjs`, `public/.nojekyll`, `src/app/meetings/page.tsx`, `src/app/meetings/[id]/page.tsx`, `src/app/transcripts/page.tsx`, `src/app/mynewspace/page.tsx`, `src/components/{public-shell,newspace-live,newspace-studio,newspace-wall}.tsx`, `src/app/globals.css`, NEW `tests/text-separation.mjs`, `package.json` (one script), `.github/workflows/{ci,historical_harvest,promethean_autoharvest}.yml`, `scrapers/granicus_harvester.py`, `database/schema_rhetorical_profiling.sql`, NEW `tests/test_granicus_harvester.py`, READ-FIRST.md (this entry). Not touched: the twins, `requirements.txt`, `data/`, `engine/`, `deploy-pages.yml`, any transcript, caption or dataset.
++- result: (1) CI had failed since 2026-11-07 on one stale assertion — `tests/wyoming-watch.test.mjs` looked up a workflow step by a display name that a9b4cd7 renamed; lint, typecheck, every other test, the build, the SEO audit and the browser smoke suite already passed. (2) `/transcripts/` rows rendered as one run-on line because their link no longer matched the row layout rule; fixed, and sibling labels on the archive/meeting/transcript/shell templates now carry explicit whitespace so tag-stripping extractors stop producing strings such as `Official agendacheyennecity.org`. (3) The Granicus harvester is bounded, resumable and idempotent; the recurring workflow's publish step staged nothing (untracked `STORAGE_MANIFEST.md` in a single `git add ... || true`), so no harvest had been committed since 2026-10-31.
++- verification (local, against 2a741e6): lint 0 errors; `tsc --noEmit` clean; all 13 node test scripts pass; `npm run build` exports 1,007 meeting pages; `test:seo` passes; `test:e2e` 15/15; `test:text-separation` fails with 59 findings on 2a741e6 and passes on this branch; element boxes on `/`, `/meetings/`, two meeting pages, `/explore/`, `/about/` are unchanged at 1280px and 390px apart from live timestamps; `python3 -m unittest tests/test_granicus_harvester.py` 9/9; the publish step was replayed against a scratch remote with a concurrent commit (old step: nothing lands; new step: lands).
++- not verified: no GitHub Actions run of these commits and no deployment — this session had no push access. The harvester was not run against cheyenne.granicus.com; its link patterns were checked offline against one captured `view_id=5` listing (962 agenda endpoints).
++- limitation: `cheyenne.granicus.com/robots.txt` disallows all agents except four named crawlers. The harvester's existing behavior (record the result, fetch anyway) is unchanged; `--respect-robots` exists for the owner to decide. October–November 2026 meetings still show 0 archived documents because none exist in the archive repositories for those dates; nothing was backfilled or invented.
+-- 
+2.47.3
+

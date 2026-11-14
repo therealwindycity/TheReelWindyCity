@@ -1,0 +1,47 @@
+From 8f9647a48e037cd50d9ffe631b6a5f9e62b0629f Mon Sep 17 00:00:00 2001
+From: bartimoussmith-oss <bartimoussmith-oss@users.noreply.github.com>
+Date: Sat, 14 Nov 2026 04:19:09 +0000
+Subject: [PATCH 1/4] fix(ci): locate the Wyoming watch step by id/command, not
+ display name
+
+CI has failed at 'Wyoming statewide watch' on every push since a9b4cd7
+(2026-11-07) renamed the workflow step to 'Watch every configured Wyoming
+government'. tests/wyoming-watch.test.mjs looked the step up by its old
+label, got undefined, and threw 'Cannot read properties of undefined
+(reading run)'. No collector behavior changed. The lookup now uses the
+step id (watch) with a fallback on the command it runs, and asserts the
+step exists so a future rename fails with a readable message.
+
+Also adds an empty public/.nojekyll. Pages is deployed from an Actions
+artifact, so Jekyll never ran and _next/ was already served; the file is
+a harmless guard in case the Pages source is ever switched to a branch.
+---
+ public/.nojekyll             | 0
+ tests/wyoming-watch.test.mjs | 7 ++++++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+ create mode 100644 public/.nojekyll
+
+diff --git a/public/.nojekyll b/public/.nojekyll
+new file mode 100644
+index 0000000..e69de29
+diff --git a/tests/wyoming-watch.test.mjs b/tests/wyoming-watch.test.mjs
+index 8961990..d8b9ee0 100644
+--- a/tests/wyoming-watch.test.mjs
++++ b/tests/wyoming-watch.test.mjs
+@@ -115,7 +115,12 @@ test("the scheduled workflow does not call the Cheyenne sync", async () => {
+   assert.equal(workflow.concurrency["cancel-in-progress"], false);
+   assert.ok(workflow.on.schedule[0].cron);
+   const steps = workflow.jobs.watch.steps;
+-  const watch = steps.find((step) => step.name === "Watch every Wyoming government");
++  // Locate the collector step by what it runs, not by its display name. The step was
++  // renamed on 2026-11-07 ("Watch every configured Wyoming government") and a lookup
++  // by the old label kept CI red for a week without any behavior having changed.
++  const watch = steps.find((step) => step.id === "watch")
++    ?? steps.find((step) => typeof step.run === "string" && /wyoming-watch\.mjs\b.*--check/.test(step.run));
++  assert.ok(watch, "the workflow must keep a step that runs wyoming-watch.mjs --check");
+   assert.match(watch.run, /wyoming-watch\.mjs --check/);
+   assert.doesNotMatch(JSON.stringify(workflow), /live_city_sync/);
+   for (const step of steps) {
+-- 
+2.47.3
+
