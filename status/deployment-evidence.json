@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-14T05:21:37.967Z",
+  "observed_at": "2026-11-14T11:04:35.221Z",
   "scope": "Bounded workflow metadata and check annotations; no raw logs or source-freshness certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 43561129225,
+      "id": 43588266230,
       "sha": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43561129225",
-      "created_at": "2026-11-14T05:21:20Z",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43588266230",
+      "created_at": "2026-11-14T11:04:30Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43561129225/job/132344815360",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43588266230/job/132427318997",
           "steps": [
             {
               "name": "Set up job",
@@ -41,18 +41,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 43560810145,
+      "id": 43587861653,
       "sha": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43560810145",
-      "created_at": "2026-11-14T05:17:28Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43587861653",
+      "created_at": "2026-11-14T10:59:43Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43560810145/job/132343835962",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43587861653/job/132426141744",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +160,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43560810145/job/132344644024",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43587861653/job/132427175781",
           "steps": [
             {
               "name": "Set up job",
