@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-13T20:30:41.986Z",
+  "checkedAt": "2026-11-14T18:45:42.711Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -607,8 +607,8 @@
       "status": 200,
       "finalUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "adccdbe7454981174112fc5ef59015c5dc071767e0be02140ea4db8297094a90",
       "records": 587
@@ -967,11 +967,11 @@
       "status": 200,
       "finalUrl": "https://www.grwyo.org/AgendaCenter",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "2c06562411b20414bbef20bff20ef0b871fb52430f3ea6d8d48930be82b1681e",
-      "records": 67
+      "contentHash": "af534ce28f539ab8efd15a8761b91a7b1bd8c9ac86ba614df4632d26e47bb648",
+      "records": 69
     },
     {
       "id": "place-greybull",
@@ -1173,8 +1173,8 @@
       "changed": true,
       "reason": "content-changed",
       "structural": false,
-      "contentHash": "c385d8e5e905bcd57693385e6f05fab1bd1efa736227ef9b639ce0b74598d7ec",
-      "records": 507
+      "contentHash": "5f010fed2ec491cac304ebbbc34997a60cdf8e29b3d2fb0670c335ec5d98d848",
+      "records": 509
     },
     {
       "id": "place-lingle",
@@ -1594,8 +1594,8 @@
       "status": 200,
       "finalUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=74374&mt=ALL",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "d806bcc6ef281ff929a491976416ef04fd17c0c72b7c2ab0cc3af7c818db17ee",
       "records": 6
