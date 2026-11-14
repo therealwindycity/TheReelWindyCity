@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-14T05:21:26.467Z",
+  "observed_at": "2026-11-14T05:21:37.967Z",
   "scope": "Bounded workflow metadata and check annotations; no raw logs or source-freshness certification",
   "workflows": [
     {
