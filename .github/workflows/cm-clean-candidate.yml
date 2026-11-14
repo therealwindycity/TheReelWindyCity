@@ -12,12 +12,15 @@ concurrency:
 jobs:
   stage:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+      - name: Generate required civic data before snapshot staging
+        run: npm ci && npm run prebuild
       - run: node clean-web/build.mjs --stage
       - uses: actions/upload-artifact@v4
         with:
