@@ -1,9 +1,114 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-14T21:29:34.778Z",
-  "scope": "Bounded workflow metadata and check annotations; no raw logs or source-freshness certification",
+  "observed_at": "2026-11-14T21:49:43.640Z",
+  "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
+    {
+      "name": "Deploy to GitHub Pages",
+      "id": 43644848325,
+      "sha": "0dd777c797becd894befac6280358a69c3b510a6",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43644848325",
+      "created_at": "2026-11-14T21:49:38Z",
+      "jobs": [
+        {
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43644848325/job/132600212480",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "in_progress",
+              "conclusion": null
+            },
+            {
+              "name": "Run actions/setup-node@v4",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Run npm ci",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "CM calendar and source-check regression gate",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Restore scanner-archive linkage cache",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Refresh the Socrata scanner-archive linkage database",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Check official posted meetings with explicit unavailable state",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Restore legal audit discovery cache",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Discover and screen official meeting agendas",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Save legal audit discovery cache",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Enable GitHub Pages if not already enabled",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Build static site",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Stamp exact built revision without claiming fresh collection",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Run actions/upload-pages-artifact@v3",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Preserve build and collection diagnostics",
+              "status": "pending",
+              "conclusion": null
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "pending",
+              "conclusion": null
+            }
+          ]
+        }
+      ],
+      "annotations": []
+    },
     {
       "name": "Verify public meeting features",
       "id": 43643056741,
@@ -26,169 +131,6 @@
             },
             {
               "name": "Verify public HTML features for CM",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
-            }
-          ]
-        }
-      ],
-      "annotations": []
-    },
-    {
-      "name": "Deploy to GitHub Pages",
-      "id": 43642711611,
-      "sha": "b854e6b2f032dea2d4e4b8d275e577c4e1955750",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43642711611",
-      "created_at": "2026-11-14T21:25:11Z",
-      "jobs": [
-        {
-          "name": "build",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43642711611/job/132593583550",
-          "steps": [
-            {
-              "name": "Set up job",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/setup-node@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run npm ci",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "CM calendar and source-check regression gate",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Restore scanner-archive linkage cache",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Refresh the Socrata scanner-archive linkage database",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Check official posted meetings with explicit unavailable state",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Restore legal audit discovery cache",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Discover and screen official meeting agendas",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Save legal audit discovery cache",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Enable GitHub Pages if not already enabled",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Build static site",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Stamp exact built revision without claiming fresh collection",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/upload-pages-artifact@v3",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Preserve build and collection diagnostics",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Restore scanner-archive linkage cache",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Run actions/setup-node@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
-            }
-          ]
-        },
-        {
-          "name": "deploy",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43642711611/job/132594332986",
-          "steps": [
-            {
-              "name": "Set up job",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/deploy-pages@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Verify exact public revision and run",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Verify published sitemap and robots.txt",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Run actions/checkout@v4",
               "status": "completed",
               "conclusion": "success"
             },
@@ -238,5 +180,44 @@
       "annotations": []
     }
   ],
+  "source_evidence": {
+    "run": 43642711611,
+    "revision": "b854e6b2f032dea2d4e4b8d275e577c4e1955750",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43642711611",
+    "artifact_id": 14132746962,
+    "deployment": {
+      "schema": 1,
+      "project_credit": "CM",
+      "revision": "b854e6b2f032dea2d4e4b8d275e577c4e1955750",
+      "run_id": "43642711611",
+      "built_at": "2026-11-14T21:27:49.354639+00:00",
+      "scope": "Build identity only; not source freshness or complete coverage."
+    },
+    "source_check": {
+      "version": 1,
+      "ok": true,
+      "observedAt": "2026-11-14T21:27:06.792Z",
+      "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
+      "attempts": 1,
+      "error": null,
+      "meetings": [
+        {
+          "body": "public-services-committee",
+          "bodyLabel": "Public Services Committee",
+          "date": "2026-11-16",
+          "time": "12:00",
+          "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1459&view_id=5"
+        },
+        {
+          "body": "finance-committee",
+          "bodyLabel": "Finance Committee",
+          "date": "2026-11-17",
+          "time": "08:00",
+          "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1458&view_id=5"
+        }
+      ]
+    },
+    "interpretation": "retrieval_reported_success_requires_content_review"
+  },
   "gaps": []
 }
