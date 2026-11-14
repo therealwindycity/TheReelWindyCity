@@ -1,0 +1,61 @@
+name: CM deployment evidence
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-deployment-evidence.yml']
+  workflow_run:
+    workflows: ['Deploy to GitHub Pages', 'Verify public meeting features', 'Frequent public refresh']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch: {}
+permissions:
+  actions: read
+  checks: read
+  contents: write
+concurrency:
+  group: cm-deployment-evidence
+  cancel-in-progress: false
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const target = {...context.repo};
+            const report = {schema:1, project_credit:'CM', observed_at:new Date().toISOString(), scope:'Bounded workflow metadata and check annotations; no raw logs or source-freshness certification', workflows:[], gaps:[]};
+            const names = new Set(['Deploy to GitHub Pages','Verify public meeting features','Frequent public refresh']);
+            const runs = (await github.rest.actions.listWorkflowRunsForRepo({...target,branch:'main',per_page:100})).data.workflow_runs;
+            const latest = new Map();
+            for (const run of runs) if(names.has(run.name) && !latest.has(run.name)) latest.set(run.name,run);
+            for (const name of names) if(!latest.has(name)) report.gaps.push({workflow:name,reason:'Not found in latest 100 main-branch runs'});
+            for (const run of latest.values()) {
+              const item = {name:run.name,id:run.id,sha:run.head_sha,status:run.status,conclusion:run.conclusion,url:run.html_url,created_at:run.created_at,jobs:[],annotations:[]};
+              report.workflows.push(item);
+              try {
+                const jobs = (await github.rest.actions.listJobsForWorkflowRun({...target,run_id:run.id,per_page:30})).data.jobs;
+                item.jobs = jobs.map(j => ({name:j.name,status:j.status,conclusion:j.conclusion,url:j.html_url,steps:(j.steps||[]).map(s=>({name:s.name,status:s.status,conclusion:s.conclusion}))}));
+                for(const job of jobs.filter(j=>['failure','timed_out'].includes(j.conclusion)).slice(0,5)) {
+                  const match = job.check_run_url?.match(/check-runs\/(\d+)$/);
+                  if(!match) continue;
+                  try {
+                    const annotations = (await github.rest.checks.listAnnotations({...target,check_run_id:Number(match[1]),per_page:10})).data;
+                    item.annotations.push(...annotations.map(a=>({job:job.name,path:a.path,line:a.start_line,level:a.annotation_level,title:a.title,message:(a.message||'').slice(0,1600)})));
+                  } catch(e) { report.gaps.push({run:run.id,check:'annotations',status:e.status||null}); }
+                }
+              } catch(e) { report.gaps.push({run:run.id,check:'jobs',status:e.status||null}); }
+            }
+            const branch = 'cm-deployment-status';
+            try { await github.rest.git.getRef({...target,ref:'heads/'+branch}); }
+            catch(e) {
+              if(e.status!==404) throw e;
+              const head = await github.rest.repos.getCommit({...target,ref:'main'});
+              await github.rest.git.createRef({...target,ref:'refs/heads/'+branch,sha:head.data.sha});
+            }
+            const path = 'status/deployment-evidence.json';
+            let sha;
+            try { sha = (await github.rest.repos.getContent({...target,path,ref:branch})).data.sha; }
+            catch(e) { if(e.status!==404) throw e; }
+            await github.rest.repos.createOrUpdateFileContents({...target,branch,path,sha,message:'CM: record deployment evidence [skip ci]',content:Buffer.from(JSON.stringify(report,null,2)+'\n').toString('base64')});
+            await core.summary.addHeading('CM deployment evidence').addRaw('Saved status/deployment-evidence.json on cm-deployment-status. Reports are observations, not repairs.').write();
