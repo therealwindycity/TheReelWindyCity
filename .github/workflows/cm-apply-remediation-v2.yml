@@ -1,0 +1,118 @@
+name: CM apply frontend remediation v2
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-apply-remediation-v2.yml']
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: cm-apply-remediation-v2
+  cancel-in-progress: false
+jobs:
+  apply-and-verify:
+    if: github.repository == 'therealwindycity/TheReelWindyCity' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Python verification dependencies
+        run: python -m pip install requests beautifulsoup4 pypdf pdfplumber curl_cffi
+      - name: Apply immutable handoff and preserve scope log
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'bartimoussmith-oss'
+          git config user.email 'bartimoussmith-oss@users.noreply.github.com'
+          git fetch --no-tags origin handoff/remediation-v2
+          pin=f11687893265594703c0c40d210fe51e04d7db06
+          test "$(git rev-parse FETCH_HEAD)" = "$pin"
+          mkdir -p /tmp/cm-handoff
+          git archive "$pin" unpacked/windycity-remediation-handoff/patches/TheReelWindyCity | tar -x -C /tmp/cm-handoff
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          p=Path('READ-FIRST.md')
+          with p.open('a') as out:
+              out.write('\n\n### '+datetime.now(timezone.utc).isoformat()+' — CM remediation-v2 active scope\n- scope: pinned handoff frontend patches; .github/, database/, scrapers/, tests/, package.json, affected UI sources and append-only READ-FIRST.md. Existing work and source records preserved.\n- state: applying and verifying; this entry is not a claim of successful tests or deployment.\n')
+          PY
+          git add READ-FIRST.md
+          git commit -m 'CM: register remediation-v2 frontend scope'
+          patches=/tmp/cm-handoff/unpacked/windycity-remediation-handoff/patches/TheReelWindyCity
+          for n in 0001 0002 0003; do
+            patch=$(find "$patches" -maxdepth 1 -name "$n-*.patch" -print)
+            test -n "$patch"
+            git am --3way "$patch"
+          done
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          folder=Path('/tmp/cm-handoff/unpacked/windycity-remediation-handoff/patches/TheReelWindyCity')
+          patch=next(folder.glob('0004-*.patch')).read_text()
+          addition='\n'.join(line[1:] for line in patch.splitlines() if line.startswith('+') and not line.startswith('+++'))+'\n'
+          target=Path('READ-FIRST.md')
+          if addition.strip() not in target.read_text():
+              with target.open('a') as out: out.write('\n'+addition)
+          paths=[Path('src/app/hub/signals/page.tsx'),Path('src/app/hub/wyoming/page.tsx'),Path('src/app/mynewspace/page.tsx'),Path('src/components/pulse-broadcast.tsx'),Path('src/components/wyoming-ecosystem-map.tsx'),*Path('src/components').glob('newspace-*.tsx')]
+          changed=[]
+          for p in paths:
+              if not p.exists(): continue
+              old=p.read_text()
+              new,count=re.subn(r'</button>\s*(?=<button\b)', '</button>{" "}', old)
+              if count:
+                  p.write_text(new)
+                  changed.append(str(p))
+              print(f'{p}: {count} adjacent button separators added')
+          Path('/tmp/cm-spacing-paths.txt').write_text('\n'.join(changed))
+          PY
+          git add READ-FIRST.md
+          while IFS= read -r file || [ -n "$file" ]; do
+            [ -z "$file" ] || git add -- "$file"
+          done < /tmp/cm-spacing-paths.txt
+          if ! git diff --cached --quiet; then
+            git commit -m 'CM: preserve handoff work log and separate adjacent controls'
+          fi
+      - name: Rebase, run required verification, and push without force
+        env:
+          NEXT_PUBLIC_BASE_PATH: /TheReelWindyCity
+        shell: bash
+        run: |
+          set -euo pipefail
+          verify() {
+            npm ci && npm run lint && npx tsc --noEmit && npm run test:wyoming-watch && npm run build && npm run test:seo && npm run test:text-separation && python3 -m unittest tests/test_granicus_harvester.py -v
+          }
+          for attempt in 1 2; do
+            git fetch origin main
+            git rebase origin/main
+            verify 2>&1 | tee "/tmp/cm-remediation-verification-$attempt.log"
+            git rev-parse HEAD
+            git status -sb
+            git diff origin/main...HEAD --stat | tee /tmp/cm-remediation-diff.txt
+            git diff --binary origin/main...HEAD > /tmp/cm-remediation-applied.patch
+            if git push origin HEAD:main; then
+              echo "Verified frontend remediation pushed: $(git rev-parse HEAD)" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+          done
+          echo 'Push failed; no force-push attempted.' >&2
+          exit 1
+      - name: Preserve verification logs and applied diff
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cm-remediation-v2-frontend-${{ github.run_id }}
+          path: |
+            /tmp/cm-remediation-verification-*.log
+            /tmp/cm-remediation-diff.txt
+            /tmp/cm-remediation-applied.patch
+          if-no-files-found: warn
