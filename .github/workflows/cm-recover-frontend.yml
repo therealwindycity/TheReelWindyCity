@@ -1,0 +1,98 @@
+name: CM recover tested frontend remediation
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-recover-frontend.yml']
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: cm-frontend-recovery
+  cancel-in-progress: false
+jobs:
+  recover:
+    if: github.repository == 'therealwindycity/TheReelWindyCity' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Download existing verification artifact
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const run_id=43626313141;
+            const run=(await github.rest.actions.getWorkflowRun({...context.repo,run_id})).data;
+            if(run.head_sha!=='f07fda96a9e3567e27f99a44f29226cfd0df2c53'||run.status!=='completed'||run.conclusion!=='failure')throw Error('Unexpected source run');
+            const artifacts=(await github.rest.actions.listWorkflowRunArtifacts({...context.repo,run_id,per_page:100})).data.artifacts;
+            const artifact=artifacts.find(a=>a.name===`cm-remediation-v2-frontend-${run_id}`&&!a.expired);
+            if(!artifact)throw Error('Verification artifact unavailable');
+            const download=await github.rest.actions.downloadArtifact({...context.repo,artifact_id:artifact.id,archive_format:'zip'});
+            fs.writeFileSync('/tmp/cm-recovery.zip',Buffer.from(download.data));
+            fs.writeFileSync('/tmp/cm-recovery-source.json',JSON.stringify({project_credit:'CM',source_run:run.html_url,source_revision:run.head_sha,artifact_id:artifact.id,observed_at:new Date().toISOString(),scope:'Recovery of previously tested patch and push failure evidence only; no application to main or deployment'}));
+      - name: Reconstruct patch as inert review material
+        shell: bash
+        run: |
+          set -euo pipefail
+          unzip -p /tmp/cm-recovery.zip cm-remediation-applied.patch > /tmp/cm-recovered.patch
+          test -s /tmp/cm-recovered.patch
+          git worktree add --detach /tmp/cm-recovered-source f07fda96a9e3567e27f99a44f29226cfd0df2c53
+          git -C /tmp/cm-recovered-source apply --check --index /tmp/cm-recovered.patch
+          git -C /tmp/cm-recovered-source apply --index /tmp/cm-recovered.patch
+          python3 - <<'PY'
+          import hashlib,json,re,subprocess,zipfile
+          from pathlib import Path
+          source=Path('/tmp/cm-recovered-source')
+          out=Path('/tmp/cm-recovered-material')
+          out.mkdir()
+          report=json.loads(Path('/tmp/cm-recovery-source.json').read_text())
+          report['patch_sha256']=hashlib.sha256(Path('/tmp/cm-recovered.patch').read_bytes()).hexdigest()
+          report['files']=[]
+          changes=subprocess.check_output(['git','diff','--cached','--name-status','-z','--no-renames'],cwd=source).decode().split('\0')
+          for i in range(0,len(changes)-1,2):
+              status,name=changes[i:i+2]
+              p=Path(name)
+              if p.is_absolute() or '..' in p.parts or status not in ('A','M','D'): raise RuntimeError('Unsupported patch path or change')
+              entry={'path':name,'change':status}
+              if status!='D':
+                  mode=subprocess.check_output(['git','ls-files','--stage','--',name],cwd=source).decode().split()[0]
+                  if mode not in ('100644','100755'): raise RuntimeError('Unsupported file mode')
+                  data=subprocess.check_output(['git','show',':'+name],cwd=source)
+                  target=out/'recovered'/p
+                  target.parent.mkdir(parents=True,exist_ok=True)
+                  target.write_bytes(data)
+                  entry.update(review_path='recovered/'+name,sha256=hashlib.sha256(data).hexdigest(),mode=mode)
+              report['files'].append(entry)
+          report['push_rejection_context']=[]
+          with zipfile.ZipFile('/tmp/cm-recovery.zip') as archive:
+              for name in archive.namelist():
+                  if not re.fullmatch(r'cm-remediation-verification-\d+\.log',name): continue
+                  lines=archive.read(name).decode(errors='replace').splitlines()
+                  keep=set()
+                  for i,line in enumerate(lines):
+                      if re.search(r'remote:|rejected|refusing|failed to push|GH006|GH013',line,re.I): keep.update(range(max(0,i-2),min(len(lines),i+4)))
+                  excerpt=['[credential-related line omitted]' if re.search(r'token|secret|password|authorization',lines[i],re.I) else lines[i][:600] for i in sorted(keep)]
+                  report['push_rejection_context'].append({'log':name,'lines':excerpt[-60:]})
+          (out/'status').mkdir()
+          (out/'status/frontend-recovery.json').write_text(json.dumps(report,indent=2)+'\n')
+          PY
+      - name: Publish review material on separate branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if git ls-remote --exit-code --heads origin cm-frontend-recovery; then
+            git fetch origin cm-frontend-recovery
+            git worktree add -B cm-frontend-recovery /tmp/cm-recovery-report FETCH_HEAD
+          else
+            git worktree add -b cm-frontend-recovery /tmp/cm-recovery-report origin/main
+          fi
+          cp -R /tmp/cm-recovered-material/. /tmp/cm-recovery-report/
+          git -C /tmp/cm-recovery-report add -- recovered status/frontend-recovery.json
+          git -C /tmp/cm-recovery-report commit -m 'CM: preserve tested frontend patch as inert review material [skip ci]'
+          git -C /tmp/cm-recovery-report push origin HEAD:cm-frontend-recovery
+          echo 'Review material published on cm-frontend-recovery. Main application code and deployment unchanged.' >> "$GITHUB_STEP_SUMMARY"
