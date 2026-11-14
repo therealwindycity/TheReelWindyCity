@@ -24,7 +24,7 @@ jobs:
         with:
           script: |
             const target = {...context.repo};
-            const report = {schema:1, project_credit:'CM', observed_at:new Date().toISOString(), scope:'Bounded workflow metadata and check annotations; no raw logs or source-freshness certification', workflows:[], gaps:[]};
+            const report = {schema:1, project_credit:'CM', observed_at:new Date().toISOString(), scope:'Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification', workflows:[], source_evidence:null, gaps:[]};
             const names = new Set(['Deploy to GitHub Pages','Verify public meeting features','Frequent public refresh']);
             const runs = (await github.rest.actions.listWorkflowRunsForRepo({...target,branch:'main',per_page:100})).data.workflow_runs;
             const latest = new Map();
@@ -46,6 +46,34 @@ jobs:
                 }
               } catch(e) { report.gaps.push({run:run.id,check:'jobs',status:e.status||null}); }
             }
+            const deployed=runs.find(r=>r.name==='Deploy to GitHub Pages'&&r.status==='completed'&&r.conclusion==='success');
+            if(!deployed)report.gaps.push({check:'source_evidence',reason:'No completed successful deployment in sampled runs'});
+            else {
+              try {
+                const artifacts=(await github.rest.actions.listWorkflowRunArtifacts({...target,run_id:deployed.id,per_page:100})).data.artifacts;
+                const artifact=artifacts.find(a=>a.name==='pages-build-diagnostics'&&!a.expired);
+                if(!artifact||artifact.size_in_bytes>50000000)throw Error('Diagnostics artifact unavailable or exceeds size limit');
+                const downloaded=await github.rest.actions.downloadArtifact({...target,artifact_id:artifact.id,archive_format:'zip'});
+                const python=[
+                  'import io,json,sys,zipfile',
+                  'with zipfile.ZipFile(io.BytesIO(sys.stdin.buffer.read())) as z:',
+                  ' result={}',
+                  ' for key,suffix in (("source_check","data/source-check.json"),("deployment","out/status/deployment.json")):',
+                  '  names=[n for n in z.namelist() if n==suffix or n.endswith("/"+suffix)]',
+                  '  if len(names)!=1: raise RuntimeError("Missing or ambiguous artifact member: "+suffix)',
+                  '  if z.getinfo(names[0]).file_size>1000000: raise RuntimeError("Artifact member exceeds limit")',
+                  '  result[key]=json.loads(z.read(names[0]))',
+                  ' print(json.dumps(result))'
+                ].join('\n');
+                const parsed=require('child_process').spawnSync('python3',['-c',python],{input:Buffer.from(downloaded.data),maxBuffer:3000000,timeout:20000});
+                if(parsed.status!==0)throw Error('Bounded artifact JSON extraction failed');
+                const evidence=JSON.parse(parsed.stdout.toString());
+                if(evidence.deployment.revision!==deployed.head_sha||String(evidence.deployment.run_id)!==String(deployed.id))throw Error('Artifact identity does not match deployment');
+                const check=evidence.source_check;
+                if(typeof check.ok!=='boolean'||!Array.isArray(check.meetings)||typeof check.observedAt!=='string')throw Error('Invalid source-check structure');
+                report.source_evidence={run:deployed.id,revision:deployed.head_sha,url:deployed.html_url,artifact_id:artifact.id,deployment:evidence.deployment,source_check:check,interpretation:check.ok?(check.meetings.length?'retrieval_reported_success_requires_content_review':'retrieval_reported_success_but_empty_requires_review'):'official_source_check_failed'};
+              }catch(e){report.gaps.push({run:deployed.id,check:'source_evidence',reason:String(e.message||e).slice(0,300),status:e.status||null});}
+            }
             const branch = 'cm-deployment-status';
             try { await github.rest.git.getRef({...target,ref:'heads/'+branch}); }
             catch(e) {
@@ -57,5 +85,5 @@ jobs:
             let sha;
             try { sha = (await github.rest.repos.getContent({...target,path,ref:branch})).data.sha; }
             catch(e) { if(e.status!==404) throw e; }
-            await github.rest.repos.createOrUpdateFileContents({...target,branch,path,sha,message:'CM: record deployment evidence [skip ci]',content:Buffer.from(JSON.stringify(report,null,2)+'\n').toString('base64')});
-            await core.summary.addHeading('CM deployment evidence').addRaw('Saved status/deployment-evidence.json on cm-deployment-status. Reports are observations, not repairs.').write();
+            await github.rest.repos.createOrUpdateFileContents({...target,branch,path,sha,message:'CM: record deployment and source-check evidence [skip ci]',content:Buffer.from(JSON.stringify(report,null,2)+'\n').toString('base64')});
+            await core.summary.addHeading('CM deployment evidence').addRaw('Saved status/deployment-evidence.json on cm-deployment-status. Includes saved source-check output when available; gaps are explicit. Reports are observations, not repairs.').write();
