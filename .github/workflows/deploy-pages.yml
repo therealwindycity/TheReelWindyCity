@@ -1,26 +1,21 @@
 name: Deploy to GitHub Pages
-
 on:
   push:
-    branches: [main, "arena/**"]
-  workflow_dispatch:
-  # Static Pages has no runtime RSS proxy; rebuild and publish the newsroom
-  # snapshot hourly so the public news lanes stay genuinely current.
+    branches: [main, 'arena/**']
+  workflow_dispatch: {}
   schedule:
-    - cron: "17 * * * *"
-
+    - cron: '8,23,38,53 * * * *'
 permissions:
   contents: write
   pages: write
   id-token: write
-
 concurrency:
   group: pages-${{ github.ref }}
   cancel-in-progress: false
-
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -28,32 +23,21 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: CM calendar and source-check regression gate
+        run: npm run test:calendar && npm run test:sync
       - name: Restore scanner-archive linkage cache
         uses: actions/cache@v4
         with:
           path: .cache/scanner-archive-links
           key: scanner-archive-links-${{ github.run_id }}
           restore-keys: scanner-archive-links-
-      - name: Refresh the Socrata ↔ scanner-archive linkage database
-        # Rebuilds the log → archive-block database for every linkable day.
-        # Broadcastify feed archives keep a rolling ~6-month window, so the
-        # sync window rolls with it. The sync fails closed; on any publisher
-        # problem this step is skipped and the build falls back to the
-        # committed seed artifact — an outage can never blank the public
-        # database. --allow-large: the full linkable window is ~60k rows by
-        # design (see MAX_COMMITTED_LINKS in the sync script).
+      - name: Refresh the Socrata scanner-archive linkage database
         continue-on-error: true
+        timeout-minutes: 8
         run: node scripts/sync/scanner-archive-links.mjs --start "$(date -u -d '180 days ago' +%F)" --allow-large
-      - name: Check the city's posted-meeting table (bounded; fails open)
-        # Keeps "next meeting" honest: the build can use a real, timestamped
-        # posting instead of a frozen snapshot. This never advances the watcher
-        # baseline, never triggers a sync, and writes an explicit ok:false
-        # record if the publisher is unreachable. The build then falls back to
-        # the committed snapshot and says so.
-        continue-on-error: true
+      - name: Check official posted meetings with explicit unavailable state
         timeout-minutes: 2
         run: node scripts/sync/snapshot-upcoming.mjs --out data/source-check.json --timeout-ms 10000 --attempts 2
-
       - name: Restore legal audit discovery cache
         uses: actions/cache/restore@v4
         with:
@@ -66,7 +50,6 @@ jobs:
             legal-audit-v3-
             legal-audit-v2-
       - name: Discover and screen official meeting agendas
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/arena/') || github.event_name == 'workflow_dispatch'
         timeout-minutes: 15
         run: |
           npm run data:assemble
@@ -74,7 +57,6 @@ jobs:
           node scripts/analysis/legal-evidence.mjs --refresh
           node scripts/analysis/legal-support.mjs --refresh
       - name: Save legal audit discovery cache
-        if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/arena/') || github.event_name == 'workflow_dispatch'
         uses: actions/cache/save@v4
         with:
           path: |
@@ -82,39 +64,46 @@ jobs:
             .sync/legal-evidence-cache.json
             .sync/legal-support-cache.json
           key: legal-audit-v3-${{ github.run_id }}-${{ github.run_attempt }}
-
-      - name: Enable GitHub Pages (if not already enabled)
+      - name: Enable GitHub Pages if not already enabled
         uses: actions/configure-pages@v5
         continue-on-error: true
         with:
           enablement: true
       - name: Build static site
+        shell: bash
         run: |
-          set -o pipefail
-          echo '### Command: `npm run build`' >> CI_DIAGNOSTICS.md
-          echo '```text' >> CI_DIAGNOSTICS.md
-          npm run build 2>&1 | tee -a CI_DIAGNOSTICS.md
-          echo '```' >> CI_DIAGNOSTICS.md
+          set -euo pipefail
+          npm run build 2>&1 | tee CI_DIAGNOSTICS.md
         env:
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - name: Stamp exact built revision without claiming fresh collection
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          from datetime import datetime, timezone
+          status = Path('out/status')
+          status.mkdir(parents=True, exist_ok=True)
+          manifest = {'schema': 1, 'project_credit': 'CM', 'revision': os.environ['GITHUB_SHA'], 'run_id': os.environ['GITHUB_RUN_ID'], 'built_at': datetime.now(timezone.utc).isoformat(), 'scope': 'Build identity only; not source freshness or complete coverage.'}
+          (status / 'deployment.json').write_text(json.dumps(manifest, indent=2) + '\n')
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
-
-      - name: Upload Build Diagnostics Artifact (Runs Even On Failure)
+      - name: Preserve build and collection diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: pages-build-diagnostics
-          path: CI_DIAGNOSTICS.md
-          if-no-files-found: ignore
-
+          path: |
+            CI_DIAGNOSTICS.md
+            data/source-check.json
+            out/status/deployment.json
+          if-no-files-found: warn
   deploy:
     needs: build
-    # The github-pages environment is protected to the default branch; feature
-    # branches are build-checked but must not attempt a production deployment.
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -122,10 +111,35 @@ jobs:
       - uses: actions/checkout@v4
       - id: deployment
         uses: actions/deploy-pages@v4
-      # Search Console reads the published files, not the build artifacts. Fail
-      # the deploy if the live sitemap is unreachable, advertises another host,
-      # or lists fewer pages than the archive in this commit.
-      - name: Verify the published sitemap and robots.txt
+      - name: Verify exact public revision and run
+        env:
+          LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: python
+        run: |
+          import json, os, time, urllib.request
+          base = os.environ['LIVE_SITE_URL'].rstrip('/')
+          error = 'Public revision not checked'
+          for attempt in range(6):
+              try:
+                  url = base + '/status/deployment.json?verify=' + str(time.time_ns())
+                  req = urllib.request.Request(url, headers={'Cache-Control': 'no-cache'})
+                  with urllib.request.urlopen(req, timeout=20) as response:
+                      data = json.loads(response.read(65536))
+                  if data.get('revision') != os.environ['GITHUB_SHA'] or str(data.get('run_id')) != os.environ['GITHUB_RUN_ID']:
+                      raise ValueError('Served revision or workflow run does not match this deployment')
+                  error = None
+                  break
+              except Exception as exc:
+                  error = str(exc)
+                  if attempt < 5:
+                      time.sleep(10)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('## CM public revision verification\n')
+              summary.write(('FAILED: ' + error if error else 'Exact revision and workflow run verified: ' + os.environ['GITHUB_SHA']) + '\n')
+              summary.write('This does not certify source freshness or coverage.\n')
+          if error:
+              raise SystemExit(error)
+      - name: Verify published sitemap and robots.txt
         run: node scripts/check-live-seo.mjs --retries 6 --delay 10000
         env:
           LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
