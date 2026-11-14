@@ -63,13 +63,13 @@ export default function MeetingArchivePage() {
       />
       <header className="seo-site-header">
         <a className="seo-brand" href={SITE_URL}>
-          <span>{SITE_NAME}</span>
+          <span>{SITE_NAME}</span>{" "}
           <small>Independent index of Cheyenne public records</small>
         </a>
         <nav aria-label="Site navigation">
-          <a href={SITE_URL}>Civic Cheyenne home</a>
-          <a href={siteUrl("hub/")}>Live Government Hub</a>
-          <a href={siteUrl("transcripts/")}>Transcript archive</a>
+          <a href={SITE_URL}>Civic Cheyenne home</a>{" "}
+          <a href={siteUrl("hub/")}>Live Government Hub</a>{" "}
+          <a href={siteUrl("transcripts/")}>Transcript archive</a>{" "}
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">
             Official city records
           </a>
@@ -78,7 +78,7 @@ export default function MeetingArchivePage() {
 
       <main className="seo-container seo-archive-page">
         <nav className="seo-breadcrumbs" aria-label="Breadcrumb">
-          <a href={SITE_URL}>Home</a><span aria-hidden="true">/</span><span>Meeting archive</span>
+          <a href={SITE_URL}>Home</a>{" "}<span aria-hidden="true">/</span>{" "}<span>Meeting archive</span>
         </nav>
 
         <header className="seo-page-heading">
@@ -97,16 +97,16 @@ export default function MeetingArchivePage() {
         </header>
 
         <section className="seo-stats-grid" aria-label="Archive coverage statistics">
-          <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong><span>historical meeting entries</span></div>
-          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong><span>upcoming meetings confirmed as of snapshot</span></div>
-          <div><strong>{MEETING_STATS.totalDocuments.toLocaleString()}</strong><span>archived documents indexed</span></div>
-          <div><strong>{(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts).toLocaleString()}</strong><span>{transcriptCountSummary()}</span></div>
+          <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong>{" "}<span>historical meeting entries</span>{" "}</div>
+          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong>{" "}<span>upcoming meetings confirmed as of snapshot</span>{" "}</div>
+          <div><strong>{MEETING_STATS.totalDocuments.toLocaleString()}</strong>{" "}<span>archived documents indexed</span>{" "}</div>
+          <div><strong>{(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts).toLocaleString()}</strong>{" "}<span>{transcriptCountSummary()}</span>{" "}</div>
         </section>
 
         <nav className="seo-year-nav" aria-label="Jump to a year">
-          <span>Jump to:</span>
+          <span>Jump to:</span>{" "}
           {groups.map((group) => (
-            <a key={group.label} href={`#${sectionId(group.label)}`}>{group.label}</a>
+            <a key={group.label} href={`#${sectionId(group.label)}`}>{group.label}{" "}</a>
           ))}
         </nav>
 
@@ -126,14 +126,14 @@ export default function MeetingArchivePage() {
                   return (
                     <li key={meeting.id}>
                       <a href={siteUrl(`meetings/${meeting.id}/`)}>
-                        <span className="seo-archive-date">{meeting.dateLabel}</span>
-                        <strong>{meeting.bodyLabel}</strong>
-                        {cleanNotes.length ? <small>{cleanNotes.join(" · ")}</small> : null}
+                        <span className="seo-archive-date">{meeting.dateLabel}</span>{" "}
+                        <strong>{meeting.bodyLabel}</strong>{" "}
+                        {cleanNotes.length ? <small>{cleanNotes.join(" · ")}</small> : null}{" "}
                         {(meeting.upcoming || meeting.agendaPosted) ? <small>{meetingCalendarLabel(meeting)}{meeting.items?.length ? ` · ${meeting.items.length} items` : ""}</small> : null}
-                      </a>
+                      </a>{" "}
                       <span className="seo-archive-counts">
                         {meeting.docs.length ? `${meeting.docs.length} file${meeting.docs.length === 1 ? "" : "s"}` : "Official links"}
-                        {meeting.transcript ? " · transcript file" : ""}
+                        {meeting.transcript ? " · transcript file" : ""}{" "}
                       </span>
                     </li>
                   );
@@ -144,7 +144,7 @@ export default function MeetingArchivePage() {
         </div>
 
         <footer className="seo-footer">
-          <p>This is an independent civic-learning index, not an official City of Cheyenne service. Agenda entries are proposals, not recorded decisions.</p>
+          <p>This is an independent civic-learning index, not an official City of Cheyenne service. Agenda entries are proposals, not recorded decisions.</p>{" "}
           <a href={SITE_URL}>Civic Cheyenne home</a>
         </footer>
       </main>

@@ -186,7 +186,7 @@ export default function MyNewSpaceProfile() {
           <a href={asset("")}>Report a Problem</a>
         </div>
         <p className="nsp-ticker">
-          <b>STATUS</b>
+          <b>STATUS</b>{" "}
           <span className="nsp-ticker-track">
             <NewspaceText field="status" module={MODULE} /> · record snapshot {MEETINGS_CAPTURED} · nothing on this
             page posts anywhere · your customization stays in this browser
@@ -280,7 +280,7 @@ export default function MyNewSpaceProfile() {
             <h2 className="nsp-card-head" id="nsp-online-title">
               <span>
                 <Star size={11} aria-hidden="true" /> On the docket
-              </span>
+              </span>{" "}
               <span>{UPCOMING_MEETINGS.length} posted</span>
             </h2>
             <div className="nsp-online">
@@ -347,7 +347,7 @@ export default function MyNewSpaceProfile() {
         <div id="nsp-modules">
           <section className="nsp-card nsp-module" id="nsp-sec-about" aria-labelledby="nsp-about-title">
             <h2 className="nsp-card-head" id="nsp-about-title">
-              <span>About Me</span>
+              <span>About Me</span>{" "}
               <span>read-only</span>
             </h2>
             <div className="nsp-module-body">
@@ -384,7 +384,7 @@ export default function MyNewSpaceProfile() {
 
           <section className="nsp-card nsp-module" id="nsp-sec-agenda" aria-labelledby="nsp-agenda-title">
             <h2 className="nsp-card-head" id="nsp-agenda-title">
-              <span>{NEXT_MEETING ? "Next public meeting" : "Latest in the record"}</span>
+              <span>{NEXT_MEETING ? "Next public meeting" : "Latest in the record"}</span>{" "}
               <span>{NEXT_MEETING ? `${NEXT_MEETING.items?.length ?? 0} posted items` : `${FEATURED_MEETING.docs.length} archived files`}</span>
             </h2>
             <div className="nsp-module-body">
@@ -392,21 +392,21 @@ export default function MyNewSpaceProfile() {
                 <div>
                   <dt>Body</dt>
                   <dd>
-                    {FEATURED_MEETING.bodyLabel}
+                    {FEATURED_MEETING.bodyLabel}{" "}
                     <small>{NEXT_MEETING ? "agenda posted" : meetingCalendarLabel(FEATURED_MEETING)}</small>
                   </dd>
                 </div>
                 <div>
                   <dt>When</dt>
                   <dd>
-                    {FEATURED_MEETING.shortDate}
+                    {FEATURED_MEETING.shortDate}{" "}
                     <small>{FEATURED_MEETING.time ?? "time not in this snapshot"}</small>
                   </dd>
                 </div>
                 <div>
                   <dt>Where</dt>
                   <dd>
-                    {FEATURED_MEETING.location ?? "Council Chambers"}
+                    {FEATURED_MEETING.location ?? "Council Chambers"}{" "}
                     <small>2101 O’Neil Avenue, Cheyenne</small>
                   </dd>
                 </div>
@@ -502,7 +502,7 @@ export default function MyNewSpaceProfile() {
 
           <section className="nsp-card nsp-module" id="nsp-sec-meet" aria-labelledby="nsp-meet-title">
             <h2 className="nsp-card-head" id="nsp-meet-title">
-              <span>Who I’d like to meet</span>
+              <span>Who I’d like to meet</span>{" "}
               <span>{UNREACHED.length} of {MUNICIPALITIES.length}</span>
             </h2>
             <div className="nsp-module-body">
@@ -530,7 +530,7 @@ export default function MyNewSpaceProfile() {
 
           <section className="nsp-card nsp-module" id="nsp-sec-friends" aria-labelledby="nsp-friends-title">
             <h2 className="nsp-card-head" id="nsp-friends-title">
-              <span>My Top 8 Friends</span>
+              <span>My Top 8 Friends</span>{" "}
               <span>
                 <a href={asset("hub/wyoming/")} style={{ color: "#fff", textDecoration: "underline" }}>
                   see all {MUNICIPALITIES.length}
@@ -543,10 +543,10 @@ export default function MyNewSpaceProfile() {
                   <a className="nsp-friend" key={friend.id} href={friend.href}>
                     <span className="nsp-friend-avatar" aria-hidden="true">
                       {friend.name.slice(0, 1)}
-                    </span>
+                    </span>{" "}
                     <strong>
                       {index + 1}. {friend.name}
-                    </strong>
+                    </strong>{" "}
                     <small>
                       {friend.kind} · {friend.population.toLocaleString()} people
                       <br />
@@ -566,7 +566,7 @@ export default function MyNewSpaceProfile() {
 
           <section className="nsp-card nsp-module" id="nsp-sec-wall" aria-labelledby="nsp-wall-title">
             <h2 className="nsp-card-head" id="nsp-wall-title">
-              <span>Friend Space</span>
+              <span>Friend Space</span>{" "}
               <span>{WALL_ENTRIES.length} comments · {GUIDED?.shortDate ?? "guided session"}</span>
             </h2>
             <div className="nsp-module-body">
@@ -576,7 +576,7 @@ export default function MyNewSpaceProfile() {
 
           <section className="nsp-card nsp-module" id="nsp-sec-custom" aria-labelledby="nsp-custom-title">
             <h2 className="nsp-card-head" id="nsp-custom-title">
-              <span>My Profile HTML</span>
+              <span>My Profile HTML</span>{" "}
               <span>sandboxed</span>
             </h2>
             <div className="nsp-module-body">
@@ -592,7 +592,7 @@ export default function MyNewSpaceProfile() {
         <h2 className="nsp-card-head">
           <span>
             <FolderLock size={11} aria-hidden="true" /> Recently on the boards
-          </span>
+          </span>{" "}
           <span>City Council</span>
         </h2>
         <div className="nsp-module-body">

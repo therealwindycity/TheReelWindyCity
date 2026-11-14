@@ -121,8 +121,8 @@ export function NewspaceSong({ fallback }: { fallback: string }) {
   const song = custom.song || fallback;
   return (
     <p className="nsp-song">
-      <span className="nsp-song-note">PROFILE SONG</span>
-      <strong>{song}</strong>
+      <span className="nsp-song-note">PROFILE SONG</span>{" "}
+      <strong>{song}</strong>{" "}
       <small>No file, no autoplay — this site publishes a document, not a sound.</small>
     </p>
   );

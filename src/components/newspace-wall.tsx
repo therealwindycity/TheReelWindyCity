@@ -95,8 +95,8 @@ export default function NewspaceWall({ entries }: { entries: WallEntry[] }) {
             </div>
             <div className="nsp-wall-body">
               <p className="nsp-wall-byline">
-                <strong>{entry.author}</strong>
-                <span>{entry.role}</span>
+                <strong>{entry.author}</strong>{" "}
+                <span>{entry.role}</span>{" "}
                 <em>{entry.at}</em>
               </p>
               <blockquote>{entry.body}</blockquote>
@@ -153,8 +153,8 @@ export default function NewspaceWall({ entries }: { entries: WallEntry[] }) {
             {notes.map((note) => (
               <li key={note.id}>
                 <p className="nsp-wall-byline">
-                  <strong>{note.name}</strong>
-                  <span>your note · local</span>
+                  <strong>{note.name}</strong>{" "}
+                  <span>your note · local</span>{" "}
                   <em>{note.at}</em>
                 </p>
                 <p>{note.body}</p>

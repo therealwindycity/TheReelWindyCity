@@ -234,13 +234,13 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
       />
       <header className="seo-site-header">
         <a className="seo-brand" href={SITE_URL}>
-          <span>{SITE_NAME}</span>
+          <span>{SITE_NAME}</span>{" "}
           <small>Independent index of Cheyenne public records</small>
         </a>
         <nav aria-label="Site navigation">
-          <a href={siteUrl("meetings/")}>All meetings</a>
-          <a href={siteUrl("hub/")}>Live Government Hub</a>
-          <a href={siteUrl("transcripts/")}>Transcript archive</a>
+          <a href={siteUrl("meetings/")}>All meetings</a>{" "}
+          <a href={siteUrl("hub/")}>Live Government Hub</a>{" "}
+          <a href={siteUrl("transcripts/")}>Transcript archive</a>{" "}
           <a href="https://www.cheyennecity.org/Your-Government/City-Council/Minutes-and-Agendas" target="_blank" rel="noreferrer">
             Official city records
           </a>
@@ -249,8 +249,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
 
       <main className="seo-container seo-meeting-page">
         <nav className="seo-breadcrumbs" aria-label="Breadcrumb">
-          <a href={SITE_URL}>Home</a><span aria-hidden="true">/</span>
-          <a href={siteUrl("meetings/")}>Meeting archive</a><span aria-hidden="true">/</span>
+          <a href={SITE_URL}>Home</a>{" "}<span aria-hidden="true">/</span>{" "}
+          <a href={siteUrl("meetings/")}>Meeting archive</a>{" "}<span aria-hidden="true">/</span>{" "}
           <span>{meetingName(meeting)} · {meeting.shortDate}</span>
         </nav>
 
@@ -262,7 +262,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             It links to source documents and does not replace the official city record.
           </p>
           <div className="seo-page-actions">
-            <a className="seo-primary-link" href={interactiveUrl.toString()}>Open this meeting in Civic Cheyenne</a>
+            <a className="seo-primary-link" href={interactiveUrl.toString()}>Open this meeting in Civic Cheyenne</a>{" "}
             <a className="seo-secondary-link" href={siteUrl("meetings/")}>Browse all {MEETINGS.length.toLocaleString()} meetings</a>
           </div>
         </header>
@@ -270,21 +270,21 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
         <section className="seo-card" aria-labelledby="meeting-facts-heading">
           <h2 id="meeting-facts-heading">Meeting record</h2>
           <dl className="seo-facts">
-            <div><dt>Government body</dt><dd>{meeting.bodyLabel}</dd></div>
-            <div><dt>Scheduled date</dt><dd><time dateTime={meeting.date}>{meeting.dateLabel}</time></dd></div>
-            {meeting.time && <div><dt>Scheduled time</dt><dd>{meeting.time}</dd></div>}
-            {meeting.location && <div><dt>Posted location</dt><dd>{meeting.location}</dd></div>}
-            <div><dt>Calendar status</dt><dd>{meetingCalendarLabel(meeting)}</dd></div>
+            <div><dt>Government body</dt>{" "}<dd>{meeting.bodyLabel}</dd>{" "}</div>
+            <div><dt>Scheduled date</dt>{" "}<dd><time dateTime={meeting.date}>{meeting.dateLabel}</time></dd>{" "}</div>
+            {meeting.time && <div><dt>Scheduled time</dt>{" "}<dd>{meeting.time}</dd>{" "}</div>}
+            {meeting.location && <div><dt>Posted location</dt>{" "}<dd>{meeting.location}</dd>{" "}</div>}
+            <div><dt>Calendar status</dt>{" "}<dd>{meetingCalendarLabel(meeting)}</dd>{" "}</div>
             {meeting.calendarStatusEvaluatedAt && (
-              <div><dt>Calendar status evaluated</dt><dd>{formatEvaluationTimestamp(meeting.calendarStatusEvaluatedAt)} ({MEETINGS_TIME_ZONE})</dd></div>
+              <div><dt>Calendar status evaluated</dt>{" "}<dd>{formatEvaluationTimestamp(meeting.calendarStatusEvaluatedAt)} ({MEETINGS_TIME_ZONE})</dd>{" "}</div>
             )}
-            <div><dt>Outcome verification</dt><dd>{meetingOutcomeLabel(meeting)}</dd></div>
-            <div><dt>Archive documents</dt><dd>{meeting.docs.length}</dd></div>
-            <div><dt>Transcript file</dt><dd>{meeting.transcript ? "Listed in repository tree (auto-generated captions; not verified against audio)" : "Not linked in this index"}</dd></div>
+            <div><dt>Outcome verification</dt>{" "}<dd>{meetingOutcomeLabel(meeting)}</dd>{" "}</div>
+            <div><dt>Archive documents</dt>{" "}<dd>{meeting.docs.length}</dd>{" "}</div>
+            <div><dt>Transcript file</dt>{" "}<dd>{meeting.transcript ? "Listed in repository tree (auto-generated captions; not verified against audio)" : "Not linked in this index"}</dd>{" "}</div>
             {meeting.publisherStatusAtCapture && (
-              <div><dt>{`Publisher status at capture (${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED})`}</dt><dd>{meeting.publisherStatusAtCapture}</dd></div>
+              <div><dt>{`Publisher status at capture (${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED})`}</dt>{" "}<dd>{meeting.publisherStatusAtCapture}</dd>{" "}</div>
             )}
-            {displayMeetingNotes(meeting).map((note) => <div key={note}><dt>Archive note</dt><dd>{note}</dd></div>)}
+            {displayMeetingNotes(meeting).map((note) => <div key={note}><dt>Archive note</dt>{" "}<dd>{note}</dd>{" "}</div>)}
           </dl>
           <HubSnapshotFreshness note="calendar evaluation and official outcome verification are tracked separately." />
           {(meeting.upcoming || meeting.agendaPosted) && (
@@ -307,7 +307,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             <ol className="seo-agenda-items">
               {agendaItems.map((item) => (
                 <li key={item.number}>
-                  <span>Item {item.number} · {item.kind}</span>
+                  <span>Item {item.number} · {item.kind}</span>{" "}
                   <p>{item.text}</p>
                   <LegalCrossReference meetingId={meeting.id} itemNumber={item.number} text={item.text} kind={item.kind} sourceUrl={autoAgenda?.sourceUrl ?? meeting.official.agenda}/>
                 </li>
@@ -322,8 +322,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             <ul className="seo-source-list">
               {sources.map((source) => (
                 <li key={`${source.label}-${source.url}`}>
-                  <a href={source.url} target="_blank" rel="noreferrer">{source.label}</a>
-                  <span>{hostLabel(source.url)}</span>
+                  <a href={source.url} target="_blank" rel="noreferrer">{source.label}</a>{" "}
+                  <span>{hostLabel(source.url)}{" "}</span>
                 </li>
               ))}
             </ul>
@@ -385,8 +385,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             <ul className="seo-document-list">
               {transcripts.map((transcript) => (
                 <li key={`${transcript.repo}/${transcript.path}`}>
-                  <a href={transcript.local && transcript.publicPath ? siteUrl(transcript.publicPath) : githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">{readableName(transcript.path)}</a>
-                  <span>{transcript.path === meeting.transcript?.path ? "Preferred transcript · " : "Transcript source · "}{transcript.local ? "locally hosted copy" : transcript.repo}</span>
+                  <a href={transcript.local && transcript.publicPath ? siteUrl(transcript.publicPath) : githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">{readableName(transcript.path)}</a>{" "}
+                  <span>{transcript.path === meeting.transcript?.path ? "Preferred transcript · " : "Transcript source · "}{transcript.local ? "locally hosted copy" : transcript.repo}</span>{" "}
                   {transcript.local && <a href={githubBlobUrl(transcript.repo, transcript.path)} target="_blank" rel="noreferrer">Open the copy in GitHub</a>}
                 </li>
               ))}
@@ -400,8 +400,8 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             <ul className="seo-document-list">
               {meeting.docs.map((document) => (
                 <li key={`${document.repo}/${document.path}`}>
-                  <a href={githubBlobUrl(document.repo, document.path)} target="_blank" rel="noreferrer">{readableName(document.path)}</a>
-                  <span>{document.repo}</span>
+                  <a href={githubBlobUrl(document.repo, document.path)} target="_blank" rel="noreferrer">{readableName(document.path)}</a>{" "}
+                  <span>{document.repo}{" "}</span>
                 </li>
               ))}
             </ul>
@@ -416,14 +416,14 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
             <h2 id="nearby-meetings-heading">More {meeting.bodyLabel} records</h2>
             <ul>
               {nearbyMeetings.map((neighbor) => (
-                <li key={neighbor.id}><a href={siteUrl(`meetings/${neighbor.id}/`)}>{meetingName(neighbor)} · {neighbor.dateLabel}</a></li>
+                <li key={neighbor.id}><a href={siteUrl(`meetings/${neighbor.id}/`)}>{meetingName(neighbor)} · {neighbor.dateLabel}</a>{" "}</li>
               ))}
             </ul>
           </nav>
         ) : null}
 
         <footer className="seo-footer">
-          <p>Civic Cheyenne is an independent civic-learning project, not an official City of Cheyenne service.</p>
+          <p>Civic Cheyenne is an independent civic-learning project, not an official City of Cheyenne service.</p>{" "}
           <a href={SITE_URL}>Civic Cheyenne home</a>
         </footer>
       </main>

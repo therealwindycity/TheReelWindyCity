@@ -172,9 +172,7 @@ export default function WyomingEcosystemMap({ points }: { points: EcosystemMapPo
         <div className="eco-map-canvas" ref={container} role="application" aria-label="Map of Wyoming city and county government reference points. Markers are not legal boundaries." />
         <div className="eco-map-place"><MapPin size={13} aria-hidden="true" /> Wyoming · reference points, not boundaries</div>
         <div className="custom-map-controls">
-          <button type="button" aria-label="Zoom in" onClick={() => mapRef.current?.zoomIn()}><Plus size={17} /></button>
-          <button type="button" aria-label="Zoom out" onClick={() => mapRef.current?.zoomOut()}><Minus size={17} /></button>
-          <button type="button" aria-label="Reset map to Wyoming" onClick={() => mapRef.current?.flyTo({ center: CENTER, zoom: 5.45 })}><LocateFixed size={17} /></button>
+          <button type="button" aria-label="Zoom in" onClick={() => mapRef.current?.zoomIn()}><Plus size={17} /></button>{" "}<button type="button" aria-label="Zoom out" onClick={() => mapRef.current?.zoomOut()}><Minus size={17} /></button>{" "}<button type="button" aria-label="Reset map to Wyoming" onClick={() => mapRef.current?.flyTo({ center: CENTER, zoom: 5.45 })}><LocateFixed size={17} /></button>
         </div>
         {!ready && !failed && <div className="map-loading">Loading Wyoming’s map…</div>}
         {failed && <div className="map-unavailable"><MapPin size={22} /><strong>Map tiles are unavailable</strong><span>The list beside the map still names every government, and the <a href={asset("hub/wyoming/entities/")}>full directory</a> carries the same sites.</span></div>}
