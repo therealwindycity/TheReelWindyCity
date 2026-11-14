@@ -1,0 +1,88 @@
+{
+  "schema": 1,
+  "project_credit": "CM",
+  "observed_at": "2026-11-14T03:53:12.081Z",
+  "scope": "Bounded workflow metadata and check annotations; no raw logs or source-freshness certification",
+  "workflows": [
+    {
+      "name": "Deploy to GitHub Pages",
+      "id": 43553880124,
+      "sha": "c7698a4e955756623ce51e222ab95c6b0c9196e8",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553880124",
+      "created_at": "2026-11-14T03:53:08Z",
+      "jobs": [
+        {
+          "name": "build",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553880124/job/132322224067",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "in_progress",
+              "conclusion": null
+            }
+          ]
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "name": "Verify public meeting features",
+      "id": 43553673896,
+      "sha": "905e067e2aeca0dd91dac31a5443b585a747833e",
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553673896",
+      "created_at": "2026-11-14T03:50:33Z",
+      "jobs": [
+        {
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "skipped",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553673896/job/132321599012",
+          "steps": []
+        }
+      ],
+      "annotations": []
+    },
+    {
+      "name": "Frequent public refresh",
+      "id": 43552087461,
+      "sha": "fe42d4451fb874dd0b30061b9366c18ecce1479b",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43552087461",
+      "created_at": "2026-11-14T03:31:39Z",
+      "jobs": [
+        {
+          "name": "coordinate",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43552087461/job/132316618029",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Request bounded checks and publication using existing workflows",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "annotations": []
+    }
+  ],
+  "gaps": []
+}
