@@ -1,42 +1,58 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-14T03:54:43.377Z",
+  "observed_at": "2026-11-14T04:00:49.086Z",
   "scope": "Bounded workflow metadata and check annotations; no raw logs or source-freshness certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 43553981992,
-      "sha": "c7698a4e955756623ce51e222ab95c6b0c9196e8",
-      "status": "completed",
-      "conclusion": "skipped",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553981992",
-      "created_at": "2026-11-14T03:54:26Z",
+      "id": 43554484227,
+      "sha": "2a741e662e6f1a7887207a7d76d35ab9eaa83e40",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43554484227",
+      "created_at": "2026-11-14T04:00:44Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
-          "conclusion": "skipped",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553981992/job/132322544657",
-          "steps": []
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43554484227/job/132324117348",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify public HTML features for CM",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
         }
       ],
       "annotations": []
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 43553880124,
-      "sha": "c7698a4e955756623ce51e222ab95c6b0c9196e8",
+      "id": 43554203989,
+      "sha": "2a741e662e6f1a7887207a7d76d35ab9eaa83e40",
       "status": "completed",
-      "conclusion": "failure",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553880124",
-      "created_at": "2026-11-14T03:53:08Z",
+      "conclusion": "success",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43554203989",
+      "created_at": "2026-11-14T03:57:15Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
-          "conclusion": "failure",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553880124/job/132322224067",
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43554203989/job/132323243086",
           "steps": [
             {
               "name": "Set up job",
@@ -61,57 +77,57 @@
             {
               "name": "CM calendar and source-check regression gate",
               "status": "completed",
-              "conclusion": "failure"
+              "conclusion": "success"
             },
             {
               "name": "Restore scanner-archive linkage cache",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Refresh the Socrata scanner-archive linkage database",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Check official posted meetings with explicit unavailable state",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Restore legal audit discovery cache",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Discover and screen official meeting agendas",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Save legal audit discovery cache",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Enable GitHub Pages if not already enabled",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Build static site",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Stamp exact built revision without claiming fresh collection",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Run actions/upload-pages-artifact@v3",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Preserve build and collection diagnostics",
@@ -119,9 +135,14 @@
               "conclusion": "success"
             },
             {
+              "name": "Post Restore scanner-archive linkage cache",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
               "name": "Post Run actions/setup-node@v4",
               "status": "completed",
-              "conclusion": "skipped"
+              "conclusion": "success"
             },
             {
               "name": "Post Run actions/checkout@v4",
@@ -138,37 +159,48 @@
         {
           "name": "deploy",
           "status": "completed",
-          "conclusion": "skipped",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553880124/job/132322528559",
-          "steps": []
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43554203989/job/132323915820",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Run actions/deploy-pages@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify exact public revision and run",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify published sitemap and robots.txt",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Post Run actions/checkout@v4",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
         }
       ],
-      "annotations": [
-        {
-          "job": "build",
-          "path": ".github",
-          "line": 2,
-          "level": "warning",
-          "title": "",
-          "message": "Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/checkout@v4, actions/setup-node@v4, actions/upload-artifact@v4. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/"
-        },
-        {
-          "job": "build",
-          "path": ".github",
-          "line": 100,
-          "level": "failure",
-          "title": "",
-          "message": "Process completed with exit code 1."
-        },
-        {
-          "job": "build",
-          "path": ".github",
-          "line": 1,
-          "level": "notice",
-          "title": "",
-          "message": "\"The ubuntu-latest label will migrate to Ubuntu 26 beginning October 19, 2026. For more information, see https://github.com/actions/runner-images/issues/14748\""
-        }
-      ]
+      "annotations": []
     },
     {
       "name": "Frequent public refresh",
