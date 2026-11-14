@@ -1,20 +1,20 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-14T04:59:23.463Z",
+  "observed_at": "2026-11-14T18:25:14.585Z",
   "scope": "Candidate execution metadata only; no production cutover or source-freshness certification",
   "run": {
-    "id": 43558138124,
-    "sha": "ecaa3be4bf8bb771e8922b7367d1df2c2bd1a030",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43558138124",
+    "id": 43626313293,
+    "sha": "f07fda96a9e3567e27f99a44f29226cfd0df2c53",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313293",
     "status": "completed",
-    "conclusion": "failure",
+    "conclusion": "success",
     "jobs": [
       {
         "name": "stage",
-        "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43558138124/job/132335554269",
+        "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313293/job/132542796579",
         "status": "completed",
-        "conclusion": "failure",
+        "conclusion": "success",
         "steps": [
           {
             "name": "Set up job",
@@ -29,16 +29,20 @@
             "conclusion": "success"
           },
           {
+            "name": "Generate required civic data before snapshot staging",
+            "conclusion": "success"
+          },
+          {
             "name": "Run node clean-web/build.mjs --stage",
-            "conclusion": "failure"
+            "conclusion": "success"
           },
           {
             "name": "Run actions/upload-artifact@v4",
-            "conclusion": "skipped"
+            "conclusion": "success"
           },
           {
             "name": "Post Run actions/setup-node@v4",
-            "conclusion": "skipped"
+            "conclusion": "success"
           },
           {
             "name": "Post Run actions/checkout@v4",
@@ -52,10 +56,47 @@
       },
       {
         "name": "build",
-        "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43558138124/job/132335661472",
+        "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313293/job/132543171587",
         "status": "completed",
-        "conclusion": "skipped",
-        "steps": []
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/setup-node@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/download-artifact@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run node clean-web/build.mjs --build",
+            "conclusion": "success"
+          },
+          {
+            "name": "Run actions/upload-artifact@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/setup-node@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Post Run actions/checkout@v4",
+            "conclusion": "success"
+          },
+          {
+            "name": "Complete job",
+            "conclusion": "success"
+          }
+        ]
       }
     ]
   }
