@@ -1,0 +1,175 @@
+{
+  "project_credit": "CM",
+  "source_run": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313141",
+  "source_revision": "f07fda96a9e3567e27f99a44f29226cfd0df2c53",
+  "artifact_id": 14126147575,
+  "observed_at": "2026-11-14T18:44:29.683Z",
+  "scope": "Recovery of previously tested patch and push failure evidence only; no application to main or deployment",
+  "patch_sha256": "2713a33513960844035805603b52c7f34188ff46af8d8cadfbdd025b0de95944",
+  "files": [
+    {
+      "path": ".github/workflows/ci.yml",
+      "change": "M",
+      "review_path": "recovered/.github/workflows/ci.yml",
+      "sha256": "1968dad0ec8e6545b5214bcb59dc0446ab935c138f25dec8b8ea3b321f43483c",
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/historical_harvest.yml",
+      "change": "M",
+      "review_path": "recovered/.github/workflows/historical_harvest.yml",
+      "sha256": "7766849f749a246bb44ac88beab15e2ad61b8d7c0c405cb8c7991992566ffaf5",
+      "mode": "100644"
+    },
+    {
+      "path": ".github/workflows/promethean_autoharvest.yml",
+      "change": "M",
+      "review_path": "recovered/.github/workflows/promethean_autoharvest.yml",
+      "sha256": "128463bbdb81a8318134d0e275ed6e64b31b133bb86076b734301dbb6bf579e1",
+      "mode": "100644"
+    },
+    {
+      "path": "READ-FIRST.md",
+      "change": "M",
+      "review_path": "recovered/READ-FIRST.md",
+      "sha256": "37e5872eb59bcb581d5c323947e9552997bc43aa30e2322bf1341b63873eff7e",
+      "mode": "100644"
+    },
+    {
+      "path": "database/schema_rhetorical_profiling.sql",
+      "change": "M",
+      "review_path": "recovered/database/schema_rhetorical_profiling.sql",
+      "sha256": "334d4eaec1b3a4ef9399d10675667dcd93c719c931990b7d4e299d369069d4af",
+      "mode": "100644"
+    },
+    {
+      "path": "package.json",
+      "change": "M",
+      "review_path": "recovered/package.json",
+      "sha256": "2eae6eac311324ae47105e94d2e9518d79d0f2e33e8647dea25fec1a99e3e26b",
+      "mode": "100644"
+    },
+    {
+      "path": "public/.nojekyll",
+      "change": "A",
+      "review_path": "recovered/public/.nojekyll",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mode": "100644"
+    },
+    {
+      "path": "scrapers/granicus_harvester.py",
+      "change": "M",
+      "review_path": "recovered/scrapers/granicus_harvester.py",
+      "sha256": "1562f454a7751abaae0f61575e84001ff43dd91a327d79f186be5807d100ff88",
+      "mode": "100755"
+    },
+    {
+      "path": "src/app/globals.css",
+      "change": "M",
+      "review_path": "recovered/src/app/globals.css",
+      "sha256": "dc328c59961eb499c16831e9aba196bb5fa25950e3e36252595fc37a9963777b",
+      "mode": "100644"
+    },
+    {
+      "path": "src/app/meetings/[id]/page.tsx",
+      "change": "M",
+      "review_path": "recovered/src/app/meetings/[id]/page.tsx",
+      "sha256": "f8b63fc923995236d9e3cc9455fcd8f53ced517107c253db51fb4078e7867fc5",
+      "mode": "100644"
+    },
+    {
+      "path": "src/app/meetings/page.tsx",
+      "change": "M",
+      "review_path": "recovered/src/app/meetings/page.tsx",
+      "sha256": "b9c7660ad122aaadb7ef513938fb3884ee85c950b490b02428d0732565c79e03",
+      "mode": "100644"
+    },
+    {
+      "path": "src/app/mynewspace/page.tsx",
+      "change": "M",
+      "review_path": "recovered/src/app/mynewspace/page.tsx",
+      "sha256": "f01a727056fcd3a4ae7ed66734ebc63d28975877e87c1a58aaa14677667079e2",
+      "mode": "100644"
+    },
+    {
+      "path": "src/app/transcripts/page.tsx",
+      "change": "M",
+      "review_path": "recovered/src/app/transcripts/page.tsx",
+      "sha256": "1d5b55e9892f3705e59be8978fdacec2ebc8d76a988db2297542d6be46cfbfe8",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/newspace-live.tsx",
+      "change": "M",
+      "review_path": "recovered/src/components/newspace-live.tsx",
+      "sha256": "e769fa2a88327a686ad49a71216e80b1793216eafe35345d8e88041193cd6079",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/newspace-studio.tsx",
+      "change": "M",
+      "review_path": "recovered/src/components/newspace-studio.tsx",
+      "sha256": "bc77610ab7468c7a438449c5338602d6b41e0a7222b21b1f9c2567337f730da9",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/newspace-wall.tsx",
+      "change": "M",
+      "review_path": "recovered/src/components/newspace-wall.tsx",
+      "sha256": "f7888fa9aecd672fe9523833f530f84633758789a3d73eae342b8e76465bc1af",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/public-shell.tsx",
+      "change": "M",
+      "review_path": "recovered/src/components/public-shell.tsx",
+      "sha256": "a38079f6898ea7c1fe6ac92eb25b3a76b7149c1069d512af205ae47f201b616e",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/pulse-broadcast.tsx",
+      "change": "M",
+      "review_path": "recovered/src/components/pulse-broadcast.tsx",
+      "sha256": "cd9a03ea79579acc5a6d605bbd5ba20ab89a6a2e4adc7e2ca51545a03a0c99ac",
+      "mode": "100644"
+    },
+    {
+      "path": "src/components/wyoming-ecosystem-map.tsx",
+      "change": "M",
+      "review_path": "recovered/src/components/wyoming-ecosystem-map.tsx",
+      "sha256": "183f1c2fc1ca2b4b83eb8ad4d035f62f87a1cf3eda8e1202f963a6fb8c53dec5",
+      "mode": "100644"
+    },
+    {
+      "path": "tests/test_granicus_harvester.py",
+      "change": "A",
+      "review_path": "recovered/tests/test_granicus_harvester.py",
+      "sha256": "f406e8c97c59910d1d765bd4848f2aff51e3462af1757f6cb9924245f7c91a33",
+      "mode": "100644"
+    },
+    {
+      "path": "tests/text-separation.mjs",
+      "change": "A",
+      "review_path": "recovered/tests/text-separation.mjs",
+      "sha256": "ccb0528d4005204f2b102f51607f55cb3c0d37009fbad9cd87945bc374392b17",
+      "mode": "100644"
+    },
+    {
+      "path": "tests/wyoming-watch.test.mjs",
+      "change": "M",
+      "review_path": "recovered/tests/wyoming-watch.test.mjs",
+      "sha256": "10737daff15faca889aab0188bf3f26c18b375a427729374556abb89307e4a1d",
+      "mode": "100644"
+    }
+  ],
+  "push_rejection_context": [
+    {
+      "log": "cm-remediation-verification-1.log",
+      "lines": []
+    },
+    {
+      "log": "cm-remediation-verification-2.log",
+      "lines": []
+    }
+  ]
+}

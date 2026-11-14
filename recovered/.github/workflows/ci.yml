@@ -1,0 +1,128 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main, "arena/**"]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Legal cross-reference tests
+        run: |
+          npm run test:legal-cross-reference
+          npm run test:legal-audit
+          npm run test:legal-evidence
+          npm run test:legal-support
+      - name: Wyoming ecosystem catalog invariants
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:ecosystem`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:ecosystem 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Wyoming statewide watch
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:wyoming-watch`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:wyoming-watch 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Place archive repo rules
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:places`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:places 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Sync pipeline tests (red-team regression suite)
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:sync`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:sync 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Wyoming Pulse RSS parsing and source-data tests
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:pulse`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:pulse 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Filename-dated archive indexing regression tests
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:filenames`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:filenames 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Scanner-archive linkage tests (Socrata ↔ Broadcastify join)
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:scanner-archive-links`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:scanner-archive-links 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Local transcript coverage and caption-import tests
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:transcripts`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:transcripts 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Meeting calendar status and freshness tests (injected clock)
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:calendar`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:calendar 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+      - name: Build static site
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run build`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run build 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - name: Audit the exported SEO surface (every meeting page, sitemap, canonicals)
+        run: |
+          set -o pipefail
+          echo '### Command: `npm run test:seo`' >> CI_DIAGNOSTICS.md
+          echo '```text' >> CI_DIAGNOSTICS.md
+          npm run test:seo 2>&1 | tee -a CI_DIAGNOSTICS.md
+          echo '```' >> CI_DIAGNOSTICS.md
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Serve and run browser smoke tests (GitHub Pages path)
+        run: |
+          mkdir -p /tmp/pages && ln -s "$PWD/out" "/tmp/pages/${{ github.event.repository.name }}"
+          PORT=3000 node scripts/serve.mjs /tmp/pages &
+          for i in $(seq 1 30); do curl -sf "http://127.0.0.1:3000/${{ github.event.repository.name }}/" >/dev/null && break; sleep 1; done
+          BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:e2e
+          # Labels must stay separated for tag-stripping extractors and for assistive technology.
+          BASE_URL="http://127.0.0.1:3000/${{ github.event.repository.name }}" npm run test:text-separation
+
+      - name: Upload CI diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-diagnostics
+          path: CI_DIAGNOSTICS.md
+          if-no-files-found: ignore
