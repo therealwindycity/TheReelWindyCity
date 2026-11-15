@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-14T18:45:42.711Z",
+  "checkedAt": "2026-11-15T19:24:02.428Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -7,7 +7,7 @@
   "warnings": 6,
   "recorded": 91,
   "delegated": 1,
-  "changed": true,
+  "changed": false,
   "structural": 2,
   "results": [
     {
@@ -967,8 +967,8 @@
       "status": 200,
       "finalUrl": "https://www.grwyo.org/AgendaCenter",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "af534ce28f539ab8efd15a8761b91a7b1bd8c9ac86ba614df4632d26e47bb648",
       "records": 69
@@ -1170,8 +1170,8 @@
       "status": 200,
       "finalUrl": "https://cityoflaramie.org/AgendaCenter",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "5f010fed2ec491cac304ebbbc34997a60cdf8e29b3d2fb0670c335ec5d98d848",
       "records": 509
