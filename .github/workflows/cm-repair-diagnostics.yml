@@ -1,0 +1,74 @@
+name: CM repair diagnostics
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-repair-diagnostics.yml']
+  workflow_run:
+    workflows: ['CM public display repair']
+    types: [completed]
+    branches: [main]
+  workflow_dispatch: {}
+permissions:
+  actions: write
+  checks: read
+  contents: write
+concurrency:
+  group: cm-repair-diagnostics
+  cancel-in-progress: false
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const target = {...context.repo};
+            const workflow_id = 'cm-public-display-repair.yml';
+            const report = {schema:1,observed_at:new Date().toISOString(),scope:'Repair job outcomes and allowlisted failure classifications; no raw logs or certification of public data',repair:null,retry:null,gaps:[]};
+            const runs=(await github.rest.actions.listWorkflowRuns({...target,workflow_id,branch:'main',per_page:10})).data.workflow_runs;
+            const run=runs[0];
+            if(!run)report.gaps.push({check:'repair_run',reason:'No repair run found'});
+            else {
+              report.repair={id:run.id,revision:run.head_sha,status:run.status,conclusion:run.conclusion,url:run.html_url,created_at:run.created_at,jobs:[],annotations:[],failure_classes:[]};
+              const jobs=(await github.rest.actions.listJobsForWorkflowRun({...target,run_id:run.id,per_page:30})).data.jobs;
+              report.repair.jobs=jobs.map(j=>({id:j.id,name:j.name,status:j.status,conclusion:j.conclusion,url:j.html_url,started_at:j.started_at,completed_at:j.completed_at,steps:(j.steps||[]).map(s=>({name:s.name,status:s.status,conclusion:s.conclusion}))}));
+              for(const job of jobs.filter(j=>['failure','timed_out'].includes(j.conclusion)).slice(0,3)){
+                const check=job.check_run_url?.match(/check-runs\/(\d+)$/);
+                if(check){
+                  try {
+                    const annotations=(await github.rest.checks.listAnnotations({...target,check_run_id:Number(check[1]),per_page:10})).data;
+                    report.repair.annotations.push(...annotations.map(a=>({job:job.name,path:a.path,line:a.start_line,title:a.title,level:a.annotation_level,message:(a.message||'').slice(0,1600)})));
+                  }catch(e){report.gaps.push({check:'repair_annotations',status:e.status||null});}
+                }
+                try {
+                  const response=await github.rest.actions.downloadJobLogsForWorkflowRun({...target,job_id:job.id});
+                  const text=typeof response.data==='string'?response.data:Buffer.from(response.data).toString('utf8');
+                  if(Buffer.byteLength(text)>8000000){report.gaps.push({check:'failure_classification',reason:'Log exceeds inspection limit'});continue;}
+                  const rules=[
+                    ['main_advanced',/^\S+\s+Main changed; refusing to overwrite newer work\.\s*$/m],
+                    ['patch_anchor_mismatch',/^\S+\s+RuntimeError: Expected exactly one repair anchor in /m],
+                    ['generated_workflow_invalid',/^\S+\s+(?:Error: )?Invalid generated verification step\s*$/m],
+                    ['typescript_error',/error TS\d+:/],
+                    ['workflow_write_permission_denied',/refusing to allow a GitHub App to create or update workflow/i]
+                  ];
+                  for(const [code,pattern] of rules)if(pattern.test(text))report.repair.failure_classes.push({job:job.name,code});
+                }catch(e){report.gaps.push({check:'failure_classification',status:e.status||null,reason:'Could not inspect bounded job logs'});}
+              }
+              const mainAdvanced=report.repair.failure_classes.some(x=>x.code==='main_advanced');
+              const running=runs.some(r=>r.status!=='completed');
+              const initiatingEvent=['push','workflow_dispatch'].includes(context.eventName);
+              if(initiatingEvent&&run.status==='completed'&&run.conclusion==='failure'&&mainAdvanced&&!running){
+                const head=(await github.rest.repos.getCommit({...target,ref:'main'})).data.sha;
+                if(head!==run.head_sha){
+                  await github.rest.actions.createWorkflowDispatch({...target,workflow_id,ref:'main'});
+                  report.retry={requested:true,ref:'main',observed_revision:head,reason:'Confirmed main-advance guard; retrying the previously approved guarded repair. Completion and publication remain unverified.'};
+                }
+              }
+            }
+            const branch='cm-deployment-status';
+            const path='status/public-display-repair.json';
+            let sha;
+            try{sha=(await github.rest.repos.getContent({...target,path,ref:branch})).data.sha;}catch(e){if(e.status!==404)throw e;}
+            await github.rest.repos.createOrUpdateFileContents({...target,branch,path,sha,message:'CM: record public display repair diagnostics [skip ci]',content:Buffer.from(JSON.stringify(report,null,2)+'\n').toString('base64')});
+            await core.summary.addHeading('Public display repair diagnostics').addRaw('Saved status/public-display-repair.json on cm-deployment-status. Retry is allowed only on an initiating event after a classified main-advance failure; completion events never trigger retry loops. Raw logs are not stored.').write();
