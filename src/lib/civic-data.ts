@@ -328,12 +328,18 @@ export function displayMeetingNotes(meeting: Meeting): string[] {
  * Evaluate whether a build-time `"upcoming"` or `"same-day-time-unverified"`
  * status has expired in the visitor's browser since the static HTML was built.
  */
+export function meetingScheduleProvenance(meeting: Meeting): string {
+  const observed = meeting.postedOnOfficialTable ? formatEvaluationTimestamp(meeting.sourceObservedAt) : null;
+  if (observed) return `Official schedule posting checked ${observed}`;
+  return `Archive schedule snapshot (${meeting.snapshotCapturedAt || MEETINGS_CAPTURED || "capture date unknown"}); current posting not verified`;
+}
+
 function calendarStatusPhrase(meeting: Meeting, status: MeetingCalendarStatus, expiredSinceBuild: boolean): string {
   if (status === "upcoming") {
     if (meeting.archiveUnavailable || meeting.ingestionStage === "posting-discovered") {
-      return "Official posting detected; archive unavailable";
+      return `${meetingScheduleProvenance(meeting)} · agenda archive unavailable`;
     }
-    return `Next posted meeting as of snapshot (${MEETINGS_CAPTURED || "unrecorded capture date"})`;
+    return `Future-dated meeting at calendar evaluation · ${meetingScheduleProvenance(meeting)}`;
   }
   if (status === "same-day-time-unverified") {
     return "Scheduled for today; start time not verified.";

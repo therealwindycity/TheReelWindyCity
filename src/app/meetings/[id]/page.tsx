@@ -5,7 +5,7 @@ import ClickToLoadYouTube from "@/components/click-to-load-youtube";
 import HubSnapshotFreshness from "@/components/hub-snapshot-freshness";
 import LegalCrossReference from "@/components/legal-cross-reference";
 import { automatedAgenda } from "@/lib/legal-cross-reference";
-import { ARCHIVE_OWNER, MEETINGS, MEETINGS_CAPTURED, MEETINGS_TIME_ZONE, displayMeetingNotes, formatEvaluationTimestamp, meetingCalendarLabel, meetingOutcomeLabel, readableName, type Meeting } from "@/lib/civic-data";
+import { ARCHIVE_OWNER, MEETINGS, MEETINGS_CAPTURED, MEETINGS_TIME_ZONE, displayMeetingNotes, formatEvaluationTimestamp, meetingCalendarLabel, meetingScheduleProvenance, meetingOutcomeLabel, readableName, type Meeting } from "@/lib/civic-data";
 import { SITE_NAME, SITE_URL, siteUrl } from "@/lib/site-config";
 
 export const dynamic = "force-static";
@@ -255,7 +255,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
         </nav>
 
         <header className="seo-page-heading">
-          <p className="seo-eyebrow">{meeting.upcoming ? "POSTED PUBLIC AGENDA SNAPSHOT" : meeting.agendaPosted ? "PUBLIC-RECORD ENTRY · POSTED AGENDA" : "HISTORICAL PUBLIC-RECORD ENTRY"}</p>
+          <p className="seo-eyebrow">{meeting.upcoming ? "SCHEDULED MEETING · CHECK SOURCE TIMESTAMP" : meeting.agendaPosted ? "PUBLIC-RECORD ENTRY · POSTED AGENDA" : "HISTORICAL PUBLIC-RECORD ENTRY"}</p>
           <h1>{meetingHeading(meeting)}</h1>
           <p className="seo-lede">
             This independent index brings together the available public records for the {meeting.bodyLabel} on {meeting.dateLabel}.
@@ -290,7 +290,7 @@ export default async function MeetingRecordPage({ params }: MeetingPageProps) {
           {(meeting.upcoming || meeting.agendaPosted) && (
             <p className="seo-record-notice">
               {meeting.upcoming
-                ? `This agenda snapshot was captured on ${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED}. Agendas describe proposed business as of capture; consult official minutes for recorded actions.`
+                ? `${meetingScheduleProvenance(meeting)}. A schedule check does not refresh archived agenda text. Agendas describe proposed business; consult official minutes for recorded actions.`
                 : `This agenda was posted for a date that has passed. Passing a scheduled date or time never establishes whether the body met or what it decided; check official minutes, adopted text, and recordings for outcomes.`}
             </p>
           )}

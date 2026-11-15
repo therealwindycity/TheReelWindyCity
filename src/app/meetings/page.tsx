@@ -85,7 +85,7 @@ export default function MeetingArchivePage() {
           <p className="seo-eyebrow">PUBLIC RECORDS · CHEYENNE, WYOMING</p>
           <h1>Cheyenne public meeting archive</h1>
           <p className="seo-lede">
-            Browse {MEETING_STATS.totalMeetings.toLocaleString()} meeting entries across nine government bodies, from {MEETING_STATS.earliest} through {MEETING_STATS.latest}.
+            Browse {MEETING_STATS.totalMeetings.toLocaleString()} meeting entries across {Object.keys(MEETING_STATS.byBody).length} government bodies, from {MEETING_STATS.earliest} through {MEETING_STATS.latest}.
             Each record page lists available official links, archived repository files, and a timestamped transcript where one is indexed.
           </p>
           <p className="seo-capture-note">
@@ -97,8 +97,8 @@ export default function MeetingArchivePage() {
         </header>
 
         <section className="seo-stats-grid" aria-label="Archive coverage statistics">
-          <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong>{" "}<span>historical meeting entries</span>{" "}</div>
-          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong>{" "}<span>upcoming meetings confirmed as of snapshot</span>{" "}</div>
+          <div><strong>{MEETING_STATS.pastMeetings.toLocaleString()}</strong>{" "}<span>other indexed meeting entries</span>{" "}</div>
+          <div><strong>{MEETING_STATS.upcomingMeetings.toLocaleString()}</strong>{" "}<span>future-dated postings at calendar evaluation</span>{" "}</div>
           <div><strong>{MEETING_STATS.totalDocuments.toLocaleString()}</strong>{" "}<span>archived documents indexed</span>{" "}</div>
           <div><strong>{(MEETING_STATS.totalTranscriptFiles ?? MEETING_STATS.totalTranscripts).toLocaleString()}</strong>{" "}<span>{transcriptCountSummary()}</span>{" "}</div>
         </section>
@@ -115,7 +115,7 @@ export default function MeetingArchivePage() {
             <section className="seo-card seo-archive-year" id={sectionId(group.label)} key={group.label} aria-labelledby={`${sectionId(group.label)}-heading`}>
               <div className="seo-archive-year-heading">
                 <div>
-                  <p className="seo-eyebrow">{group.label === "Upcoming agendas" ? "AGENDA POSTED AS OF SNAPSHOT" : "ARCHIVE YEAR"}</p>
+                  <p className="seo-eyebrow">{group.label === "Upcoming agendas" ? "POSTED SCHEDULE · CHECK TIMESTAMPS" : "ARCHIVE YEAR"}</p>
                   <h2 id={`${sectionId(group.label)}-heading`}>{group.label}</h2>
                 </div>
                 <span>{group.meetings.length.toLocaleString()} meeting entries</span>

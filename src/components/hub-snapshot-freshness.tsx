@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { CalendarClock, TriangleAlert } from "lucide-react";
 import { getSnapshotFreshness, SNAPSHOT_STALE_AFTER_DAYS } from "@/lib/hub-sources";
-import { LIVE_SOURCE_CHECK, MEETING_STATS, OFFICIAL_SCHEDULE_URL, UPCOMING_MEETINGS, evaluateMeetingCalendarAt, formatEvaluationTimestamp } from "@/lib/civic-data";
+import { asset, LIVE_SOURCE_CHECK, MEETING_STATS, OFFICIAL_SCHEDULE_URL, UPCOMING_MEETINGS, evaluateMeetingCalendarAt, formatEvaluationTimestamp } from "@/lib/civic-data";
 
 const BUILD_REFERENCE_DATE = MEETING_STATS.calendarStatusEvaluatedAt
   ? new Date(MEETING_STATS.calendarStatusEvaluatedAt)
@@ -28,14 +28,15 @@ export function HubSnapshotFreshness({ note }: { note?: string }) {
   const checkUnknown = !LIVE_SOURCE_CHECK || !Number.isFinite(checkMs);
   const ageMs = reference.getTime() - checkMs;
   const checkOverdue = !checkUnknown && (ageMs > SCHEDULE_CHECK_MAX_AGE_MS || ageMs < -300_000 || LIVE_SOURCE_CHECK?.stale === true);
-  const checkWarning = checkFailed || checkUnknown || checkOverdue;
+  const checkNotUsed = LIVE_SOURCE_CHECK?.ok === true && LIVE_SOURCE_CHECK.used === false;
+  const checkWarning = checkFailed || checkUnknown || checkOverdue || checkNotUsed;
   const staleOrExpired = freshness.stale || expiredMeetings.length > 0 || checkWarning;
   const evaluatedLabel = formatEvaluationTimestamp(freshness.calendarEvaluatedAt);
   const watcherLabel = formatEvaluationTimestamp(freshness.watcherCheckedAt);
   const scheduleLabel = formatEvaluationTimestamp(LIVE_SOURCE_CHECK?.observedAt);
 
   return (
-    <p className={`gov-freshness${staleOrExpired ? " gov-freshness--stale" : ""}`} data-expired={expiredMeetings.length > 0 ? "true" : "false"} data-schedule-check={checkFailed ? "failed" : checkUnknown ? "unknown" : checkOverdue ? "overdue" : "recent"}>
+    <p className={`gov-freshness${staleOrExpired ? " gov-freshness--stale" : ""}`} data-expired={expiredMeetings.length > 0 ? "true" : "false"} data-schedule-check={checkFailed ? "failed" : (checkUnknown || checkNotUsed) ? "unknown" : checkOverdue ? "overdue" : "recent"}>
       <span className="gov-freshness-icon" aria-hidden="true">{staleOrExpired ? <TriangleAlert size={14} /> : <CalendarClock size={14} />}</span>
       <span>
         <strong>{`Record snapshot · ${freshness.capturedLabel}`}</strong> ({freshness.ageLabel}
@@ -45,11 +46,12 @@ export function HubSnapshotFreshness({ note }: { note?: string }) {
         {checkFailed ? <> — <strong>Latest official schedule check failed.</strong> Previously captured records are not confirmation of the current schedule.</>
           : checkUnknown ? <> — <strong>Official schedule check status unknown.</strong> No valid live-check timestamp is available in this build.</>
           : checkOverdue ? <> — <strong>Official schedule check is stale or its timestamp needs review.</strong> The check exceeds the two-hour freshness target, was marked stale, or has an inconsistent timestamp.</>
+          : checkNotUsed ? <> — <strong>The saved schedule check was not used in this build.</strong> Displayed records are not confirmation of the current schedule.</>
           : <> — Official schedule check succeeded within the two-hour freshness target as of this evaluation; later changes remain possible.</>}
         {expiredMeetings.length > 0 && <> — <strong>Snapshot validity window passed</strong> for {expiredMeetings.map((m) => `${m.bodyLabel} (${m.shortDate})`).join(", ")}. Scheduled time has passed; outcomes are not verified by this warning.</>}
         {freshness.stale && ` — Archive snapshot is at least ${SNAPSHOT_STALE_AFTER_DAYS} days old; a recent schedule check does not refresh archived agenda contents.`}
         {note ? ` — ${note}` : ""}
-        {" "}<a href={OFFICIAL_SCHEDULE_URL} target="_blank" rel="noopener noreferrer">Confirm current postings on the official City of Cheyenne calendar</a>.
+        {" "}<a href={asset("status/source-check.json")}>View saved schedule-check evidence and deployment identity</a>.{" "}<a href={OFFICIAL_SCHEDULE_URL} target="_blank" rel="noopener noreferrer">Confirm current postings on the official City of Cheyenne calendar</a>.
       </span>
     </p>
   );
