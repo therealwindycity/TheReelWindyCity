@@ -1,58 +1,42 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-15T03:39:50.631Z",
+  "observed_at": "2026-11-15T03:45:56.846Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 43673348782,
-      "sha": "cfe6db2b9adeb4e7d1ebbfee8700b318217fda1d",
+      "id": 43673804025,
+      "sha": "0df1737608da919dc0db91e2589f065858fa9ef8",
       "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673348782",
-      "created_at": "2026-11-15T03:39:33Z",
+      "conclusion": "skipped",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673804025",
+      "created_at": "2026-11-15T03:45:52Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673348782/job/132688023830",
-          "steps": [
-            {
-              "name": "Set up job",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Verify public HTML features for CM",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
-            }
-          ]
+          "conclusion": "skipped",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673804025/job/132689426494",
+          "steps": []
         }
       ],
       "annotations": []
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 43673110478,
-      "sha": "cfe6db2b9adeb4e7d1ebbfee8700b318217fda1d",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673110478",
-      "created_at": "2026-11-15T03:36:16Z",
+      "id": 43673654429,
+      "sha": "0df1737608da919dc0db91e2589f065858fa9ef8",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673654429",
+      "created_at": "2026-11-15T03:43:49Z",
       "jobs": [
         {
           "name": "build",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673110478/job/132687296222",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673654429/job/132689411521",
           "steps": [
             {
               "name": "Set up job",
@@ -61,141 +45,83 @@
             },
             {
               "name": "Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "in_progress",
+              "conclusion": null
             },
             {
               "name": "Run actions/setup-node@v4",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Run npm ci",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "CM calendar and source-check regression gate",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Restore scanner-archive linkage cache",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Refresh the Socrata scanner-archive linkage database",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Check official posted meetings with explicit unavailable state",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Restore legal audit discovery cache",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Discover and screen official meeting agendas",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Save legal audit discovery cache",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Enable GitHub Pages if not already enabled",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Build static site",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Stamp exact built revision without claiming fresh collection",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Run actions/upload-pages-artifact@v3",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Preserve build and collection diagnostics",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Restore scanner-archive linkage cache",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Run actions/setup-node@v4",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             },
             {
               "name": "Post Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
-            }
-          ]
-        },
-        {
-          "name": "deploy",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673110478/job/132687882391",
-          "steps": [
-            {
-              "name": "Set up job",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Run actions/deploy-pages@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Verify exact public revision and run",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Verify published sitemap and robots.txt",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Post Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
+              "status": "pending",
+              "conclusion": null
             }
           ]
         }
