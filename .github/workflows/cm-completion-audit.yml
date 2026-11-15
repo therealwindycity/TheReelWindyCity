@@ -1,0 +1,185 @@
+name: CM completion audit
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-completion-audit.yml']
+  workflow_dispatch: {}
+permissions:
+  actions: write
+  contents: write
+concurrency:
+  group: cm-completion-audit
+  cancel-in-progress: false
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Refresh postings and reconcile publication within a bounded deadline
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const target={...context.repo};
+            const report={schema:1,started_at:new Date().toISOString(),operations:[],history:{},gaps:[]};
+            const deadline=Date.now()+18*60*1000;
+            const list=async workflow_id=>(await github.rest.actions.listWorkflowRuns({...target,workflow_id,branch:'main',per_page:20})).data.workflow_runs;
+            const compact=r=>({id:r.id,revision:r.head_sha,event:r.event,status:r.status,conclusion:r.conclusion,created_at:r.created_at,updated_at:r.updated_at,url:r.html_url});
+            async function runOrAwait(workflow_id,dispatchWhenIdle){
+              const before=await list(workflow_id);
+              report.history[workflow_id]=before.map(compact);
+              const op={workflow:workflow_id,dispatch_requested:false,run:null};
+              report.operations.push(op);
+              let selected=before.find(r=>r.status!=='completed');
+              if(!selected&&dispatchWhenIdle){
+                const since=Date.now()-10000;
+                await github.rest.actions.createWorkflowDispatch({...target,workflow_id,ref:'main'});
+                op.dispatch_requested=true;
+                while(Date.now()<deadline&&!selected){
+                  await new Promise(resolve=>setTimeout(resolve,15000));
+                  const candidates=(await list(workflow_id)).filter(r=>r.event==='workflow_dispatch'&&Date.parse(r.created_at)>=since&&!before.some(old=>old.id===r.id));
+                  if(candidates.length===1)selected=candidates[0];
+                  else if(candidates.length>1){report.gaps.push({workflow:workflow_id,reason:'Ambiguous concurrent dispatches; not attributing a run'});return;}
+                }
+              }
+              while(selected&&Date.now()<deadline){
+                selected=(await github.rest.actions.getWorkflowRun({...target,run_id:selected.id})).data;
+                op.run=compact(selected);
+                if(selected.status==='completed')break;
+                await new Promise(resolve=>setTimeout(resolve,30000));
+              }
+              if(!op.run||op.run.status!=='completed')report.gaps.push({workflow:workflow_id,reason:'Completion not established within the shared deadline'});
+              else if(op.run.conclusion!=='success')report.gaps.push({workflow:workflow_id,run:op.run.id,reason:'Workflow did not succeed',conclusion:op.run.conclusion});
+              return op;
+            }
+            try{await runOrAwait('live_city_watch.yml',true);}catch(e){report.gaps.push({workflow:'live_city_watch.yml',status:e.status||null,reason:String(e.message).slice(0,250)});}
+            if(Date.now()<deadline){
+              try{
+                const deploy=await runOrAwait('deploy-pages.yml',true);
+                if(deploy?.run?.status==='completed'&&deploy.run.conclusion!=='success'&&!deploy.dispatch_requested&&Date.now()<deadline)await runOrAwait('deploy-pages.yml',true);
+              }catch(e){report.gaps.push({workflow:'deploy-pages.yml',status:e.status||null,reason:String(e.message).slice(0,250)});}
+            }
+            for(const workflow_id of ['deploy-pages.yml','live_city_watch.yml','historical_harvest.yml']){
+              try{report.history[workflow_id]=(await list(workflow_id)).map(compact);}catch(e){report.gaps.push({workflow:workflow_id,reason:'History unavailable',status:e.status||null});}
+            }
+            report.observed_at=new Date().toISOString();
+            fs.writeFileSync('cm-operations.json',JSON.stringify(report,null,2));
+      - name: Read current main after collection
+        run: git fetch origin main && git checkout --detach origin/main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Assemble current indexed holdings without fabricating source captures
+        run: node scripts/build-data.mjs
+      - name: Compare official inventories and check the public display
+        shell: python
+        run: |
+          import json, re, time, urllib.request, urllib.parse
+          from pathlib import Path
+          from html import unescape
+          from html.parser import HTMLParser
+          from datetime import datetime, timezone
+          index=json.loads(Path('src/data/meetings.json').read_text())
+          rows=index.get('meetings',[])
+          report={'schema':1,'observed_at':datetime.now(timezone.utc).isoformat(),'scope':'Indexed holdings and event links on two bounded official inventory pages; no complete historical coverage certification','archive_capture':index.get('captured'),'indexed_stats':index.get('stats'),'sources':[],'public':{},'gaps':[]}
+          def fetch(url,limit=6000000):
+              req=urllib.request.Request(url,headers={'User-Agent':'CivicCheyenne-CoverageAudit/1.0','Cache-Control':'no-cache'})
+              with urllib.request.urlopen(req,timeout=25) as response:
+                  data=response.read(limit+1)
+              if len(data)>limit: raise ValueError('Response exceeds bounded byte limit')
+              return data.decode('utf-8',errors='replace')
+          def event_key(url):
+              try:
+                  parsed=urllib.parse.urlparse(url)
+                  if parsed.hostname!='cheyenne.granicus.com': return None
+                  query=urllib.parse.parse_qs(parsed.query)
+                  event=query.get('event_id',[None])[0]
+                  return (query.get('view_id',['5'])[0],event) if event else None
+              except ValueError: return None
+          indexed_events={}
+          for row in rows:
+              for url in row.get('official',{}).values():
+                  if isinstance(url,str):
+                      key=event_key(url)
+                      if key:indexed_events.setdefault(key,[]).append(row['id'])
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.urls=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag=='a':
+                      href=dict(attrs).get('href')
+                      if href:self.urls.append(href)
+          for source in ['https://cheyenne.granicus.com/ViewPublisher.php?view_id=5','https://cheyenne.granicus.com/ViewPublisher.php?view_id=2']:
+              item={'url':source,'ok':False,'scope':'Event links visible on this response only; pagination and unlinked records not enumerated'}
+              try:
+                  parser=Links();parser.feed(fetch(source))
+                  official={}
+                  for href in parser.urls:
+                      url=urllib.parse.urljoin(source,href)
+                      key=event_key(url)
+                      if key:official.setdefault(key,url)
+                  missing=[{'view_id':key[0],'event_id':key[1],'url':url} for key,url in official.items() if key not in indexed_events]
+                  item.update(ok=True,observed_event_links=len(official),matched_indexed_events=len(official)-len(missing),unmatched_event_links=len(missing),unmatched=missing[:500],unmatched_list_truncated=len(missing)>500)
+                  if not official:item['limitation']='No event links parsed; this is not proof of an empty inventory'
+              except Exception as exc:item['error']=str(exc)[:400]
+              report['sources'].append(item)
+          report['indexed_holdings_gaps']={
+              'records_without_archived_documents':sum(not row.get('docs') for row in rows),
+              'records_without_linked_minutes':sum(not row.get('official',{}).get('minutes') for row in rows),
+              'records_without_transcripts':sum(not row.get('transcript') and not row.get('transcripts') for row in rows),
+              'qualification':'Absence from this index is not proof that an official record does not exist or that every record should have a transcript.'
+          }
+          base='https://therealwindycity.github.io/TheReelWindyCity'
+          try:
+              evidence=json.loads(fetch(base+'/status/source-check.json?audit='+str(time.time_ns())))
+              identity=json.loads(fetch(base+'/status/deployment.json?audit='+str(time.time_ns())))
+              if evidence.get('revision')!=identity.get('revision') or str(evidence.get('run_id'))!=str(identity.get('run_id')):raise ValueError('Public evidence identity mismatch')
+              page=unescape(fetch(base+'/meetings/?audit='+str(time.time_ns())))
+              forbidden=['Next posted meeting as of snapshot','upcoming meetings confirmed as of snapshot','AGENDA POSTED AS OF SNAPSHOT']
+              obsolete=[text for text in forbidden if text in page]
+              labels_present='future-dated postings at calendar evaluation' in page and 'View saved schedule-check evidence' in page
+              report['public']={'ok':not obsolete and labels_present,'revision':identity.get('revision'),'run_id':identity.get('run_id'),'source_check':evidence.get('source_check'),'obsolete_labels':obsolete,'corrected_labels_present':labels_present,'meeting_pages':[]}
+              for meeting in evidence.get('source_check',{}).get('meetings',[])[:5]:
+                  meeting_id=meeting['body']+'-'+meeting['date']
+                  try:
+                      detail=unescape(fetch(base+'/meetings/'+meeting_id+'/?audit='+str(time.time_ns())))
+                      valid='A schedule check does not refresh archived agenda text' in detail and 'This agenda snapshot was captured on' not in detail
+                      report['public']['meeting_pages'].append({'meeting_id':meeting_id,'ok':valid})
+                      if not valid:report['public']['ok']=False
+                  except Exception as exc:
+                      report['public']['meeting_pages'].append({'meeting_id':meeting_id,'ok':False,'error':str(exc)[:300]})
+                      report['public']['ok']=False
+          except Exception as exc:report['public']={'ok':False,'error':str(exc)[:400]}
+          if not report['public'].get('ok'):report['gaps'].append('Public display verification did not pass')
+          if any(not source['ok'] for source in report['sources']):report['gaps'].append('At least one official inventory could not be retrieved')
+          report['coverage_complete']=False
+          report['coverage_limitation']='This bounded inventory identifies candidate gaps. It does not crawl every historical page, validate every document, backfill all unmatched records, verify quotations against audio, or create storage repositories.'
+          Path('cm-coverage.json').write_text(json.dumps(report,indent=2)+'\n')
+      - name: Preserve audit artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cm-completion-audit
+          path: |
+            cm-operations.json
+            cm-coverage.json
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Publish consolidated outcomes and explicit unresolved gaps
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs=require('fs');
+            const target={...context.repo};
+            const read=p=>fs.existsSync(p)?JSON.parse(fs.readFileSync(p,'utf8')):null;
+            const report={schema:1,observed_at:new Date().toISOString(),audit_run:context.runId,operations:read('cm-operations.json'),coverage:read('cm-coverage.json'),scope:'Bounded reconciliation; null results mean a step did not produce evidence, not success.'};
+            const branch='cm-deployment-status',path='status/completion-audit.json';
+            let sha;
+            try{sha=(await github.rest.repos.getContent({...target,path,ref:branch})).data.sha;}catch(e){if(e.status!==404)throw e;}
+            await github.rest.repos.createOrUpdateFileContents({...target,branch,path,sha,message:'CM: record publication, refresh history and coverage audit [skip ci]',content:Buffer.from(JSON.stringify(report,null,2)+'\n').toString('base64')});
+            await core.summary.addHeading('CM completion audit').addRaw('Saved status/completion-audit.json on cm-deployment-status. Official inventory gaps require review and backfill; this run does not certify complete archive coverage.').write();
