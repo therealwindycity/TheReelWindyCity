@@ -1,0 +1,809 @@
+{
+  "schema": 1,
+  "observed_at": "2026-11-15T07:13:47.688Z",
+  "audit_run": 43688633960,
+  "operations": {
+    "schema": 1,
+    "started_at": "2026-11-15T07:09:21.620Z",
+    "operations": [
+      {
+        "workflow": "live_city_watch.yml",
+        "dispatch_requested": true,
+        "run": {
+          "id": 43688660932,
+          "revision": "947ca85f364a267e94a39acc2f1c741c7c6a04cf",
+          "event": "workflow_dispatch",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T07:09:23Z",
+          "updated_at": "2026-11-15T07:10:37Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43688660932"
+        }
+      },
+      {
+        "workflow": "deploy-pages.yml",
+        "dispatch_requested": false,
+        "run": {
+          "id": 43688633868,
+          "revision": "947ca85f364a267e94a39acc2f1c741c7c6a04cf",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T07:09:02Z",
+          "updated_at": "2026-11-15T07:12:54Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43688633868"
+        }
+      }
+    ],
+    "history": {
+      "live_city_watch.yml": [
+        {
+          "id": 43688660932,
+          "revision": "947ca85f364a267e94a39acc2f1c741c7c6a04cf",
+          "event": "workflow_dispatch",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T07:09:23Z",
+          "updated_at": "2026-11-15T07:10:37Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43688660932"
+        },
+        {
+          "id": 43661594067,
+          "revision": "c24ef8292eb4ab6966d7574dd5887c80172f2e19",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T01:07:52Z",
+          "updated_at": "2026-11-15T01:09:06Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43661594067"
+        },
+        {
+          "id": 43639440933,
+          "revision": "5b0999b6b18f810c71142f090e130d361164c698",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T20:48:30Z",
+          "updated_at": "2026-11-14T20:49:52Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43639440933"
+        },
+        {
+          "id": 43612626065,
+          "revision": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T15:53:52Z",
+          "updated_at": "2026-11-14T15:55:12Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43612626065"
+        },
+        {
+          "id": 43579078403,
+          "revision": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T09:07:57Z",
+          "updated_at": "2026-11-14T09:09:40Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43579078403"
+        },
+        {
+          "id": 43552100126,
+          "revision": "fe42d4451fb874dd0b30061b9366c18ecce1479b",
+          "event": "workflow_dispatch",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T03:31:48Z",
+          "updated_at": "2026-11-14T03:33:10Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43552100126"
+        },
+        {
+          "id": 43540956645,
+          "revision": "fe42d4451fb874dd0b30061b9366c18ecce1479b",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T01:30:10Z",
+          "updated_at": "2026-11-14T01:31:18Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43540956645"
+        },
+        {
+          "id": 43502530458,
+          "revision": "de19761a5a41740313638e74996ba0e91cb7a031",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-13T20:32:43Z",
+          "updated_at": "2026-11-13T20:34:03Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43502530458"
+        },
+        {
+          "id": 43424896760,
+          "revision": "ec91a123e518d8e91b5fa0d7a9f07f76482ca16c",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-13T12:24:34Z",
+          "updated_at": "2026-11-13T12:25:40Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43424896760"
+        },
+        {
+          "id": 43359078246,
+          "revision": "ec91a123e518d8e91b5fa0d7a9f07f76482ca16c",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-13T03:27:23Z",
+          "updated_at": "2026-11-13T03:28:32Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43359078246"
+        },
+        {
+          "id": 43323025300,
+          "revision": "825a51a95265e71063cbbbfd50b6d35b48f3b9bb",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-12T22:46:45Z",
+          "updated_at": "2026-11-12T22:48:02Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43323025300"
+        },
+        {
+          "id": 43263803151,
+          "revision": "7500610ab4dafec5cd7c4ccdc8fd16650ba572bf",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-12T16:54:50Z",
+          "updated_at": "2026-11-12T16:55:59Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43263803151"
+        },
+        {
+          "id": 43175355619,
+          "revision": "7500610ab4dafec5cd7c4ccdc8fd16650ba572bf",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-12T07:27:05Z",
+          "updated_at": "2026-11-12T07:28:25Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43175355619"
+        },
+        {
+          "id": 43120533320,
+          "revision": "7500610ab4dafec5cd7c4ccdc8fd16650ba572bf",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-11T23:31:58Z",
+          "updated_at": "2026-11-11T23:33:05Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43120533320"
+        },
+        {
+          "id": 43057856695,
+          "revision": "2234eecedcf62064b84e1b88ce0879eff22ea869",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-11T16:23:32Z",
+          "updated_at": "2026-11-11T16:24:47Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43057856695"
+        },
+        {
+          "id": 42983108585,
+          "revision": "2234eecedcf62064b84e1b88ce0879eff22ea869",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-11T07:56:04Z",
+          "updated_at": "2026-11-11T07:57:19Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42983108585"
+        },
+        {
+          "id": 42938139274,
+          "revision": "2234eecedcf62064b84e1b88ce0879eff22ea869",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-11T01:19:42Z",
+          "updated_at": "2026-11-11T01:20:40Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42938139274"
+        },
+        {
+          "id": 42899903245,
+          "revision": "532c25675ed6f54081c910def5bf45dcb765969a",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-10T20:55:00Z",
+          "updated_at": "2026-11-10T20:58:09Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42899903245"
+        },
+        {
+          "id": 42826303921,
+          "revision": "4d2a363a339d7261103b31836a33bd17ad58674a",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-10T13:38:00Z",
+          "updated_at": "2026-11-10T13:39:48Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42826303921"
+        },
+        {
+          "id": 42757425048,
+          "revision": "4d2a363a339d7261103b31836a33bd17ad58674a",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-10T04:41:13Z",
+          "updated_at": "2026-11-10T04:42:30Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42757425048"
+        }
+      ],
+      "deploy-pages.yml": [
+        {
+          "id": 43688633868,
+          "revision": "947ca85f364a267e94a39acc2f1c741c7c6a04cf",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T07:09:02Z",
+          "updated_at": "2026-11-15T07:12:54Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43688633868"
+        },
+        {
+          "id": 43673654429,
+          "revision": "0df1737608da919dc0db91e2589f065858fa9ef8",
+          "event": "workflow_dispatch",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T03:43:49Z",
+          "updated_at": "2026-11-15T03:49:38Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673654429"
+        },
+        {
+          "id": 43673465889,
+          "revision": "b9f557cde40cc6fdd89e575dab7727eb91ee2db8",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-15T03:41:09Z",
+          "updated_at": "2026-11-15T03:45:49Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673465889"
+        },
+        {
+          "id": 43673110478,
+          "revision": "cfe6db2b9adeb4e7d1ebbfee8700b318217fda1d",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T03:36:16Z",
+          "updated_at": "2026-11-15T03:39:32Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43673110478"
+        },
+        {
+          "id": 43662477395,
+          "revision": "c24ef8292eb4ab6966d7574dd5887c80172f2e19",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T01:18:35Z",
+          "updated_at": "2026-11-15T01:22:16Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43662477395"
+        },
+        {
+          "id": 43657022054,
+          "revision": "73313a6ab99f838b25c9fd79850fd9f33e70bee3",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-15T00:12:29Z",
+          "updated_at": "2026-11-15T00:16:43Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43657022054"
+        },
+        {
+          "id": 43644848325,
+          "revision": "0dd777c797becd894befac6280358a69c3b510a6",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T21:49:38Z",
+          "updated_at": "2026-11-14T21:53:08Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43644848325"
+        },
+        {
+          "id": 43642711611,
+          "revision": "b854e6b2f032dea2d4e4b8d275e577c4e1955750",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T21:25:11Z",
+          "updated_at": "2026-11-14T21:29:12Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43642711611"
+        },
+        {
+          "id": 43641831977,
+          "revision": "b854e6b2f032dea2d4e4b8d275e577c4e1955750",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T21:15:23Z",
+          "updated_at": "2026-11-14T21:19:45Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43641831977"
+        },
+        {
+          "id": 43629298323,
+          "revision": "6bc7543d8b674accd5672b8e7b0af7063fe5f6a8",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T18:55:49Z",
+          "updated_at": "2026-11-14T18:59:02Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43629298323"
+        },
+        {
+          "id": 43628227260,
+          "revision": "0888d2204acca0b40ab6b3d71a620c3013653239",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T18:43:55Z",
+          "updated_at": "2026-11-14T18:47:35Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43628227260"
+        },
+        {
+          "id": 43626313218,
+          "revision": "f07fda96a9e3567e27f99a44f29226cfd0df2c53",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T18:23:14Z",
+          "updated_at": "2026-11-14T18:27:25Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43626313218"
+        },
+        {
+          "id": 43618810088,
+          "revision": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T17:01:34Z",
+          "updated_at": "2026-11-14T17:05:25Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43618810088"
+        },
+        {
+          "id": 43587861653,
+          "revision": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T10:59:43Z",
+          "updated_at": "2026-11-14T11:04:27Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43587861653"
+        },
+        {
+          "id": 43560810145,
+          "revision": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T05:17:28Z",
+          "updated_at": "2026-11-14T05:21:18Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43560810145"
+        },
+        {
+          "id": 43559287487,
+          "revision": "0fa16d1a20eda7da4e254a4c70e2aa69150aba76",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T04:59:16Z",
+          "updated_at": "2026-11-14T05:02:54Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43559287487"
+        },
+        {
+          "id": 43558138179,
+          "revision": "ecaa3be4bf8bb771e8922b7367d1df2c2bd1a030",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T04:44:34Z",
+          "updated_at": "2026-11-14T04:48:09Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43558138179"
+        },
+        {
+          "id": 43554203989,
+          "revision": "2a741e662e6f1a7887207a7d76d35ab9eaa83e40",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "success",
+          "created_at": "2026-11-14T03:57:15Z",
+          "updated_at": "2026-11-14T04:00:41Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43554203989"
+        },
+        {
+          "id": 43553880124,
+          "revision": "c7698a4e955756623ce51e222ab95c6b0c9196e8",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T03:53:08Z",
+          "updated_at": "2026-11-14T03:54:23Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553880124"
+        },
+        {
+          "id": 43553276153,
+          "revision": "905e067e2aeca0dd91dac31a5443b585a747833e",
+          "event": "push",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T03:45:43Z",
+          "updated_at": "2026-11-14T03:50:31Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43553276153"
+        }
+      ],
+      "historical_harvest.yml": [
+        {
+          "id": 43654802783,
+          "revision": "0dd777c797becd894befac6280358a69c3b510a6",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T23:45:19Z",
+          "updated_at": "2026-11-15T00:16:34Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43654802783"
+        },
+        {
+          "id": 43607200849,
+          "revision": "c0c2a62c0b3fd4f302b911290c672d9c20ab5a8e",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-14T14:53:21Z",
+          "updated_at": "2026-11-14T20:53:42Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43607200849"
+        },
+        {
+          "id": 43536509061,
+          "revision": "fe42d4451fb874dd0b30061b9366c18ecce1479b",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-14T00:47:33Z",
+          "updated_at": "2026-11-14T06:47:52Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43536509061"
+        },
+        {
+          "id": 43458113216,
+          "revision": "ec91a123e518d8e91b5fa0d7a9f07f76482ca16c",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-13T15:59:26Z",
+          "updated_at": "2026-11-13T21:59:47Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43458113216"
+        },
+        {
+          "id": 43341133147,
+          "revision": "825a51a95265e71063cbbbfd50b6d35b48f3b9bb",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-13T00:57:12Z",
+          "updated_at": "2026-11-13T06:57:33Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43341133147"
+        },
+        {
+          "id": 43261325903,
+          "revision": "7500610ab4dafec5cd7c4ccdc8fd16650ba572bf",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-12T16:41:01Z",
+          "updated_at": "2026-11-12T22:41:21Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43261325903"
+        },
+        {
+          "id": 43137300585,
+          "revision": "7500610ab4dafec5cd7c4ccdc8fd16650ba572bf",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-12T01:50:55Z",
+          "updated_at": "2026-11-12T07:51:16Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43137300585"
+        },
+        {
+          "id": 43053526028,
+          "revision": "2234eecedcf62064b84e1b88ce0879eff22ea869",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "failure",
+          "created_at": "2026-11-11T15:57:45Z",
+          "updated_at": "2026-11-11T16:08:53Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43053526028"
+        },
+        {
+          "id": 42931767132,
+          "revision": "2234eecedcf62064b84e1b88ce0879eff22ea869",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-11T00:29:35Z",
+          "updated_at": "2026-11-11T06:29:53Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42931767132"
+        },
+        {
+          "id": 42852830375,
+          "revision": "708dcb1c48486394a1aba6a9611ccba3a7c95b67",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-10T16:16:14Z",
+          "updated_at": "2026-11-10T22:16:35Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42852830375"
+        },
+        {
+          "id": 42743933601,
+          "revision": "4d2a363a339d7261103b31836a33bd17ad58674a",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-10T02:36:27Z",
+          "updated_at": "2026-11-10T08:36:46Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42743933601"
+        },
+        {
+          "id": 42674883221,
+          "revision": "a639b926e5e82acf599545586d4000b27dac30b0",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-09T18:32:17Z",
+          "updated_at": "2026-11-10T00:32:38Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42674883221"
+        },
+        {
+          "id": 42535493701,
+          "revision": "a639b926e5e82acf599545586d4000b27dac30b0",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-08T23:30:32Z",
+          "updated_at": "2026-11-09T05:30:51Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42535493701"
+        },
+        {
+          "id": 42492044617,
+          "revision": "3e06af41fc3bb722920adaf8a652fc48f85a4417",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-08T14:53:52Z",
+          "updated_at": "2026-11-08T20:54:11Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42492044617"
+        },
+        {
+          "id": 42425578323,
+          "revision": "f5147cfef379f78612820f175476ae073d7b9174",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-07T23:30:49Z",
+          "updated_at": "2026-11-08T05:31:10Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42425578323"
+        },
+        {
+          "id": 42383268926,
+          "revision": "734ba8ad37bba5c2ed146bf24b07405abab89c21",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-07T14:47:50Z",
+          "updated_at": "2026-11-07T20:48:10Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42383268926"
+        },
+        {
+          "id": 42315452870,
+          "revision": "7ae87747f3e5a628f811182a39196b60653489ce",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-06T23:59:58Z",
+          "updated_at": "2026-11-07T06:00:18Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42315452870"
+        },
+        {
+          "id": 42246261794,
+          "revision": "df1a8062bcda334d8d2528c6b145a760854a1ef9",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-06T15:47:07Z",
+          "updated_at": "2026-11-06T21:47:28Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42246261794"
+        },
+        {
+          "id": 42140133912,
+          "revision": "b1b0141e318256ad5de563f10add15b6bc13617b",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-06T00:54:04Z",
+          "updated_at": "2026-11-06T06:55:20Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42140133912"
+        },
+        {
+          "id": 42063075626,
+          "revision": "a5dcbd73e94c3d6540b5d19158a670f3eb489792",
+          "event": "schedule",
+          "status": "completed",
+          "conclusion": "cancelled",
+          "created_at": "2026-11-05T16:18:40Z",
+          "updated_at": "2026-11-05T22:19:32Z",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/42063075626"
+        }
+      ]
+    },
+    "gaps": [],
+    "observed_at": "2026-11-15T07:13:14.237Z"
+  },
+  "coverage": {
+    "schema": 1,
+    "observed_at": "2026-11-15T07:13:45.260751+00:00",
+    "scope": "Indexed holdings and event links on two bounded official inventory pages; no complete historical coverage certification",
+    "archive_capture": "2026-10-03",
+    "indexed_stats": {
+      "totalMeetings": 1007,
+      "pastMeetings": 1005,
+      "upcomingMeetings": 2,
+      "sameDayUnverifiedMeetings": 0,
+      "earliest": "2008-05-27",
+      "latest": "2026-11-09",
+      "totalDocuments": 5118,
+      "totalTranscripts": 84,
+      "totalTranscriptFiles": 85,
+      "localValidatedTranscripts": 0,
+      "excerptIndexedMeetings": 82,
+      "audioVerifiedTranscripts": 0,
+      "byBody": {
+        "public-services-committee": {
+          "label": "Public Services Committee",
+          "count": 120,
+          "first": "2022-01-05",
+          "last": "2026-11-16"
+        },
+        "finance-committee": {
+          "label": "Finance Committee",
+          "count": 124,
+          "first": "2022-01-04",
+          "last": "2026-11-17"
+        },
+        "city-council": {
+          "label": "City Council",
+          "count": 528,
+          "first": "2008-05-27",
+          "last": "2026-11-09"
+        },
+        "work-sessions": {
+          "label": "Work Sessions",
+          "count": 115,
+          "first": "2018-10-03",
+          "last": "2026-08-28"
+        },
+        "board-of-adjustment": {
+          "label": "Board of Adjustment",
+          "count": 6,
+          "first": "2026-01-15",
+          "last": "2026-07-16"
+        },
+        "historic-preservation-board": {
+          "label": "Historic Preservation Board",
+          "count": 7,
+          "first": "2026-01-13",
+          "last": "2026-07-14"
+        },
+        "planning-commission": {
+          "label": "Planning Commission",
+          "count": 47,
+          "first": "2024-01-11",
+          "last": "2026-07-06"
+        },
+        "urban-renewal-authority": {
+          "label": "Urban Renewal Authority",
+          "count": 2,
+          "first": "2026-02-05",
+          "last": "2026-05-07"
+        },
+        "board-of-county-commissioners": {
+          "label": "Board of County Commissioners",
+          "count": 58,
+          "first": "2024-01-02",
+          "last": "2026-03-17"
+        }
+      }
+    },
+    "sources": [
+      {
+        "url": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5",
+        "ok": true,
+        "scope": "Event links visible on this response only; pagination and unlinked records not enumerated",
+        "observed_event_links": 2,
+        "matched_indexed_events": 2,
+        "unmatched_event_links": 0,
+        "unmatched": [],
+        "unmatched_list_truncated": false
+      },
+      {
+        "url": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=2",
+        "ok": true,
+        "scope": "Event links visible on this response only; pagination and unlinked records not enumerated",
+        "observed_event_links": 2,
+        "matched_indexed_events": 0,
+        "unmatched_event_links": 2,
+        "unmatched": [
+          {
+            "view_id": "2",
+            "event_id": "1459",
+            "url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&event_id=1459"
+          },
+          {
+            "view_id": "2",
+            "event_id": "1458",
+            "url": "https://cheyenne.granicus.com/AgendaViewer.php?view_id=2&event_id=1458"
+          }
+        ],
+        "unmatched_list_truncated": false
+      }
+    ],
+    "public": {
+      "ok": true,
+      "revision": "947ca85f364a267e94a39acc2f1c741c7c6a04cf",
+      "run_id": "43688633868",
+      "source_check": {
+        "version": 1,
+        "ok": true,
+        "observedAt": "2026-11-15T07:11:14.117Z",
+        "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
+        "attempts": 1,
+        "error": null,
+        "meetings": [
+          {
+            "body": "public-services-committee",
+            "bodyLabel": "Public Services Committee",
+            "date": "2026-11-16",
+            "time": "12:00",
+            "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1459&view_id=5"
+          },
+          {
+            "body": "finance-committee",
+            "bodyLabel": "Finance Committee",
+            "date": "2026-11-17",
+            "time": "08:00",
+            "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1458&view_id=5"
+          }
+        ]
+      },
+      "obsolete_labels": [],
+      "corrected_labels_present": true,
+      "meeting_pages": [
+        {
+          "meeting_id": "public-services-committee-2026-11-16",
+          "ok": true
+        },
+        {
+          "meeting_id": "finance-committee-2026-11-17",
+          "ok": true
+        }
+      ]
+    },
+    "gaps": [],
+    "indexed_holdings_gaps": {
+      "records_without_archived_documents": 78,
+      "records_without_linked_minutes": 872,
+      "records_without_transcripts": 925,
+      "qualification": "Absence from this index is not proof that an official record does not exist or that every record should have a transcript."
+    },
+    "coverage_complete": false,
+    "coverage_limitation": "This bounded inventory identifies candidate gaps. It does not crawl every historical page, validate every document, backfill all unmatched records, verify quotations against audio, or create storage repositories."
+  },
+  "scope": "Bounded reconciliation; null results mean a step did not produce evidence, not success."
+}
