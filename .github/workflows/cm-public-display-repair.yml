@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - name: Apply guarded provenance corrections
+      - name: Apply guarded display-only corrections
         shell: python
         run: |
           from pathlib import Path
@@ -58,57 +58,6 @@ jobs:
           replace(fresh, 'checkUnknown ? "unknown" : checkOverdue', '(checkUnknown || checkNotUsed) ? "unknown" : checkOverdue')
           replace(fresh, ': <> — Official schedule check succeeded within the two-hour freshness target as of this evaluation; later changes remain possible.</>}', ': checkNotUsed ? <> — <strong>The saved schedule check was not used in this build.</strong> Displayed records are not confirmation of the current schedule.</>\n          : <> — Official schedule check succeeded within the two-hour freshness target as of this evaluation; later changes remain possible.</>}')
           replace(fresh, '{" "}<a href={OFFICIAL_SCHEDULE_URL}', '{" "}<a href={asset("status/source-check.json")}>View saved schedule-check evidence and deployment identity</a>.{" "}<a href={OFFICIAL_SCHEDULE_URL}')
-          deploy = '.github/workflows/deploy-pages.yml'
-          stamp = "(status / 'deployment.json').write_text(json.dumps(manifest, indent=2) + '\\n')"
-          evidence = "(status / 'source-check.json').write_text(json.dumps({'schema': 1, 'revision': manifest['revision'], 'run_id': manifest['run_id'], 'source_check': json.loads(Path('data/source-check.json').read_text())}, indent=2) + '\\n')"
-          replace(deploy, stamp, stamp + '\n          ' + evidence)
-          verification = '''
-                - name: Verify public schedule evidence and corrected meeting labels
-                  env:
-                    LIVE_SITE_URL: __DEPLOYED_PAGE_URL__
-                  shell: python
-                  run: |
-                    import json, os, time, urllib.request
-                    from html import unescape
-                    base = os.environ['LIVE_SITE_URL'].rstrip('/')
-                    error = None
-                    def read(path):
-                        req = urllib.request.Request(base + path + '?verify=' + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
-                        with urllib.request.urlopen(req, timeout=20) as response:
-                            data = response.read(10000001)
-                        if len(data) > 10000000:
-                            raise ValueError('Public response exceeds verification limit')
-                        return data.decode('utf-8')
-                    for attempt in range(6):
-                        try:
-                            evidence = json.loads(read('/status/source-check.json'))
-                            if evidence.get('revision') != os.environ['GITHUB_SHA'] or str(evidence.get('run_id')) != os.environ['GITHUB_RUN_ID']:
-                                raise ValueError('Public source-check evidence does not match this deployment')
-                            check = evidence['source_check']
-                            if not isinstance(check.get('ok'), bool) or not isinstance(check.get('meetings'), list) or not check.get('observedAt'):
-                                raise ValueError('Invalid public source-check structure')
-                            page = unescape(read('/meetings/'))
-                            for forbidden in ('Next posted meeting as of snapshot', 'upcoming meetings confirmed as of snapshot', 'AGENDA POSTED AS OF SNAPSHOT'):
-                                if forbidden in page:
-                                    raise ValueError('Obsolete public provenance label: ' + forbidden)
-                            if 'future-dated postings at calendar evaluation' not in page or 'View saved schedule-check evidence' not in page:
-                                raise ValueError('Corrected public information labels are missing')
-                            error = None
-                            break
-                        except Exception as exc:
-                            error = str(exc)
-                            if attempt < 5:
-                                time.sleep(10)
-                    with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
-                        summary.write('\\nCM public provenance verification: ' + ('FAILED: ' + error if error else 'Matched deployment identity; corrected archive labels and public source-check evidence verified.') + '\\n')
-                        summary.write('This verifies display and saved evidence, not complete records coverage or successful source retrieval when ok=false.\\n')
-                    if error:
-                        raise SystemExit(error)
-          '''
-          import textwrap
-          verification = verification.replace('__DEPLOYED_PAGE_URL__', '$' + '{{ steps.deployment.outputs.page_url }}')
-          p = Path(deploy)
-          p.write_text(p.read_text().rstrip() + '\n' + textwrap.indent(textwrap.dedent(verification).strip(), '      ') + '\n')
           test = Path('tests/public-provenance.test.mjs')
           if test.exists():
               raise RuntimeError('Refusing to overwrite an existing public provenance test')
@@ -149,9 +98,9 @@ jobs:
           });
           ''')
       - run: npm ci
-      - name: Validate generated deployment workflow and regression tests
+      - name: Validate deployment workflow and regression tests
         run: |
-          node --input-type=module -e 'import fs from "node:fs"; import YAML from "yaml"; const doc=YAML.parse(fs.readFileSync(".github/workflows/deploy-pages.yml","utf8")); const steps=doc.jobs.deploy.steps; const step=steps.find(s=>s.name==="Verify public schedule evidence and corrected meeting labels"); if(!step || !step.env.LIVE_SITE_URL.includes("steps.deployment.outputs.page_url")) throw Error("Invalid generated verification step");'
+          node --input-type=module -e 'import fs from "node:fs"; import YAML from "yaml"; const doc=YAML.parse(fs.readFileSync(".github/workflows/deploy-pages.yml","utf8")); if(!doc.jobs.deploy.steps.some(s=>s.name==="Verify public schedule evidence and corrected meeting labels")) throw Error("Public verification step missing");'
           node --test tests/public-provenance.test.mjs
           npm run test:calendar
           npm run test:sync
@@ -161,7 +110,7 @@ jobs:
         run: npm run build && npm run test:seo && npm run test:text-separation
         env:
           NEXT_PUBLIC_BASE_PATH: /TheReelWindyCity
-      - name: Commit validated display corrections and request publication
+      - name: Commit validated display files only and request publication
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -172,8 +121,9 @@ jobs:
           test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" || { echo 'Main changed; refusing to overwrite newer work.'; exit 1; }
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src/lib/civic-data.ts src/app/meetings/page.tsx 'src/app/meetings/[id]/page.tsx' src/components/hub-snapshot-freshness.tsx .github/workflows/deploy-pages.yml tests/public-provenance.test.mjs
+          git add src/lib/civic-data.ts src/app/meetings/page.tsx 'src/app/meetings/[id]/page.tsx' src/components/hub-snapshot-freshness.tsx tests/public-provenance.test.mjs
+          if git diff --cached --name-only | grep '^.github/'; then echo 'Refusing workflow-file changes from the repair runner.'; exit 1; fi
           git commit -m 'CM: correct public schedule provenance and verify published evidence'
           git push origin HEAD:main
           gh workflow run deploy-pages.yml --ref main
-          echo 'Validated corrections committed. Deployment requested; publication is not yet verified by this job.' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Validated display corrections committed. Deployment requested; live verification belongs to the deployment run.' >> "$GITHUB_STEP_SUMMARY"

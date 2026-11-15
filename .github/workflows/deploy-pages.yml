@@ -86,6 +86,8 @@ jobs:
           status.mkdir(parents=True, exist_ok=True)
           manifest = {'schema': 1, 'project_credit': 'CM', 'revision': os.environ['GITHUB_SHA'], 'run_id': os.environ['GITHUB_RUN_ID'], 'built_at': datetime.now(timezone.utc).isoformat(), 'scope': 'Build identity only; not source freshness or complete coverage.'}
           (status / 'deployment.json').write_text(json.dumps(manifest, indent=2) + '\n')
+          evidence = {'schema': 1, 'revision': manifest['revision'], 'run_id': manifest['run_id'], 'source_check': json.loads(Path('data/source-check.json').read_text())}
+          (status / 'source-check.json').write_text(json.dumps(evidence, indent=2) + '\n')
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
@@ -98,6 +100,7 @@ jobs:
             CI_DIAGNOSTICS.md
             data/source-check.json
             out/status/deployment.json
+            out/status/source-check.json
           if-no-files-found: warn
   deploy:
     needs: build
@@ -143,3 +146,44 @@ jobs:
         run: node scripts/check-live-seo.mjs --retries 6 --delay 10000
         env:
           LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
+      - name: Verify public schedule evidence and corrected meeting labels
+        env:
+          LIVE_SITE_URL: ${{ steps.deployment.outputs.page_url }}
+        shell: python
+        run: |
+          import json, os, time, urllib.request
+          from html import unescape
+          base = os.environ['LIVE_SITE_URL'].rstrip('/')
+          def read(path):
+              req = urllib.request.Request(base + path + '?verify=' + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  data = response.read(10000001)
+              if len(data) > 10000000:
+                  raise ValueError('Public response exceeds verification limit')
+              return data.decode('utf-8')
+          error = None
+          for attempt in range(6):
+              try:
+                  evidence = json.loads(read('/status/source-check.json'))
+                  if evidence.get('revision') != os.environ['GITHUB_SHA'] or str(evidence.get('run_id')) != os.environ['GITHUB_RUN_ID']:
+                      raise ValueError('Public source-check evidence does not match this deployment')
+                  check = evidence['source_check']
+                  if not isinstance(check.get('ok'), bool) or not isinstance(check.get('meetings'), list) or not check.get('observedAt'):
+                      raise ValueError('Invalid public source-check structure')
+                  page = unescape(read('/meetings/'))
+                  for forbidden in ('Next posted meeting as of snapshot', 'upcoming meetings confirmed as of snapshot', 'AGENDA POSTED AS OF SNAPSHOT'):
+                      if forbidden in page:
+                          raise ValueError('Obsolete public provenance label: ' + forbidden)
+                  if 'future-dated postings at calendar evaluation' not in page or 'View saved schedule-check evidence' not in page:
+                      raise ValueError('Corrected public information labels are missing')
+                  error = None
+                  break
+              except Exception as exc:
+                  error = str(exc)
+                  if attempt < 5:
+                      time.sleep(10)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('\nCM public provenance verification: ' + ('FAILED: ' + error if error else 'Matched deployment identity; corrected archive labels and public source-check evidence verified.') + '\n')
+              summary.write('This verifies display and saved evidence, not complete records coverage or successful source retrieval when ok=false.\n')
+          if error:
+              raise SystemExit(error)
