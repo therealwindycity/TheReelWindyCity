@@ -52,3 +52,5 @@ Omit --global to set the identity only in this repository.
 
 fatal: empty ident name (for <runner@runnervmccnms.l5l4xjmyzuhedcxkq5suuecaff.cx.internal.cloudapp.net>) not allowed
 ```
+```
+[storage] Publication did not succeed; database progress was not committed.
