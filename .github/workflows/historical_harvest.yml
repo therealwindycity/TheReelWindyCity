@@ -10,15 +10,12 @@ on:
         default: "900"
 permissions:
   contents: write
-# One writer at a time for database/promethean_evidence.db (shared with the autonomous harvester).
 concurrency:
   group: promethean-evidence-db
   cancel-in-progress: false
 jobs:
   harvest:
     runs-on: ubuntu-latest
-    # Three sources x 15 minutes plus setup. Before 2026-11-13 this job had no budget, ran until
-    # GitHub cancelled it at six hours, and so never reached the publish step below.
     timeout-minutes: 75
     env:
       HARVEST_MAX_SECONDS: ${{ github.event.inputs.max_seconds || '900' }}
@@ -36,7 +33,7 @@ jobs:
       - name: Install Python Dependencies
         run: pip install requests beautifulsoup4 pypdf pdfplumber pytesseract pdf2image
       - name: Harvester regression tests (offline)
-        run: python3 -m unittest tests/test_granicus_harvester.py -v
+        run: python3 -m unittest tests/test_granicus_harvester.py tests/test_harvest_publication.py -v
       - name: Execute Extraction Pipelines
         run: |
           set -uo pipefail
@@ -46,7 +43,6 @@ jobs:
           reached=0
           failed=0
           run_source() {
-            # A source that cannot be reached is reported, but must not stop the other sources.
             if "$@" 2>&1 | tee -a SYSTEM_DIAGNOSTICS.md; then reached=$((reached + 1)); else failed=$((failed + 1)); fi
           }
           run_source python3 scrapers/granicus_harvester.py "${HOST}/ViewPublisher.php?view_id=5" --historical
@@ -57,50 +53,55 @@ jobs:
           echo "[sources] reached=${reached} failed=${failed}" | tee -a SYSTEM_DIAGNOSTICS.md
           {
             echo "### Promethean Recurring Harvest"
-            echo "Sources reached: ${reached}; unreachable: ${failed}. A run is partial by design: it stops at its budget and the next run resumes."
+            echo "Sources reached: ${reached}; unreachable: ${failed}. This bounded collection is not complete records coverage."
             echo '```'
             grep -F '[summary]' SYSTEM_DIAGNOSTICS.md || true
             echo '```'
           } >> "$GITHUB_STEP_SUMMARY"
-          # Red only when nothing could be reached at all.
           [ "$reached" -gt 0 ]
-      - name: Provision Storage Shards
+      - name: Publish Payloads In Existing Repository
+        id: storage
         env:
-          GH_TOKEN: ${{ secrets.PROMETHEAN_ARCHIVE_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
-          set -e
-          set -o pipefail
-          chmod +x tools/storage_shard_manager.sh
-          ./tools/storage_shard_manager.sh 2>&1 | tee -a SYSTEM_DIAGNOSTICS.md
-      - name: Publish Telemetry & Database Updates (Runs Even On Failure)
+          set -euo pipefail
+          bash tools/storage_shard_manager.sh 2>&1 | tee -a SYSTEM_DIAGNOSTICS.md
+      - name: Preserve Failed Publication For Recovery
+        if: failure() && steps.storage.outcome == 'failure'
+        uses: actions/upload-artifact@v4
+        with:
+          name: unpublished-harvest-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/
+            database/promethean_evidence.db*
+            SYSTEM_DIAGNOSTICS.md
+          retention-days: 1
+          if-no-files-found: warn
+      - name: Publish Telemetry And Verified Database Progress
         if: always()
+        env:
+          STORAGE_OUTCOME: ${{ steps.storage.outcome }}
         run: |
-          set -uo pipefail
+          set -euo pipefail
           echo '```' >> SYSTEM_DIAGNOSTICS.md
-          # Fold the write-ahead log back into the database file so the committed file is complete.
-          sqlite3 database/promethean_evidence.db "PRAGMA wal_checkpoint(TRUNCATE);" || true
+          if [ "$STORAGE_OUTCOME" = "success" ]; then
+            sqlite3 database/promethean_evidence.db "PRAGMA wal_checkpoint(TRUNCATE);"
+            if [ -f database/promethean_evidence.db ]; then git add -- database/promethean_evidence.db; fi
+            if [ -f STORAGE_MANIFEST.md ]; then git add -- STORAGE_MANIFEST.md; fi
+          else
+            # Never advance database progress when its source files were not published.
+            git restore -- database/promethean_evidence.db
+            rm -f database/promethean_evidence.db-wal database/promethean_evidence.db-shm
+            echo '[storage] Publication did not succeed; database progress was not committed.' >> SYSTEM_DIAGNOSTICS.md
+          fi
           git config user.name "Promethean-AutoHarvester"
           git config user.email "cwdm82001@gmail.com"
-          # Stage each file on its own. `git add a b c` stages nothing at all when one path is
-          # missing, and STORAGE_MANIFEST.md only exists after a shard has been provisioned, so the
-          # previous single `git add ... || true` silently published nothing.
-          for path in STORAGE_MANIFEST.md database/promethean_evidence.db SYSTEM_DIAGNOSTICS.md; do
-            if [ -e "$path" ]; then git add -- "$path"; fi
-          done
-          if git diff --cached --quiet; then
-            echo "[*] Nothing new to publish in this cycle."
-            exit 0
-          fi
+          git add -- SYSTEM_DIAGNOSTICS.md
+          if git diff --cached --quiet; then exit 0; fi
           git commit -m "Automated Harvest Telemetry & Data Sync [skip ci]"
-          # Commit first, then rebase: `git pull --rebase` refuses to run on a dirty tree, and the
-          # old order hid that refusal behind `|| true`, so the push was rejected whenever another
-          # bot had committed in the meantime.
           for attempt in 1 2 3; do
-            if git pull --rebase origin main && git push origin HEAD:main; then
-              exit 0
-            fi
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
             git rebase --abort 2>/dev/null || true
-            echo "[!] Push attempt ${attempt} did not land; retrying."
             sleep $((attempt * 15))
           done
           echo "::error::Harvest results could not be pushed after three attempts."
