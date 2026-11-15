@@ -1,0 +1,179 @@
+name: CM public display repair
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/cm-public-display-repair.yml']
+  workflow_dispatch: {}
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: cm-public-display-repair
+  cancel-in-progress: false
+jobs:
+  repair:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Apply guarded provenance corrections
+        shell: python
+        run: |
+          from pathlib import Path
+          def replace(path, old, new):
+              p = Path(path)
+              text = p.read_text()
+              if text.count(old) != 1:
+                  raise RuntimeError('Expected exactly one repair anchor in ' + path + ': ' + old[:100])
+              p.write_text(text.replace(old, new, 1))
+          civic = 'src/lib/civic-data.ts'
+          marker = 'function calendarStatusPhrase(meeting: Meeting, status: MeetingCalendarStatus, expiredSinceBuild: boolean): string {'
+          helper = '''export function meetingScheduleProvenance(meeting: Meeting): string {
+            const observed = meeting.postedOnOfficialTable ? formatEvaluationTimestamp(meeting.sourceObservedAt) : null;
+            if (observed) return `Official schedule posting checked ${observed}`;
+            return `Archive schedule snapshot (${meeting.snapshotCapturedAt || MEETINGS_CAPTURED || "capture date unknown"}); current posting not verified`;
+          }
+          
+          '''
+          replace(civic, marker, helper + marker)
+          replace(civic, 'return "Official posting detected; archive unavailable";', 'return `${meetingScheduleProvenance(meeting)} · agenda archive unavailable`;')
+          replace(civic, 'return `Next posted meeting as of snapshot (${MEETINGS_CAPTURED || "unrecorded capture date"})`;', 'return `Future-dated meeting at calendar evaluation · ${meetingScheduleProvenance(meeting)}`;')
+          archive = 'src/app/meetings/page.tsx'
+          replace(archive, 'meeting entries across nine government bodies', 'meeting entries across {Object.keys(MEETING_STATS.byBody).length} government bodies')
+          replace(archive, 'historical meeting entries</span>', 'other indexed meeting entries</span>')
+          replace(archive, 'upcoming meetings confirmed as of snapshot', 'future-dated postings at calendar evaluation')
+          replace(archive, 'AGENDA POSTED AS OF SNAPSHOT', 'POSTED SCHEDULE · CHECK TIMESTAMPS')
+          detail = 'src/app/meetings/[id]/page.tsx'
+          replace(detail, 'formatEvaluationTimestamp, meetingCalendarLabel,', 'formatEvaluationTimestamp, meetingCalendarLabel, meetingScheduleProvenance,')
+          replace(detail, 'POSTED PUBLIC AGENDA SNAPSHOT', 'SCHEDULED MEETING · CHECK SOURCE TIMESTAMP')
+          replace(detail, '`This agenda snapshot was captured on ${meeting.snapshotCapturedAt ?? MEETINGS_CAPTURED}. Agendas describe proposed business as of capture; consult official minutes for recorded actions.`', '`${meetingScheduleProvenance(meeting)}. A schedule check does not refresh archived agenda text. Agendas describe proposed business; consult official minutes for recorded actions.`')
+          fresh = 'src/components/hub-snapshot-freshness.tsx'
+          replace(fresh, 'import { LIVE_SOURCE_CHECK,', 'import { asset, LIVE_SOURCE_CHECK,')
+          replace(fresh, 'const checkWarning = checkFailed || checkUnknown || checkOverdue;', 'const checkNotUsed = LIVE_SOURCE_CHECK?.ok === true && LIVE_SOURCE_CHECK.used === false;\n  const checkWarning = checkFailed || checkUnknown || checkOverdue || checkNotUsed;')
+          replace(fresh, 'checkUnknown ? "unknown" : checkOverdue', '(checkUnknown || checkNotUsed) ? "unknown" : checkOverdue')
+          replace(fresh, ': <> — Official schedule check succeeded within the two-hour freshness target as of this evaluation; later changes remain possible.</>}', ': checkNotUsed ? <> — <strong>The saved schedule check was not used in this build.</strong> Displayed records are not confirmation of the current schedule.</>\n          : <> — Official schedule check succeeded within the two-hour freshness target as of this evaluation; later changes remain possible.</>}')
+          replace(fresh, '{" "}<a href={OFFICIAL_SCHEDULE_URL}', '{" "}<a href={asset("status/source-check.json")}>View saved schedule-check evidence and deployment identity</a>.{" "}<a href={OFFICIAL_SCHEDULE_URL}')
+          deploy = '.github/workflows/deploy-pages.yml'
+          stamp = "(status / 'deployment.json').write_text(json.dumps(manifest, indent=2) + '\\n')"
+          evidence = "(status / 'source-check.json').write_text(json.dumps({'schema': 1, 'revision': manifest['revision'], 'run_id': manifest['run_id'], 'source_check': json.loads(Path('data/source-check.json').read_text())}, indent=2) + '\\n')"
+          replace(deploy, stamp, stamp + '\n          ' + evidence)
+          verification = '''
+                - name: Verify public schedule evidence and corrected meeting labels
+                  env:
+                    LIVE_SITE_URL: __DEPLOYED_PAGE_URL__
+                  shell: python
+                  run: |
+                    import json, os, time, urllib.request
+                    from html import unescape
+                    base = os.environ['LIVE_SITE_URL'].rstrip('/')
+                    error = None
+                    def read(path):
+                        req = urllib.request.Request(base + path + '?verify=' + str(time.time_ns()), headers={'Cache-Control': 'no-cache'})
+                        with urllib.request.urlopen(req, timeout=20) as response:
+                            data = response.read(10000001)
+                        if len(data) > 10000000:
+                            raise ValueError('Public response exceeds verification limit')
+                        return data.decode('utf-8')
+                    for attempt in range(6):
+                        try:
+                            evidence = json.loads(read('/status/source-check.json'))
+                            if evidence.get('revision') != os.environ['GITHUB_SHA'] or str(evidence.get('run_id')) != os.environ['GITHUB_RUN_ID']:
+                                raise ValueError('Public source-check evidence does not match this deployment')
+                            check = evidence['source_check']
+                            if not isinstance(check.get('ok'), bool) or not isinstance(check.get('meetings'), list) or not check.get('observedAt'):
+                                raise ValueError('Invalid public source-check structure')
+                            page = unescape(read('/meetings/'))
+                            for forbidden in ('Next posted meeting as of snapshot', 'upcoming meetings confirmed as of snapshot', 'AGENDA POSTED AS OF SNAPSHOT'):
+                                if forbidden in page:
+                                    raise ValueError('Obsolete public provenance label: ' + forbidden)
+                            if 'future-dated postings at calendar evaluation' not in page or 'View saved schedule-check evidence' not in page:
+                                raise ValueError('Corrected public information labels are missing')
+                            error = None
+                            break
+                        except Exception as exc:
+                            error = str(exc)
+                            if attempt < 5:
+                                time.sleep(10)
+                    with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+                        summary.write('\\nCM public provenance verification: ' + ('FAILED: ' + error if error else 'Matched deployment identity; corrected archive labels and public source-check evidence verified.') + '\\n')
+                        summary.write('This verifies display and saved evidence, not complete records coverage or successful source retrieval when ok=false.\\n')
+                    if error:
+                        raise SystemExit(error)
+          '''
+          import textwrap
+          verification = verification.replace('__DEPLOYED_PAGE_URL__', '$' + '{{ steps.deployment.outputs.page_url }}')
+          p = Path(deploy)
+          p.write_text(p.read_text().rstrip() + '\n' + textwrap.indent(textwrap.dedent(verification).strip(), '      ') + '\n')
+          test = Path('tests/public-provenance.test.mjs')
+          if test.exists():
+              raise RuntimeError('Refusing to overwrite an existing public provenance test')
+          test.write_text('''import test from 'node:test';
+          import assert from 'node:assert/strict';
+          import { readFileSync } from 'node:fs';
+          import ts from 'typescript';
+          const base = { id: 'fixture', body: 'fixture', bodyLabel: 'Fixture', date: '2026-11-16', dateLabel: 'November 16, 2026', shortDate: 'Nov 16', docs: [], official: {}, upcoming: true, calendarStatus: 'upcoming', snapshotCapturedAt: '2026-10-03' };
+          const index = { meetings: [base], captured: '2026-10-03', schedules: {}, stats: { totalMeetings: 1, pastMeetings: 0, upcomingMeetings: 1, totalDocuments: 0, totalTranscripts: 0, byBody: {} } };
+          const compiled = ts.transpileModule(readFileSync('src/lib/civic-data.ts', 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, esModuleInterop: true } }).outputText;
+          const mod = { exports: {} };
+          new Function('require', 'module', 'exports', compiled)((id) => {
+            if (id === '@/data/official-sources.json') return {};
+            if (id === '@/data/meetings.json') return index;
+            throw new Error('Unexpected import: ' + id);
+          }, mod, mod.exports);
+          const api = mod.exports;
+          test('official posting labels use the actual source-check timestamp, not archive capture', () => {
+            const row = { ...base, postedOnOfficialTable: true, sourceObservedAt: '2026-11-14T21:51:23Z' };
+            const label = api.meetingCalendarLabel(row);
+            assert.match(label, /Official schedule posting checked/);
+            assert.match(label, /Nov 14, 2026/);
+            assert.doesNotMatch(label, /2026-10-03|Next posted/);
+          });
+          test('unverified fallback retains archive date and does not imply a current check', () => {
+            assert.match(api.meetingScheduleProvenance(base), /2026-10-03/);
+            assert.match(api.meetingScheduleProvenance(base), /current posting not verified/);
+          });
+          test('missing or invalid source timestamps do not become checked claims', () => {
+            for (const sourceObservedAt of [undefined, 'invalid']) {
+              assert.doesNotMatch(api.meetingScheduleProvenance({ ...base, postedOnOfficialTable: true, sourceObservedAt }), /Official schedule posting checked/);
+            }
+          });
+          test('discovered-only records include provenance without implying archived agenda contents', () => {
+            const label = api.meetingCalendarLabel({ ...base, archiveUnavailable: true, postedOnOfficialTable: true, sourceObservedAt: '2026-11-14T21:51:23Z' });
+            assert.match(label, /Official schedule posting checked/);
+            assert.match(label, /agenda archive unavailable/);
+          });
+          ''')
+      - run: npm ci
+      - name: Validate generated deployment workflow and regression tests
+        run: |
+          node --input-type=module -e 'import fs from "node:fs"; import YAML from "yaml"; const doc=YAML.parse(fs.readFileSync(".github/workflows/deploy-pages.yml","utf8")); const steps=doc.jobs.deploy.steps; const step=steps.find(s=>s.name==="Verify public schedule evidence and corrected meeting labels"); if(!step || !step.env.LIVE_SITE_URL.includes("steps.deployment.outputs.page_url")) throw Error("Invalid generated verification step");'
+          node --test tests/public-provenance.test.mjs
+          npm run test:calendar
+          npm run test:sync
+      - run: npm run lint
+      - run: npm run typecheck
+      - name: Production build and public-output regression checks
+        run: npm run build && npm run test:seo && npm run test:text-separation
+        env:
+          NEXT_PUBLIC_BASE_PATH: /TheReelWindyCity
+      - name: Commit validated display corrections and request publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          test "$(git rev-parse HEAD)" = "$(git rev-parse origin/main)" || { echo 'Main changed; refusing to overwrite newer work.'; exit 1; }
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src/lib/civic-data.ts src/app/meetings/page.tsx 'src/app/meetings/[id]/page.tsx' src/components/hub-snapshot-freshness.tsx .github/workflows/deploy-pages.yml tests/public-provenance.test.mjs
+          git commit -m 'CM: correct public schedule provenance and verify published evidence'
+          git push origin HEAD:main
+          gh workflow run deploy-pages.yml --ref main
+          echo 'Validated corrections committed. Deployment requested; publication is not yet verified by this job.' >> "$GITHUB_STEP_SUMMARY"
