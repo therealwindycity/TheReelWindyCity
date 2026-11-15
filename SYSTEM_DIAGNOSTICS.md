@@ -1,120 +1,24 @@
-# Promethean Harvest Telemetry - Sat Nov 14 23:46:03 UTC 2026
+# Promethean Harvest Telemetry - Sun Nov 15 15:30:13 UTC 2026
 ```text
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-[*] Scanned PDF detected. Engaging OCR...
-[*] Scanned PDF detected. Engaging OCR...
-[*] Scanned PDF detected. Engaging OCR...
-[*] Scanned PDF detected. Engaging OCR...
-[summary] {"aliases": 49, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 6, "endpoints_listed": 963, "endpoints_remaining": 957, "errors": 0, "known_not_refetched": 0, "new": 53, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5", "unchanged": 0}
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
+[summary] {"aliases": 114, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 13, "endpoints_listed": 963, "endpoints_remaining": 950, "errors": 0, "known_not_refetched": 0, "new": 53, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5", "unchanged": 29}
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
-[summary] {"aliases": 146, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 7, "endpoints_listed": 865, "endpoints_remaining": 858, "errors": 0, "known_not_refetched": 0, "new": 46, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=2", "unchanged": 0}
+[*] Scanned PDF detected. Engaging OCR...
+[*] Scanned PDF detected. Engaging OCR...
+[*] Scanned PDF detected. Engaging OCR...
+[*] Scanned PDF detected. Engaging OCR...
+[summary] {"aliases": 117, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 7, "endpoints_listed": 865, "endpoints_remaining": 858, "errors": 0, "known_not_refetched": 0, "new": 45, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=2", "unchanged": 40}
 [!] Target unreachable https://connectcheyenne.org/: HTTPSConnectionPool(host='connectcheyenne.org', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("HTTPSConnection(host='connectcheyenne.org', port=443): Failed to resolve 'connectcheyenne.org' ([Errno -2] Name or service not known)"))
 [summary] {"aliases": 0, "budget_exhausted": false, "changed": 0, "endpoints_crawled": 0, "endpoints_listed": 0, "endpoints_remaining": 0, "errors": 0, "known_not_refetched": 0, "new": 0, "reachable": false, "robots_allowed": true, "root": "https://connectcheyenne.org/", "unchanged": 0}
 [sources] reached=3 failed=0
 [*] Auditing payload size for Shard Provisioning...
-[*] Provisioning Linked Shard: therealwindycity/Promethean-Archive-2026-11-15-0016
+[*] Provisioning Linked Shard: therealwindycity/Promethean-Archive-2026-11-15-1600
 Flag --confirm has been deprecated, Pass any argument to skip confirmation prompt
 gh: To use GitHub CLI in a GitHub Actions workflow, set the GH_TOKEN environment variable. Example:
   env:
@@ -133,7 +37,7 @@ hint:
 hint: 	git branch -m <name>
 hint:
 hint: Disable this message with "git config set advice.defaultBranchName false"
-Initialized empty Git repository in /home/runner/work/TheReelWindyCity/TheReelWindyCity/shard_staging_2026-11-15-0016/.git/
+Initialized empty Git repository in /home/runner/work/TheReelWindyCity/TheReelWindyCity/shard_staging_2026-11-15-1600/.git/
 Author identity unknown
 
 *** Please tell me who you are.
@@ -146,5 +50,5 @@ Run
 to set your account's default identity.
 Omit --global to set the identity only in this repository.
 
-fatal: empty ident name (for <runner@runnervmccnms.y3bjl1wixy0erccpnjuwue5g0d.bx.internal.cloudapp.net>) not allowed
+fatal: empty ident name (for <runner@runnervmccnms.l5l4xjmyzuhedcxkq5suuecaff.cx.internal.cloudapp.net>) not allowed
 ```
