@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-15T19:24:02.428Z",
+  "checkedAt": "2026-11-16T22:54:35.437Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -7,7 +7,7 @@
   "warnings": 6,
   "recorded": 91,
   "delegated": 1,
-  "changed": false,
+  "changed": true,
   "structural": 2,
   "results": [
     {
@@ -1170,11 +1170,11 @@
       "status": 200,
       "finalUrl": "https://cityoflaramie.org/AgendaCenter",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "5f010fed2ec491cac304ebbbc34997a60cdf8e29b3d2fb0670c335ec5d98d848",
-      "records": 509
+      "contentHash": "5534ffa88ef68abb9ec6134b3b67f66ad2e24a97f6a0c28925c2b80d9327f878",
+      "records": 512
     },
     {
       "id": "place-lingle",
