@@ -130,7 +130,7 @@
         "46189"
       ],
       "from": "2026-04-13",
-      "to": "2026-11-15",
+      "to": "2026-11-16",
       "probed": {
         "46189": {
           "empty": [],
@@ -222,10 +222,10 @@
       },
       {
         "year": "2026",
-        "socrataLogs": 101957,
-        "incidents": 94007,
-        "cases": 7950,
-        "linkableLogs": 68457
+        "socrataLogs": 102292,
+        "incidents": 94319,
+        "cases": 7973,
+        "linkableLogs": 68792
       }
     ]
   },
