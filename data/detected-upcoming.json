@@ -1,16 +1,9 @@
 {
   "version": 1,
   "ok": true,
-  "discoveredAt": "2026-11-10T20:56:17.837Z",
+  "discoveredAt": "2026-11-17T02:32:32.036Z",
   "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
   "meetings": [
-    {
-      "body": "public-services-committee",
-      "bodyLabel": "Public Services Committee",
-      "date": "2026-11-16",
-      "time": "12:00",
-      "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1459&view_id=5"
-    },
     {
       "body": "finance-committee",
       "bodyLabel": "Finance Committee",
