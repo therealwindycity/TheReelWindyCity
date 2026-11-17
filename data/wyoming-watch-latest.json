@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-16T22:54:35.437Z",
+  "checkedAt": "2026-11-17T21:47:26.400Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -1173,8 +1173,8 @@
       "changed": true,
       "reason": "content-changed",
       "structural": false,
-      "contentHash": "5534ffa88ef68abb9ec6134b3b67f66ad2e24a97f6a0c28925c2b80d9327f878",
-      "records": 512
+      "contentHash": "a727d4f6c993e69509580d5a400288430080307b8bb892228b9f63f3b5bd9d0b",
+      "records": 514
     },
     {
       "id": "place-lingle",
