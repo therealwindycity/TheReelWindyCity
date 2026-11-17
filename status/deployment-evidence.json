@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-16T17:02:04.786Z",
+  "observed_at": "2026-11-17T00:50:58.397Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 43913958430,
-      "sha": "21398cc668bcb6edea6f5dbb99bc679dceea8343",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43913958430",
-      "created_at": "2026-11-16T17:01:48Z",
+      "id": 43990925931,
+      "sha": "cdbe550ec569a7539e9e778b23d1954a64fecf51",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43990925931",
+      "created_at": "2026-11-17T00:50:54Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43913958430/job/133462985375",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43990925931/job/133730979764",
           "steps": [
             {
               "name": "Set up job",
@@ -41,18 +41,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 43913158272,
-      "sha": "21398cc668bcb6edea6f5dbb99bc679dceea8343",
+      "id": 43990350327,
+      "sha": "cdbe550ec569a7539e9e778b23d1954a64fecf51",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43913158272",
-      "created_at": "2026-11-16T16:57:23Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43990350327",
+      "created_at": "2026-11-17T00:46:36Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43913158272/job/133460162701",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43990350327/job/133729021316",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +160,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43913158272/job/133462349921",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43990350327/job/133730617288",
           "steps": [
             {
               "name": "Set up job",
@@ -209,33 +209,26 @@
     }
   ],
   "source_evidence": {
-    "run": 43913158272,
-    "revision": "21398cc668bcb6edea6f5dbb99bc679dceea8343",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43913158272",
-    "artifact_id": 14248373392,
+    "run": 43990350327,
+    "revision": "cdbe550ec569a7539e9e778b23d1954a64fecf51",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/43990350327",
+    "artifact_id": 14286764095,
     "deployment": {
       "schema": 1,
       "project_credit": "CM",
-      "revision": "21398cc668bcb6edea6f5dbb99bc679dceea8343",
-      "run_id": "43913158272",
-      "built_at": "2026-11-16T17:00:36.713354+00:00",
+      "revision": "cdbe550ec569a7539e9e778b23d1954a64fecf51",
+      "run_id": "43990350327",
+      "built_at": "2026-11-17T00:49:54.418875+00:00",
       "scope": "Build identity only; not source freshness or complete coverage."
     },
     "source_check": {
       "version": 1,
       "ok": true,
-      "observedAt": "2026-11-16T16:59:38.459Z",
+      "observedAt": "2026-11-17T00:49:11.086Z",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
       "attempts": 1,
       "error": null,
       "meetings": [
-        {
-          "body": "public-services-committee",
-          "bodyLabel": "Public Services Committee",
-          "date": "2026-11-16",
-          "time": "12:00",
-          "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1459&view_id=5"
-        },
         {
           "body": "finance-committee",
           "bodyLabel": "Finance Committee",
