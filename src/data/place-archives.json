@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-11-18T22:19:37.188Z",
+  "generatedAt": "2026-11-19T22:26:54.301Z",
   "places": [
     {
       "id": "afton",
@@ -1093,7 +1093,9 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-campbell",
       "sourceUrl": "https://www.campbellcountywy.gov/",
       "documents": [],
-      "errors": []
+      "errors": [
+        "HTTP 522 from https://www.campbellcountywy.gov/"
+      ]
     },
     {
       "id": "carbon",
@@ -1211,6 +1213,12 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-niobrara",
       "sourceUrl": "https://www.niobraracounty.org/",
       "documents": [
+        {
+          "name": "20261120_SpecialMeeting_Notice.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/20261120_SpecialMeeting_Notice.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
         {
           "name": "County%20Planning%20and%20Zoning%20Authorities.pdf",
           "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/County%20Planning%20and%20Zoning%20Authorities.pdf",
