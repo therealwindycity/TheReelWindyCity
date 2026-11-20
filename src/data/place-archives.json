@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-11-19T22:26:54.301Z",
+  "generatedAt": "2026-11-20T21:57:47.902Z",
   "places": [
     {
       "id": "afton",
@@ -1093,9 +1093,7 @@
       "repoUrl": "https://github.com/therealwindycity/civic-wy-county-campbell",
       "sourceUrl": "https://www.campbellcountywy.gov/",
       "documents": [],
-      "errors": [
-        "HTTP 522 from https://www.campbellcountywy.gov/"
-      ]
+      "errors": []
     },
     {
       "id": "carbon",
