@@ -1,21 +1,14 @@
 {
   "version": 1,
-  "checkedAt": "2026-11-10T20:57:39.708Z",
-  "contentHash": "c4f7faa7eabfc94fb314f4a7f4c415662fcf7c178642ffe77eef4c0892d7b09b",
+  "checkedAt": "2026-11-20T20:37:27.144Z",
+  "contentHash": "f279123e07ec21607c73b30e5a01c665458b4ff950e1c8cf82bde1ca8791dc30",
   "meetings": [
     {
-      "body": "public-services-committee",
-      "bodyLabel": "Public Services Committee",
-      "date": "2026-11-16",
-      "time": "12:00",
-      "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1459&view_id=5"
-    },
-    {
-      "body": "finance-committee",
-      "bodyLabel": "Finance Committee",
-      "date": "2026-11-17",
-      "time": "08:00",
-      "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1458&view_id=5"
+      "body": "city-council",
+      "bodyLabel": "City Council Meeting",
+      "date": "2026-11-23",
+      "time": "18:00",
+      "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1460&view_id=5"
     }
   ]
 }
