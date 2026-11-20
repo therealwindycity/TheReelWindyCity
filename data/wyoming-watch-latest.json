@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-19T21:31:07.634Z",
+  "checkedAt": "2026-11-20T21:06:14.466Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -607,11 +607,11 @@
       "status": 200,
       "finalUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "adccdbe7454981174112fc5ef59015c5dc071767e0be02140ea4db8297094a90",
-      "records": 587
+      "contentHash": "86ac7f2418a8814cb282388cc2dd7479e3bc7c2ee2d4148da6a8f7fdd368f4c3",
+      "records": 588
     },
     {
       "id": "place-cheyenne",
@@ -1173,8 +1173,8 @@
       "changed": true,
       "reason": "content-changed",
       "structural": false,
-      "contentHash": "340e146f596c02ac16d66b73d9f0ef10364a3048f982305649bad4fd1ddc1693",
-      "records": 524
+      "contentHash": "c9493364014d1f96874e9df87f781cb282c7c4352c49a5389412f934d289fb3e",
+      "records": 527
     },
     {
       "id": "place-lingle",
@@ -1594,8 +1594,8 @@
       "status": 200,
       "finalUrl": "https://public.destinyhosted.com/agenda_publish.cfm?id=74374&mt=ALL",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "da0c87779f6629c518dc2fc3ac190523e3c111461b53e0c525f89e3413f1ee1c",
       "records": 8
