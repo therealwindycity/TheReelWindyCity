@@ -1,0 +1,163 @@
+{
+  "meetingId": "name-city-council-meeting-date",
+  "generatedAt": "2026-11-21T11:31:30.726Z",
+  "generatedBy": [
+    "rules-v1",
+    "llm-v1"
+  ],
+  "summary": {
+    "items": 28,
+    "findings": 5,
+    "bySeverity": {
+      "act": 2,
+      "watch": 3,
+      "info": 0
+    }
+  },
+  "findings": [
+    {
+      "id": "consent-bundling",
+      "severity": "act",
+      "title": "Substantive item bundled on the consent agenda",
+      "detail": "This item is designated for the consent agenda, meaning it is enacted by a single motion with no separate discussion unless a governing-body member pulls it (with two supporting members). Substantive policy can pass with essentially zero deliberation — request removal from consent if you want it discussed.",
+      "itemNumbers": [
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21"
+      ],
+      "kind": "Resolution",
+      "evidence": [
+        {
+          "quote": "15. [CA] RESOLUTION – Authorizing the City Treasurer to discharge uncollectible debts pursuant to Wyoming Statute §16-4-502. (FINANCE COMMITTEE) ACTION: Adopt Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "All agenda items listed with the designation of [CA] are considered to be routine items by the governing body and will be enacted by one motion.",
+          "page": 1
+        },
+        {
+          "quote": "16. [CA] RESOLUTION – Authorizing salary adjustments for certain non-uniformed City employees based on the 2026 compensation study. (FINANCE COMMITTEE) ACTION: Adopt Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "17. [CA] RESOLUTION – Authorizing the Mayor and the City Clerk to sign a Final Plat for Dell Range Addition Sixth Filing, City of Cheyenne, Laramie County, Wyoming, located south of Holland Court, west of Ridge Road, and",
+          "page": 1
+        },
+        {
+          "quote": "18. [CA] RESOLUTION – Authorizing the Mayor and the City Clerk to sign a Final Plat for Pronghorn Crossing, 2nd Filing, City of Cheyenne, Laramie County, Wyoming located south of and adjacent to Storey Boulevard, between",
+          "page": 1
+        },
+        {
+          "quote": "19. [CA] RESOLUTION – Encouraging continued dialogue between the Cheyenne Regional Airport Board and the individuals and organizations concerned with the potential demolition of the 1960’s Airport Terminal. (SPONSOR – MR",
+          "page": 1
+        },
+        {
+          "quote": "20. [CA] RESOLUTION – Directing the transfer of ten million dollars ($10,000,000.00) in General Fund Reserves to the Stormwater Runoff Management System Account through the next reappropriation resolution of the Governin",
+          "page": 1
+        },
+        {
+          "quote": "21. [CA] RESOLUTION – Authorizing the conveyance of certain City-owned real property to Cheyenne LEADS for economic development and stormwater management purposes. (SPONSOR – MR. ESQUIBEL) ACTION: Refer to Finance Commit",
+          "page": 1
+        }
+      ],
+      "citation": "Posted agenda, item(s) 15, 16, 17, 18, 19, 20, 21",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "final-reading",
+      "severity": "act",
+      "title": "Ordinance on final (3rd) reading — last scheduled opportunity for input",
+      "detail": "Third reading is typically the passage vote. Public comment after this point is drastically less effective; this is the last agenda step where input can change the outcome.",
+      "itemNumbers": [
+        "7"
+      ],
+      "kind": "Ordinance · 3rd reading",
+      "evidence": [
+        {
+          "quote": "7. ORDINANCE –3rd READING – Amending Sections 1.4.3, 1.4.4, 2.2.3, 5.1.4, and 5.7.2 of the Cheyenne Unified Development Code to add and clarify Specified Use Allowances, clarify processes for Agricultural Uses and provid",
+          "page": 1
+        }
+      ],
+      "citation": "Posted name-city-council-meeting-date agenda, item 7, page 1",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "second-reading",
+      "severity": "watch",
+      "title": "Ordinance on 2nd reading — text can still be amended",
+      "detail": "Second reading is where amendments are still routine; track the final language here.",
+      "itemNumbers": [
+        "8",
+        "9",
+        "10",
+        "11",
+        "12"
+      ],
+      "kind": "Ordinance · 2nd reading",
+      "evidence": [
+        {
+          "quote": "8. ORDINANCE – 2nd READING – Creating Sections 1.1.8, 1.1.9, and 5.8.9; and amending Sections 1.4.3, 4.5.3, and 4.5.4 of the Unified Development Code to clarify requirements around establishing uses, including expectatio",
+          "page": 1
+        },
+        {
+          "quote": "9. ORDINANCE – 2nd READING – Creating Section 5.7.1 Data Centers of the Cheyenne Unified Development Code to establish specific use standards for data centers. (PUBLIC SERVICES COMMITTEE) ACTION: Supporting Document",
+          "page": 1
+        },
+        {
+          "quote": "10. ORDINANCE – 2nd READING – Amending Sections 1.4.3, 1.4.4, and 5.1.4 and creating Section 5.7.14 of the Cheyenne Unified Development Code to create definitions and establish use allowances for power generation facilit",
+          "page": 1
+        },
+        {
+          "quote": "11. ORDINANCE – 2nd READING – Amending various Sections of Chapter 6.08, Animal Care and Control Regulations Generally, of the Municipal Code of the City of Cheyenne, Wyoming, to exempt farm and farm related operations. ",
+          "page": 1
+        },
+        {
+          "quote": "12. ORDINANCE – 2nd READING – Amending Sections 8.60.30, Nuisances Prohibited and 8.60.35, Care and Maintenance of Right-of-Way Adjacent to Private Properties of the Municipal Code of the City of Cheyenne, Wyoming, to ex",
+          "page": 1
+        }
+      ],
+      "citation": "Posted agenda, item(s) 8, 9, 10, 11, 12",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "annexation",
+      "severity": "watch",
+      "title": "Territorial annexation",
+      "detail": "Annexation moves land into city jurisdiction and usually precedes zoning/service decisions with long-term effects. Verify the associated zoning-map and service-commitment items posted alongside it.",
+      "itemNumbers": [
+        "26"
+      ],
+      "kind": "Other",
+      "evidence": [
+        {
+          "quote": "26. ANNOUNCEMENTS/REPORTS/MOTIONS: a) Appointments of Bill Hibbler and Steven Czoschke to serve as Administrative Hearing Officers for the City of Cheyenne. ACTION: b) VOUCHER REPORT. Supporting Document Supporting Docum",
+          "page": 1
+        }
+      ],
+      "citation": "Posted name-city-council-meeting-date agenda, item 26, page 1",
+      "generatedBy": "rules-v1"
+    },
+    {
+      "id": "budget-reappropriation",
+      "severity": "watch",
+      "title": "Budget re-appropriation",
+      "detail": "Moves previously appropriated funds between purposes; check which program loses the money.",
+      "itemNumbers": [
+        "20"
+      ],
+      "kind": "Resolution",
+      "evidence": [
+        {
+          "quote": "20. [CA] RESOLUTION – Directing the transfer of ten million dollars ($10,000,000.00) in General Fund Reserves to the Stormwater Runoff Management System Account through the next reappropriation resolution of the Governin",
+          "page": 1
+        }
+      ],
+      "citation": "Posted name-city-council-meeting-date agenda, item 20, page 1",
+      "generatedBy": "rules-v1"
+    }
+  ]
+}
