@@ -1,13 +1,13 @@
 {
   "version": 1,
   "ok": true,
-  "discoveredAt": "2026-11-20T20:35:57.604Z",
+  "discoveredAt": "2026-11-21T11:29:52.507Z",
   "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
   "meetings": [
     {
-      "body": "city-council",
-      "bodyLabel": "City Council Meeting",
-      "date": "2026-11-23",
+      "body": "name-city-council-meeting",
+      "bodyLabel": "Name, City Council Meeting",
+      "date": "date, nov 23, 2026",
       "time": "18:00",
       "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1460&view_id=5"
     }
