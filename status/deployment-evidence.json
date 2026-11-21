@@ -1,9 +1,44 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-21T21:42:08.057Z",
+  "observed_at": "2026-11-21T21:42:21.460Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
+    {
+      "name": "Verify public meeting features",
+      "id": 44952890566,
+      "sha": "590b59de356f562ef69b3512917ef553a88393b6",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/44952890566",
+      "created_at": "2026-11-21T21:42:03Z",
+      "jobs": [
+        {
+          "name": "verify",
+          "status": "completed",
+          "conclusion": "success",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/44952890566/job/136994499558",
+          "steps": [
+            {
+              "name": "Set up job",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Verify public HTML features for CM",
+              "status": "completed",
+              "conclusion": "success"
+            },
+            {
+              "name": "Complete job",
+              "status": "completed",
+              "conclusion": "success"
+            }
+          ]
+        }
+      ],
+      "annotations": []
+    },
     {
       "name": "Deploy to GitHub Pages",
       "id": 44952558364,
@@ -159,41 +194,6 @@
             },
             {
               "name": "Post Run actions/checkout@v4",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
-            }
-          ]
-        }
-      ],
-      "annotations": []
-    },
-    {
-      "name": "Verify public meeting features",
-      "id": 44923072855,
-      "sha": "c12156815c29dff87245dc8bc625d8fe3f9be94b",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/44923072855",
-      "created_at": "2026-11-21T16:10:13Z",
-      "jobs": [
-        {
-          "name": "verify",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/44923072855/job/136903103952",
-          "steps": [
-            {
-              "name": "Set up job",
-              "status": "completed",
-              "conclusion": "success"
-            },
-            {
-              "name": "Verify public HTML features for CM",
               "status": "completed",
               "conclusion": "success"
             },
