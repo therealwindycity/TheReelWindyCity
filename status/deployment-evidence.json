@@ -1,15 +1,15 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-22T17:09:25.412Z",
+  "observed_at": "2026-11-22T17:09:37.298Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
       "id": 45047825142,
       "sha": "99a7a68b5445a5d447fce2db6f64b95c73c5af34",
-      "status": "in_progress",
-      "conclusion": null,
+      "status": "completed",
+      "conclusion": "success",
       "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45047825142",
       "created_at": "2026-11-22T17:09:19Z",
       "jobs": [
