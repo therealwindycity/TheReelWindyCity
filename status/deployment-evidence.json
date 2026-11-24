@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-24T10:15:22.405Z",
+  "observed_at": "2026-11-24T20:47:53.401Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 45372961866,
-      "sha": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372961866",
-      "created_at": "2026-11-24T10:15:02Z",
+      "id": 45484495441,
+      "sha": "ab72ccf1fab1404d1bab4ff9823d03cf11a9f5d6",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45484495441",
+      "created_at": "2026-11-24T20:47:48Z",
       "jobs": [
         {
           "name": "verify",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372961866/job/138371648204",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45484495441/job/138766120068",
           "steps": [
             {
               "name": "Set up job",
@@ -28,11 +28,6 @@
               "name": "Verify public HTML features for CM",
               "status": "completed",
               "conclusion": "success"
-            },
-            {
-              "name": "Complete job",
-              "status": "completed",
-              "conclusion": "success"
             }
           ]
         }
@@ -41,18 +36,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 45372294453,
-      "sha": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
+      "id": 45483696866,
+      "sha": "ab72ccf1fab1404d1bab4ff9823d03cf11a9f5d6",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453",
-      "created_at": "2026-11-24T10:10:55Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45483696866",
+      "created_at": "2026-11-24T20:43:10Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453/job/138369342011",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45483696866/job/138763314737",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +155,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453/job/138371214662",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45483696866/job/138765613325",
           "steps": [
             {
               "name": "Set up job",
@@ -209,22 +204,22 @@
     }
   ],
   "source_evidence": {
-    "run": 45372294453,
-    "revision": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453",
-    "artifact_id": 14910541171,
+    "run": 45483696866,
+    "revision": "ab72ccf1fab1404d1bab4ff9823d03cf11a9f5d6",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45483696866",
+    "artifact_id": 14963921998,
     "deployment": {
       "schema": 1,
       "project_credit": "CM",
-      "revision": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
-      "run_id": "45372294453",
-      "built_at": "2026-11-24T10:14:05.247969+00:00",
+      "revision": "ab72ccf1fab1404d1bab4ff9823d03cf11a9f5d6",
+      "run_id": "45483696866",
+      "built_at": "2026-11-24T20:46:47.554480+00:00",
       "scope": "Build identity only; not source freshness or complete coverage."
     },
     "source_check": {
       "version": 1,
       "ok": true,
-      "observedAt": "2026-11-24T10:13:08.276Z",
+      "observedAt": "2026-11-24T20:45:51.193Z",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
       "attempts": 1,
       "error": null,
