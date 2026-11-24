@@ -1,7 +1,7 @@
 {
   "owner": "therealwindycity",
   "volumeSize": 250,
-  "generatedAt": "2026-11-24T01:53:33.278Z",
+  "generatedAt": "2026-11-24T23:38:20.431Z",
   "places": [
     {
       "id": "afton",
@@ -1212,14 +1212,20 @@
       "sourceUrl": "https://www.niobraracounty.org/",
       "documents": [
         {
-          "name": "20261120_SpecialMeeting_Notice.pdf",
-          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/20261120_SpecialMeeting_Notice.pdf",
+          "name": "NC%20Plan-Zone%20Regs%20For%20Public%20Review%2011-13-26.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/NC%20Plan-Zone%20Regs%20For%20Public%20Review%2011-13-26.pdf",
           "volume": 1,
           "repo": "civic-wy-county-niobrara"
         },
         {
-          "name": "County%20Planning%20and%20Zoning%20Authorities.pdf",
-          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/County%20Planning%20and%20Zoning%20Authorities.pdf",
+          "name": "NC%20P%20and%20Z%20Forms%20for%20Public%20Review.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/NC%20P%20and%20Z%20Forms%20for%20Public%20Review.pdf",
+          "volume": 1,
+          "repo": "civic-wy-county-niobrara"
+        },
+        {
+          "name": "Planning%20and%20Zoning%20Fees%202026%20-%20for%20public%20review.pdf",
+          "sourceUrl": "https://www.niobraracounty.org/_departments/_planning_and_zoning/_pdfs/2026/Planning%20and%20Zoning%20Fees%202026%20-%20for%20public%20review.pdf",
           "volume": 1,
           "repo": "civic-wy-county-niobrara"
         },
