@@ -130,7 +130,7 @@
         "46189"
       ],
       "from": "2026-04-13",
-      "to": "2026-11-22",
+      "to": "2026-11-23",
       "probed": {
         "46189": {
           "empty": [],
@@ -180,52 +180,52 @@
     "perYear": [
       {
         "year": "2020",
-        "socrataLogs": 80,
+        "socrataLogs": 73,
         "incidents": 1,
-        "cases": 79,
+        "cases": 72,
         "linkableLogs": 0
       },
       {
         "year": "2021",
-        "socrataLogs": 436,
+        "socrataLogs": 427,
         "incidents": 3,
-        "cases": 433,
+        "cases": 424,
         "linkableLogs": 0
       },
       {
         "year": "2022",
-        "socrataLogs": 1177,
-        "incidents": 200,
-        "cases": 977,
+        "socrataLogs": 1158,
+        "incidents": 212,
+        "cases": 946,
         "linkableLogs": 0
       },
       {
         "year": "2023",
-        "socrataLogs": 115004,
-        "incidents": 104392,
-        "cases": 10612,
+        "socrataLogs": 114814,
+        "incidents": 104305,
+        "cases": 10509,
         "linkableLogs": 0
       },
       {
         "year": "2024",
-        "socrataLogs": 122648,
-        "incidents": 112759,
-        "cases": 9889,
+        "socrataLogs": 122948,
+        "incidents": 113192,
+        "cases": 9756,
         "linkableLogs": 0
       },
       {
         "year": "2025",
-        "socrataLogs": 116348,
-        "incidents": 106659,
-        "cases": 9689,
+        "socrataLogs": 116346,
+        "incidents": 106835,
+        "cases": 9511,
         "linkableLogs": 0
       },
       {
         "year": "2026",
-        "socrataLogs": 103985,
-        "incidents": 95865,
-        "cases": 8120,
-        "linkableLogs": 70485
+        "socrataLogs": 104242,
+        "incidents": 96185,
+        "cases": 8057,
+        "linkableLogs": 70737
       }
     ]
   },
