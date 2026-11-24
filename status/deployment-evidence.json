@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-24T00:26:18.607Z",
+  "observed_at": "2026-11-24T10:15:07.510Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 45297111143,
-      "sha": "dcf0ffc47401d9233a2d6b9af9805a99ccca6dcc",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45297111143",
-      "created_at": "2026-11-24T00:26:01Z",
+      "id": 45372961866,
+      "sha": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372961866",
+      "created_at": "2026-11-24T10:15:02Z",
       "jobs": [
         {
           "name": "verify",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45297111143/job/138120186645",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372961866/job/138371648204",
           "steps": [
             {
               "name": "Set up job",
@@ -41,18 +41,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 45296260430,
-      "sha": "dcf0ffc47401d9233a2d6b9af9805a99ccca6dcc",
+      "id": 45372294453,
+      "sha": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45296260430",
-      "created_at": "2026-11-24T00:19:46Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453",
+      "created_at": "2026-11-24T10:10:55Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45296260430/job/138117308841",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453/job/138369342011",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +160,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45296260430/job/138119823340",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453/job/138371214662",
           "steps": [
             {
               "name": "Set up job",
@@ -209,32 +209,32 @@
     }
   ],
   "source_evidence": {
-    "run": 45296260430,
-    "revision": "dcf0ffc47401d9233a2d6b9af9805a99ccca6dcc",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45296260430",
-    "artifact_id": 14876428258,
+    "run": 45372294453,
+    "revision": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45372294453",
+    "artifact_id": 14910541171,
     "deployment": {
       "schema": 1,
       "project_credit": "CM",
-      "revision": "dcf0ffc47401d9233a2d6b9af9805a99ccca6dcc",
-      "run_id": "45296260430",
-      "built_at": "2026-11-24T00:25:01.799739+00:00",
+      "revision": "b4a4a0ea96c95b1a5ef534c0a2b4b92142a30628",
+      "run_id": "45372294453",
+      "built_at": "2026-11-24T10:14:05.247969+00:00",
       "scope": "Build identity only; not source freshness or complete coverage."
     },
     "source_check": {
       "version": 1,
       "ok": true,
-      "observedAt": "2026-11-24T00:24:02.295Z",
+      "observedAt": "2026-11-24T10:13:08.276Z",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
       "attempts": 1,
       "error": null,
       "meetings": [
         {
-          "body": "name-city-council-meeting",
-          "bodyLabel": "Name, City Council Meeting",
-          "date": "date, nov 23, 2026",
-          "time": "18:00",
-          "agendaUrl": "https://cheyenne.granicus.com/AgendaViewer.php?event_id=1460&view_id=5"
+          "body": "currently-there-are-no-upcoming-events",
+          "bodyLabel": "Currently there are no Upcoming Events",
+          "date": "",
+          "time": "",
+          "agendaUrl": ""
         }
       ]
     },
