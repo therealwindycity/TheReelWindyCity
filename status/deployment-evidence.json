@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-25T13:48:10.736Z",
+  "observed_at": "2026-11-25T22:55:14.793Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 45627245717,
-      "sha": "cf7a30862d93ca68f66d32af69ca466a1accd038",
+      "id": 45717206143,
+      "sha": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45627245717",
-      "created_at": "2026-11-25T13:47:54Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45717206143",
+      "created_at": "2026-11-25T22:55:06Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45627245717/job/139250601510",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45717206143/job/139566203885",
           "steps": [
             {
               "name": "Set up job",
@@ -41,18 +41,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 45626450082,
-      "sha": "cf7a30862d93ca68f66d32af69ca466a1accd038",
+      "id": 45716612486,
+      "sha": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45626450082",
-      "created_at": "2026-11-25T13:43:13Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486",
+      "created_at": "2026-11-25T22:50:37Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45626450082/job/139247815604",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486/job/139564174165",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +160,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45626450082/job/139249887880",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486/job/139565879377",
           "steps": [
             {
               "name": "Set up job",
@@ -209,31 +209,38 @@
     }
   ],
   "source_evidence": {
-    "run": 45626450082,
-    "revision": "cf7a30862d93ca68f66d32af69ca466a1accd038",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45626450082",
-    "artifact_id": 15029230479,
+    "run": 45716612486,
+    "revision": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486",
+    "artifact_id": 15070746359,
     "deployment": {
       "schema": 1,
       "project_credit": "CM",
-      "revision": "cf7a30862d93ca68f66d32af69ca466a1accd038",
-      "run_id": "45626450082",
-      "built_at": "2026-11-25T13:46:33.734821+00:00",
+      "revision": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
+      "run_id": "45716612486",
+      "built_at": "2026-11-25T22:54:10.855073+00:00",
       "scope": "Build identity only; not source freshness or complete coverage."
     },
     "source_check": {
       "version": 1,
       "ok": true,
-      "observedAt": "2026-11-25T13:45:36.399Z",
+      "observedAt": "2026-11-25T22:53:07.077Z",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
       "attempts": 1,
       "error": null,
       "meetings": [
         {
-          "body": "currently-there-are-no-upcoming-events",
-          "bodyLabel": "Currently there are no Upcoming Events",
-          "date": "",
-          "time": "",
+          "body": "name-public-services-committee",
+          "bodyLabel": "Name, Public Services Committee",
+          "date": "date, dec 7, 2026",
+          "time": "12:00",
+          "agendaUrl": ""
+        },
+        {
+          "body": "name-finance-committee",
+          "bodyLabel": "Name, Finance Committee",
+          "date": "date, dec 8, 2026",
+          "time": "12:00",
           "agendaUrl": ""
         }
       ]
