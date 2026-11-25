@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-24T23:02:27.725Z",
+  "checkedAt": "2026-11-25T22:30:49.084Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -7,7 +7,7 @@
   "warnings": 6,
   "recorded": 91,
   "delegated": 1,
-  "changed": false,
+  "changed": true,
   "structural": 2,
   "results": [
     {
@@ -967,11 +967,11 @@
       "status": 200,
       "finalUrl": "https://www.grwyo.org/AgendaCenter",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "af534ce28f539ab8efd15a8761b91a7b1bd8c9ac86ba614df4632d26e47bb648",
-      "records": 69
+      "contentHash": "25def6620f1de58636e373216dc21dc48909b075ee7fd4556ce95a724e0713c1",
+      "records": 71
     },
     {
       "id": "place-greybull",
