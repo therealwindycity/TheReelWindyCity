@@ -1,14 +1,21 @@
 {
   "version": 1,
   "ok": true,
-  "discoveredAt": "2026-11-25T08:55:03.972Z",
+  "discoveredAt": "2026-11-25T19:28:47.119Z",
   "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
   "meetings": [
     {
-      "body": "currently-there-are-no-upcoming-events",
-      "bodyLabel": "Currently there are no Upcoming Events",
-      "date": "",
-      "time": "",
+      "body": "name-public-services-committee",
+      "bodyLabel": "Name, Public Services Committee",
+      "date": "date, dec 7, 2026",
+      "time": "12:00",
+      "agendaUrl": ""
+    },
+    {
+      "body": "name-finance-committee",
+      "bodyLabel": "Name, Finance Committee",
+      "date": "date, dec 8, 2026",
+      "time": "12:00",
       "agendaUrl": ""
     }
   ]
