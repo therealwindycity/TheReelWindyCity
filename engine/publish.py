@@ -131,7 +131,10 @@ def build() -> str:
     today = _dt.date.today()
     elec = _dt.date.fromisoformat(site["election_day"])
     pet = _dt.date.fromisoformat(site["petition_file_date"])
-    days_to_elec = max(0, (elec - today).days)
+    delta = (elec - today).days  # after the date, count up instead of freezing at 0
+    elec_value, elec_label = ((str(delta), "days to the Nov. 3 election") if delta > 0 else
+                              ("TODAY", "Nov. 3 election day") if delta == 0 else
+                              (str(-delta), "days since the Nov. 3 election"))
     days_since_pet = max(0, (today - pet).days)
 
     stats_html = "".join([
@@ -139,7 +142,7 @@ def build() -> str:
         f"<div class='stat'><b>{st['alerts']}</b><span>watchlist hits, quoted</span></div>",
         f"<div class='stat'><b>{st['edits']}</b><span>silent edits caught</span></div>",
         f"<div class='stat'><b>{st['drafts']}</b><span>drafts awaiting a human</span></div>",
-        f"<div class='stat'><b>{days_to_elec}</b><span>days to the Nov. 3 election</span></div>",
+        f"<div class='stat'><b>{elec_value}</b><span>{elec_label}</span></div>",
     ])
 
     edits_html = "".join(

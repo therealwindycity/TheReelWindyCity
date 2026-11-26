@@ -175,10 +175,10 @@ def seal_names(names: list[str], *, url: str = "", title: str = "",
     """
     if not names:
         return KEYRING
+    _ensure_ignored()  # check BEFORE writing any name to disk, not after
     ARREST_DIR.mkdir(parents=True, exist_ok=True)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     src_sha = hashlib.sha256((url or capture or title).encode()).hexdigest()[:16]
-    fresh = not KEYRING.exists()
     with KEYRING.open("a", encoding="utf-8") as fh:
         for i, nm in enumerate(names, start=1):
             fh.write(json.dumps({
@@ -191,8 +191,6 @@ def seal_names(names: list[str], *, url: str = "", title: str = "",
                 "capture": capture,
             }, ensure_ascii=False, sort_keys=True) + "\n")
     os.chmod(KEYRING, 0o600)
-    if fresh:
-        _ensure_ignored()
     return KEYRING
 
 

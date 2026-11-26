@@ -32,3 +32,8 @@ __pycache__/
 /src/data/legal-audit-generated.json
 /src/data/legal-evidence-generated.json
 /src/data/legal-support-generated.json
+
+# Arrest-record SEALED tier: person names withheld from the public data. Never commit these.
+# engine/redact.py refuses to write the keyring unless this entry exists.
+/data/arrests/keyring.jsonl
+/data/arrests/name_key.json
