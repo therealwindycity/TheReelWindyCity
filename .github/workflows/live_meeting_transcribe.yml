@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
+          # No requirements.txt/pyproject.toml in this repo, so `cache: pip` aborted setup on every run.
 
       - name: Install ffmpeg, yt-dlp and faster-whisper
         run: |
