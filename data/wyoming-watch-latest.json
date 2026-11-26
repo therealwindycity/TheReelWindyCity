@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-25T22:30:49.084Z",
+  "checkedAt": "2026-11-26T22:21:25.365Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -607,11 +607,11 @@
       "status": 200,
       "finalUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "86ac7f2418a8814cb282388cc2dd7479e3bc7c2ee2d4148da6a8f7fdd368f4c3",
-      "records": 588
+      "contentHash": "6b3b1242edb5355aff6c4b1d3f643f34b732826b6e2b52c23a2477d800a594be",
+      "records": 591
     },
     {
       "id": "place-cheyenne",
@@ -967,8 +967,8 @@
       "status": 200,
       "finalUrl": "https://www.grwyo.org/AgendaCenter",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "25def6620f1de58636e373216dc21dc48909b075ee7fd4556ce95a724e0713c1",
       "records": 71
@@ -1170,11 +1170,11 @@
       "status": 200,
       "finalUrl": "https://cityoflaramie.org/AgendaCenter",
       "redirects": [],
-      "changed": false,
-      "reason": "unchanged",
+      "changed": true,
+      "reason": "content-changed",
       "structural": false,
-      "contentHash": "c9493364014d1f96874e9df87f781cb282c7c4352c49a5389412f934d289fb3e",
-      "records": 527
+      "contentHash": "7014cae1cb115ea5827548a8669eda0cdd805c5b726158efd903c013f07113cf",
+      "records": 531
     },
     {
       "id": "place-lingle",
