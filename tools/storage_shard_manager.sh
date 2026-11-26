@@ -36,7 +36,17 @@ gh release create "$TAG" --repo "$REPOSITORY" --target "$GITHUB_SHA" --draft --p
     --title "Harvest payloads: run ${GITHUB_RUN_ID}, attempt ${ATTEMPT}" \
     --notes 'Raw public-source payloads and a database snapshot. This is not certification of complete records coverage or of website indexing. Verify SHA256SUMS, then reconstruct with: cat payload.part.* | tar -xz'
 gh release upload "$TAG" "$TEMP_DIR"/payload.part.* "$TEMP_DIR/SHA256SUMS" --repo "$REPOSITORY"
-gh api "repos/$REPOSITORY/releases/tags/$TAG" > "$TEMP_DIR/remote.json"
+# Draft releases are not served by /releases/tags/{tag} (always 404); find the draft in the release list instead.
+gh api "repos/$REPOSITORY/releases?per_page=100" > "$TEMP_DIR/releases.json"
+python3 - "$TEMP_DIR" "$TAG" <<'PY'
+import json, sys
+from pathlib import Path
+root, tag = Path(sys.argv[1]), sys.argv[2]
+matches = [r for r in json.loads((root / "releases.json").read_text()) if r.get("tag_name") == tag]
+if not matches:
+    raise SystemExit("Draft release for " + tag + " was not found; nothing was published")
+(root / "remote.json").write_text(json.dumps(matches[0]))
+PY
 python3 - "$TEMP_DIR" <<'PY'
 import hashlib, json, sys
 from pathlib import Path

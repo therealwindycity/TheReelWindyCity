@@ -19,18 +19,25 @@ mode = os.environ.get("MOCK_MODE", "success")
 if a[:2] == ["release", "view"]:
     sys.exit(0 if mode == "collision" else 1)
 elif a[:2] == ["release", "create"]:
-    (root / "release.json").write_text(json.dumps({"draft": True, "assets": []}))
+    (root / "release.json").write_text(json.dumps({"draft": True, "tag_name": a[2], "assets": []}))
 elif a[:2] == ["release", "upload"]:
     if mode == "upload_failure": sys.exit(42)
     files = a[3:a.index("--repo")]
     assets = [{"name": pathlib.Path(f).name, "size": pathlib.Path(f).stat().st_size, "digest": "sha256:" + hashlib.sha256(pathlib.Path(f).read_bytes()).hexdigest()} for f in files]
     if mode == "digest_failure": assets[0]["digest"] = "sha256:incorrect"
-    (root / "release.json").write_text(json.dumps({"draft": True, "assets": assets}))
+    r = json.loads((root / "release.json").read_text()); r["assets"] = assets
+    (root / "release.json").write_text(json.dumps(r))
 elif a[:2] == ["release", "edit"]:
     r = json.loads((root / "release.json").read_text()); r["draft"] = False
     (root / "release.json").write_text(json.dumps(r))
 elif a[:1] == ["api"]:
-    sys.stdout.write((root / "release.json").read_text())
+    r = json.loads((root / "release.json").read_text())
+    if "/releases?" in a[1]:
+        sys.stdout.write(json.dumps([r]))  # the list endpoint includes drafts
+    elif r.get("draft"):
+        sys.exit(1)  # like GitHub: /releases/tags/{tag} never returns a draft (HTTP 404)
+    else:
+        sys.stdout.write(json.dumps(r))
 else:
     sys.exit(99)
 '''
