@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-25T22:55:23.942Z",
+  "observed_at": "2026-11-26T04:42:17.291Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 45717206143,
-      "sha": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45717206143",
-      "created_at": "2026-11-25T22:55:06Z",
+      "id": 45756876442,
+      "sha": "7342d5dad8711f5a25bbf3b66c08cf51cd946b85",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45756876442",
+      "created_at": "2026-11-26T04:42:12Z",
       "jobs": [
         {
           "name": "verify",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45717206143/job/139566203885",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45756876442/job/139697459652",
           "steps": [
             {
               "name": "Set up job",
@@ -41,18 +41,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 45716612486,
-      "sha": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
+      "id": 45756504990,
+      "sha": "7342d5dad8711f5a25bbf3b66c08cf51cd946b85",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486",
-      "created_at": "2026-11-25T22:50:37Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45756504990",
+      "created_at": "2026-11-26T04:38:32Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486/job/139564174165",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45756504990/job/139696251037",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +160,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486/job/139565879377",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45756504990/job/139697225618",
           "steps": [
             {
               "name": "Set up job",
@@ -209,22 +209,22 @@
     }
   ],
   "source_evidence": {
-    "run": 45716612486,
-    "revision": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45716612486",
-    "artifact_id": 15070746359,
+    "run": 45756504990,
+    "revision": "7342d5dad8711f5a25bbf3b66c08cf51cd946b85",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45756504990",
+    "artifact_id": 15088755044,
     "deployment": {
       "schema": 1,
       "project_credit": "CM",
-      "revision": "c3f82d7e10f10c9b5d58b24a1e397e5f3c5e1ef1",
-      "run_id": "45716612486",
-      "built_at": "2026-11-25T22:54:10.855073+00:00",
+      "revision": "7342d5dad8711f5a25bbf3b66c08cf51cd946b85",
+      "run_id": "45756504990",
+      "built_at": "2026-11-26T04:41:19.904180+00:00",
       "scope": "Build identity only; not source freshness or complete coverage."
     },
     "source_check": {
       "version": 1,
       "ok": true,
-      "observedAt": "2026-11-25T22:53:07.077Z",
+      "observedAt": "2026-11-26T04:40:30.597Z",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
       "attempts": 1,
       "error": null,
