@@ -1,0 +1,1 @@
+- [Harvest payload harvest-payloads-45822228105-1](https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-45822228105-1) — SHA-256-verified archive parts; partial collection, not coverage certification.
