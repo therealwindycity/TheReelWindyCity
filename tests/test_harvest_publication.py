@@ -69,6 +69,10 @@ class PublicationTests(unittest.TestCase):
             if mode != "empty": self.assertTrue((root / "artifacts/fixture.pdf").exists())
             if mode in ("upload_failure", "digest_failure"):
                 self.assertFalse(any(call[:2] == ["release", "edit"] for call in calls))
+                # a failed publication removes its own draft instead of leaving an orphan behind
+                self.assertTrue(any(call[:2] == ["release", "delete"] for call in calls))
+            if mode in ("success", "collision", "empty", "missing_token"):
+                self.assertFalse(any(call[:2] == ["release", "delete"] for call in calls))
 
     def test_empty(self): self.check_case("empty")
     def test_missing_token(self): self.check_case("missing_token")
