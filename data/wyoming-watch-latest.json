@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-26T22:21:25.365Z",
+  "checkedAt": "2026-11-27T21:59:02.909Z",
   "governments": 122,
   "surfaces": 123,
   "fetched": 31,
@@ -7,7 +7,7 @@
   "warnings": 6,
   "recorded": 91,
   "delegated": 1,
-  "changed": true,
+  "changed": false,
   "structural": 2,
   "results": [
     {
@@ -607,8 +607,8 @@
       "status": 200,
       "finalUrl": "https://www.casperwy.gov/government/city_council/agendas_minutes.php",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "6b3b1242edb5355aff6c4b1d3f643f34b732826b6e2b52c23a2477d800a594be",
       "records": 591
@@ -1170,8 +1170,8 @@
       "status": 200,
       "finalUrl": "https://cityoflaramie.org/AgendaCenter",
       "redirects": [],
-      "changed": true,
-      "reason": "content-changed",
+      "changed": false,
+      "reason": "unchanged",
       "structural": false,
       "contentHash": "7014cae1cb115ea5827548a8669eda0cdd805c5b726158efd903c013f07113cf",
       "records": 531
