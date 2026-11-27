@@ -181,7 +181,7 @@ def _ingest_one(conn, source: str, url: str, title: str, raw: bytes,
     # the redacted artefact, so re-crawling the same live page stays "unchanged".
     # See engine/redact.py.
     sealed_names: list[str] = []
-    if redact.is_arrest_document(url=url, title=title):
+    if redact.REDACT_ARREST_NAMES and redact.is_arrest_document(url=url, title=title):
         try:
             raw, sealed_names = redact.redact_bytes(raw, url=url, title=title)
         except redact.RedactionError as e:

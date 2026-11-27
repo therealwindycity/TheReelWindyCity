@@ -1,4 +1,10 @@
-"""Password gate in front of the de-identified arrest database.
+"""Arrest database page -- OPEN by default (owner decision 2026-11-27).
+
+The arrest records are now published with names and ages, so this page serves them
+without a password. The password gate below is kept as an option: it only applies when
+the Streamlit secret `arrest_page_seal = true` (or env ARREST_PAGE_SEAL=1) is set, in
+which case the password rules that follow apply. The rest of this docstring describes
+that optional gate and the previous (de-identified) policy.
 
 WHY THIS PAGE EXISTS
     The rest of this app is open. This page is the one that serves the arrest
@@ -38,7 +44,7 @@ from pathlib import Path
 
 import streamlit as st
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]  # src/pages/<this> -> repo root
 EXPLORER = ROOT / "tools" / "arrest_explorer.py"
 ARREST_DIR = ROOT / "data" / "arrests"
 
@@ -143,9 +149,10 @@ def serve() -> None:
     with top:
         cols = st.columns([6, 1])
         cols[0].caption(
-            "🔓 Unlocked. Serving the public, de-identified tier from `data/arrests/`."
+            "Serving the public arrest records (with names) from `data/arrests/`. "
+            "Arrest is not a conviction."
         )
-        if cols[1].button("Lock", width="stretch"):
+        if not st.session_state.get("_arrest_open") and cols[1].button("Lock", width="stretch"):
             st.session_state.arrest_unlocked = False
             st.rerun()
 
@@ -171,6 +178,22 @@ def serve() -> None:
 
 
 # ------------------------------------------------------------------ run
+
+def seal_requested() -> bool:
+    """The gate is opt-in. Default: serve openly (owner decision 2026-11-27)."""
+    try:
+        if str(st.secrets.get("arrest_page_seal", "")).strip().lower() in ("1", "true", "yes"):
+            return True
+    except Exception:
+        pass
+    return os.environ.get("ARREST_PAGE_SEAL", "0") == "1"
+
+
+if not seal_requested():
+    st.session_state["arrest_unlocked"] = True
+    st.session_state["_arrest_open"] = True
+    serve()
+    st.stop()
 
 expected = configured_password()
 if not expected:
