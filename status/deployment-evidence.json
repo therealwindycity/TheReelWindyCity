@@ -1,23 +1,23 @@
 {
   "schema": 1,
   "project_credit": "CM",
-  "observed_at": "2026-11-27T05:16:08.356Z",
+  "observed_at": "2026-11-27T15:26:37.816Z",
   "scope": "Workflow metadata, check annotations, and saved official-source check output; no raw logs, independent freshness certification, or coverage certification",
   "workflows": [
     {
       "name": "Verify public meeting features",
-      "id": 45944754107,
-      "sha": "16313a21fb9c37749364bf8bd4518c4ca7f5afda",
-      "status": "completed",
-      "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45944754107",
-      "created_at": "2026-11-27T05:15:51Z",
+      "id": 46024942062,
+      "sha": "96ddae03710599b66eb9cd6a380b3943525acf9f",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/46024942062",
+      "created_at": "2026-11-27T15:26:33Z",
       "jobs": [
         {
           "name": "verify",
-          "status": "completed",
-          "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45944754107/job/140326780022",
+          "status": "in_progress",
+          "conclusion": null,
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/46024942062/job/140593790203",
           "steps": [
             {
               "name": "Set up job",
@@ -41,18 +41,18 @@
     },
     {
       "name": "Deploy to GitHub Pages",
-      "id": 45944305182,
-      "sha": "bc868ac5e6befe8f806a8d5bede30ce3be3e00c1",
+      "id": 46024340027,
+      "sha": "16313a21fb9c37749364bf8bd4518c4ca7f5afda",
       "status": "completed",
       "conclusion": "success",
-      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45944305182",
-      "created_at": "2026-11-27T05:11:28Z",
+      "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/46024340027",
+      "created_at": "2026-11-27T15:22:32Z",
       "jobs": [
         {
           "name": "build",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45944305182/job/140325377747",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/46024340027/job/140591729351",
           "steps": [
             {
               "name": "Set up job",
@@ -160,7 +160,7 @@
           "name": "deploy",
           "status": "completed",
           "conclusion": "success",
-          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45944305182/job/140326489259",
+          "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/46024340027/job/140593304248",
           "steps": [
             {
               "name": "Set up job",
@@ -209,22 +209,22 @@
     }
   ],
   "source_evidence": {
-    "run": 45944305182,
-    "revision": "bc868ac5e6befe8f806a8d5bede30ce3be3e00c1",
-    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/45944305182",
-    "artifact_id": 15174261816,
+    "run": 46024340027,
+    "revision": "16313a21fb9c37749364bf8bd4518c4ca7f5afda",
+    "url": "https://github.com/therealwindycity/TheReelWindyCity/actions/runs/46024340027",
+    "artifact_id": 15210193640,
     "deployment": {
       "schema": 1,
       "project_credit": "CM",
-      "revision": "bc868ac5e6befe8f806a8d5bede30ce3be3e00c1",
-      "run_id": "45944305182",
-      "built_at": "2026-11-27T05:14:47.146742+00:00",
+      "revision": "16313a21fb9c37749364bf8bd4518c4ca7f5afda",
+      "run_id": "46024340027",
+      "built_at": "2026-11-27T15:25:26.678888+00:00",
       "scope": "Build identity only; not source freshness or complete coverage."
     },
     "source_check": {
       "version": 1,
       "ok": true,
-      "observedAt": "2026-11-27T05:13:55.834Z",
+      "observedAt": "2026-11-27T15:24:46.664Z",
       "sourceUrl": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5&widget=upcoming",
       "attempts": 1,
       "error": null,
