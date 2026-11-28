@@ -1,4 +1,4 @@
-# Promethean Harvest Telemetry - Fri Nov 27 17:58:17 UTC 2026
+# Promethean Harvest Telemetry - Sat Nov 28 02:33:19 UTC 2026
 ```text
 Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
 Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
@@ -8,44 +8,6 @@ Could not get FontBBox from font descriptor because None cannot be parsed as 4 f
 Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
 Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
 Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
-Could not get FontBBox from font descriptor because None cannot be parsed as 4 floats
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
@@ -57,14 +19,13 @@ Could not get FontBBox from font descriptor because None cannot be parsed as 4 f
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
 [*] Scanned PDF detected. Engaging OCR...
-[summary] {"aliases": 69, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 11, "endpoints_listed": 963, "endpoints_remaining": 952, "errors": 0, "known_not_refetched": 0, "new": 101, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5", "unchanged": 5}
-[*] Scanned PDF detected. Engaging OCR...
-[*] Scanned PDF detected. Engaging OCR...
-[summary] {"aliases": 219, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 9, "endpoints_listed": 864, "endpoints_remaining": 855, "errors": 0, "known_not_refetched": 0, "new": 10, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=2", "unchanged": 7}
+[summary] {"aliases": 36, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 15, "endpoints_listed": 963, "endpoints_remaining": 948, "errors": 0, "known_not_refetched": 0, "new": 71, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=5", "unchanged": 22}
+[!] Document skipped https://cheyenne.granicus.com/MetaViewer.php?view_id=2&clip_id=1014&meta_id=140990: HTTPSConnectionPool(host='cheyenne.granicus.com', port=443): Read timed out. (read timeout=30)
+[summary] {"aliases": 216, "budget_exhausted": true, "changed": 0, "endpoints_crawled": 11, "endpoints_listed": 864, "endpoints_remaining": 853, "errors": 1, "known_not_refetched": 0, "new": 0, "reachable": true, "robots_allowed": false, "root": "https://cheyenne.granicus.com/ViewPublisher.php?view_id=2", "unchanged": 36}
 [sources] connectcheyenne.org does not resolve; Connect Cheyenne skipped (domain retired)
 [sources] reached=2 failed=0
 0|0|0
-https://github.com/therealwindycity/TheReelWindyCity/releases/tag/untagged-dec44261bdf8b0f774d1
-https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-46045791384-1
-[+] Payload publication verified: https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-46045791384-1
+https://github.com/therealwindycity/TheReelWindyCity/releases/tag/untagged-41030e74cac96e7f7006
+https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-46098578089-1
+[+] Payload publication verified: https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-46098578089-1
 ```

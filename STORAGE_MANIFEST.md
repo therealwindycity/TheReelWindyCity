@@ -2,3 +2,4 @@
 - [Harvest payload harvest-payloads-45874493361-1](https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-45874493361-1) — SHA-256-verified archive parts; partial collection, not coverage certification.
 - [Harvest payload harvest-payloads-45929919675-1](https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-45929919675-1) — SHA-256-verified archive parts; partial collection, not coverage certification.
 - [Harvest payload harvest-payloads-46045791384-1](https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-46045791384-1) — SHA-256-verified archive parts; partial collection, not coverage certification.
+- [Harvest payload harvest-payloads-46098578089-1](https://github.com/therealwindycity/TheReelWindyCity/releases/tag/harvest-payloads-46098578089-1) — SHA-256-verified archive parts; partial collection, not coverage certification.
